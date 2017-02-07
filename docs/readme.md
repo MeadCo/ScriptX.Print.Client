@@ -1,3 +1,4 @@
+
 # ScriptX.Print.Client
 The MeadCo.ScriptX.Print project brings control of printing to browser based content in all browsers on all devices with
 out needing a binary add-on - something that has become persona non-grata due to the abuse of the power they have enabled 
@@ -5,6 +6,7 @@ and power that has been taken by the unscrupulous.
 
 In the binary free environment MeadCo.ScriptX.Client.xxxxx are the javascript libraries for interfacing between the client devices 
 and the server system that provides printing services where-ever that server may be:
+
 * in the cloud
 * an on-premise server
 * services on the device (PC)
