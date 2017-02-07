@@ -1,1 +1,2 @@
-# ScriptX.Print.Client Pages
+# ScriptX.Print.Client
+This documentation is currently under construction.

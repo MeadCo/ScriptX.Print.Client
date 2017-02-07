@@ -2,8 +2,8 @@
 
 ## Overview
 
-* [My Awesome API](README.md)
-* [Defining properties](defining-properties.md)
+* [Introduction](README.md)
+* [Referencing the library](referencelib.md)
 
 ## Methods
 

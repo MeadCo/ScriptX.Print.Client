@@ -12,6 +12,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{6F1B6E72-BADC-427F-B43B-24A2CFC326A2}"
+	ProjectSection(SolutionItems) = preProject
+		docs\_config.yml = docs\_config.yml
+		docs\readme.md = docs\readme.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "book", "book", "{09B1AEEF-1A4F-4875-933C-71D32CBD1BD0}"
+	ProjectSection(SolutionItems) = preProject
+		book\methods.md = book\methods.md
+		book\new-article.md = book\new-article.md
+		book\README.md = book\README.md
+		book\referencelib.md = book\referencelib.md
+		book\SUMMARY.md = book\SUMMARY.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,5 +40,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6F1B6E72-BADC-427F-B43B-24A2CFC326A2} = {F483EA25-6581-4C95-80F9-42E54B1866FD}
+		{09B1AEEF-1A4F-4875-933C-71D32CBD1BD0} = {F483EA25-6581-4C95-80F9-42E54B1866FD}
 	EndGlobalSection
 EndGlobal
