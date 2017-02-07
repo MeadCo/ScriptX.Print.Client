@@ -1,11 +1,11 @@
 # ScriptX.Print.Client
 The MeadCo.ScriptX.Print project brings control of printing to browser based content in all browsers on all devices with
 out needing a binary add-on - something that has become persona non-grata due to the abuse of the power they have enabled 
-and pwer that has been taken by the unscrupulous.
+and power that has been taken by the unscrupulous.
 
 In the binary free environment MeadCo.ScriptX.Client.* are the javascript libraries for interfacing between the client devices 
 and the server system that provides printing services where-ever that server may be:
-* in the coud
+* in the cloud
 * an on-premise server
 * services on the device (PC)
 
@@ -17,15 +17,15 @@ The library has three layers:
 
 In addition there are a number of useful UI libraries that encapsulate commonly required behaviour.
 
-#### A note on browsers and devices, abstrations and dependency injection
+#### A note on browsers and devices, abstractions and dependency injection
 
 The libraries are developed for 'evergreen' browsers on common devices. These libraries will not be compatible with
-ancient versions of Internet Explorer. However, MeadCo ScriptX continues to be available and support old versions of Internet Explorer. 
-Script code in this scenario will be utilising the *'window.factory'* object. By use of a compatibility layer hat same code can be bought
+ancient versions of Internet Explorer. However, the MeadCo ScriptX add-on continues to be available and supports old versions of Internet Explorer. 
+Script code in this scenario will be utilising the *'window.factory'* object. By use of a compatibility layer that same code can be bought
 to more modern browsers. With the proviso of course that the HTML that renders successfully in the older browser
-renders in modern browers.
+renders correctly in modern browsers.
 
-We do not want the MeadC.ScriptX.Client libraries to depend on anything other than itself. Our clients are many and varied and will no doubt be 
+We do not want the MeadC.ScriptX.Client libraries to depend on anything other than thenselves. Our clients are many and varied and will no doubt be 
 taking dependencies on many libraries, we dont want to work against those choices but work with them. The core library abstracts behaviour
 and then the dependency dependent layer uses simple injection to configure the core layer for the environment.
 
