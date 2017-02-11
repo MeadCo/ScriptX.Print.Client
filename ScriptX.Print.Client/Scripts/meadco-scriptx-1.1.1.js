@@ -51,12 +51,14 @@
 
 // MeadCo.ScriptX 
 //
-(function (topLeveNs) {
-    topLeveNs.ScriptX = {};
+(function (topLevelNs) {
 
-    var scriptx = topLeveNs.ScriptX;
+    if (typeof topLevelNs["ScriptX"] === "undefined")
+        topLevelNs.ScriptX = {};
 
-    scriptx.LibVersion = "1.1.1";
+    var scriptx = topLevelNs.ScriptX;
+
+    scriptx.LibVersion = "1.1.2";
     scriptx.Printing = null;
     scriptx.Utils = null;
 
@@ -66,7 +68,7 @@
     //
     scriptx.Init = function () {
         if (scriptx.Printing == null) {
-            var f = document.getElementById("factory") || this.factory; // we assume the <object /> has an id of 'factory'
+            var f = document.getElementById("factory") || window.factory; // we assume the <object /> has an id of 'factory'
             if (f && f.object != null) {
                 scriptx.Utils = f.object;
                 scriptx.Printing = f.printing;
