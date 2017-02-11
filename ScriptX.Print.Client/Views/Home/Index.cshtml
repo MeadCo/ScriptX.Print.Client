@@ -5,3 +5,26 @@
     <div class="col-md-2">&nbsp;</div>
 </div>
 <h1>ScriptX.Print.HTML Service - Client Library</h1>
+
+@section scripts
+{
+    <script type="text/javascript">
+        if (window.jQuery) {
+            $(function() {
+                $.MeadCo.log("Page starting with jQuery");
+                try {
+                    $.MeadCo.ScriptX.Print.HTML.printFromUrl("http://scriptx.meadroid.com");
+                } catch (e) {
+                    console.log("error in page startup: " + e.message);
+                }
+            });
+        } else {
+            MeadCo.log("Page starting without jQuery");
+            try {
+                MeadCo.ScriptX.Print.HTML.printFromUrl("http://scriptx.meadroid.com");
+            } catch (e) {
+                console.log("error in page startup: " + e.message);
+            }
+        }
+    </script>
+}

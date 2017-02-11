@@ -19,8 +19,7 @@
                 @Html.ActionLink("MeadCo ScriptX.Print.Client", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right">
-                </ul>
+                <ul class="nav navbar-nav navbar-right"></ul>
             </div>
         </div>
     </div>
@@ -39,6 +38,8 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/MeadCo.ScriptX/meadco-scriptxprintcore.js"></script>
+    <script src="~/Scripts/MeadCo.ScriptX/meadco-scriptxprinthtml.js"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

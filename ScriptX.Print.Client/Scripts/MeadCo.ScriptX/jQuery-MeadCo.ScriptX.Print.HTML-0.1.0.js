@@ -5,8 +5,13 @@
  */
 "use strict";
 (function (topLevelNs, $, undefined) {
+    if (topLevelNs == undefined) {
+        console.log("MeadCo core library is required by MeadCo.ScriptX.Print.HTML");
+        return;
+    }
+
     if ($ == undefined) {
-        console.log("no jquery!");
+        console.log("jQuery is required by MeadCo.ScriptX.Print.HTML");
         return;
     }
 
@@ -31,4 +36,4 @@
         return false; // the first is the winner.
     });
 
-}(window.MeadCo = window.MeadCo || {}, jQuery));
+}(window.MeadCo, jQuery));
