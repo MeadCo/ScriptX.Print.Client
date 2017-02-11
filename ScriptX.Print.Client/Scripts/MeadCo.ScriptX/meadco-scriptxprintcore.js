@@ -1,20 +1,9 @@
 ﻿/*!
+ * MeadCo.ScriptX.Print.Core (support for modern browsers and IE 11) JS client library
+ * Copyright 2017 Mead & Company. All rights reserved.
+ * https://github.com/MeadCo/ScriptX.Print.Client
  *
- *  MeadCo.ScriptX.Print.Core (support for modern browsers and IE 11) JS client library
- *  Copyright 2017 Mead & Company. All rights reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    https://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License
- *
+ * Released under the MIT license
  */
 
 // Extensible UMD Plugins 
@@ -64,13 +53,12 @@
         } else if (hasExports) { // Node.js Module
             module.exports = theModule;
         } else {
-            // Assign to common namespaces or simply the global object (window)
-            // account for for flat-file/global module extensions
+            // walk/build the namespace part by part and assign the module to the leaf
             var namespaces = name.split(".");
             for (var i = 0; i < namespaces.length; i++) {
                 var packageName = namespaces[i];
                 if (i === namespaces.length - 1) {
-                    scope[packageName] = definition;
+                    scope[packageName] = theModule;
                 } else if (typeof scope[packageName] === "undefined") {
                     scope[packageName] = {};
                 }

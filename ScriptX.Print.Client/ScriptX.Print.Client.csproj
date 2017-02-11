@@ -167,8 +167,11 @@
     <Content Include="Scripts\jquery-3.1.1.min.js" />
     <Content Include="Scripts\jquery-3.1.1.slim.js" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.js" />
+    <Content Include="Scripts\meadco-scriptx-1.1.1.js" />
+    <Content Include="Scripts\meadco-scriptx-1.1.1.min.js" />
     <Content Include="Scripts\MeadCo.ScriptX\jQuery-MeadCo.ScriptX.Print.HTML-0.1.0.js" />
     <Content Include="Scripts\MeadCo.ScriptX\jQuery-MeadCo.ScriptX.Print.UI.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxfactory.js" />
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprinthtml.js" />
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprintcore.js" />
     <Content Include="Scripts\MeadCo.ScriptX\MeadCo.ScriptX.Print.Core-0.1.0.js" />
@@ -193,11 +196,12 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\ShimFactory.cshtml" />
+    <Content Include="Views\Home\ShimMeadCoJS.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config" />
-    <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
   </ItemGroup>
