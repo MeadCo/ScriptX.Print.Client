@@ -7,29 +7,8 @@
 <h1>ScriptX.Print.HTML Service - Client Library</h1>
 
 <ul>
-    <li>@Html.ActionLink("Emulate factory","ShimFactory")</li>
-    <li>@Html.ActionLink("Support MeadCoJS Library","ShimMeadCoJS")</li>
+    <li>@Html.ActionLink("Modern","Modern")</li>
+    <li>@Html.ActionLink("Emulate factory", "ShimFactory")</li>
+    <li>@Html.ActionLink("Support MeadCoJS Library", "ShimMeadCoJS")</li>
 </ul>
 
-@section scripts
-{
-    <script type="text/javascript">
-        if (window.jQuery) {
-            $(function() {
-                $.MeadCo.log("Page starting with jQuery");
-                try {
-                    $.MeadCo.ScriptX.Print.HTML.printFromUrl("http://scriptx.meadroid.com");
-                } catch (e) {
-                    console.log("error in page startup: " + e.message);
-                }
-            });
-        } else {
-            MeadCo.log("Page starting without jQuery");
-            try {
-                MeadCo.ScriptX.Print.HTML.printFromUrl("http://scriptx.meadroid.com");
-            } catch (e) {
-                console.log("error in page startup: " + e.message);
-            }
-        }
-    </script>
-}

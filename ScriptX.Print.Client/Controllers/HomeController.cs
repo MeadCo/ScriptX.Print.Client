@@ -21,6 +21,14 @@ namespace ScriptX.Print.Client.Controllers
             return View();
         }
 
+        [Route("Modern")]
+        [HttpGet]
+        public ActionResult Modern()
+        {
+            ViewBag.Title = "Supporting modern code";
+            return View();
+        }
+
         [Route("FactoryShim")]
         [HttpGet]
         public ActionResult ShimFactory()

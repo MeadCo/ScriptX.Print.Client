@@ -198,6 +198,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\ShimFactory.cshtml" />
     <Content Include="Views\Home\ShimMeadCoJS.cshtml" />
+    <Content Include="Views\Home\Modern.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

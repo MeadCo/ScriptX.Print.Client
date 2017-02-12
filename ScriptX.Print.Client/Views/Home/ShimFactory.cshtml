@@ -18,13 +18,13 @@
             console.log("Shim factory test starting");
             try {
                 factory.GetComponentVersion("MeadCo.ScriptX", a, b, c, d);
-                $.MeadCo.log("Version: " + a[0] + "." + b[0] + "." + c[0] + "." + d[0]);
+                MeadCo.log("Version: " + a[0] + "." + b[0] + "." + c[0] + "." + d[0]);
 
                 factory.printing.header = "This is the page header";
-                $.MeadCo.log("header set to: " + factory.printing.header);
+                MeadCo.log("header set to: " + factory.printing.header);
 
             } catch (e) {
-                $.MeadCo.log("Error: " + e.message);
+                MeadCo.log("Error: " + e.message);
             }
         });
     </script>

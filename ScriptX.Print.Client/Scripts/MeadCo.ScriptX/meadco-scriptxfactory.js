@@ -6,11 +6,13 @@
  * Released under the MIT license
  */
 
-// we shim <object id="factory" /> -- code can run as-is
+// we anti-polyfill <object id="factory" /> 
+// enabling old code to run in modern browsers
+//
 ; (function (name, definition,undefined) {
 
     if ( this[name] != undefined || document.getElementById(name) != null ) {
-        console.log("ScriptX factory shim believes it isnt requred.");
+        console.log("ScriptX factory anti-polyfill believes it isnt requred.");
         if ( this[name] != undefined ) {
             console.log("this[" + name + "] is defined");
         }
@@ -30,15 +32,16 @@
     var module = this;
 
     module.log = function (str) {
-        console.log("factory shim :: " + str);
+        console.log("factory anti-polyfill :: " + str);
     }
 
     // extend the namespace
-    module.extend = function(name, definition, scope) {
-        var theModule = definition;
+    module.extendNamespace = function(name, definition) {
+        var theModule = definition();
 
         // walk/build the namespace branch and assign the module to the leaf
         var namespaces = name.split(".");
+        var scope = this;
         for (var i = 0; i < namespaces.length; i++) {
             var packageName = namespaces[i];
             if (i === namespaces.length - 1) {
@@ -67,19 +70,14 @@
 });
 
 ; (function (name, definition) {
-    extend(name, definition(), (this));
+    extendNamespace(name, definition);
 })('factory.printing', function () {
 
     // protected API
     var module = this;
-    var settings;
+    var settings = MeadCo.ScriptX.Print.HTML.pageSettings;
 
     log("factory.Printing loaded.");
-    if (this.jQuery) {
-        settings = $.MeadCo.ScriptX.Print.HTML.pageSettings;
-    } else {
-        settings = MeadCo.ScriptX.Print.HTML.pageSettings;
-    }
 
     // public API
     return {
@@ -97,7 +95,7 @@
 });
 
 ; (function (name, definition) {
-    extend(name, definition(), (this));
+    extendNamespace(name, definition);
 })('factory.object', function () {
 
     // protected API

@@ -15,14 +15,14 @@
 
             try {
                 if (MeadCo.ScriptX.Init()) {
-                    $.MeadCo.log("Installed version of ScriptX is: " + MeadCo.ScriptX.Version())
+                    MeadCo.log("Installed version of ScriptX is: " + MeadCo.ScriptX.Version())
                     MeadCo.ScriptX.Printing.header = "This is a MeadCoJSShim Header";
-                    $.MeadCo.log("Header was set to: " + MeadCo.ScriptX.Printing.header);
+                    MeadCo.log("Header was set to: " + MeadCo.ScriptX.Printing.header);
                 } else {
-                    $.MeadCo.log("Failed to init");
+                    MeadCo.log("Failed to init");
                 }
             } catch (e) {
-                $.MeadCo.log("Error: " + e.message);
+                MeadCo.log("Error: " + e.message);
             }
         });
     </script>

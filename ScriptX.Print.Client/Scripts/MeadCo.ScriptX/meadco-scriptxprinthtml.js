@@ -7,21 +7,21 @@
  */
 
 ; (function (name, definition) {
-    extend(name, definition(), (this.jQuery || this.ender || this.$ || this));
+    extendNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
 
     var module = this;
    
     module.PageOrientation = {
-        Default: 0,
-        Landscape: 1,
-        Portrait: 2
+        DEFAULT: 0,
+        LANDSCAPE: 1,
+        PORTRAIT: 2
     };
 
     module.PageMarginUnits = {
-        Default: 0,
-        Inches: 1,
-        Mm: 2
+        DEFAULT: 0,
+        INCHES: 1,
+        MM: 2
     }
 
     var settingsCache =
@@ -30,10 +30,10 @@
         footer: "",
         headerFooterFont: "",
         pageSettings: {
-            orientation: module.PageOrientation.Portrait,
+            orientation: module.PageOrientation.PORTRAIT,
             paperSize: "",
             paperSource: "",
-            units: module.PageMarginUnits.Default,
+            units: module.PageMarginUnits.DEFAULT,
             margins: {
                 left: 0,
                 top: 0,
@@ -56,10 +56,10 @@
         footer: "",
         headerFooterFont: "",
         pageSettings: {
-            orientation: module.PageOrientation.Portrait,
+            orientation: module.PageOrientation.PORTRAIT,
             paperSize: "",
             paperSource: "",
-            units: module.PageMarginUnits.Default,
+            units: module.PageMarginUnits.DEFAULT,
             margins: {
                 left: 0,
                 top: 0,
@@ -76,15 +76,15 @@
 
     // public API
     return {
-        printFromUrl: function (sUrl) {
-            log("html.printFromUrl: " + sUrl);
-            printHtmlAtServer(ContentType.Url, sUrl,settingsCache);
-        },
-
         PageMarginUnits: module.PageMarginUnits,
         PageOrientation: module.PageOrientation,
 
-        pageSettings: module.settings
+        pageSettings: module.settings,
+
+        printFromUrl: function (sUrl) {
+            log("html.printFromUrl: " + sUrl);
+            printHtmlAtServer(ContentType.URL, sUrl, settingsCache);
+        }
     };
 
 });
