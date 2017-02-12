@@ -172,8 +172,9 @@
     <Content Include="Scripts\MeadCo.ScriptX\jQuery-MeadCo.ScriptX.Print.HTML-0.1.0.js" />
     <Content Include="Scripts\MeadCo.ScriptX\jQuery-MeadCo.ScriptX.Print.UI.js" />
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxfactory.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprint.js" />
     <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprinthtml.js" />
-    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprintcore.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-core.js" />
     <Content Include="Scripts\MeadCo.ScriptX\MeadCo.ScriptX.Print.Core-0.1.0.js" />
     <Content Include="Scripts\MeadCo.ScriptX\UMDTest.js" />
     <Content Include="Scripts\MeadCo.ScriptX\UMDTest2.js" />

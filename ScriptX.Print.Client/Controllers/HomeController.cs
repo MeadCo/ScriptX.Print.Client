@@ -41,7 +41,7 @@ namespace ScriptX.Print.Client.Controllers
         [HttpGet]
         public ActionResult ShimMeadCoJS()
         {
-            ViewBag.Title = "Supportng code written against 'MeadCo.ScriptX'";
+            ViewBag.Title = "Supporting code written against 'MeadCo.ScriptX'";
             return View();
         }
     }
