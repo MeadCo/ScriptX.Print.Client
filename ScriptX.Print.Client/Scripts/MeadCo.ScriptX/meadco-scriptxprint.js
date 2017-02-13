@@ -29,7 +29,7 @@
         OK: 4
     };
 
-    module.printHtmlAtServer = function (contentType, content, htmlPrintSettings) {
+    module.printHtmlAtServer = function(contentType, content, htmlPrintSettings) {
         log("started MeadCo.ScriptX.Print.print.printHtmlAtServer() Type: " + contentType);
         var requestData = {
             ContentType: contentType,
@@ -40,33 +40,44 @@
 
         printAtServer(requestData,
         {
-            fail: function (jqXhr, textStatus, errorThrown) {
+            fail: function(jqXhr, textStatus, errorThrown) {
                 alert("Print failed.\n\n" + errorThrown);
             },
 
-            queuedToFile: function (data) {
-                alert("Print requested, please wait for the download to complete ... ");
-                window.setTimeout("alert('Requesting output now'); window.open('" + module.server + "/PrintedDoc?job=" + data + "');", 4000);
+            queuedToFile: function(data) {
+                console.log("default handler on queued to file response");
+                waitForJobComplete(data.JobIdentifier,
+                    -1,
+                    function(data) {
+                        window.open(module.server + "/DownloadPrint/" + data.JobIdentifier,"_self");
+                    });
             },
 
-            queuedToDevice: function (data) {
-
+            queuedToDevice: function(data) {
+                log("print was queued to device");
             },
 
-            softError: function (data) {
-
+            softError: function(data) {
+                log("print has soft error");
             },
 
-            ok: function (data) {
-
+            ok: function(data) {
+                log("printed ok, no further information");
             }
         });
-    }
+    };
 
     module.deviceSettings =
     {
-        printerName: ""
+        printerName: "",
+        paperSize: "",
+        paperSource: ""
+    };
+
+    module.connectToServer = function(serverUrl,licenseGuid) {
+        module.server = serverUrl;
     }
+
 
     /////////////////////////////////////////////////////
     // private 
@@ -77,31 +88,63 @@
         }
 
         if (this.jQuery) {
+            log("post to: " + module.server);
             this.jQuery.post(module.server, requestData).done(function (data) {
-                switch (data.responseType) {
-                    case module.ResponseType.QUEUEDTOFILE:
-                        promiseInterface.queuedToFile(data.message);
-                        break;
+                log("Success response: " + data.ResponseType);
+                switch (data.ResponseType) {
+                case module.ResponseType.QUEUEDTOFILE:
+                    promiseInterface.queuedToFile(data);
+                    break;
 
-                    case module.ResponseType.QUEUEDTODEVICE:
-                        promiseInterface.queuedToDevice(data.message);
-                        break;
+                case module.ResponseType.QUEUEDTODEVICE:
+                    promiseInterface.queuedToDevice(data);
+                    break;
 
-                    case module.ResponseType.SOFTERROR:
-                        promiseInterface.softError(data.message);
-                        break;
+                case module.ResponseType.SOFTERROR:
+                    promiseInterface.softError(data);
+                    break;
 
-                    case module.ResponseType.OK:
-                        promiseInterface.ok(data.message);
-                        break;
+                case module.ResponseType.OK:
+                    promiseInterface.ok(data);
+                    break;
                 }
-            }).fail(function (jqXhr, textStatus, errorThrown) {
+            }).fail(function(jqXhr, textStatus, errorThrown) {
                 promiseInterface.fail(jqXhr, textStatus, errorThrown);
             });
+        } else {
+            throw new Error("MeadCo.ScriptX.Print : no known ajax helper available");
         }
+    }
 
-        throw new Error("MeadCo.ScriptX.Print : no known ajax helper available");
+    function waitForJobComplete(jobId, timeOut,functionComplete) {
+        log("WaitForJobComplete: " + jobId);
+        var intervalId = window.setInterval(function() {
+            log("Going to request status");
+                $.getJSON(module.server + "/status/" + jobId,
+                    null,
+                    function (data) {
+                        log("jobStatus: " + data.ResponseType);
+                        switch ( data.ResponseType ) {
+                            case module.ResponseType.OK:
+                                log("clear interval: " + intervalId);
+                                window.clearInterval(intervalId);
+                                functionComplete(data);
+                                break;
 
+                            case module.ResponseType.QUEUEDTOFILE:
+                                // keep going
+                                break;
+
+                            default:
+                                log("unknow status in waitForJobComplete so clear interval: " + intervalId);
+                                window.clearInterval(intervalId);
+                                break;
+                        }
+                    });
+            },
+            1000);
+
+        console.log("intervalId: " + intervalId);
     }
 
     log("MeadCo.ScriptX.Print loaded.");
@@ -116,8 +159,8 @@
 
         ResponseType: module.ResponseType,
 
-        Connect: function (serverUrl, licenseGuid) {
-            module.server = serverUrl;
+        connect: function (serverUrl, licenseGuid) {
+            module.connectToServer(serverUrl, licenseGuid);
         }
     };
 
