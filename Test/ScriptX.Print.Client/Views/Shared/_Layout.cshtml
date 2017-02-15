@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -38,9 +37,11 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-    <script src="~/Scripts/MeadCo.ScriptX/meadco-core.js"></script>
-    <script src="~/Scripts/MeadCo.ScriptX/meadco-scriptxprint.js"></script>
-    <script src="~/Scripts/MeadCo.ScriptX/meadco-scriptxprinthtml.js"></script>
+    
+    <script src="@Url.Action("script","Home",new { filename= "meadco-core.js" })"></script>
+    <script src="@Url.Action("script","Home",new { filename= "meadco-scriptxprint.js" })"></script>
+    <script src="@Url.Action("script","Home",new { filename= "meadco-scriptxprinthtml.js" })"></script>
+
     @RenderSection("scripts", required: false)
 </body>
 </html>
