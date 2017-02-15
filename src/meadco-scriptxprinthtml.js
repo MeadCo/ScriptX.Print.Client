@@ -153,8 +153,7 @@
         return window.location.protocol + '//' + window.location.hostname + port + window.location.pathname;
     }
 
-    function documentHtml() {
-        var $html = $("html");
+    function printableHtmlDocument($html) {
 
         persistData($html);
         $("script", $html).remove();
@@ -165,10 +164,15 @@
             {
                 href: getBaseHref()
             });
-            document.getElementsByTagName("head")[0].appendChild(base[0]);
+            $("head", $html).append(base);
         }
 
         return $html.html();
+        
+    }
+
+    function documentHtml() {
+        return printableHtmlDocument($("html"));
     }
 
     function documentContent() {
@@ -179,6 +183,19 @@
         throw new Error("No supported html snapshot helper available (jQuery is required)");
     }
 
+    function frameContent(sFrame) {
+        if (this.jQuery) {
+            var $frame = $("#" + sFrame);
+
+            if (!$frame.length)
+                throw new Error("Unabled to print frame - frame does not exist");
+
+            return printableHtmlDocument($frame.contents().find("html"));
+        }
+
+        throw new Error("No supported framed html snapshot helper available (jQuery is required)");
+
+    }
 
     log("MeadCo.ScriptX.Print.HTML loaded.");
     if (!this.jQuery) {
@@ -202,8 +219,9 @@
             printHtmlAtServer(ContentType.INNERTHTML, documentContent(), settingsCache);
         },
         
-        printFrame : function(oOrSFrame, bPrompt) {
-            
+        printFrame : function(sFrame, bPrompt) {
+            log("html.printFrame: " + sFrame + " *warning* ignoring bPrompt");
+            printHtmlAtServer(ContentType.INNERTHTML, frameContent(sFrame), settingsCache);
         },
 
         connect: function (serverUrl, licenseGuid) {
