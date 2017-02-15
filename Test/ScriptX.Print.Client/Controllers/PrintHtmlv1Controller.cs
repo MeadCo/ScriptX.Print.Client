@@ -14,7 +14,9 @@ namespace ScriptX.Print.Client.Controllers
     [RoutePrefix("api/v1/printHtml")]
     public class PrintHtmlv1Controller : ApiController
     {
+        private const int JobCounterWait = 1;
         private static int _counter = 1;
+        private static int _jobCounter = 1;
 
         [Route]
         // GET api/v1/printHtml
@@ -34,12 +36,27 @@ namespace ScriptX.Print.Client.Controllers
         // POST api/v1/printHtml
         public MeadCo.ScriptX.Print.Messaging.Responses.Print Post([FromBody] MeadCo.ScriptX.Print.Messaging.Requests.Print request)
         {
-            _counter = 1;
+            // cache what was sent for return 
+            try
+            {
+                using (StreamWriter testData = new StreamWriter(FileNameForJob(_jobCounter), false))
+                {
+                    var content = request.Content.Replace("\n", "\r\n");
+
+                    testData.WriteLine(content);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to cache content: " + e.Message);
+            }
+
+            _counter = 0;
             return new MeadCo.ScriptX.Print.Messaging.Responses.Print()
             {
                 ResponseType = ResponseType.QueuedToFile,
                 Message = "Test",
-                JobIdentifier = 1
+                JobIdentifier = _jobCounter++
             };
         }
 
@@ -55,25 +72,25 @@ namespace ScriptX.Print.Client.Controllers
         {
             return new MeadCo.ScriptX.Print.Messaging.Responses.Print()
             {
-                ResponseType = ++_counter > 5 ? ResponseType.Ok : ResponseType.QueuedToFile,
+                ResponseType = ++_counter > JobCounterWait ? ResponseType.Ok : ResponseType.QueuedToFile,
                 JobIdentifier = jobIdentifier
             };
         }
 
-        private string FileNameForJob(string jobName)
+        private string FileNameForJob(int jobName)
         {
-            return Path.Combine(HostingEnvironment.MapPath("~/App_data"), jobName);
+            return Path.Combine(HostingEnvironment.MapPath("~/App_data"), $"{jobName}.txt");
         }
 
 
-        [Route("DownloadPrint/{jobId}")]
-        public IHttpActionResult GetDownloadPrint(string jobId)
+        [Route("DownloadPrint/{jobId:int}")]
+        public IHttpActionResult GetDownloadPrint(int jobId)
         {
-            var fileInfo = new FileInfo(FileNameForJob("Test.pdf"));
+            var fileInfo = new FileInfo(FileNameForJob(jobId));
 
-            return _counter < 6 
+            return _counter < JobCounterWait 
                 ? (IHttpActionResult)NotFound()
-                : new FileDownloadResult(new FileInfo(FileNameForJob("Test.pdf")).FullName);
+                : new FileDownloadResult(fileInfo.FullName);
         }
 
 

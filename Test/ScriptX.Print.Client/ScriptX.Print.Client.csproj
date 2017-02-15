@@ -197,6 +197,8 @@
     <Content Include="Views\Home\ShimFactory.cshtml" />
     <Content Include="Views\Home\ShimMeadCoJS.cshtml" />
     <Content Include="Views\Home\Modern.cshtml" />
+    <Content Include="Views\Home\FramedHeaderFooterArgs.cshtml" />
+    <Content Include="Views\Shared\_LayoutFramedContent.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
