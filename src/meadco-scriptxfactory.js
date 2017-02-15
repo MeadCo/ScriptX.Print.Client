@@ -75,7 +75,7 @@
 
     // protected API
     var module = this;
-    var settings = MeadCo.ScriptX.Print.HTML.pageSettings;
+    var settings = MeadCo.ScriptX.Print.HTML.settings;
 
     log("factory.Printing loaded.");
 

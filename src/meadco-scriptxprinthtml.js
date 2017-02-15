@@ -67,7 +67,7 @@
             return settingsCache.headerFooterFont;
         },
 
-        pageSettings: {
+        page: {
             set orientation(enumOrientation) {
                 settingsCache.pageSettings.orientation = enumOrientation;
             },
@@ -207,7 +207,7 @@
         PageMarginUnits: module.PageMarginUnits,
         PageOrientation: module.PageOrientation,
 
-        pageSettings: module.settings,
+        settings: module.settings,
 
         printFromUrl: function (sUrl) {
             log("html.printFromUrl: " + sUrl);

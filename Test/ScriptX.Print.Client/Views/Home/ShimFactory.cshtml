@@ -7,7 +7,9 @@
 
 @section scripts
 {
-    <script src="~/Scripts/MeadCo.ScriptX/meadco-scriptxfactory.js"></script>
+
+    <script src="@Url.Action("script","Home",new { filename= "meadco-scriptxfactory.js" })"></script>
+
     <script type="text/javascript">
         $(function() {
             var a = new Object();
