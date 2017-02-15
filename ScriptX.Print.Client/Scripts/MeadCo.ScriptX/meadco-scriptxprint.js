@@ -74,7 +74,8 @@
         paperSource: ""
     };
 
-    module.connectToServer = function(serverUrl,licenseGuid) {
+    module.connectToServer = function (serverUrl, licenseGuid) {
+        log("Print server requested: " + serverUrl);
         module.server = serverUrl;
     }
 
