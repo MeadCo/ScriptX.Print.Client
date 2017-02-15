@@ -129,7 +129,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +142,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Results\FileDownloadResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -160,6 +160,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="App_Data\Test.pdf" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -167,9 +168,13 @@
     <Content Include="Scripts\jquery-3.1.1.min.js" />
     <Content Include="Scripts\jquery-3.1.1.slim.js" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.js" />
-    <Content Include="Scripts\MeadCo.ScriptX\jQuery-MeadCo.ScriptX.Print.HTML-0.1.0.js" />
+    <Content Include="Scripts\meadco-scriptx-1.1.1.js" />
+    <Content Include="Scripts\meadco-scriptx-1.1.1.min.js" />
     <Content Include="Scripts\MeadCo.ScriptX\jQuery-MeadCo.ScriptX.Print.UI.js" />
-    <Content Include="Scripts\MeadCo.ScriptX\MeadCo.ScriptX.Print.Core-0.1.0.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxfactory.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprint.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-scriptxprinthtml.js" />
+    <Content Include="Scripts\MeadCo.ScriptX\meadco-core.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
@@ -189,11 +194,15 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\ShimFactory.cshtml" />
+    <Content Include="Views\Home\ShimMeadCoJS.cshtml" />
+    <Content Include="Views\Home\Modern.cshtml" />
+    <Content Include="Views\Home\FramedHeaderFooterArgs.cshtml" />
+    <Content Include="Views\Shared\_LayoutFramedContent.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config" />
-    <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
   </ItemGroup>

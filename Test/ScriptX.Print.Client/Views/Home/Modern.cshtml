@@ -1,0 +1,57 @@
+﻿
+@{
+    var server = $"{Request.Url.Scheme}://{Request.Url.Authority}{Url.Content("~/api/v1/printHtml")}";
+    var frameUrl = Url.Action("FramedHeaderFooterArgs");
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <button id="btn-printPage" class="btn btn-primary">Print page</button>&nbsp;<button id="btn-printDoc" class="btn btn-primary">Print doc</button>&nbsp;<button id="btn-printFrame" class="btn btn-primary">Print frame</button>
+</div>
+
+<div style="margin: 20px; width: 50%; height: 500px">
+    <iframe style="width: 100%; height: 100%; border: 2px solid grey; margin: 0px" src="@frameUrl" id="infoframe"></iframe> 
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        if (window.jQuery) {
+            $(function() {
+                MeadCo.log("Page starting with jQuery");
+
+                try {
+                    MeadCo.ScriptX.Print.HTML.connect("@server");
+                    MeadCo.ScriptX.Print.HTML.pageSettings.header = "Modern ScriptX.Print&b&b&D";
+                    MeadCo.ScriptX.Print.HTML.pageSettings.footer = "Page &p of &P";
+
+                    $("#btn-printPage").click(function(e) {
+                        e.preventDefault();
+                        MeadCo.ScriptX.Print.HTML.printDocument(true);
+                    });
+
+                    $("#btn-printDoc").click(function(e) {
+                        e.preventDefault();
+                        MeadCo.ScriptX.Print.HTML.printFromUrl("http://scriptx.meadroid.com");
+                    });
+
+                    $("#btn-printFrame").click(function (e) {
+                        e.preventDefault();
+                        MeadCo.ScriptX.Print.HTML.printFrame("infoframe");
+                    });
+
+                } catch (e) {
+                    console.log("error in page startup: " + e.message);
+                }
+            });
+        } else {
+            MeadCo.log("Page starting without jQuery");
+            try {
+                MeadCo.ScriptX.Print.HTML.printFromUrl("http://scriptx.meadroid.com");
+            } catch (e) {
+                console.log("error in page startup: " + e.message);
+            }
+        }
+    </script>
+}
