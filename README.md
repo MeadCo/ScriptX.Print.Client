@@ -19,3 +19,14 @@ We are making the libraries available early in our developments. At this time th
 Include the following script files on a page you wish to print:
 
 [tbc]
+
+### License
+
+Released under the [MIT](http://opensource.org/licenses/MIT) license. 
+
+Copyright (c) 2017, Mead & Co Limited.
+
+
+
+
+
