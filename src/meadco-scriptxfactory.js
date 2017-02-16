@@ -53,19 +53,34 @@
         }
     }
 
+    module.version = "8.0.0.1";
+
     log("'factory' loaded.");
 
     // public API.
     return {
         log: module.log,
 
-        GetComponentVersion: function (sComponent, a, b, c, d) {
+        GetComponentVersion: function(sComponent, a, b, c, d) {
             log("factory.object.getcomponentversion: " + sComponent);
-            a[0] = 8;
-            b[0] = 0;
-            c[0] = 0;
-            d[0] = 0;
+            var v = module.version.split(".");
+            a[0] = v[0];
+            b[0] = v[1];
+            c[0] = v[2];
+            d[0] = v[3];
+        },
+
+        ScriptXVersion: module.version,
+        SecurityManagerVersion: module.version,
+
+        baseURL : function(sRelative) {
+            alert("ScriptX.print :: baseUrl is not implemented yet.");
+        },
+
+        relativeURL : function(sUrl) {
+            alert("ScriptX.print :: relativeUrl is not implemented yet.");
         }
+
     };
 });
 
@@ -81,6 +96,9 @@
 
     // public API
     return {
+        // basic properties
+        //
+
         set header(str) {
             log("set factory.printing.header: " + str);
             settings.header = str;
@@ -88,8 +106,132 @@
 
         get header() {
             return settings.header;
-        }
+        },
+
+        set footer(str) {
+            settings.footer = str;
+        },
+
+        get footer() {
+            return settings.footer;
+        },
+
+        set headerFooterFont(str) {
+            settings.headerFooterFont = str;
+        },
+
+        get headerHooterFont() {
+            return settings.headerFooterFont;
+        },
+
+
+        set orientation(sOrientation) {
+            switch ( toLowerCase(sOrientation) ) {
+                case "landscape":
+                    settings.pageSettings.orientation = PageOrientation.LANDSCAPE;
+                    break;
+
+                case "portrait":
+                    settings.pageSettings.orientation = PageOrientation.PORTRAIT;
+                    break;
+            }
+        },
+
+        get orientation() {
+            return settings.pageSettings.orientation === PageOrientation.PORTRAIT ? "portrait" : "landscape";
+        },
+
+        set portrait(bPortrait) {
+            settings.pageSettings.orientation = bPortrait ? PageOrientation.PORTRAIT : PageOrientation.LANDSCAPE;
+        },
+
+        get portrait() {
+            return settings.pageSettings.orientation === PageOrientation.PORTRAIT;
+        },
+
+        set leftMargin(n) {
+            settings.pageSettings.margins.left = n;
+        },
+
+        get leftMargin() {
+            return settings.pageSettings.margins.left;
+        },
+
+        set topMargin(n) {
+            settings.pageSettings.margins.top = n;
+        },
+
+        get topMargin() {
+            return settings.pageSettings.margins.top;
+        },
+
+        set bottomMargin(n) {
+            settings.pageSettings.margins.bottom = n;
+        },
+
+        get bottomMargin() {
+            return settings.pageSettings.margins.bottom;
+        },
+
+        set rightMargin(n) {
+            settings.pageSettings.margins.right = n;
+        },
+
+        get rightMargin() {
+            return settings.pageSettings.margins.right;
+        },
         
+        // templateURL is a no-op at this time. In the future may
+        // enable alternative server behaviour.
+        set templateURL(sUrl) {           
+        },
+
+        get templateURL() {
+            return "MeadCo://default";
+        },
+
+        // basic functions
+        //
+
+        // No longer relevant, has returned true since IE 6 and was 
+        // a proxy for testing if the browser was IE5.5 or later!
+        IsTemplateSupported : function() {
+            return true;
+        },
+
+        PageSetup : function() {
+            alert("ScriptX.Print :: Page setup dialog is not implemented yet.");
+        },
+
+        Preview : function(sOrOFrame) {
+            alert("ScriptX.Print :: Preview is not implemented yet.");
+        },
+
+        Print : function(bPrompt, sOrOFrame) { // needs and wants update to ES2015
+            if (typeof (bPrompt) === 'undefined') bPrompt = true;
+            if (typeof (sOrOFrame) === 'undefined') sOrOFrame = null;
+
+            if (sOrOFrame != null) {
+                var sFrame = typeof (sOrOFrame) === 'string' ? sOrOFrame : sOrOFrame.id;
+                return printFrame(sFrame, bPrompt);
+            }
+
+            return printDocument(bPrompt);
+        },
+
+        // advanced (aka licensed properties - the server will reject
+        // use if no license available)
+        set units(enumUnits) {
+            // TODO: Check licensed (or will obviously fail on the server)
+            settings.pageSettings.units = enumUnits;
+        },
+
+        get units() {
+            return settings.pageSettings.units;
+        }
+
+        // advanced functions
+
     };
 
 });
