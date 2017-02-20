@@ -6,7 +6,7 @@ MeadCo.ScriptX.Client.* are the javascript libraries for interfacing between the
 * an on premise server
 * services on the device (PC)
 
-We are making the libraries available early in our developments. At this time the server system is only avaiable in
+We are making the libraries available early in our developments. At this time the server system is only available in
  prototype form in its cloud incarnation but we hope to radiply iterate both server and client code and look forward to 
  comment and/or cooperation from the community.
 
