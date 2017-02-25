@@ -29,7 +29,7 @@
                     break;
 
                 case "remote":
-                    MeadCo.ScriptX.Print.HTML.printURL($this.data("url"));
+                    MeadCo.ScriptX.Print.HTML.printFromUrl($this.data("url"));
                     break;
 
                 case "element":
