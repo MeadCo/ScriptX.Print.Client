@@ -120,19 +120,21 @@
       <Private>True</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Identity\LicenseDetail.cs" />
+    <Compile Include="Identity\ApiIdentity.cs" />
+    <Compile Include="Attributes\AuthenticateLicenseAttribute.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PrintHtmlv1Controller.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Sample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Results\FileDownloadResult.cs" />
   </ItemGroup>

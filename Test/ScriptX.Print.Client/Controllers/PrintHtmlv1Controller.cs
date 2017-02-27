@@ -3,27 +3,24 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Web;
 using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Routing;
 using MeadCo.ScriptX.Print.Messaging.Responses;
+using ScriptX.Print.Client.Attributes;
+using ScriptX.Print.Client.Identity;
 using ScriptX.Print.Client.Results;
 
 namespace ScriptX.Print.Client.Controllers
 {
+    [AuthenticateLicense]
     [RoutePrefix("api/v1/printHtml")]
     public class PrintHtmlv1Controller : ApiController
     {
         private const int JobCounterWait = 1;
         private static int _counter = 1;
         private static int _jobCounter = 1;
-
-        [Route]
-        // GET api/v1/printHtml
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
 
         [Route("{settingName}")]
         // GET api/v1/printHtml/papersize
@@ -36,9 +33,12 @@ namespace ScriptX.Print.Client.Controllers
         // POST api/v1/printHtml
         public MeadCo.ScriptX.Print.Messaging.Responses.Print Post([FromBody] MeadCo.ScriptX.Print.Messaging.Requests.Print request)
         {
+
             // cache what was sent for return 
             try
             {
+                LicenseDetail license = ((ApiIdentity)HttpContext.Current.User.Identity).License;
+
                 using (StreamWriter testData = new StreamWriter(FileNameForJob(_jobCounter), false))
                 {
                     var content = request.Content.Replace("\n", "\r\n");

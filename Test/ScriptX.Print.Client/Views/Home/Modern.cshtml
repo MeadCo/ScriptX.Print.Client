@@ -1,5 +1,8 @@
-﻿
+﻿@model ScriptX.Print.Client.Models.Sample
+
 @{
+    ViewBag.Title = Model.Title;
+
     var server = $"{Request.Url.Scheme}://{Request.Url.Authority}{Url.Content("~/api/v1/printHtml")}";
     var frameUrl = Url.Action("FramedHeaderFooterArgs");
 }
@@ -22,7 +25,7 @@
                 MeadCo.log("Page starting with jQuery");
 
                 try {
-                    MeadCo.ScriptX.Print.HTML.connect("@server");
+                    MeadCo.ScriptX.Print.HTML.connect("@server","@Model.License");
                     MeadCo.ScriptX.Print.HTML.settings.header = "Modern ScriptX.Print&b&b&D";
                     MeadCo.ScriptX.Print.HTML.settings.footer = "Page &p of &P";
 

@@ -28,26 +28,28 @@ namespace ScriptX.Print.Client.Controllers
         [HttpGet]
         public ActionResult Modern()
         {
-            ViewBag.Title = "Supporting modern code";
-            return View();
+            return View(new Models.Sample("Supporting modern code"));
         }
 
         [Route("FactoryShim")]
         [HttpGet]
         public ActionResult ShimFactory()
         {
-            ViewBag.Title = "Supporting code written against 'factory'";
-            return View();
+            return View(new Models.Sample("Supporting code written against 'factory'"));
         }
 
         [Route("MeadCoJSShim")]
         [HttpGet]
         public ActionResult ShimMeadCoJS()
         {
-            ViewBag.Title = "Supporting code written against 'MeadCo.ScriptX'";
-            return View();
+            return View(new Models.Sample("Supporting code written against 'MeadCo.ScriptX'"));
         }
 
+        /// <summary>
+        /// Return a script file from outside the web app root.
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns></returns>
         [Route("script")]
         [HttpGet]
         public FileStreamResult Script(string filename)
