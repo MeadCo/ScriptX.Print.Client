@@ -15,6 +15,7 @@
     ////////////////////////////////////////////////////
     // protected API
     module.server = ""; // url to the server, server is CORS restricted 
+    module.licenseGuid = "";
 
     module.ContentType = {
         URL: 1,
@@ -75,43 +76,55 @@
     };
 
     module.connectToServer = function (serverUrl, licenseGuid) {
-        log("Print server requested: " + serverUrl);
+        log("Print server requested: " + serverUrl + " with license: " + licenseGuid);
         module.server = serverUrl;
+        module.licenseGuid = licenseGuid;
     }
 
 
     /////////////////////////////////////////////////////
     // private 
-    function printAtServer(requestData, promiseInterface) {
+    function printAtServer(requestData, responseInterface) {
 
         if (module.server.length <= 0) {
             throw new Error("MeadCo.ScriptX.Print : no server connection");
         }
 
         if (this.jQuery) {
-            log("post to: " + module.server);
-            this.jQuery.post(module.server, requestData).done(function (data) {
-                log("Success response: " + data.ResponseType);
-                switch (data.ResponseType) {
-                case module.ResponseType.QUEUEDTOFILE:
-                    promiseInterface.queuedToFile(data);
-                    break;
+            log(".ajax() post to: " + module.server);
+            this.jQuery.ajax(module.server,
+                {
+                    data: requestData,
+                    dataType: "json",
+                    jsonp: false,
+                    method: "POST",
+                    headers: {
+                        "Authorization": "Basic " + btoa(module.licenseGuid + ":")
+                    }
+                })
+                .done(function (data) {
+                    log("Success response: " + data.ResponseType);
+                    switch (data.ResponseType) {
+                    case module.ResponseType.QUEUEDTOFILE:
+                        responseInterface.queuedToFile(data);
+                        break;
 
-                case module.ResponseType.QUEUEDTODEVICE:
-                    promiseInterface.queuedToDevice(data);
-                    break;
+                    case module.ResponseType.QUEUEDTODEVICE:
+                        responseInterface.queuedToDevice(data);
+                        break;
 
-                case module.ResponseType.SOFTERROR:
-                    promiseInterface.softError(data);
-                    break;
+                    case module.ResponseType.SOFTERROR:
+                        responseInterface.softError(data);
+                        break;
 
-                case module.ResponseType.OK:
-                    promiseInterface.ok(data);
-                    break;
-                }
-            }).fail(function(jqXhr, textStatus, errorThrown) {
-                promiseInterface.fail(jqXhr, textStatus, errorThrown);
-            });
+                    case module.ResponseType.OK:
+                        responseInterface.ok(data);
+                        break;
+                    }
+                })
+                .fail(function (jqXhr, textStatus, errorThrown) {
+                    responseInterface.fail(jqXhr, textStatus, errorThrown);
+                });
         } else {
             throw new Error("MeadCo.ScriptX.Print : no known ajax helper available");
         }
@@ -120,10 +133,17 @@
     function waitForJobComplete(jobId, timeOut,functionComplete) {
         log("WaitForJobComplete: " + jobId);
         var intervalId = window.setInterval(function() {
-            log("Going to request status");
-                $.getJSON(module.server + "/status/" + jobId,
-                    null,
-                    function (data) {
+            log("Going to request status with .ajax");
+                $.ajax(module.server + "/status/" + jobId,
+                {
+                    dataType: "json",
+                    jsonp: false,
+                    method: "GET",
+                    cache: false,
+                    headers: {
+                        "Authorization": "Basic " + btoa(module.licenseGuid + ":")
+                    }
+                }).done(function (data) {
                         log("jobStatus: " + data.ResponseType);
                         switch ( data.ResponseType ) {
                             case module.ResponseType.OK:
@@ -137,11 +157,15 @@
                                 break;
 
                             default:
-                                log("unknow status in waitForJobComplete so clear interval: " + intervalId);
+                                log("unknown status in waitForJobComplete so clear interval: " + intervalId);
                                 window.clearInterval(intervalId);
                                 break;
                         }
-                    });
+                })
+                .fail(function() {
+                    log("error in waitForJobComplete so clear interval: " + intervalId);
+                    window.clearInterval(intervalId);
+                });
             },
             1000);
 
