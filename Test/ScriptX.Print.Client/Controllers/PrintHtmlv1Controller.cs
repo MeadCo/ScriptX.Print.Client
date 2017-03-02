@@ -31,7 +31,7 @@ namespace ScriptX.Print.Client.Controllers
 
         [Route]
         // POST api/v1/printHtml
-        public MeadCo.ScriptX.Print.Messaging.Responses.Print Post([FromBody] MeadCo.ScriptX.Print.Messaging.Requests.Print request)
+        public MeadCo.ScriptX.Print.Messaging.Responses.Print Post([FromBody] MeadCo.ScriptX.Print.Messaging.Requests.PrintHtml request)
         {
 
             // cache what was sent for return 
