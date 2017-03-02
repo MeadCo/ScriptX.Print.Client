@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2016, Mead & Company Ltd. All rights reserved.
+// Copyright (c) 2013-2017, Mead & Company Ltd. All rights reserved.
 //
 // Use, reproduction, distribution, and modification of this code is subject to the terms and 
 // conditions of the MIT license, available at http://www.opensource.org/licenses/mit-license.php
@@ -12,6 +12,11 @@
 // Going forward, use MeadCo.ScriptX.Printing
 //
 //////////////////////////////////////////////////////////////////////////////////////////////
+
+// v1.1.3 and later include support for working with MeadCo.ScriptX.Print via a polyfill
+//  - include meadco-scriptxfactory.js before this file and call MeadCo.ScriptX.Print.HTML.connect() 
+//
+//
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Usage:
@@ -58,7 +63,7 @@
 
     var scriptx = topLevelNs.ScriptX;
 
-    scriptx.LibVersion = "1.1.2";
+    scriptx.LibVersion = "1.1.3";
     scriptx.Printing = null;
     scriptx.Utils = null;
 
@@ -329,7 +334,7 @@
 
     licensing.Init = function () {
         if (licensing.LicMgr == null) {
-            var l = document.getElementById("secmgr");  // we assume the <object /> has an id of 'secmgr'
+            var l = document.getElementById("secmgr") || window.secmgr;  // we assume the <object /> has an id of 'secmgr'
             if (l && l.object)
                 licensing.LicMgr = l.object;
         }
