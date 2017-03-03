@@ -82,7 +82,7 @@ namespace ScriptX.Print.Client.Controllers
             return Path.Combine(HostingEnvironment.MapPath("~/App_data"), $"{jobName}.txt");
         }
 
-
+        [AllowAnonymous]
         [Route("DownloadPrint/{jobId:int}")]
         public IHttpActionResult GetDownloadPrint(int jobId)
         {

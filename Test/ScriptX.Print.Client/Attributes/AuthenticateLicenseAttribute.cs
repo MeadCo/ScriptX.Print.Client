@@ -18,8 +18,14 @@ namespace ScriptX.Print.Client.Attributes
 
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
+
             if (actionContext.Request.Headers.Authorization == null)
             {
+                if (actionContext.ActionDescriptor.GetCustomAttributes<System.Web.Http.AllowAnonymousAttribute>(true).Count > 0)
+                {
+                    base.OnActionExecuting(actionContext);
+                    return;
+                }
                 actionContext.Response = new System.Net.Http.HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);
             }
             else
