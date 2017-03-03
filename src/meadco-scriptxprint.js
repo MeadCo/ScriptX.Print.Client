@@ -10,7 +10,7 @@
     extendNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
 
-    var version = "0.0.2";
+    var version = "0.0.3";
     var module = this;
     
     ////////////////////////////////////////////////////
@@ -133,6 +133,7 @@
 
     function waitForJobComplete(jobId, timeOut,functionComplete) {
         log("WaitForJobComplete: " + jobId);
+        var counter = 0;
         var intervalId = window.setInterval(function() {
             log("Going to request status with .ajax");
                 $.ajax(module.server + "/status/" + jobId,
@@ -155,6 +156,10 @@
 
                             case module.ResponseType.QUEUEDTOFILE:
                                 // keep going
+                                if (++counter > 20) {
+                                    window.clearInterval(intervalId);
+                                    alert("Sorry, it appears the print has failed for an unknown reason");
+                                }
                                 break;
 
                             default:
@@ -173,7 +178,7 @@
         console.log("intervalId: " + intervalId);
     }
 
-    log("MeadCo.ScriptX.Print loaded.");
+    log("MeadCo.ScriptX.Print loaded: " + version);
     if (!this.jQuery) {
         log("**** warning :: no jQuery");
     }
