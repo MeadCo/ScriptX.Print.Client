@@ -38,9 +38,6 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     
-    <script src="@Url.Action("script","Home",new { filename= "meadco-core.js" })"></script>
-    <script src="@Url.Action("script","Home",new { filename= "meadco-scriptxprint.js" })"></script>
-    <script src="@Url.Action("script","Home",new { filename= "meadco-scriptxprinthtml.js" })"></script>
 
     @RenderSection("scripts", required: false)
 </body>

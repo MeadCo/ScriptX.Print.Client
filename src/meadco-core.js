@@ -52,11 +52,15 @@
         scope[name] = theModule;
 
         if (oldscope != null) {
-            // hack assumptions
             var newscope = scope[name];
-            newscope["ScriptX"] = oldscope["ScriptX"];
-            newscope["Licensing"] = oldscope["Licensing"];
-            newscope["ScriptXTracker"] = oldscope["ScriptXTracker"];
+
+            console.log("preserving old scope ... ");
+            for (var prop in oldscope) {
+                if (oldscope.hasOwnProperty(prop)) {
+                    console.log("will preserve: " + prop);
+                    newscope[prop] = oldscope[prop];
+                }
+            }
         }
 
         // this is moderately poor .. assuming this code is executing
