@@ -56,14 +56,18 @@
 
 // MeadCo.ScriptX 
 //
-(function (topLevelNs) {
+(function(topLevelNs) {
 
-    if (typeof topLevelNs["ScriptX"] === "undefined")
+    console.log("Initialising MeadCo.ScriptX 1.1.4");
+
+    if (typeof topLevelNs["ScriptX"] === "undefined") {
+        console.log("intialising new ScriptX package");
         topLevelNs.ScriptX = {};
+    }
 
     var scriptx = topLevelNs.ScriptX;
 
-    scriptx.LibVersion = "1.1.3";
+    scriptx.LibVersion = "1.1.4";
     scriptx.Printing = null;
     scriptx.Utils = null;
 
@@ -73,11 +77,15 @@
     //
     scriptx.Init = function () {
         if (scriptx.Printing == null) {
-            var f = document.getElementById("factory") || window.factory; // we assume the <object /> has an id of 'factory'
+            console.log("scriptx.Init()");
+            var f = window.factory || document.getElementById("factory"); // we assume the <object /> has an id of 'factory'
             if (f && f.object != null) {
+                console.log("found factory");
                 scriptx.Utils = f.object;
                 scriptx.Printing = f.printing;
-            } 
+            } else {
+                console.log("** Warning -- no factory **");
+            }
         }
         return scriptx.Printing != null;
     }
@@ -334,7 +342,7 @@
 
     licensing.Init = function () {
         if (licensing.LicMgr == null) {
-            var l = document.getElementById("secmgr") || window.secmgr;  // we assume the <object /> has an id of 'secmgr'
+            var l = window.secmgr || document.getElementById("secmgr") ;  // we assume the <object /> has an id of 'secmgr'
             if (l && l.object)
                 licensing.LicMgr = l.object;
         }

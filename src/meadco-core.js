@@ -37,7 +37,27 @@
         // we always go for window
         var scope = this;
 
+        // hack ...
+        //
+        // MeadCo.ScriptX and MeadCo.Licensing may already be defined
+        // when we run -- they would happily extend this implementation
+        // and we should extend theirs. This is a horible way to do it.
+        //
+        var oldscope = null;
+        if (typeof scope[name] !== 'undefined') {
+            console.log(name + " already exists");
+            oldscope = scope[name];
+        }
+
         scope[name] = theModule;
+
+        if (oldscope != null) {
+            // hack assumptions
+            var newscope = scope[name];
+            newscope["ScriptX"] = oldscope["ScriptX"];
+            newscope["Licensing"] = oldscope["Licensing"];
+            newscope["ScriptXTracker"] = oldscope["ScriptXTracker"];
+        }
 
         // this is moderately poor .. assuming this code is executing
         // as the root of the name space, which it is and assumes
@@ -50,6 +70,7 @@
 
     // protected API
     var module = this;
+    var version = "0.0.4";
 
     module.log = function (str) {
         console.log("MeadCo :: " + str);
@@ -66,15 +87,24 @@
         } else if (hasExports) { // Node.js Module
             module.exports = theModule;
         } else {
+            module.log("MeadCo root extending namespace: " + name);
             // walk/build the namespace part by part and assign the module to the leaf
             var namespaces = name.split(".");
             var scope = (module.scope || this.jQuery || this.ender || this.$ || this);
             for (var i = 0; i < namespaces.length; i++) {
                 var packageName = namespaces[i];
                 if (i === namespaces.length - 1) {
-                    scope[packageName] = theModule;
+                    if (typeof scope[packageName] === "undefined") {
+                        module.log("installing implementation at: " + packageName);
+                        scope[packageName] = theModule;
+                    } else {
+                        module.log("Warning - not overwriting package: " + packageName);
+                    }
                 } else if (typeof scope[packageName] === "undefined") {
+                    module.log("initialising new: " + packageName);
                     scope[packageName] = {};
+                } else {
+                    module.log("using existing package: " + packageName);
                 }
                 scope = scope[packageName];
             }
@@ -86,6 +116,7 @@
     // public API.
     return {
         log: module.log,
+        get version() { return version },
 
         // allow things such as MeadCo.createNS("MeadCo.ScriptX.Print.UI");
         createNS: function(namespace) {

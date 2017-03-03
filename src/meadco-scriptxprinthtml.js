@@ -9,7 +9,7 @@
 ; (function (name, definition) {
     extendNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
-
+    var version = "0.0.2";
     var module = this;
    
     module.PageOrientation = {
@@ -226,7 +226,9 @@
 
         connect: function (serverUrl, licenseGuid) {
             connectToServer(serverUrl, licenseGuid);
-        }
+        },
+
+        get version() { return version }
 
     };
 

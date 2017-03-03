@@ -10,8 +10,9 @@
     extendNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
 
+    var version = "0.0.2";
     var module = this;
-
+    
     ////////////////////////////////////////////////////
     // protected API
     module.server = ""; // url to the server, server is CORS restricted 
@@ -183,6 +184,8 @@
         ContentType: module.ContentType,
 
         ResponseType: module.ResponseType,
+
+        get version() { return version },
 
         connect: function (serverUrl, licenseGuid) {
             module.connectToServer(serverUrl, licenseGuid);

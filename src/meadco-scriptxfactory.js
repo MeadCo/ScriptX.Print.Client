@@ -12,12 +12,18 @@
 ; (function (name, definition,undefined) {
 
     if ( this[name] != undefined || document.getElementById(name) != null ) {
-        console.log("ScriptX factory anti-polyfill believes it isnt requred.");
+        console.log("ScriptX factory anti-polyfill believes it may not be requred.");
         if ( this[name] != undefined ) {
             console.log("this[" + name + "] is defined");
         }
         if (document.getElementById(name) != null) {
             console.log("document.getElementById(" + name + ") is defined");
+        }
+        if (this[name].object != undefined) {
+            console.log("this[" + name + "].object is defined -- not required!!!");
+            return;
+        } else {
+            console.log("this[" + name + "].object is *not* defined");
         }
     }
 
@@ -30,6 +36,8 @@
 
     // protected API
     var module = this;
+    var version = "0.0.5.1";
+    var emulatedVersion = "8.0.0.2";
 
     module.log = function (str) {
         console.log("factory anti-polyfill :: " + str);
@@ -39,21 +47,30 @@
     module.extendNamespace = function(name, definition) {
         var theModule = definition();
 
-        // walk/build the namespace branch and assign the module to the leaf
+        module.log("MeadCo factory extending namespace2: " + name);
+        // walk/build the namespace part by part and assign the module to the leaf
         var namespaces = name.split(".");
         var scope = this;
         for (var i = 0; i < namespaces.length; i++) {
             var packageName = namespaces[i];
             if (i === namespaces.length - 1) {
-                scope[packageName] = theModule;
+                if (typeof scope[packageName] === "undefined") {
+                    module.log("installing implementation at: " + packageName);
+                    scope[packageName] = theModule;
+                } else {
+                    module.log("Warning - not overwriting package: " + packageName);
+                }
             } else if (typeof scope[packageName] === "undefined") {
+                module.log("initialising new: " + packageName);
                 scope[packageName] = {};
+            } else {
+                module.log("using existing package: " + packageName);
             }
             scope = scope[packageName];
         }
+
     }
 
-    module.version = "8.0.0.1";
 
     log("'factory' loaded.");
 
@@ -63,15 +80,15 @@
 
         GetComponentVersion: function(sComponent, a, b, c, d) {
             log("factory.object.getcomponentversion: " + sComponent);
-            var v = module.version.split(".");
+            var v = emulatedVersion.split(".");
             a[0] = v[0];
             b[0] = v[1];
             c[0] = v[2];
             d[0] = v[3];
         },
 
-        ScriptXVersion: module.version,
-        SecurityManagerVersion: module.version,
+        get ScriptXVersion() { return emulatedVersion },
+        get SecurityManagerVersion() { return emulatedVersion },
 
         baseURL : function(sRelative) {
             alert("ScriptX.print :: baseUrl is not implemented yet.");
@@ -90,9 +107,20 @@
 
     // protected API
     var module = this;
+    var notafactory = MeadCo.ScriptX.Print.HTML;
     var settings = MeadCo.ScriptX.Print.HTML.settings;
 
-    log("factory.Printing loaded.");
+    log("factory.Printing 2 loaded.");
+
+    if (this.jQuery) {
+        log("Looking for auto connect");
+        $("[data-meadco-server]").each(function () {
+            var $this = $(this);
+            log("Auto connect to: " + $this.data("meadco-server") + "with license: " + $this.data("meadco-license"));
+            notafactory.connect($this.data("meadco-server"), $this.data("meadco-license"));
+            return false;
+        });
+    }
 
     // public API
     return {
@@ -126,59 +154,59 @@
 
 
         set orientation(sOrientation) {
-            switch ( toLowerCase(sOrientation) ) {
+            switch (sOrientation.toLowerCase()) {
                 case "landscape":
-                    settings.pageSettings.orientation = PageOrientation.LANDSCAPE;
+                    settings.page.orientation = PageOrientation.LANDSCAPE;
                     break;
 
                 case "portrait":
-                    settings.pageSettings.orientation = PageOrientation.PORTRAIT;
+                    settings.page.orientation = PageOrientation.PORTRAIT;
                     break;
             }
         },
 
         get orientation() {
-            return settings.pageSettings.orientation === PageOrientation.PORTRAIT ? "portrait" : "landscape";
+            return settings.page.orientation === PageOrientation.PORTRAIT ? "portrait" : "landscape";
         },
 
         set portrait(bPortrait) {
-            settings.pageSettings.orientation = bPortrait ? PageOrientation.PORTRAIT : PageOrientation.LANDSCAPE;
+            settings.page.orientation = bPortrait ? PageOrientation.PORTRAIT : PageOrientation.LANDSCAPE;
         },
 
         get portrait() {
-            return settings.pageSettings.orientation === PageOrientation.PORTRAIT;
+            return settings.page.orientation === PageOrientation.PORTRAIT;
         },
 
         set leftMargin(n) {
-            settings.pageSettings.margins.left = n;
+            settings.page.margins.left = n;
         },
 
         get leftMargin() {
-            return settings.pageSettings.margins.left;
+            return settings.page.margins.left;
         },
 
         set topMargin(n) {
-            settings.pageSettings.margins.top = n;
+            settings.page.margins.top = n;
         },
 
         get topMargin() {
-            return settings.pageSettings.margins.top;
+            return settings.page.margins.top;
         },
 
         set bottomMargin(n) {
-            settings.pageSettings.margins.bottom = n;
+            settings.page.margins.bottom = n;
         },
 
         get bottomMargin() {
-            return settings.pageSettings.margins.bottom;
+            return settings.page.margins.bottom;
         },
 
         set rightMargin(n) {
-            settings.pageSettings.margins.right = n;
+            settings.page.margins.right = n;
         },
 
         get rightMargin() {
-            return settings.pageSettings.margins.right;
+            return settings.page.margins.right;
         },
         
         // templateURL is a no-op at this time. In the future may
@@ -213,21 +241,21 @@
 
             if (sOrOFrame != null) {
                 var sFrame = typeof (sOrOFrame) === 'string' ? sOrOFrame : sOrOFrame.id;
-                return printFrame(sFrame, bPrompt);
+                return notafactory.printFrame(sFrame, bPrompt);
             }
 
-            return printDocument(bPrompt);
+            return notafactory.printDocument(bPrompt);
         },
 
         // advanced (aka licensed properties - the server will reject
         // use if no license available)
         set units(enumUnits) {
             // TODO: Check licensed (or will obviously fail on the server)
-            settings.pageSettings.units = enumUnits;
+            settings.page.units = enumUnits;
         },
 
         get units() {
-            return settings.pageSettings.units;
+            return settings.page.units;
         }
 
         // advanced functions

@@ -45,6 +45,13 @@ namespace ScriptX.Print.Client.Controllers
             return View(new Models.Sample("Supporting code written against 'MeadCo.ScriptX'"));
         }
 
+        [Route("MeadCoJSShim2")]
+        [HttpGet]
+        public ActionResult ShimMeadCoJS2()
+        {
+            return View(new Models.Sample("Supporting code written against 'MeadCo.ScriptX' included first"));
+        }
+
         /// <summary>
         /// Return a script file from outside the web app root.
         /// </summary>
