@@ -10,9 +10,12 @@
     extendNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
 
-    var version = "0.0.3";
+    var version = "0.0.4";
+    var printerName = "";
+    var deviceSettings = {};
     var module = this;
-    
+
+
     ////////////////////////////////////////////////////
     // protected API
     module.server = ""; // url to the server, server is CORS restricted 
@@ -33,11 +36,19 @@
 
     module.printHtmlAtServer = function(contentType, content, htmlPrintSettings) {
         log("started MeadCo.ScriptX.Print.print.printHtmlAtServer() Type: " + contentType);
+        var devInfo;
+
+        if (printerName === "") {
+            devInfo = {};
+        } else {
+            devInfo = deviceSettings[printerName];
+        }
+
         var requestData = {
             ContentType: contentType,
             Content: content,
             HtmlPrintSettings: htmlPrintSettings,
-            DeviceSettings: module.deviceSettings
+            DeviceSettings: devInfo
         }
 
         printAtServer(requestData,
@@ -48,10 +59,10 @@
 
             queuedToFile: function(data) {
                 console.log("default handler on queued to file response");
-                waitForJobComplete(data.JobIdentifier,
+                waitForJobComplete(data.jobIdentifier,
                     -1,
                     function(data) {
-                        window.open(module.server + "/DownloadPrint/" + data.JobIdentifier,"_self");
+                        window.open(module.server + "/DownloadPrint/" + data.jobIdentifier,"_self");
                     });
             },
 
@@ -69,19 +80,14 @@
         });
     };
 
-    module.deviceSettings =
-    {
-        printerName: "",
-        paperSize: "",
-        paperSource: ""
-    };
-
     module.connectToServer = function (serverUrl, licenseGuid) {
         log("Print server requested: " + serverUrl + " with license: " + licenseGuid);
         module.server = serverUrl;
         module.licenseGuid = licenseGuid;
+        // note that this will silently fail if no advanced printing license
+        // TODO: Warning, this is synchronous
+        getDeviceSettings({ name: "default" });
     }
-
 
     /////////////////////////////////////////////////////
     // private 
@@ -104,8 +110,8 @@
                     }
                 })
                 .done(function (data) {
-                    log("Success response: " + data.ResponseType);
-                    switch (data.ResponseType) {
+                    log("Success response: " + data.responseType);
+                    switch (data.responseType) {
                     case module.ResponseType.QUEUEDTOFILE:
                         responseInterface.queuedToFile(data);
                         break;
@@ -124,6 +130,9 @@
                     }
                 })
                 .fail(function (jqXhr, textStatus, errorThrown) {
+                    if (errorThrown === "") {
+                        errorThrown = "possible unlicensed request";
+                    }
                     responseInterface.fail(jqXhr, textStatus, errorThrown);
                 });
         } else {
@@ -146,8 +155,8 @@
                         "Authorization": "Basic " + btoa(module.licenseGuid + ":")
                     }
                 }).done(function (data) {
-                        log("jobStatus: " + data.ResponseType);
-                        switch ( data.ResponseType ) {
+                        log("jobStatus: " + data.responseType);
+                        switch ( data.responseType ) {
                             case module.ResponseType.OK:
                                 log("clear interval: " + intervalId);
                                 window.clearInterval(intervalId);
@@ -178,6 +187,47 @@
         console.log("intervalId: " + intervalId);
     }
 
+    function getDeviceSettings(oRequest) {
+        log("Request get device info: " + oRequest.name);
+        if (this.jQuery) {
+            var serviceUrl = module.server + "/deviceinfo/" + encodeURIComponent(oRequest.name) + "?units=0";
+            log(".ajax() get: " + serviceUrl);
+            this.jQuery.ajax(serviceUrl,
+                {
+                    dataType: "json",
+                    jsonp: false,
+                    method: "GET",
+                    async: false, // TODO: deprecated 
+                    headers: {
+                        "Authorization": "Basic " + btoa(module.licenseGuid + ":")
+                    }
+                })
+                .done(function (data) {
+                    deviceSettings[data.printerName] = data;
+                    if (data.isDefault && printerName.length === 0) {
+                        printerName = data.printerName;
+                    }
+                    if (typeof oRequest.done === "function") {
+                        oRequest.done(data);
+                    }
+                })
+                .fail(function (jqXhr, textStatus, errorThrown) {
+                    if (errorThrown === "") {
+                        errorThrown = "possible unlicensed request";
+                    }
+
+                    log("failed to getdevice: " + errorThrown);
+                    if (typeof oRequest.fail === "function") {
+                        oRequest.fail(errorThrown);
+                    }
+                });
+        } else {
+            throw new Error("MeadCo.ScriptX.Print : no known ajax helper available");
+        }
+
+    }
+
+
     log("MeadCo.ScriptX.Print loaded: " + version);
     if (!this.jQuery) {
         log("**** warning :: no jQuery");
@@ -190,7 +240,31 @@
 
         ResponseType: module.ResponseType,
 
-        get version() { return version },
+        get printerName() {
+             return printerName;
+        },
+
+        set printerName(deviceRequest) {
+            if (typeof deviceRequest === "string") {
+                getDeviceSettings({
+                    name: deviceRequest,
+                    done: function(data) {
+                        printerName = data.PrinterName;
+                    },
+                    fail: function (eTxt) { alert(eTxt);  }
+                });
+            } else {
+                getDeviceSettings(deviceRequest);
+            }
+        },
+
+        get version() {
+            return version;
+        },
+
+        get deviceSettings() {
+            return printerName !== "" ? deviceSettings[printerName] : {};
+        },
 
         connect: function (serverUrl, licenseGuid) {
             module.connectToServer(serverUrl, licenseGuid);
