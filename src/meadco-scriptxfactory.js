@@ -35,19 +35,19 @@
 })('factory', function () {
 
     // protected API
-    var module = this;
-    var version = "0.0.5.1";
+    var version = "0.0.5.2";
     var emulatedVersion = "8.0.0.2";
+    var module = this;
 
-    module.log = function (str) {
+    function log (str) {
         console.log("factory anti-polyfill :: " + str);
     }
 
     // extend the namespace
-    module.extendNamespace = function(name, definition) {
+    module.extendFactoryNamespace = function(name, definition) {
         var theModule = definition();
 
-        module.log("MeadCo factory extending namespace2: " + name);
+        log("MeadCo factory extending namespace2: " + name);
         // walk/build the namespace part by part and assign the module to the leaf
         var namespaces = name.split(".");
         var scope = this;
@@ -55,16 +55,16 @@
             var packageName = namespaces[i];
             if (i === namespaces.length - 1) {
                 if (typeof scope[packageName] === "undefined") {
-                    module.log("installing implementation at: " + packageName);
+                    log("installing implementation at: " + packageName);
                     scope[packageName] = theModule;
                 } else {
-                    module.log("Warning - not overwriting package: " + packageName);
+                    log("Warning - not overwriting package: " + packageName);
                 }
             } else if (typeof scope[packageName] === "undefined") {
-                module.log("initialising new: " + packageName);
+                log("initialising new: " + packageName);
                 scope[packageName] = {};
             } else {
-                module.log("using existing package: " + packageName);
+                log("using existing package: " + packageName);
             }
             scope = scope[packageName];
         }
@@ -76,7 +76,7 @@
 
     // public API.
     return {
-        log: module.log,
+        log: log,
 
         GetComponentVersion: function(sComponent, a, b, c, d) {
             log("factory.object.getcomponentversion: " + sComponent);
@@ -102,22 +102,21 @@
 });
 
 ; (function (name, definition) {
-    extendNamespace(name, definition);
+    extendFactoryNamespace(name, definition);
 })('factory.printing', function () {
 
     // protected API
-    var module = this;
-    var notafactory = MeadCo.ScriptX.Print.HTML;
-    var settings = MeadCo.ScriptX.Print.HTML.settings;
+    var printHtml = MeadCo.ScriptX.Print.HTML;
+    var settings = printHtml.settings;
 
-    log("factory.Printing 2 loaded.");
+    factory.log("factory.Printing 2 loaded.");
 
     if (this.jQuery) {
-        log("Looking for auto connect");
+        factory.log("Looking for auto connect");
         $("[data-meadco-server]").each(function () {
             var $this = $(this);
-            log("Auto connect to: " + $this.data("meadco-server") + "with license: " + $this.data("meadco-license"));
-            notafactory.connect($this.data("meadco-server"), $this.data("meadco-license"));
+            factory.log("Auto connect to: " + $this.data("meadco-server") + "with license: " + $this.data("meadco-license"));
+            printHtml.connect($this.data("meadco-server"), $this.data("meadco-license"));
             return false;
         });
     }
@@ -128,7 +127,7 @@
         //
 
         set header(str) {
-            log("set factory.printing.header: " + str);
+            factory.log("set factory.printing.header: " + str);
             settings.header = str;
         },
 
@@ -241,10 +240,19 @@
 
             if (sOrOFrame != null) {
                 var sFrame = typeof (sOrOFrame) === 'string' ? sOrOFrame : sOrOFrame.id;
-                return notafactory.printFrame(sFrame, bPrompt);
+                return printHtml.printFrame(sFrame, bPrompt);
             }
 
-            return notafactory.printDocument(bPrompt);
+            return printHtml.printDocument(bPrompt);
+        },
+
+        PrintHTML : function(sUrl, bPrompt) {
+            if (typeof (bPrompt) === 'undefined') bPrompt = true;
+            return printHtml.printFromUrl(sUrl);
+        },
+
+        PrintHTMLEx: function (sUrl, bPrompt, fnCallback, data) {
+            alert("ScriptX.Print :: PrintHtmlEx is not implemented yet.");
         },
 
         // advanced (aka licensed properties - the server will reject
@@ -265,13 +273,13 @@
 });
 
 ; (function (name, definition) {
-    extendNamespace(name, definition);
+    extendFactoryNamespace(name, definition);
 })('factory.object', function () {
 
     // protected API
     var module = this;
 
-    log("factory.object loaded.");
+    factory.log("factory.object loaded.");
 
     // public API
     return this.factory;

@@ -124,6 +124,7 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\Jsonconfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Identity\LicenseDetail.cs" />
@@ -169,6 +170,8 @@
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\umd\core.js" />
+    <Content Include="Scripts\umd\myExtension.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -189,6 +192,8 @@
     <Content Include="Views\Home\FramedHeaderFooterArgs.cshtml" />
     <Content Include="Views\Shared\_LayoutFramedContent.cshtml" />
     <Content Include="Views\Home\ShimMeadCoJS2.cshtml" />
+    <Content Include="Views\Home\Inspector.cshtml" />
+    <Content Include="Views\Home\UmdInspector.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

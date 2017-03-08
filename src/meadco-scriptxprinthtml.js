@@ -7,18 +7,17 @@
  */
 
 ; (function (name, definition) {
-    extendNamespace(name, definition);
+    extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
-    var version = "0.0.2";
-    var module = this;
+    var version = "0.0.5.2";
    
-    module.PageOrientation = {
+    var mPageOrientation = {
         DEFAULT: 0,
         LANDSCAPE: 1,
         PORTRAIT: 2
     };
 
-    module.PageMarginUnits = {
+    var mPageMarginUnits = {
         DEFAULT: 0,
         INCHES: 1,
         MM: 2
@@ -30,8 +29,8 @@
         footer: "",
         headerFooterFont: "",
         pageSettings: {
-            orientation: module.PageOrientation.PORTRAIT,
-            units: module.PageMarginUnits.DEFAULT,
+            orientation: mPageOrientation.PORTRAIT,
+            units: mPageMarginUnits.DEFAULT,
             margins: {
                 left: "",
                 top: "",
@@ -41,10 +40,10 @@
         }
     };
 
-    module.settings =
+    var iSettings =
     {
         set header(str) {
-            log("MeadCo.ScriptX.Print.HTML setting header: " + str);
+            MeadCo.log("MeadCo.ScriptX.Print.HTML setting header: " + str);
             settingsCache.header = str;
         },
         get header() {
@@ -159,7 +158,7 @@
         $("script", $html).remove();
 
         if (!$("head>base",$html).length) {
-            log("No base element, fabricating one to: " + getBaseHref());
+            MeadCo.log("No base element, fabricating one to: " + getBaseHref());
             var base = $("<base />",
             {
                 href: getBaseHref()
@@ -197,35 +196,39 @@
 
     }
 
-    log("MeadCo.ScriptX.Print.HTML loaded.");
+    function printHtmlAtServer(a, b, c) {
+        MeadCo.ScriptX.Print.printHtml(a, b, c);
+    }
+
+    MeadCo.log("MeadCo.ScriptX.Print.HTML loaded.");
     if (!this.jQuery) {
-        log("**** warning :: no jQuery");
+        MeadCo.log("**** warning :: no jQuery");
     }
 
     // public API
     return {
-        PageMarginUnits: module.PageMarginUnits,
-        PageOrientation: module.PageOrientation,
+        PageMarginUnits: mPageMarginUnits,
+        PageOrientation: mPageOrientation,
 
-        settings: module.settings,
+        settings: iSettings,
 
         printFromUrl: function (sUrl) {
-            log("html.printFromUrl: " + sUrl);
-            printHtmlAtServer(ContentType.URL, sUrl, settingsCache);
+            MeadCo.log("html.printFromUrl: " + sUrl);
+            printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.URL, sUrl, settingsCache);
         },
 
         printDocument: function(bPrompt) {
-            log("html.printDocument. *warning* ignoring bPrompt");
-            printHtmlAtServer(ContentType.INNERTHTML, documentContent(), settingsCache);
+            MeadCo.log("html.printDocument. *warning* ignoring bPrompt");
+            printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.INNERTHTML, documentContent(), settingsCache);
         },
         
         printFrame : function(sFrame, bPrompt) {
-            log("html.printFrame: " + sFrame + " *warning* ignoring bPrompt");
-            printHtmlAtServer(ContentType.INNERTHTML, frameContent(sFrame), settingsCache);
+            MeadCo.log("html.printFrame: " + sFrame + " *warning* ignoring bPrompt");
+            printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.INNERTHTML, frameContent(sFrame), settingsCache);
         },
 
         connect: function (serverUrl, licenseGuid) {
-            connectToServer(serverUrl, licenseGuid);
+            MeadCo.ScriptX.Print.connect(serverUrl, licenseGuid);
         },
 
         get version() { return version }
