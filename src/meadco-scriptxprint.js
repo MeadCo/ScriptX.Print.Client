@@ -7,35 +7,33 @@
  */
 
 ; (function (name, definition) {
-    extendNamespace(name, definition);
+    extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
 
-    var version = "0.0.4";
+    var version = "0.0.5.2";
     var printerName = "";
     var deviceSettings = {};
     var module = this;
 
 
-    ////////////////////////////////////////////////////
-    // protected API
-    module.server = ""; // url to the server, server is CORS restricted 
-    module.licenseGuid = "";
+    var server = ""; // url to the server, server is CORS restricted 
+    var licenseGuid = "";
 
-    module.ContentType = {
+    var enumContentType = {
         URL: 1,
         HTML: 2,
         INNERTHTML: 4
     };
 
-    module.ResponseType = {
+    var enumResponseType = {
         QUEUEDTODEVICE: 1,
         QUEUEDTOFILE: 2,
         SOFTERROR: 3,
         OK: 4
     };
 
-    module.printHtmlAtServer = function(contentType, content, htmlPrintSettings) {
-        log("started MeadCo.ScriptX.Print.print.printHtmlAtServer() Type: " + contentType);
+    function printHtmlAtServer(contentType, content, htmlPrintSettings) {
+        MeadCo.log("started MeadCo.ScriptX.Print.print.printHtmlAtServer() Type: " + contentType);
         var devInfo;
 
         if (printerName === "") {
@@ -58,73 +56,71 @@
             },
 
             queuedToFile: function(data) {
-                console.log("default handler on queued to file response");
+                MeadCo.log("default handler on queued to file response");
                 waitForJobComplete(data.jobIdentifier,
                     -1,
                     function(data) {
-                        window.open(module.server + "/DownloadPrint/" + data.jobIdentifier,"_self");
+                        window.open(server + "/DownloadPrint/" + data.jobIdentifier,"_self");
                     });
             },
 
             queuedToDevice: function(data) {
-                log("print was queued to device");
+                MeadCo.log("print was queued to device");
             },
 
             softError: function(data) {
-                log("print has soft error");
+                MeadCo.log("print has soft error");
             },
 
             ok: function(data) {
-                log("printed ok, no further information");
+                MeadCo.log("printed ok, no further information");
             }
         });
     };
 
-    module.connectToServer = function (serverUrl, licenseGuid) {
-        log("Print server requested: " + serverUrl + " with license: " + licenseGuid);
-        module.server = serverUrl;
-        module.licenseGuid = licenseGuid;
+    function connectToServer(serverUrl, licenseGuid) {
+        MeadCo.log("Print server requested: " + serverUrl + " with license: " + licenseGuid);
+        server = serverUrl;
+        licenseGuid = licenseGuid;
         // note that this will silently fail if no advanced printing license
         // TODO: Warning, this is synchronous
         getDeviceSettings({ name: "default" });
     }
 
-    /////////////////////////////////////////////////////
-    // private 
     function printAtServer(requestData, responseInterface) {
 
-        if (module.server.length <= 0) {
+        if (server.length <= 0) {
             throw new Error("MeadCo.ScriptX.Print : no server connection");
         }
 
         if (this.jQuery) {
-            log(".ajax() post to: " + module.server);
-            this.jQuery.ajax(module.server,
+            MeadCo.log(".ajax() post to: " + server);
+            this.jQuery.ajax(server,
                 {
                     data: requestData,
                     dataType: "json",
                     jsonp: false,
                     method: "POST",
                     headers: {
-                        "Authorization": "Basic " + btoa(module.licenseGuid + ":")
+                        "Authorization": "Basic " + btoa(licenseGuid + ":")
                     }
                 })
                 .done(function (data) {
-                    log("Success response: " + data.responseType);
+                    MeadCo.log("Success response: " + data.responseType);
                     switch (data.responseType) {
-                    case module.ResponseType.QUEUEDTOFILE:
+                    case enumResponseType.QUEUEDTOFILE:
                         responseInterface.queuedToFile(data);
                         break;
 
-                    case module.ResponseType.QUEUEDTODEVICE:
+                    case enumResponseType.QUEUEDTODEVICE:
                         responseInterface.queuedToDevice(data);
                         break;
 
-                    case module.ResponseType.SOFTERROR:
+                    case enumResponseType.SOFTERROR:
                         responseInterface.softError(data);
                         break;
 
-                    case module.ResponseType.OK:
+                    case enumResponseType.OK:
                         responseInterface.ok(data);
                         break;
                     }
@@ -141,29 +137,29 @@
     }
 
     function waitForJobComplete(jobId, timeOut,functionComplete) {
-        log("WaitForJobComplete: " + jobId);
+        MeadCo.log("WaitForJobComplete: " + jobId);
         var counter = 0;
         var intervalId = window.setInterval(function() {
-            log("Going to request status with .ajax");
-                $.ajax(module.server + "/status/" + jobId,
+            MeadCo.log("Going to request status with .ajax");
+                $.ajax(server + "/status/" + jobId,
                 {
                     dataType: "json",
                     jsonp: false,
                     method: "GET",
                     cache: false,
                     headers: {
-                        "Authorization": "Basic " + btoa(module.licenseGuid + ":")
+                        "Authorization": "Basic " + btoa(licenseGuid + ":")
                     }
                 }).done(function (data) {
-                        log("jobStatus: " + data.responseType);
+                        MeadCo.log("jobStatus: " + data.responseType);
                         switch ( data.responseType ) {
-                            case module.ResponseType.OK:
-                                log("clear interval: " + intervalId);
+                            case enumResponseType.OK:
+                                MeadCo.log("clear interval: " + intervalId);
                                 window.clearInterval(intervalId);
                                 functionComplete(data);
                                 break;
 
-                            case module.ResponseType.QUEUEDTOFILE:
+                            case enumResponseType.QUEUEDTOFILE:
                                 // keep going
                                 if (++counter > 20) {
                                     window.clearInterval(intervalId);
@@ -172,26 +168,26 @@
                                 break;
 
                             default:
-                                log("unknown status in waitForJobComplete so clear interval: " + intervalId);
+                                MeadCo.log("unknown status in waitForJobComplete so clear interval: " + intervalId);
                                 window.clearInterval(intervalId);
                                 break;
                         }
                 })
                 .fail(function() {
-                    log("error in waitForJobComplete so clear interval: " + intervalId);
+                    MeadCo.log("error in waitForJobComplete so clear interval: " + intervalId);
                     window.clearInterval(intervalId);
                 });
             },
             1000);
 
-        console.log("intervalId: " + intervalId);
+        MeadCo.log("intervalId: " + intervalId);
     }
 
     function getDeviceSettings(oRequest) {
-        log("Request get device info: " + oRequest.name);
+        MeadCo.log("Request get device info: " + oRequest.name);
         if (this.jQuery) {
-            var serviceUrl = module.server + "/deviceinfo/" + encodeURIComponent(oRequest.name) + "?units=0";
-            log(".ajax() get: " + serviceUrl);
+            var serviceUrl = server + "/deviceinfo/" + encodeURIComponent(oRequest.name) + "?units=0";
+            MeadCo.log(".ajax() get: " + serviceUrl);
             this.jQuery.ajax(serviceUrl,
                 {
                     dataType: "json",
@@ -199,7 +195,7 @@
                     method: "GET",
                     async: false, // TODO: deprecated 
                     headers: {
-                        "Authorization": "Basic " + btoa(module.licenseGuid + ":")
+                        "Authorization": "Basic " + btoa(licenseGuid + ":")
                     }
                 })
                 .done(function (data) {
@@ -216,7 +212,7 @@
                         errorThrown = "possible unlicensed request";
                     }
 
-                    log("failed to getdevice: " + errorThrown);
+                    MeadCo.log("failed to getdevice: " + errorThrown);
                     if (typeof oRequest.fail === "function") {
                         oRequest.fail(errorThrown);
                     }
@@ -228,17 +224,17 @@
     }
 
 
-    log("MeadCo.ScriptX.Print loaded: " + version);
+    MeadCo.log("MeadCo.ScriptX.Print loaded: " + version);
     if (!this.jQuery) {
-        log("**** warning :: no jQuery");
+        MeadCo.log("**** warning :: no jQuery");
     }
 
     //////////////////////////////////////////////////
     // public API
     return {
-        ContentType: module.ContentType,
+        ContentType: enumContentType,
 
-        ResponseType: module.ResponseType,
+        ResponseType: enumResponseType,
 
         get printerName() {
              return printerName;
@@ -267,8 +263,10 @@
         },
 
         connect: function (serverUrl, licenseGuid) {
-            module.connectToServer(serverUrl, licenseGuid);
-        }
+            connectToServer(serverUrl, licenseGuid);
+        },
+
+        printHtml: printHtmlAtServer
     };
 
 });

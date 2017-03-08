@@ -1,0 +1,69 @@
+﻿@model ScriptX.Print.Client.Models.Sample
+
+@{
+    ViewBag.Title = Model.Title;
+
+    var server = $"{Request.Url.Scheme}://{Request.Url.Authority}{Url.Content("~/api/v1/printHtml")}";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <button id="btn-test" class="btn btn-primary">Test</button>
+</div>
+
+<div id="logPane"></div>
+
+@section scripts
+{
+    <script src="~/Scripts/umd/core.js"></script>
+    <script src="~/Scripts/umd/myExtension.js"></script>
+
+    <script type="text/javascript">
+        function pageLogger(txt) {
+            $("#logPane").append(txt + "<br/>");
+        }
+
+        if (window.jQuery) {
+            $(function() {
+                try {
+                    pageLogger("Opening page log.");
+
+                    pageLogger("typeof errorColor: " + (typeof errorColor));
+                    pageLogger("typeof highlight: " + (typeof highlight));
+                    pageLogger("typeof version: " + (typeof version));
+                    // pageLogger("version: " + version);
+ 
+                    // the plugin 'core' is exposed under a core namespace in 
+                    // this example which we first cache
+                    var core = $.core;
+                    pageLogger("typeof version: " + (typeof core.version));
+                    pageLogger("version: " + core.version);
+
+                    // use then use some of the built-in core functionality to 
+                    // highlight all divs in the page yellow
+                    // core.highlightAll();
+                    highlight('div', highlightColor);
+
+                    // access the plugins (extensions) loaded into the 'plugin'
+                    // namespace of our core module:
+
+                    // Set the first div in the page to have a green background.
+                    core.plugin.setGreen("div:first");
+                    // Here we're making use of the core's 'highlight' method
+                    // under the hood from a plugin loaded in after it
+
+                    // Set the last div to the 'errorColor' property defined in 
+                    // our core module/plugin. If you review the code further down
+                    // you'll see how easy it is to consume properties and methods
+                    // between the core and other plugins
+                    core.plugin.setRed('div:last');
+                } catch (e) {
+                    pageLogger("*** ERROR *** " + e.message);
+                }
+            });
+        } else {
+            MeadCo.log("Page starting without jQuery");
+        }
+    </script>
+}

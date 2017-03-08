@@ -74,14 +74,14 @@
 
     // protected API
     var module = this;
-    var version = "0.0.4";
+    var version = "0.0.5.2";
 
-    module.log = function (str) {
+    var log = function (str) {
         console.log("MeadCo :: " + str);
     }
 
     // extend the namespace
-    module.extendNamespace = function(name,definition) {
+    module.extendMeadCoNamespace = function(name,definition) {
         var theModule = definition(),
             hasDefine = typeof define === 'function' && define.amd,
             hasExports = typeof module !== 'undefined' && module.exports;
@@ -91,7 +91,7 @@
         } else if (hasExports) { // Node.js Module
             module.exports = theModule;
         } else {
-            module.log("MeadCo root extending namespace: " + name);
+            log("MeadCo root extending namespace: " + name);
             // walk/build the namespace part by part and assign the module to the leaf
             var namespaces = name.split(".");
             var scope = (module.scope || this.jQuery || this.ender || this.$ || this);
@@ -99,27 +99,27 @@
                 var packageName = namespaces[i];
                 if (i === namespaces.length - 1) {
                     if (typeof scope[packageName] === "undefined") {
-                        module.log("installing implementation at: " + packageName);
+                        log("installing implementation at: " + packageName);
                         scope[packageName] = theModule;
                     } else {
-                        module.log("Warning - not overwriting package: " + packageName);
+                        log("Warning - not overwriting package: " + packageName);
                     }
                 } else if (typeof scope[packageName] === "undefined") {
-                    module.log("initialising new: " + packageName);
+                    log("initialising new: " + packageName);
                     scope[packageName] = {};
                 } else {
-                    module.log("using existing package: " + packageName);
+                    log("using existing package: " + packageName);
                 }
                 scope = scope[packageName];
             }
         }
     }
 
-    module.log("MeadCo root namespace loaded.");
+    log("MeadCo root namespace loaded.");
 
     // public API.
     return {
-        log: module.log,
+        log: log,
         get version() { return version },
 
         // allow things such as MeadCo.createNS("MeadCo.ScriptX.Print.UI");

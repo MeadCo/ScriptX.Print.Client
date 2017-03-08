@@ -52,6 +52,21 @@ namespace ScriptX.Print.Client.Controllers
             return View(new Models.Sample("Supporting code written against 'MeadCo.ScriptX' included first"));
         }
 
+        [Route("Inspector")]
+        [HttpGet]
+        public ActionResult Inspector()
+        {
+            return View(new Models.Sample("Looking into the implementation"));
+        }
+
+        [Route("UmdInspector")]
+        [HttpGet]
+        public ActionResult UmdInspector()
+        {
+            return View(new Models.Sample("Looking into the implementation"));
+        }
+
+
         /// <summary>
         /// Return a script file from outside the web app root.
         /// </summary>
