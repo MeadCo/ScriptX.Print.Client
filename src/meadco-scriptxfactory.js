@@ -35,7 +35,7 @@
 })('factory', function () {
 
     // protected API
-    var version = "0.0.5.2";
+    var version = "0.0.5.4";
     var emulatedVersion = "8.0.0.2";
     var module = this;
 
@@ -91,18 +91,20 @@
         get SecurityManagerVersion() { return emulatedVersion },
 
         baseURL : function(sRelative) {
-            alert("ScriptX.print :: baseUrl is not implemented yet.");
+            alert("MeadCo.ScriptX.Print :: baseUrl is not implemented yet.");
         },
 
         relativeURL : function(sUrl) {
-            alert("ScriptX.print :: relativeUrl is not implemented yet.");
+            alert("MeadCo.ScriptX.Print :: relativeUrl is not implemented yet.");
         }
 
     };
 });
 
 ; (function (name, definition) {
-    extendFactoryNamespace(name, definition);
+    if (typeof extendFactoryNamespace === "function") {
+        extendFactoryNamespace(name, definition);
+    }
 })('factory.printing', function () {
 
     // protected API
@@ -155,25 +157,25 @@
         set orientation(sOrientation) {
             switch (sOrientation.toLowerCase()) {
                 case "landscape":
-                    settings.page.orientation = PageOrientation.LANDSCAPE;
+                    settings.page.orientation = printHtml.PageOrientation.LANDSCAPE;
                     break;
 
                 case "portrait":
-                    settings.page.orientation = PageOrientation.PORTRAIT;
+                    settings.page.orientation = printHtml.PageOrientation.PORTRAIT;
                     break;
             }
         },
 
         get orientation() {
-            return settings.page.orientation === PageOrientation.PORTRAIT ? "portrait" : "landscape";
+            return settings.page.orientation === printHtml.PageOrientation.PORTRAIT ? "portrait" : "landscape";
         },
 
         set portrait(bPortrait) {
-            settings.page.orientation = bPortrait ? PageOrientation.PORTRAIT : PageOrientation.LANDSCAPE;
+            settings.page.orientation = bPortrait ? printHtml.PageOrientation.PORTRAIT : printHtml.PageOrientation.LANDSCAPE;
         },
 
         get portrait() {
-            return settings.page.orientation === PageOrientation.PORTRAIT;
+            return settings.page.orientation === printHtml.PageOrientation.PORTRAIT;
         },
 
         set leftMargin(n) {
@@ -227,11 +229,11 @@
         },
 
         PageSetup : function() {
-            alert("ScriptX.Print :: Page setup dialog is not implemented yet.");
+            alert("MeadCo.ScriptX.Print :: Page setup dialog is not implemented yet.");
         },
 
         Preview : function(sOrOFrame) {
-            alert("ScriptX.Print :: Preview is not implemented yet.");
+            alert("MeadCo.ScriptX.Print :: Preview is not implemented yet.");
         },
 
         Print : function(bPrompt, sOrOFrame) { // needs and wants update to ES2015
@@ -252,7 +254,7 @@
         },
 
         PrintHTMLEx: function (sUrl, bPrompt, fnCallback, data) {
-            alert("ScriptX.Print :: PrintHtmlEx is not implemented yet.");
+            alert("MeadCo.ScriptX.Print :: PrintHtmlEx is not implemented yet.");
         },
 
         // advanced (aka licensed properties - the server will reject
@@ -273,7 +275,9 @@
 });
 
 ; (function (name, definition) {
-    extendFactoryNamespace(name, definition);
+    if (typeof extendFactoryNamespace === "function") {
+        extendFactoryNamespace(name, definition);
+    }
 })('factory.object', function () {
 
     // protected API

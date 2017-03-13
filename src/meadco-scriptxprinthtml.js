@@ -156,6 +156,7 @@
 
         persistData($html);
         $("script", $html).remove();
+        $("object", $html).remove();
 
         if (!$("head>base",$html).length) {
             MeadCo.log("No base element, fabricating one to: " + getBaseHref());
