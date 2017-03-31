@@ -9,7 +9,7 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
-    var version = "0.0.5.2";
+    var version = "0.0.5.6";
    
     var mPageOrientation = {
         DEFAULT: 0,
@@ -23,11 +23,18 @@
         MM: 2
     };
 
+    var mCollateOptions = {
+        DEFAULT: 0,
+        TRUE: 1,
+        FALSE: 2
+    };
+
     var settingsCache =
     {
         header: "",
         footer: "",
         headerFooterFont: "",
+        viewScale: -1,
         pageSettings: {
             orientation: mPageOrientation.PORTRAIT,
             units: mPageMarginUnits.DEFAULT,
@@ -64,6 +71,14 @@
 
         get headerHooterFont() {
             return settingsCache.headerFooterFont;
+        },
+
+        set viewScale(x) {
+            settingsCache.viewScale = x;
+        },
+
+        get viewScale() {
+            return settingsCache.viewScale;
         },
 
         page: {
@@ -201,7 +216,7 @@
         MeadCo.ScriptX.Print.printHtml(a, b, c);
     }
 
-    MeadCo.log("MeadCo.ScriptX.Print.HTML loaded.");
+    MeadCo.log("MeadCo.ScriptX.Print.HTML " + version + " loaded.");
     if (!this.jQuery) {
         MeadCo.log("**** warning :: no jQuery");
     }
@@ -210,6 +225,7 @@
     return {
         PageMarginUnits: mPageMarginUnits,
         PageOrientation: mPageOrientation,
+        CollateOptions: mCollateOptions,
 
         settings: iSettings,
 
@@ -229,7 +245,16 @@
         },
 
         connect: function (serverUrl, licenseGuid) {
-            MeadCo.ScriptX.Print.connect(serverUrl, licenseGuid);
+            MeadCo.log("Print.HTML connection request");
+            MeadCo.ScriptX.Print.connectLite(serverUrl, licenseGuid);
+            MeadCo.ScriptX.Print.getFromServer("/htmlPrintDefaults/?units=0",
+                function (data) {
+                    settingsCache = data.htmlPrintSettings;
+                    if (data.deviceSettings != null) {
+                        MeadCo.ScriptX.Print.printerName = "default";
+                        //MeadCo.ScriptX.Print.deviceSettings = data.deviceSettings;
+                    }
+                });
         },
 
         get version() { return version }

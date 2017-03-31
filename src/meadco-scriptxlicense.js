@@ -35,14 +35,54 @@
 })('secmgr', function () {
 
     // protected API
-    var version = "0.0.5.4";
+    var version = "0.0.5.6";
     var emulatedVersion = "8.0.0.2";
     var module = this;
+    var license = {};
+
+
+    var server = "";            // url to the server
+    var licenseGuid = "";
 
     function log (str) {
         console.log("secmgr anti-polyfill :: " + str);
     }
 
+    function setLicensingServer(serverUrl, clientLicenseGuid) {
+        MeadCo.log("Licensing server requested: " + serverUrl + " with license: " + clientLicenseGuid);
+        server = serverUrl;
+        licenseGuid = clientLicenseGuid;
+    }
+
+    function getLicenseFromServer(onFail) {
+
+        if (server.length <= 0) {
+            throw new Error("MeadCo.ScriptX.Licensing : licensing server URL is not set or is invalid");
+        }
+
+        if (module.jQuery) {
+            MeadCo.log(".ajax() get: " + server);
+            module.jQuery.ajax(server,
+                {
+                    method: "GET",
+                    dataType: "json",
+                    jsonp: false,
+                    cache: false,
+                    async: false, // TODO: deprecated 
+                    headers: {
+                        "Authorization": "Basic " + btoa(licenseGuid + ":")
+                    }
+                }).done(function (data) {
+                    $.extend(license, data);
+                })
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    MeadCo.log("**warning: failure in MeadCo.ScriptX.Licensing.getLicenseFromServer: " + errorThrown);
+                    if (typeof onFail == "function")
+                        onFail(errorThrown);
+                });
+            return license;
+        }
+    }
 
     // extend the namespace
     module.extendSecMgrNamespace = function(name, definition) {
@@ -88,7 +128,23 @@
         },
 
         get SecMgrVersion() { return emulatedVersion },
+
         get SecurityManagerVersion() { return emulatedVersion },
+
+        get result() {
+            return 0;
+        },
+
+        get validLicense() {
+            return true;
+        },
+
+        get License() {
+            var license = getLicenseFromServer();
+            return license;
+        },
+
+        connect: setLicensingServer,
 
     };
 });

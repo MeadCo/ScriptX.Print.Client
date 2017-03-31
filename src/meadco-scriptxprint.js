@@ -10,7 +10,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
 
-    var version = "0.0.5.5";
+    var version = "0.0.5.8";
     var printerName = "";
     var deviceSettings = {};
     var module = this;
@@ -96,10 +96,15 @@
         });
     };
 
-    function connectToServer(serverUrl, clientLicenseGuid) {
+    function setServer(serverUrl, clientLicenseGuid)
+    {
         MeadCo.log("Print server requested: " + serverUrl + " with license: " + clientLicenseGuid);
         server = serverUrl;
         licenseGuid = clientLicenseGuid;
+    }
+
+    function connectToServer(serverUrl, clientLicenseGuid) {
+        setServer(serverUrl, clientLicenseGuid);
         // note that this will silently fail if no advanced printing license
         // TODO: Warning, this is synchronous
         getDeviceSettings({ name: "default" });
@@ -111,9 +116,9 @@
             throw new Error("MeadCo.ScriptX.Print : print server URL is not set or is invalid");
         }
 
-        if (this.jQuery) {
+        if (module.jQuery) {
             MeadCo.log(".ajax() post to: " + server);
-            this.jQuery.ajax(server,
+            module.jQuery.ajax(server,
                 {
                     data: requestData,
                     dataType: "json",
@@ -153,6 +158,31 @@
                 });
         } else {
             throw new Error("MeadCo.ScriptX.Print : no known ajax helper available");
+        }
+    }
+
+    function getFromServer(sApi,onSuccess,onFail) {
+        if (module.jQuery) {
+            var serviceUrl = server + sApi;
+            MeadCo.log(".ajax() get: " + serviceUrl);
+            module.jQuery.ajax(serviceUrl,
+                {
+                    method: "GET",
+                    dataType: "json",
+                    jsonp: false,
+                    cache: false,
+                    async: false, // TODO: deprecated 
+                    headers: {
+                        "Authorization": "Basic " + btoa(licenseGuid + ":")
+                    }
+                }).done(function(data) {
+                    onSuccess(data);
+                })
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    MeadCo.log("**warning: failure in MeadCo.ScriptX.Print.getFromServer: " + errorThrown);
+                    if (typeof onFail == "function")
+                        onFail(errorThrown);
+                });
         }
     }
 
@@ -227,10 +257,10 @@
 
     function getDeviceSettings(oRequest) {
         MeadCo.log("Request get device info: " + oRequest.name);
-        if (this.jQuery) {
+        if (module.jQuery) {
             var serviceUrl = server + "/deviceinfo/" + encodeURIComponent(oRequest.name) + "?units=0";
             MeadCo.log(".ajax() get: " + serviceUrl);
-            this.jQuery.ajax(serviceUrl,
+            module.jQuery.ajax(serviceUrl,
                 {
                     dataType: "json",
                     jsonp: false,
@@ -269,7 +299,7 @@
 
 
     MeadCo.log("MeadCo.ScriptX.Print loaded: " + version);
-    if (!this.jQuery) {
+    if (!module.jQuery) {
         MeadCo.log("**** warning :: no jQuery");
     }
 
@@ -289,7 +319,7 @@
                 getDeviceSettings({
                     name: deviceRequest,
                     done: function(data) {
-                        printerName = data.PrinterName;
+                        printerName = data.printerName;
                     },
                     fail: function (eTxt) { alert("MeadCo.ScriptX.Print : " + eTxt);  }
                 });
@@ -302,6 +332,10 @@
             return version;
         },
 
+        set deviceSettings(settings) {
+            deviceSettings[settings.printerName] = settings;
+        },
+
         get deviceSettings() {
             return printerName !== "" ? deviceSettings[printerName] : {};
         },
@@ -309,6 +343,12 @@
         connect: function (serverUrl, licenseGuid) {
             connectToServer(serverUrl, licenseGuid);
         },
+
+        connectLite : function(serverUrl, licenseGuid) {
+            setServer(serverUrl, licenseGuid);
+        },
+
+        getFromServer: getFromServer,
 
         printHtml: printHtmlAtServer
     };

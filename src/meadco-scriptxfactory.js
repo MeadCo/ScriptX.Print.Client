@@ -35,7 +35,7 @@
 })('factory', function () {
 
     // protected API
-    var version = "0.0.5.4";
+    var version = "0.0.5.7";
     var emulatedVersion = "8.0.0.2";
     var module = this;
 
@@ -91,13 +91,24 @@
         get SecurityManagerVersion() { return emulatedVersion },
 
         baseURL : function(sRelative) {
-            alert("MeadCo.ScriptX.Print :: baseUrl is not implemented yet.");
+            return window.location.href.substring(0, window.location.href.length - window.location.pathname.length);
         },
 
         relativeURL : function(sUrl) {
             alert("MeadCo.ScriptX.Print :: relativeUrl is not implemented yet.");
-        }
+        },
 
+        FormatNumber : function (arg) {
+                if (isNaN(arg)) {
+                    return 0;
+                } else {
+                    if (typeof arg === 'string') {
+                        return Number(arg);
+                    } else {
+                        return arg;
+                    }
+                }
+            }
     };
 });
 
@@ -110,6 +121,8 @@
     // protected API
     var printHtml = MeadCo.ScriptX.Print.HTML;
     var settings = printHtml.settings;
+    var printApi = MeadCo.ScriptX.Print;
+    var printBackground = false;
 
     factory.log("factory.Printing 2 loaded.");
 
@@ -232,6 +245,10 @@
             alert("MeadCo.ScriptX.Print :: Page setup dialog is not implemented yet.");
         },
 
+        PrintSetup : function() {
+            alert("MeadCo.ScriptX.Print :: Print setup dialog is not implemented yet.");
+        },
+
         Preview : function(sOrOFrame) {
             alert("MeadCo.ScriptX.Print :: Preview is not implemented yet.");
         },
@@ -250,6 +267,25 @@
 
         PrintHTML : function(sUrl, bPrompt) {
             if (typeof (bPrompt) === 'undefined') bPrompt = true;
+
+            // if a relative URL supplied then add the base URL of this website
+            if (!(sUrl.indexOf('http://') === 0 || sUrl.indexOf('https://') === 0)) {
+                var baseurl = factory.baseURL();
+                if (baseurl.substring(baseurl.length - 1, baseurl.length) !== "/") {
+                    if (sUrl.substring(0, 1) !== "/") {
+                        sUrl = baseurl + "/" + sUrl;
+                    } else {
+                        sUrl = baseurl + sUrl;
+                    }
+                } else {
+                    if (sUrl.substring(0, 1) !== "/") {
+                        sUrl = baseurl + sUrl;
+                    } else {
+                        sUrl = baseurl + sUrl.substring(1)
+                    }
+                }
+            }
+
             return printHtml.printFromUrl(sUrl);
         },
 
@@ -261,14 +297,112 @@
         // use if no license available)
         set units(enumUnits) {
             // TODO: Check licensed (or will obviously fail on the server)
-            settings.page.units = enumUnits;
+            this.SetMarginMeasure(enumUnits);
         },
 
         get units() {
-            return settings.page.units;
-        }
+            return this.GetMarginMeasure();
+        },
 
         // advanced functions
+        set paperSize(sPaperSize) {
+            printApi.deviceSettings.paperSizeName = sPaperSize;
+        },
+
+        get paperSize() {
+            return printApi.deviceSettings.paperSizeName;
+        },
+
+        get pageWidth() {
+            return printApi.deviceSettings.paperPageSize.width;
+        },
+
+        get pageHeight() {
+            return printApi.deviceSettings.paperPageSize.height         ;
+        },
+
+        set copies(nCopies) {
+            printApi.deviceSettings.copies = nCopies;
+        },
+
+        get copies() {
+            return printApi.deviceSettings.copies;
+        },
+
+        set collate(bCollate) {
+            printApi.deviceSettings.collate = (bCollate === true || bCollate === 1) ? printHtml.CollateOptions.TRUE : printHtml.CollateOptions.FALSE;
+        },
+
+        get collate() {
+            return printApi.deviceSettings.collate == printHtml.CollateOptions.FALSE ? 2 : 1;
+        },
+
+        get CurrentPrinter() {
+            return printApi.printerName;
+        },
+
+        set CurrentPrinter(sPrinterName) {
+            printApi.printerName = sPrinterName;
+        },
+
+        get currentPrinter() {
+            return printApi.printerName;
+        },
+
+        set currentPrinter(sPrinterName) {
+            printApi.printerName = sPrinterName;
+        },
+
+        set printer(sPrinterName) {
+            printApi.printerName = sPrinterName;
+        },
+
+        // implemented as simple property not persisted, TBA
+        get printBackground() {
+            return printBackground;
+        },
+
+        set printBackground(bPrintBackground) {
+            printBackground = bPrintBackground;
+        },
+
+        get viewScale() {
+            return settings.viewScale;
+        },
+
+        set viewScale(x) {
+            settings.viewScale = x;
+        },
+
+        EnumPrinters: function (index) {
+            if (index === 0) {
+                return this.CurrentPrinter;
+            }
+            else {
+                return "";
+            }
+        },
+
+        printerControl: function (value) {
+            // for now ignore value parameter and return an array of paper sizes in the Forms property
+            var x = {};
+            x.Forms = ["A3", "A4", "A5", "Letter"];
+            x.Bins = ["Automatically select", "Printer auto select", "Manual Feed Tray", "Tray 1", "Tray 2", "Tray 3", "Tray 4"];
+            return x;
+        },
+
+        GetMarginMeasure: function() {
+            return settings.page.units == printHtml.PageMarginUnits.INCHES ? 2 : 1;
+        },
+
+        SetMarginMeasure: function (enumUnits) {
+            settings.page.units = enumUnits == 2 ? printHtml.PageMarginUnits.INCHES : printHtml.PageMarginUnits.MM;
+        },
+
+        SetPrintScale: function (value) {
+            settings.viewScale = value;
+        },
+
 
     };
 
@@ -284,6 +418,21 @@
     var module = this;
 
     factory.log("factory.object loaded.");
+
+    // public API
+    return this.factory;
+});
+
+; (function (name, definition) {
+    if (typeof extendFactoryNamespace === "function") {
+        extendFactoryNamespace(name, definition);
+    }
+})('factory.object.js', function () {
+
+    // protected API
+    var module = this;
+
+    factory.log("factory.object.js loaded.");
 
     // public API
     return this.factory;
