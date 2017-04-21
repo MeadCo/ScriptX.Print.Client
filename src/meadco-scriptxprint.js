@@ -10,7 +10,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
 
-    var version = "0.0.5.8";
+    var version = "0.0.6.2";
     var printerName = "";
     var deviceSettings = {};
     var module = this;
@@ -18,6 +18,7 @@
 
     var server = ""; // url to the server, server is CORS restricted 
     var licenseGuid = "";
+    var bConnected = false;
 
     var enumContentType = {
         URL: 1,
@@ -62,14 +63,14 @@
         var requestData = {
             ContentType: contentType,
             Content: content,
-            HtmlPrintSettings: htmlPrintSettings,
+            Settings: htmlPrintSettings,
             DeviceSettings: devInfo
         }
 
         printAtServer(requestData,
         {
             fail: function(jqXhr, textStatus, errorThrown) {
-                alert("MeadCo.ScriptX.Print : Your print request has failed:\n\n" + errorThrown + "\n");
+                MeadCo.ScriptX.Print.reportServerError(errorThrown);
             },
 
             queuedToFile: function(data) {
@@ -122,7 +123,6 @@
                 {
                     data: requestData,
                     dataType: "json",
-                    jsonp: false,
                     method: "POST",
                     headers: {
                         "Authorization": "Basic " + btoa(licenseGuid + ":")
@@ -150,6 +150,9 @@
                 })
                 .fail(function (jqXhr, textStatus, errorThrown) {
                     if (errorThrown === "") {
+                        errorThrown = jqXhr.responseText;
+                    }
+                    if (errorThrown === "") {
                         errorThrown = "Unknown server or network error";
                     }
                     if (typeof responseInterface.fail === "function") {
@@ -169,7 +172,6 @@
                 {
                     method: "GET",
                     dataType: "json",
-                    jsonp: false,
                     cache: false,
                     async: false, // TODO: deprecated 
                     headers: {
@@ -178,8 +180,11 @@
                 }).done(function(data) {
                     onSuccess(data);
                 })
-                .fail(function (jqXHR, textStatus, errorThrown) {
+                .fail(function (jqXhr, textStatus, errorThrown) {
                     MeadCo.log("**warning: failure in MeadCo.ScriptX.Print.getFromServer: " + errorThrown);
+                    if (errorThrown === "") {
+                        errorThrown = jqXhr.responseText;
+                    }
                     if (typeof onFail == "function")
                         onFail(errorThrown);
                 });
@@ -198,7 +203,6 @@
                     $.ajax(server + "/status/" + jobId,
                         {
                             dataType: "json",
-                            jsonp: false,
                             method: "GET",
                             cache: false,
                             headers: {
@@ -224,7 +228,7 @@
                                 // keep going
                                 if (timeOut > 0 && (++counter * interval) > timeOut) {
                                     window.clearInterval(intervalId);
-                                    alert("Sorry, it appears the print has failed for an unknown reason.");
+                                    MeadCo.ScriptX.Print.reportServerError("unknown failure while printing.");
                                 }
                                 bWaiting = false;
                                 break;
@@ -233,7 +237,7 @@
                            case enumPrintStatus.ABANDONED:
                                 MeadCo.log("error status in waitForJobComplete so clear interval: " + intervalId);
                                 window.clearInterval(intervalId);
-                                alert("The print failed.\n\n" + data.message);
+                                MeadCo.ScriptX.Print.reportServerError("The print failed.\n\n" + data.message);
                                 break;
 
                             default:
@@ -242,7 +246,7 @@
                                 break;
                             }
                         })
-                        .fail(function (jqXHR, textStatus, errorThrown) {
+                        .fail(function (jqXhr, textStatus, errorThrown) {
                             MeadCo.log("error: " + errorThrown + " in waitForJobComplete so clear interval: " + intervalId);
                             window.clearInterval(intervalId);
                         });
@@ -263,7 +267,6 @@
             module.jQuery.ajax(serviceUrl,
                 {
                     dataType: "json",
-                    jsonp: false,
                     method: "GET",
                     async: false, // TODO: deprecated 
                     headers: {
@@ -271,6 +274,7 @@
                     }
                 })
                 .done(function (data) {
+                    bConnected = true;
                     deviceSettings[data.printerName] = data;
                     if ( data.isDefault && printerName.length === 0) {
                         printerName = data.printerName;
@@ -281,8 +285,11 @@
                 })
                 .fail(function (jqXhr, textStatus, errorThrown) {
                     if (errorThrown === "") {
-                        errorThrown = "Unknown server or network error";
-                    } else {
+                        errorThrown = jqXhr.responseText;
+
+                    }
+                    else {
+                        bConnected = true; // we connected but the server doesnt like us
                         errorThrown = errorThrown.toString();
                     }
 
@@ -321,7 +328,7 @@
                     done: function(data) {
                         printerName = data.printerName;
                     },
-                    fail: function (eTxt) { alert("MeadCo.ScriptX.Print : " + eTxt);  }
+                    fail: function (eTxt) { MeadCo.ScriptX.Print.reportServerError(eTxt);  }
                 });
             } else {
                 getDeviceSettings(deviceRequest);
@@ -348,9 +355,18 @@
             setServer(serverUrl, licenseGuid);
         },
 
+        get isConnected() {
+            return bConnected;
+        },
+
         getFromServer: getFromServer,
 
-        printHtml: printHtmlAtServer
+        printHtml: printHtmlAtServer,
+
+        // overridable function for reporting an error.
+        reportServerError : function(errorThrown) {
+            alert("There was an error in the printing service\n\n" + errorThrown);
+        }
     };
 
 });

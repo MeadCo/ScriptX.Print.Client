@@ -35,8 +35,8 @@
 })('factory', function () {
 
     // protected API
-    var version = "0.0.5.7";
-    var emulatedVersion = "8.0.0.2";
+    var moduleversion = "0.0.5.9";
+    var emulatedVersion = "8.0.0.0";
     var module = this;
 
     function log (str) {
@@ -78,37 +78,48 @@
     return {
         log: log,
 
+        // 'factory' functions
         GetComponentVersion: function(sComponent, a, b, c, d) {
             log("factory.object.getcomponentversion: " + sComponent);
-            var v = emulatedVersion.split(".");
+            var v = emulatedVersion;
+
+            switch( sComponent.toLowerCase() ) {
+                case "scriptx.factory":
+                    v = moduleversion;
+                    break;
+
+                case "meadco.secmgr":
+                try {
+                    v = module.secmgr.version;
+                } catch (e) {
+                }
+                break;
+
+                case "meadco.triprint":
+                    try {
+                        v = MeadCo.ScriptX.Print.HTML.version;
+                    } catch (e) {
+                    }
+                    break;
+            }
+
+            v = v.split(".");
             a[0] = v[0];
             b[0] = v[1];
             c[0] = v[2];
             d[0] = v[3];
         },
 
-        get ScriptXVersion() { return emulatedVersion },
-        get SecurityManagerVersion() { return emulatedVersion },
+        get ScriptXVersion() { return version },
+        get SecurityManagerVersion() { return version },
 
         baseURL : function(sRelative) {
             return window.location.href.substring(0, window.location.href.length - window.location.pathname.length);
         },
 
         relativeURL : function(sUrl) {
-            alert("MeadCo.ScriptX.Print :: relativeUrl is not implemented yet.");
-        },
-
-        FormatNumber : function (arg) {
-                if (isNaN(arg)) {
-                    return 0;
-                } else {
-                    if (typeof arg === 'string') {
-                        return Number(arg);
-                    } else {
-                        return arg;
-                    }
-                }
-            }
+            throw "MeadCo.ScriptX.Print :: relativeUrl is not implemented yet.";
+        }
     };
 });
 
@@ -123,14 +134,15 @@
     var settings = printHtml.settings;
     var printApi = MeadCo.ScriptX.Print;
     var printBackground = false;
+    var module = this;
 
-    factory.log("factory.Printing 2 loaded.");
+    module.factory.log("factory.Printing loaded.");
 
     if (this.jQuery) {
-        factory.log("Looking for auto connect");
+        module.factory.log("Looking for auto connect");
         $("[data-meadco-server]").each(function () {
             var $this = $(this);
-            factory.log("Auto connect to: " + $this.data("meadco-server") + "with license: " + $this.data("meadco-license"));
+            module.factory.log("Auto connect to: " + $this.data("meadco-server") + "with license: " + $this.data("meadco-license"));
             printHtml.connect($this.data("meadco-server"), $this.data("meadco-license"));
             return false;
         });
@@ -142,7 +154,7 @@
         //
 
         set header(str) {
-            factory.log("set factory.printing.header: " + str);
+            module.factory.log("set factory.printing.header: " + str);
             settings.header = str;
         },
 
@@ -270,7 +282,7 @@
 
             // if a relative URL supplied then add the base URL of this website
             if (!(sUrl.indexOf('http://') === 0 || sUrl.indexOf('https://') === 0)) {
-                var baseurl = factory.baseURL();
+                var baseurl = module.factory.baseURL();
                 if (baseurl.substring(baseurl.length - 1, baseurl.length) !== "/") {
                     if (sUrl.substring(0, 1) !== "/") {
                         sUrl = baseurl + "/" + sUrl;
@@ -281,7 +293,7 @@
                     if (sUrl.substring(0, 1) !== "/") {
                         sUrl = baseurl + sUrl;
                     } else {
-                        sUrl = baseurl + sUrl.substring(1)
+                        sUrl = baseurl + sUrl.substring(1);
                     }
                 }
             }
@@ -334,7 +346,7 @@
         },
 
         get collate() {
-            return printApi.deviceSettings.collate == printHtml.CollateOptions.FALSE ? 2 : 1;
+            return printApi.deviceSettings.collate === printHtml.CollateOptions.TRUE;
         },
 
         get CurrentPrinter() {
@@ -403,7 +415,10 @@
             settings.viewScale = value;
         },
 
-
+        // helpers for wrapper MeadCoJS
+        PolyfillInit: function () {
+            return MeadCo.ScriptX.Print.isConnected;
+        }
     };
 
 });
@@ -435,5 +450,17 @@
     factory.log("factory.object.js loaded.");
 
     // public API
-    return this.factory;
+    return {
+        FormatNumber: function (arg) {
+            if (isNaN(arg)) {
+                return 0;
+            } else {
+                if (typeof arg === 'string') {
+                    return Number(arg);
+                } else {
+                    return arg;
+                }
+            }
+        }
+    };
 });

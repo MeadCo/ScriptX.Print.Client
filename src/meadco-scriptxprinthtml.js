@@ -9,7 +9,7 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
-    var version = "0.0.5.6";
+    var moduleversion = "0.0.6.3";
    
     var mPageOrientation = {
         DEFAULT: 0,
@@ -31,10 +31,16 @@
 
     var settingsCache =
     {
-        header: "",
-        footer: "",
-        headerFooterFont: "",
+        header: null,
+        footer: null,
+        headerFooterFont: null,
         viewScale: -1,
+        locale: (navigator.languages && navigator.languages.length)
+        ? navigator.languages[0]
+        : navigator.language,
+        timezoneOffset: 0,
+        shortDateFormat: "",
+        longDateFormat: "",
         pageSettings: {
             orientation: mPageOrientation.PORTRAIT,
             units: mPageMarginUnits.DEFAULT,
@@ -51,6 +57,9 @@
     {
         set header(str) {
             MeadCo.log("MeadCo.ScriptX.Print.HTML setting header: " + str);
+            if (str.length === 0) {
+                str = "%20";
+            }
             settingsCache.header = str;
         },
         get header() {
@@ -58,6 +67,9 @@
         },
 
         set footer(str) {
+            if (str.length === 0) {
+                str = "%20";
+            }
             settingsCache.footer = str;
         },
 
@@ -66,6 +78,9 @@
         },
 
         set headerFooterFont(str) {
+            if (str.length === 0) {
+                str = "%20";
+            }
             settingsCache.headerFooterFont = str;
         },
 
@@ -79,6 +94,18 @@
 
         get viewScale() {
             return settingsCache.viewScale;
+        },
+
+        set locale(x) {
+            settingsCache.locale = x;
+        },
+
+        set shortDateFormat(x) {
+            settingsCache.longDateFormat = x;
+        },
+
+        set longDateFormat(x) {
+            settingsCache.longDateFormat = x;
         },
 
         page: {
@@ -134,6 +161,15 @@
             }
         }
     };
+
+    function updateSettingsWithServerDefaults(sDefaults) {
+        settingsCache = sDefaults;
+        settingsCache.locale = (navigator.languages && navigator.languages.length)
+            ? navigator.languages[0]
+            : navigator.language;
+        settingsCache.timezoneOffset = (new Date()).getTimezoneOffset();
+        MeadCo.log("Settings cache updated, .locale: [" + settingsCache.locale + "], .offset: " + settingsCache.timezoneOffset);
+    }
 
     function persistData($element) {
         // preserve all form values.
@@ -216,7 +252,8 @@
         MeadCo.ScriptX.Print.printHtml(a, b, c);
     }
 
-    MeadCo.log("MeadCo.ScriptX.Print.HTML " + version + " loaded.");
+    MeadCo.log("MeadCo.ScriptX.Print.HTML " + moduleversion + " loaded.");
+
     if (!this.jQuery) {
         MeadCo.log("**** warning :: no jQuery");
     }
@@ -249,7 +286,7 @@
             MeadCo.ScriptX.Print.connectLite(serverUrl, licenseGuid);
             MeadCo.ScriptX.Print.getFromServer("/htmlPrintDefaults/?units=0",
                 function (data) {
-                    settingsCache = data.htmlPrintSettings;
+                    updateSettingsWithServerDefaults(data.htmlPrintSettings);
                     if (data.deviceSettings != null) {
                         MeadCo.ScriptX.Print.printerName = "default";
                         //MeadCo.ScriptX.Print.deviceSettings = data.deviceSettings;
@@ -257,7 +294,7 @@
                 });
         },
 
-        get version() { return version }
+        get version() { return moduleversion }
 
     };
 

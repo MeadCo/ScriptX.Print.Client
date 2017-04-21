@@ -35,7 +35,7 @@
 })('secmgr', function () {
 
     // protected API
-    var version = "0.0.5.6";
+    var moduleversion = "0.0.5.7";
     var emulatedVersion = "8.0.0.2";
     var module = this;
     var license = {};
@@ -117,19 +117,9 @@
     // public API.
     return {
         log: log,
-
-        GetComponentVersion: function (sComponent, a, b, c, d) {
-            log("secmgr.object.getcomponentversion: " + sComponent);
-            var v = emulatedVersion.split(".");
-            a[0] = v[0];
-            b[0] = v[1];
-            c[0] = v[2];
-            d[0] = v[3];
+        get version() {
+            return moduleversion;
         },
-
-        get SecMgrVersion() { return emulatedVersion },
-
-        get SecurityManagerVersion() { return emulatedVersion },
 
         get result() {
             return 0;
