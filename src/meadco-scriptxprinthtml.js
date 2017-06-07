@@ -9,7 +9,8 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
-    var moduleversion = "0.0.6.3";
+
+    var moduleversion = "0.0.6.6";
    
     var mPageOrientation = {
         DEFAULT: 0,
@@ -34,7 +35,7 @@
         header: null,
         footer: null,
         headerFooterFont: null,
-        viewScale: -1,
+        viewScale: 0,
         locale: (navigator.languages && navigator.languages.length)
         ? navigator.languages[0]
         : navigator.language,
@@ -84,7 +85,7 @@
             settingsCache.headerFooterFont = str;
         },
 
-        get headerHooterFont() {
+        get headerFooterFont() {
             return settingsCache.headerFooterFont;
         },
 
@@ -248,8 +249,8 @@
 
     }
 
-    function printHtmlAtServer(a, b, c) {
-        MeadCo.ScriptX.Print.printHtml(a, b, c);
+    function printHtmlAtServer(a, b, c, d) {
+        MeadCo.ScriptX.Print.printHtml(a, b, c, d);
     }
 
     MeadCo.log("MeadCo.ScriptX.Print.HTML " + moduleversion + " loaded.");
@@ -271,9 +272,9 @@
             printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.URL, sUrl, settingsCache);
         },
 
-        printDocument: function(bPrompt) {
+        printDocument: function(bPrompt,fnCallOnDone) {
             MeadCo.log("html.printDocument. *warning* ignoring bPrompt");
-            printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.INNERTHTML, documentContent(), settingsCache);
+            printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.INNERTHTML, documentContent(), settingsCache,fnCallOnDone);
         },
         
         printFrame : function(sFrame, bPrompt) {
@@ -286,10 +287,11 @@
             MeadCo.ScriptX.Print.connectLite(serverUrl, licenseGuid);
             MeadCo.ScriptX.Print.getFromServer("/htmlPrintDefaults/?units=0",
                 function (data) {
+                    MeadCo.log("got default html settings");
                     updateSettingsWithServerDefaults(data.htmlPrintSettings);
                     if (data.deviceSettings != null) {
+                        // note, this will cause a download of device settings.
                         MeadCo.ScriptX.Print.printerName = "default";
-                        //MeadCo.ScriptX.Print.deviceSettings = data.deviceSettings;
                     }
                 });
         },

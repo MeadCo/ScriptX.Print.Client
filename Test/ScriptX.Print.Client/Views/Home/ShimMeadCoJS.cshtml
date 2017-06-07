@@ -6,8 +6,16 @@
 
 <h2>@ViewBag.Title</h2>
 
+<div id="logPane"></div>
+
 @section scripts
 {
+    <script type="text/javascript">
+        function pageLogger(txt) {
+            $("#logPane").append(txt + "<br/>");
+        }
+    </script>
+
     <script src="@Url.Action("script","Home",new { filename= "meadco-core.js" })"></script>
     <script src="@Url.Action("script","Home",new { filename= "meadco-scriptxprint.js" })"></script>
     <script src="@Url.Action("script","Home",new { filename= "meadco-scriptxprinthtml.js" })"></script>
@@ -16,18 +24,18 @@
 
     <script type="text/javascript">
         $(function() {
-            console.log("Shim factory test starting");
+            pageLogger("Shim factory test starting");
 
             try {
                 if (MeadCo.ScriptX.Init()) {
-                    MeadCo.log("Installed version of ScriptX is: " + MeadCo.ScriptX.Version());
+                    pageLogger("Installed version of ScriptX is: " + MeadCo.ScriptX.Version());
                     MeadCo.ScriptX.Printing.header = "This is a MeadCoJSShim Header";
-                    MeadCo.log("Header was set to: " + MeadCo.ScriptX.Printing.header);
+                    pageLogger("Header was set to: " + MeadCo.ScriptX.Printing.header);
                 } else {
-                    MeadCo.log("Failed to init");
+                    pageLogger("Failed to init");
                 }
             } catch (e) {
-                MeadCo.log("Error: " + e.message);
+                pageLogger("Error: " + e.message);
             }
         });
     </script>

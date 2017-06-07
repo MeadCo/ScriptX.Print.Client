@@ -9,8 +9,7 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
-
-    var version = "0.0.6.2";
+    var version = "0.0.6.8";
     var printerName = "";
     var deviceSettings = {};
     var module = this;
@@ -50,7 +49,7 @@
         ABANDONED: -2    
     };
 
-    function printHtmlAtServer(contentType, content, htmlPrintSettings) {
+    function printHtmlAtServer(contentType, content, htmlPrintSettings,fnDone) {
         MeadCo.log("started MeadCo.ScriptX.Print.print.printHtmlAtServer() Type: " + contentType + ", printerName: " + printerName);
         var devInfo;
 
@@ -71,6 +70,9 @@
         {
             fail: function(jqXhr, textStatus, errorThrown) {
                 MeadCo.ScriptX.Print.reportServerError(errorThrown);
+                if (typeof fnDone === "function") {
+                    fnDone(jqXhr);
+                }
             },
 
             queuedToFile: function(data) {
@@ -79,7 +81,10 @@
                     -1,
                     function (data) {
                         MeadCo.log("Will download printed file");
-                        window.open(server + "/DownloadPrint/" + data.jobIdentifier,"_self");
+                        window.open(server + "/download/" + data.jobIdentifier, "_self");
+                        if (typeof fnDone === "function") {
+                            fnDone(null);
+                        }
                     });
             },
 
@@ -119,7 +124,7 @@
 
         if (module.jQuery) {
             MeadCo.log(".ajax() post to: " + server);
-            module.jQuery.ajax(server,
+            module.jQuery.ajax(server + "/print",
                 {
                     data: requestData,
                     dataType: "json",
@@ -149,12 +154,22 @@
                     }
                 })
                 .fail(function (jqXhr, textStatus, errorThrown) {
-                    if (errorThrown === "") {
+                    MeadCo.log("Fail response from server: [" +
+                        textStatus +
+                        "], [" +
+                        errorThrown +
+                        "], [" +
+                        jqXhr.responseText +
+                        "]");
+
+                    if (typeof jqXhr.responseText !== "undefined") {
                         errorThrown = jqXhr.responseText;
                     }
+
                     if (errorThrown === "") {
                         errorThrown = "Unknown server or network error";
                     }
+
                     if (typeof responseInterface.fail === "function") {
                         responseInterface.fail(jqXhr, textStatus, errorThrown);
                     } 
@@ -177,13 +192,25 @@
                     headers: {
                         "Authorization": "Basic " + btoa(licenseGuid + ":")
                     }
-                }).done(function(data) {
+                }).done(function (data) {
+                    bConnected = true;
                     onSuccess(data);
                 })
                 .fail(function (jqXhr, textStatus, errorThrown) {
-                    MeadCo.log("**warning: failure in MeadCo.ScriptX.Print.getFromServer: " + errorThrown);
-                    if (errorThrown === "") {
+                    MeadCo.log("**warning: failure in MeadCo.ScriptX.Print.getFromServer: [" +
+                        textStatus +
+                        "], [" +
+                        errorThrown +
+                        "], [" +
+                        jqXhr.responseText +
+                        "]");
+
+                    if (typeof jqXhr.responseText !== "undefined") {
                         errorThrown = jqXhr.responseText;
+                    }
+
+                    if (errorThrown === "") {
+                        errorThrown = "Unknown server or network error";
                     }
                     if (typeof onFail == "function")
                         onFail(errorThrown);
@@ -247,6 +274,22 @@
                             }
                         })
                         .fail(function (jqXhr, textStatus, errorThrown) {
+                            MeadCo.log("**warning: failure in MeadCo.ScriptX.Print.waitForJobComplete: [" +
+                                textStatus +
+                                "], [" +
+                                errorThrown +
+                                "], [" +
+                                jqXhr.responseText +
+                                "]");
+
+                            if (typeof jqXhr.responseText !== "undefined") {
+                                errorThrown = jqXhr.responseText;
+                            }
+
+                            if (errorThrown === "") {
+                                errorThrown = "Unknown server or network error";
+                            }
+
                             MeadCo.log("error: " + errorThrown + " in waitForJobComplete so clear interval: " + intervalId);
                             window.clearInterval(intervalId);
                         });
@@ -262,7 +305,7 @@
     function getDeviceSettings(oRequest) {
         MeadCo.log("Request get device info: " + oRequest.name);
         if (module.jQuery) {
-            var serviceUrl = server + "/deviceinfo/" + encodeURIComponent(oRequest.name) + "?units=0";
+            var serviceUrl = server + "/deviceinfo/" + encodeURIComponent(oRequest.name) + "/0";
             MeadCo.log(".ajax() get: " + serviceUrl);
             module.jQuery.ajax(serviceUrl,
                 {
@@ -286,7 +329,6 @@
                 .fail(function (jqXhr, textStatus, errorThrown) {
                     if (errorThrown === "") {
                         errorThrown = jqXhr.responseText;
-
                     }
                     else {
                         bConnected = true; // we connected but the server doesnt like us
@@ -366,6 +408,12 @@
         // overridable function for reporting an error.
         reportServerError : function(errorThrown) {
             alert("There was an error in the printing service\n\n" + errorThrown);
+        },
+
+        // overridable function for reporting feature isnt available.
+        reportFeatureNotImplemented: function (featureDescription) {
+            MeadCo.log("Call to not implemented: " + featureDescription);
+            alert(featureDescription + "\n\nis not available.");
         }
     };
 

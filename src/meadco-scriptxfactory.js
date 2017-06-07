@@ -27,17 +27,19 @@
         }
     }
 
+    console.log("ScriptX factory anti-polyfill believes it is requred.");
     var theModule = definition();
 
     // Assign to the global object (window)
     (this)[name] = theModule;
 
 })('factory', function () {
-
+    // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "0.0.5.9";
+    var moduleversion = "0.0.5.12";
     var emulatedVersion = "8.0.0.0";
     var module = this;
+    var printApi = MeadCo.ScriptX.Print;
 
     function log (str) {
         console.log("factory anti-polyfill :: " + str);
@@ -47,7 +49,7 @@
     module.extendFactoryNamespace = function(name, definition) {
         var theModule = definition();
 
-        log("MeadCo factory extending namespace2: " + name);
+        log("MeadCo factory extending namespace: " + name);
         // walk/build the namespace part by part and assign the module to the leaf
         var namespaces = name.split(".");
         var scope = this;
@@ -85,6 +87,10 @@
 
             switch( sComponent.toLowerCase() ) {
                 case "scriptx.factory":
+                    v = emulatedVersion;
+                    break;
+
+                case "scriptx.factory.cloud":
                     v = moduleversion;
                     break;
 
@@ -110,8 +116,8 @@
             d[0] = v[3];
         },
 
-        get ScriptXVersion() { return version },
-        get SecurityManagerVersion() { return version },
+        get ScriptXVersion() { return emulatedVersion },
+        get SecurityManagerVersion() { return emulatedVersion },
 
         baseURL : function(sRelative) {
             return window.location.href.substring(0, window.location.href.length - window.location.pathname.length);
@@ -148,6 +154,14 @@
         });
     }
 
+    if (typeof module.print === "function") {
+        module.factory.log("overwriting module.print");
+        module.print = function() {
+            module.factory.log("window.print() called and being handled.");
+            printHtml.printDocument(true);
+        }
+    }
+
     // public API
     return {
         // basic properties
@@ -174,7 +188,7 @@
             settings.headerFooterFont = str;
         },
 
-        get headerHooterFont() {
+        get headerFooterFont() {
             return settings.headerFooterFont;
         },
 
@@ -234,7 +248,7 @@
         get rightMargin() {
             return settings.page.margins.right;
         },
-        
+
         // templateURL is a no-op at this time. In the future may
         // enable alternative server behaviour.
         set templateURL(sUrl) {           
@@ -254,15 +268,15 @@
         },
 
         PageSetup : function() {
-            alert("MeadCo.ScriptX.Print :: Page setup dialog is not implemented yet.");
+            printApi.reportFeatureNotImplemented("Page setup dialog");
         },
 
         PrintSetup : function() {
-            alert("MeadCo.ScriptX.Print :: Print setup dialog is not implemented yet.");
+            printApi.reportFeatureNotImplemented("Print setup dialog");
         },
 
         Preview : function(sOrOFrame) {
-            alert("MeadCo.ScriptX.Print :: Preview is not implemented yet.");
+            printApi.reportFeatureNotImplemented("Preview");
         },
 
         Print : function(bPrompt, sOrOFrame) { // needs and wants update to ES2015
@@ -302,7 +316,7 @@
         },
 
         PrintHTMLEx: function (sUrl, bPrompt, fnCallback, data) {
-            alert("MeadCo.ScriptX.Print :: PrintHtmlEx is not implemented yet.");
+            printApi.reportFeatureNotImplemented("PrintHtmlEx");
         },
 
         // advanced (aka licensed properties - the server will reject
@@ -323,6 +337,22 @@
 
         get paperSize() {
             return printApi.deviceSettings.paperSizeName;
+        },
+
+        set paperSource(sPaperSource) {
+            printApi.reportFeatureNotImplemented("set paperSource");
+        },
+
+        get paperSource() {
+            printApi.reportFeatureNotImplemented("get paperSource");
+        },
+
+        set paperSource2(sPaperSource) {
+            printApi.reportFeatureNotImplemented("set paperSource2");
+        },
+
+        get paperSource2() {
+            printApi.reportFeatureNotImplemented("get paperSource2");
         },
 
         get pageWidth() {
@@ -349,6 +379,34 @@
             return printApi.deviceSettings.collate === printHtml.CollateOptions.TRUE;
         },
 
+        set duplex(duplex) {
+            printApi.reportFeatureNotImplemented("set Duplex");
+        },
+
+        get duplex() {
+            printApi.reportFeatureNotImplemented("get Duplex");
+        },
+
+        set duplex2(duplex) {
+            printApi.reportFeatureNotImplemented("set Duplex2");
+        },
+
+        get duplex2() {
+            printApi.reportFeatureNotImplemented("get Duplex2");
+        },
+
+        set onbeforeprint(fn) {
+            printApi.reportFeatureNotImplemented("onbeforeprint");
+        },
+
+        set onafterprint(fn) {
+            printApi.reportFeatureNotImplemented("onafterprint");
+        },
+
+        set onuserprintpreview(fn) {
+            printApi.reportFeatureNotImplemented("onuserprintpreview");
+        },
+
         get CurrentPrinter() {
             return printApi.printerName;
         },
@@ -369,7 +427,12 @@
             printApi.printerName = sPrinterName;
         },
 
-        // implemented as simple property not persisted, TBA
+        set printToFileName(fn) {
+            printApi.reportFeatureNotImplemented("printToFileName");
+        },
+
+        // implemented as simple property not persisted
+        // TODO: transfer to server
         get printBackground() {
             return printBackground;
         },
@@ -386,7 +449,42 @@
             settings.viewScale = x;
         },
 
+        set unprintableLeft(n) {
+            printApi.reportFeatureNotImplemented("set unprintableLeft");
+        },
+
+        get unprintableLeft() {
+            printApi.reportFeatureNotImplemented("get unprintableLeft");
+        },
+
+        set unprintableRight(n) {
+            printApi.reportFeatureNotImplemented("set unprintableRight");
+        },
+
+        get unprintableRight() {
+            printApi.reportFeatureNotImplemented("get unprintableRight");
+        },
+
+        set unprintableTop(n) {
+            printApi.reportFeatureNotImplemented("set unprintableTop");
+        },
+
+        get unprintableTop() {
+            printApi.reportFeatureNotImplemented("get unprintableTop");
+        },
+
+        set unprintableBottom(n) {
+            printApi.reportFeatureNotImplemented("set unprintableBottom");
+        },
+
+        get unprintableBottom() {
+            printApi.reportFeatureNotImplemented("get unprintableBottom");
+        },
+
+
+        // advanced methods :: require a subscription/license.
         EnumPrinters: function (index) {
+            // TODO: Support many printers
             if (index === 0) {
                 return this.CurrentPrinter;
             }
@@ -395,24 +493,100 @@
             }
         },
 
+        EnumJobs : function() {
+            printApi.reportFeatureNotImplemented("EnumJobs");                                
+        },
+
+        GetJobsCount : function() {
+            printApi.reportFeatureNotImplemented("GetJobsCount");                                
+        },
+
         printerControl: function (value) {
             // for now ignore value parameter and return an array of paper sizes in the Forms property
-            var x = {};
-            x.Forms = ["A3", "A4", "A5", "Letter"];
-            x.Bins = ["Automatically select", "Printer auto select", "Manual Feed Tray", "Tray 1", "Tray 2", "Tray 3", "Tray 4"];
-            return x;
+
+            return {
+                Forms : ["A3", "A4", "A5", "Letter"],
+                Bins : ["Automatically select", "Printer auto select", "Manual Feed Tray", "Tray 1", "Tray 2", "Tray 3", "Tray 4"],
+                get Name() {
+                    printApi.reportFeatureNotImplemented("printerControl.Name");      
+                },
+                get Jobs() {
+                    printApi.reportFeatureNotImplemented("printerControl.Jobs");      
+                },
+                get port() {
+                    printApi.reportFeatureNotImplemented("printerControl.port");      
+                },
+                get attributes() {
+                    printApi.reportFeatureNotImplemented("printerControl.attributes");      
+                },
+                get serverName() {
+                    printApi.reportFeatureNotImplemented("printerControl.serverName");      
+                },
+                get shareName() {
+                    printApi.reportFeatureNotImplemented("printerControl.shareName");      
+                },
+                get location() {
+                    printApi.reportFeatureNotImplemented("printerControl.location");      
+                },
+                get isLocal() {
+                    printApi.reportFeatureNotImplemented("printerControl.isLocal");      
+                },
+                get isNetwork() {
+                    printApi.reportFeatureNotImplemented("printerControl.isNetwork");      
+                },
+                get isShared() {
+                    printApi.reportFeatureNotImplemented("printerControl.isShared");      
+                },
+                Purge: function() {
+                    printApi.reportFeatureNotImplemented("printerControl.Purge()");                      
+                },
+                Pause: function() {
+                    printApi.reportFeatureNotImplemented("printerControl.Pause()");                      
+                },
+                Resume: function() {
+                    printApi.reportFeatureNotImplemented("printerControl.Resume()");                      
+                }
+            };
         },
 
         GetMarginMeasure: function() {
-            return settings.page.units == printHtml.PageMarginUnits.INCHES ? 2 : 1;
+            return settings.page.units === printHtml.PageMarginUnits.INCHES ? 2 : 1;
         },
 
         SetMarginMeasure: function (enumUnits) {
-            settings.page.units = enumUnits == 2 ? printHtml.PageMarginUnits.INCHES : printHtml.PageMarginUnits.MM;
+            settings.page.units = enumUnits === 2 ? printHtml.PageMarginUnits.INCHES : printHtml.PageMarginUnits.MM;
         },
 
         SetPrintScale: function (value) {
             settings.viewScale = value;
+        },
+
+        IsSpooling : function() {
+            printApi.reportFeatureNotImplemented("IsSpooling");
+        },
+
+        OwnQueue: function () {
+            printApi.reportFeatureNotImplemented("OwnQueue");
+        },
+
+        SetPageRange: function () {
+            printApi.reportFeatureNotImplemented("SetPageRange");
+        },
+
+        SetPreviewZoom: function () {
+            printApi.reportFeatureNotImplemented("SetPreviewZoom");
+        },
+
+        Sleep: function () {
+            printApi.reportFeatureNotImplemented("Sleep");
+        },
+
+        TotalPrintPages: function () {
+            printApi.reportFeatureNotImplemented("TotalPrintPages");
+        },
+
+        WaitForSpoolingComplete: function () {
+            printApi.reportFeatureNotImplemented("WaitForSpoolingComplete");
         },
 
         // helpers for wrapper MeadCoJS

@@ -8,8 +8,8 @@
 // Trigger with attrubute data-meado-ui = "print" 
 //
 
-"use strict";
 (function (topLevelNs, $, undefined) {
+    "use strict";
 
     var ui = topLevelNs.createNS("MeadCo.ScriptX.Print.UI");
 

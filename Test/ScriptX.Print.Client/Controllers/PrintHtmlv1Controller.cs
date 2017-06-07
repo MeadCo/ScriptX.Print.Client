@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Routing;
+using MeadCo.ScriptX.Print.Messaging.Models;
 using MeadCo.ScriptX.Print.Messaging.Responses;
 using ScriptX.Print.Client.Attributes;
 using ScriptX.Print.Client.Identity;
@@ -22,18 +23,41 @@ namespace ScriptX.Print.Client.Controllers
         private static int _counter = 1;
         private static int _jobCounter = 1;
 
-        [Route("{settingName}")]
-        // GET api/v1/printHtml/papersize
-        public string Get([FromUri] string settingName)
+        [Route("settings")]
+        public IHttpActionResult GetSettings()
         {
-            return settingName;
+            var settings = new HtmlPrintSettings();
+
+            return Ok(settings);
         }
 
-        [Route]
-        // POST api/v1/printHtml
-        public MeadCo.ScriptX.Print.Messaging.Responses.Print Post([FromBody] MeadCo.ScriptX.Print.Messaging.Requests.PrintHtml request)
+        [Route("deviceinfo/{deviceName}/{units?}")]
+        public IHttpActionResult GetDeviceInfo([FromUri] string deviceName, [FromUri] Page.PageMarginUnits units = Page.PageMarginUnits.Default)
         {
+            var settings = new DeviceSettings();
+            return Ok(settings);
+        }
 
+        [Route("htmlPrintDefaults/{units?}")]
+        [HttpGet]
+        public IHttpActionResult GetDefaults([FromUri] Page.PageMarginUnits units = Page.PageMarginUnits.Default)
+        {
+            PrintHtmlDefaultSettings allSettings = new PrintHtmlDefaultSettings()
+            {
+                HtmlPrintSettings = new HtmlPrintSettings()
+                {
+                    Header = "Default header"
+                },
+                DeviceSettings = null
+            };
+
+            return Ok(allSettings);
+        }
+
+        [Route("print")]
+        // POST api/v1/printHtml
+        public MeadCo.ScriptX.Print.Messaging.Responses.Print PostPrint([FromBody] MeadCo.ScriptX.Print.Messaging.Requests.PrintHtmlDescription requestMessage)
+        {
             // cache what was sent for return 
             try
             {
@@ -41,7 +65,7 @@ namespace ScriptX.Print.Client.Controllers
 
                 using (StreamWriter testData = new StreamWriter(FileNameForJob(_jobCounter), false))
                 {
-                    var content = request.Content.Replace("\n", "\r\n");
+                    var content = requestMessage.Content.Replace("\n", "\r\n");
 
                     testData.WriteLine(content);
                 }
@@ -53,27 +77,20 @@ namespace ScriptX.Print.Client.Controllers
 
             _counter = 0;
             return new MeadCo.ScriptX.Print.Messaging.Responses.Print()
-            {
-                ResponseType = ResponseType.QueuedToFile,
+            {           
+                Status = PrintRequestStatus.QueuedToFile,
                 Message = "Test",
                 JobIdentifier = _jobCounter++
             };
         }
 
-        [Route("{settingName}")]
-        // PUT api/v1/printHtml/paperSize
-        public void Put([FromUri] string settingName, [FromBody]string value)
-        {
-        }
-
         [Route("status/{jobIdentifier:int}")]
-        // Get api/v1/printHtml/status/jobid
-        public MeadCo.ScriptX.Print.Messaging.Responses.Print GetStatus(int jobIdentifier)
+        public MeadCo.ScriptX.Print.Messaging.Responses.JobStatus GetStatus(int jobIdentifier)
         {
-            return new MeadCo.ScriptX.Print.Messaging.Responses.Print()
+            return new JobStatus(jobIdentifier)
             {
-                ResponseType = ++_counter > JobCounterWait ? ResponseType.Ok : ResponseType.QueuedToFile,
-                JobIdentifier = jobIdentifier
+                Message = "Test",
+                Status = ++_counter > JobCounterWait ? PrintHtmlStatus.Printing : PrintHtmlStatus.Completed
             };
         }
 
@@ -82,11 +99,11 @@ namespace ScriptX.Print.Client.Controllers
             return Path.Combine(HostingEnvironment.MapPath("~/App_data"), $"{jobName}.txt");
         }
 
+        [Route("download/{jobIdentifier:int}")]
         [AllowAnonymous]
-        [Route("DownloadPrint/{jobId:int}")]
-        public IHttpActionResult GetDownloadPrint(int jobId)
+        public IHttpActionResult GetDownloadPrint(int jobIdentifier)
         {
-            var fileInfo = new FileInfo(FileNameForJob(jobId));
+            var fileInfo = new FileInfo(FileNameForJob(jobIdentifier));
 
             return _counter < JobCounterWait 
                 ? (IHttpActionResult)NotFound()
