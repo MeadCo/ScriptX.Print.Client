@@ -1,0 +1,23 @@
+{
+  "name": "MeadCoScriptXClientScripts",
+  "version": "1.0.0",
+  "main" : "src/*.js",
+  "authors": [
+    "Pete Cole"
+  ],
+  "description": "Scripts for using ScriptX.Print",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    ".*",
+    "Test",
+    "book",
+    "docs",
+    "LICENSE",
+    "README.md",
+    "*.json"
+  ],
+  "dependencies": {
+    "jquery": ">=3.0.0"
+  }
+}
