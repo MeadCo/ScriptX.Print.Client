@@ -1,14 +1,6 @@
 {
   "name": "scriptxprint",
   "version": "1.0.0",
-  "main" : [
-  	"src/jQuery-MeadCo.ScriptX.Print.UI.js",
-  	"src/meadco-core.js",
-  	"src/meadco-scriptxfactory.js",
-  	"src/meadco-scriptxlicense.js",
-  	"src/meadco-scriptxprint.js",
-  	"src/meadco-scriptxprinthtml.js"
-  ],
   "authors": [
     "Pete Cole"
   ],
