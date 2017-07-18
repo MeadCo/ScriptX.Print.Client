@@ -1,11 +1,23 @@
 {
-  "name": "scriptxprint",
-  "version": "1.0.0",
-  "authors": [
-    "Pete Cole"
+  "name": "scriptxprint-html",
+  "description": "Print html with the ScriptX.Print.HTML service from MeadCo.",
+  "main": "meadco-scriptxprinthtml.js",
+  "moduleType": [
+    "globals"
   ],
-  "description": "Scripts for using ScriptX.Print",
+  "authors": [
+    {
+      "name": "Pete Cole",
+      "email": "pcole@meadroid.com",
+      "homepage": "http://scriptx.meadroid.com"
+    }
+  ],
   "license": "MIT",
+  "keywords": [
+    "jquery",
+    "print",
+    "html"
+  ],
   "ignore": [
     "**/.*",
     ".*",
