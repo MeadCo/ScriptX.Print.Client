@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>MeadScriptXPrintHtml</id>
+        <version>1.0.0-beta01</version>
+        <title>MeadCo ScriptX.Print Services Library</title>
+        <authors>Pete Cole, MeadCo</authors>
+        <owners>MeadCo</owners>
+        <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
+        <projectUrl>https://github.com/MeadCo/ScriptX.Print.Client</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<iconUrl>http://scriptx.meadroid.com/favicon.ico</iconUrl>
+        <description>This library implements an emulation of the MeadCo ScriptX Add-on for Internet Explorer to bring print services to all browsers. The MeadCoScriptXJS library is recommended to enable code to be written that will work with both the Add-on and ScriptX.Print Services.</description>
+        <summary>Javascript emulation of the MeadCo ScriptX Add-on for Internet Explorer to bring print services to all browsers.</summary>
+        <releaseNotes>v1.0.0 - Initial release.</releaseNotes>
+        <copyright>Copyright © 2017, Mead &amp; Co Ltd</copyright>
+        <language>en-GB</language>
+        <tags>MeadCo, ScriptX, Print, HTML</tags>
+		<dependencies>
+			<dependency id="MeadScriptXJS" version="1.2.0" />
+		</dependencies>
+    </metadata>
+    <files>
+        <file src="..\src\meadco-core.js" target="content\scripts\MeadCo.ScriptX\meadco-core.js" />
+        <file src="..\src\meadco-scriptxfactory.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxfactory.js" />
+        <file src="..\src\meadco-scriptxprint.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxprint.js" />
+        <file src="..\src\meadco-scriptxprinthtml.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxprinthtml.js" />
+
+		<!-- this will shift out to its own package -->
+        <file src="..\src\jQuery-MeadCo.ScriptX.Print.UI.js" target="content\scripts\MeadCo.ScriptX\jQuery-MeadCo.ScriptX.Print.UI.js" />
+    </files>
+</package>
