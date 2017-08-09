@@ -38,6 +38,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7C47A878-72F
 		..\src\meadco-scriptxprinthtml.js = ..\src\meadco-scriptxprinthtml.js
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{0B0CC34E-A750-4CBF-965B-B9D84CAAF4EF}"
+	ProjectSection(SolutionItems) = preProject
+		..\nuget\MeadCoScriptXPrintServicesHtml.nuspec = ..\nuget\MeadCoScriptXPrintServicesHtml.nuspec
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
