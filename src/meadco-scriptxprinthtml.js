@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * MeadCo.ScriptX.Print.HTML (support for modern browsers and IE 11) JS client library
  * Copyright 2017 Mead & Company. All rights reserved.
  * https://github.com/MeadCo/ScriptX.Print.Client
@@ -10,8 +10,8 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
 
-    var moduleversion = "0.0.6.6";
-   
+    var moduleversion = "0.0.6.8";
+
     var mPageOrientation = {
         DEFAULT: 0,
         LANDSCAPE: 1,
@@ -42,6 +42,7 @@
         timezoneOffset: 0,
         shortDateFormat: "",
         longDateFormat: "",
+        printBackgroundColorsAndImages: false,
         pageSettings: {
             orientation: mPageOrientation.PORTRAIT,
             units: mPageMarginUnits.DEFAULT,
@@ -107,6 +108,14 @@
 
         set longDateFormat(x) {
             settingsCache.longDateFormat = x;
+        },
+
+        set printBackgroundColorsAndImages(b) {
+            settingsCache.printBackgroundColorsAndImages = b;
+        },
+
+        get printBackgroundColorsAndImages() {
+            return settingsCache.printBackgroundColorsAndImages;
         },
 
         page: {
@@ -196,7 +205,7 @@
             else
                 this.innerHTML = value;
         });
-        
+
     }
 
     function getBaseHref() {
@@ -220,7 +229,7 @@
         }
 
         return $html.html();
-        
+
     }
 
     function documentHtml() {
@@ -276,7 +285,7 @@
             MeadCo.log("html.printDocument. *warning* ignoring bPrompt");
             printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.INNERTHTML, documentContent(), settingsCache,fnCallOnDone);
         },
-        
+
         printFrame : function(sFrame, bPrompt) {
             MeadCo.log("html.printFrame: " + sFrame + " *warning* ignoring bPrompt");
             printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.INNERTHTML, frameContent(sFrame), settingsCache);

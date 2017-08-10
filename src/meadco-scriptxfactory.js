@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * MeadCo ScriptX 'window.factory' shim (support for modern browsers and IE 11) JS client library
  * Copyright 2017 Mead & Company. All rights reserved.
  * https://github.com/MeadCo/ScriptX.Print.Client
@@ -6,7 +6,7 @@
  * Released under the MIT license
  */
 
-// we anti-polyfill <object id="factory" /> 
+// we anti-polyfill <object id="factory" />
 // enabling old code to run in modern browsers
 //
 ; (function (name, definition,undefined) {
@@ -36,7 +36,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "0.0.5.12";
+    var moduleversion = "0.0.5.15";
     var emulatedVersion = "8.0.0.0";
     var module = this;
     var printApi = MeadCo.ScriptX.Print;
@@ -139,7 +139,6 @@
     var printHtml = MeadCo.ScriptX.Print.HTML;
     var settings = printHtml.settings;
     var printApi = MeadCo.ScriptX.Print;
-    var printBackground = false;
     var module = this;
 
     module.factory.log("factory.Printing loaded.");
@@ -251,7 +250,7 @@
 
         // templateURL is a no-op at this time. In the future may
         // enable alternative server behaviour.
-        set templateURL(sUrl) {           
+        set templateURL(sUrl) {
         },
 
         get templateURL() {
@@ -261,18 +260,26 @@
         // basic functions
         //
 
-        // No longer relevant, has returned true since IE 6 and was 
+        // No longer relevant, has returned true since IE 6 and was
         // a proxy for testing if the browser was IE5.5 or later!
         IsTemplateSupported : function() {
             return true;
         },
 
         PageSetup : function() {
-            printApi.reportFeatureNotImplemented("Page setup dialog");
+            if (MeadCo.ScriptX.Print.UI) {
+                MeadCo.ScriptX.Print.UI.PageSetup();
+            } else {
+                printApi.reportFeatureNotImplemented("Page setup dialog");
+            }
         },
 
         PrintSetup : function() {
-            printApi.reportFeatureNotImplemented("Print setup dialog");
+            if (MeadCo.ScriptX.Print.UI) {
+                MeadCo.ScriptX.Print.UI.PrinterSettings();
+            } else {
+                printApi.reportFeatureNotImplemented("Print settings dialog");
+            }
         },
 
         Preview : function(sOrOFrame) {
@@ -340,11 +347,11 @@
         },
 
         set paperSource(sPaperSource) {
-            printApi.reportFeatureNotImplemented("set paperSource");
+            printApi.deviceSettings.paperSourceName = sPaperSource;
         },
 
         get paperSource() {
-            printApi.reportFeatureNotImplemented("get paperSource");
+            return printApi.deviceSettings.paperSourceName;
         },
 
         set paperSource2(sPaperSource) {
@@ -431,14 +438,12 @@
             printApi.reportFeatureNotImplemented("printToFileName");
         },
 
-        // implemented as simple property not persisted
-        // TODO: transfer to server
         get printBackground() {
-            return printBackground;
+            return settings.printBackgroundColorsAndImages;
         },
 
         set printBackground(bPrintBackground) {
-            printBackground = bPrintBackground;
+            settings.printBackgroundColorsAndImages = bPrintBackground;
         },
 
         get viewScale() {
@@ -484,9 +489,12 @@
 
         // advanced methods :: require a subscription/license.
         EnumPrinters: function (index) {
-            // TODO: Support many printers
             if (index === 0) {
                 return this.CurrentPrinter;
+            }
+            // TODO: Support many printers
+            else if (!index) {
+                return new Array(this.CurrentPrinter);
             }
             else {
                 return "";
@@ -494,11 +502,11 @@
         },
 
         EnumJobs : function() {
-            printApi.reportFeatureNotImplemented("EnumJobs");                                
+            printApi.reportFeatureNotImplemented("EnumJobs");
         },
 
         GetJobsCount : function() {
-            printApi.reportFeatureNotImplemented("GetJobsCount");                                
+            printApi.reportFeatureNotImplemented("GetJobsCount");
         },
 
         printerControl: function (value) {
@@ -508,43 +516,43 @@
                 Forms : ["A3", "A4", "A5", "Letter"],
                 Bins : ["Automatically select", "Printer auto select", "Manual Feed Tray", "Tray 1", "Tray 2", "Tray 3", "Tray 4"],
                 get Name() {
-                    printApi.reportFeatureNotImplemented("printerControl.Name");      
+                    printApi.reportFeatureNotImplemented("printerControl.Name");
                 },
                 get Jobs() {
-                    printApi.reportFeatureNotImplemented("printerControl.Jobs");      
+                    printApi.reportFeatureNotImplemented("printerControl.Jobs");
                 },
                 get port() {
-                    printApi.reportFeatureNotImplemented("printerControl.port");      
+                    printApi.reportFeatureNotImplemented("printerControl.port");
                 },
                 get attributes() {
-                    printApi.reportFeatureNotImplemented("printerControl.attributes");      
+                    printApi.reportFeatureNotImplemented("printerControl.attributes");
                 },
                 get serverName() {
-                    printApi.reportFeatureNotImplemented("printerControl.serverName");      
+                    printApi.reportFeatureNotImplemented("printerControl.serverName");
                 },
                 get shareName() {
-                    printApi.reportFeatureNotImplemented("printerControl.shareName");      
+                    printApi.reportFeatureNotImplemented("printerControl.shareName");
                 },
                 get location() {
-                    printApi.reportFeatureNotImplemented("printerControl.location");      
+                    printApi.reportFeatureNotImplemented("printerControl.location");
                 },
                 get isLocal() {
-                    printApi.reportFeatureNotImplemented("printerControl.isLocal");      
+                    printApi.reportFeatureNotImplemented("printerControl.isLocal");
                 },
                 get isNetwork() {
-                    printApi.reportFeatureNotImplemented("printerControl.isNetwork");      
+                    printApi.reportFeatureNotImplemented("printerControl.isNetwork");
                 },
                 get isShared() {
-                    printApi.reportFeatureNotImplemented("printerControl.isShared");      
+                    printApi.reportFeatureNotImplemented("printerControl.isShared");
                 },
                 Purge: function() {
-                    printApi.reportFeatureNotImplemented("printerControl.Purge()");                      
+                    printApi.reportFeatureNotImplemented("printerControl.Purge()");
                 },
                 Pause: function() {
-                    printApi.reportFeatureNotImplemented("printerControl.Pause()");                      
+                    printApi.reportFeatureNotImplemented("printerControl.Pause()");
                 },
                 Resume: function() {
-                    printApi.reportFeatureNotImplemented("printerControl.Resume()");                      
+                    printApi.reportFeatureNotImplemented("printerControl.Resume()");
                 }
             };
         },

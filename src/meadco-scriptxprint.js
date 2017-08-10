@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * MeadCo.ScriptX.Print (support for modern browsers and IE 11) JS client library
  * Copyright 2017 Mead & Company. All rights reserved.
  * https://github.com/MeadCo/ScriptX.Print.Client
@@ -9,13 +9,13 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
-    var version = "0.0.6.8";
+    var version = "0.0.6.9";
     var printerName = "";
     var deviceSettings = {};
     var module = this;
 
 
-    var server = ""; // url to the server, server is CORS restricted 
+    var server = ""; // url to the server, server is CORS restricted
     var licenseGuid = "";
     var bConnected = false;
 
@@ -46,7 +46,7 @@
         PRINTPDF: 8,
 
         ERROR: -1,
-        ABANDONED: -2    
+        ABANDONED: -2
     };
 
     function printHtmlAtServer(contentType, content, htmlPrintSettings,fnDone) {
@@ -172,7 +172,7 @@
 
                     if (typeof responseInterface.fail === "function") {
                         responseInterface.fail(jqXhr, textStatus, errorThrown);
-                    } 
+                    }
                 });
         } else {
             throw new Error("MeadCo.ScriptX.Print : no known ajax helper available");
@@ -188,7 +188,7 @@
                     method: "GET",
                     dataType: "json",
                     cache: false,
-                    async: false, // TODO: deprecated 
+                    async: false, // TODO: deprecated
                     headers: {
                         "Authorization": "Basic " + btoa(licenseGuid + ":")
                     }
@@ -311,7 +311,7 @@
                 {
                     dataType: "json",
                     method: "GET",
-                    async: false, // TODO: deprecated 
+                    async: false, // TODO: deprecated
                     headers: {
                         "Authorization": "Basic " + btoa(licenseGuid + ":")
                     }
@@ -364,16 +364,18 @@
         },
 
         set printerName(deviceRequest) {
-            if (typeof deviceRequest === "string") {
-                getDeviceSettings({
-                    name: deviceRequest,
-                    done: function(data) {
-                        printerName = data.printerName;
-                    },
-                    fail: function (eTxt) { MeadCo.ScriptX.Print.reportServerError(eTxt);  }
-                });
-            } else {
-                getDeviceSettings(deviceRequest);
+            if (!(deviceRequest === printerName || deviceRequest.name === printerName)) {
+                if (typeof deviceRequest === "string") {
+                    getDeviceSettings({
+                        name: deviceRequest,
+                        done: function (data) {
+                            printerName = data.printerName;
+                        },
+                        fail: function (eTxt) { MeadCo.ScriptX.Print.reportServerError(eTxt); }
+                    });
+                } else {
+                    getDeviceSettings(deviceRequest);
+                }
             }
         },
 
