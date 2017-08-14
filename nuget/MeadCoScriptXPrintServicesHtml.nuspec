@@ -16,9 +16,6 @@
         <copyright>Copyright � 2017, Mead &amp; Co Ltd</copyright>
         <language>en-GB</language>
         <tags>MeadCo, ScriptX, Print, HTML</tags>
-		<dependencies>
-			<dependency id="MeadScriptXJS" version="1.2.0" />
-		</dependencies>
     </metadata>
     <files>
         <file src="..\src\meadco-core.js" target="content\scripts\MeadCo.ScriptX\meadco-core.js" />
