@@ -9,7 +9,7 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
-    var version = "1.1.0.1";
+    var version = "1.1.0.2";
     var printerName = "";
     var deviceSettings = {};
     var module = this;
@@ -190,7 +190,7 @@
         }
     }
 
-    function getFromServer(sApi,onSuccess,onFail) {
+    function getFromServer(sApi,async,onSuccess,onFail) {
         if (module.jQuery) {
             var serviceUrl = server + sApi;
             MeadCo.log(".ajax() get: " + serviceUrl);
@@ -199,7 +199,7 @@
                     method: "GET",
                     dataType: "json",
                     cache: false,
-                    async: false, // TODO: deprecated
+                    async: async, 
                     headers: {
                         "Authorization": "Basic " + btoa(licenseGuid + ":")
                     }
@@ -411,7 +411,7 @@
         },
 
         connectLite: function (serverUrl, licenseGuid) {
-            if ( arguments.length === 2)
+            if (arguments.length === 2 && serverUrl.length > 0 && licenseGuid.length > 0)
                 setServer(serverUrl, licenseGuid);
         },
 

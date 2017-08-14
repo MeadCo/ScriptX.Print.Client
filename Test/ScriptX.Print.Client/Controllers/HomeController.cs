@@ -52,6 +52,14 @@ namespace ScriptX.Print.Client.Controllers
             return View(new Models.Sample("Supporting code written against 'MeadCo.ScriptX' included first"));
         }
 
+        [Route("MeadCoJSShim3")]
+        [HttpGet]
+        public ActionResult ShimMeadCoJS3()
+        {
+            return View(new Models.Sample("Supporting async code written against 'MeadCo.ScriptX' included first"));
+        }
+
+
         [Route("Inspector")]
         [HttpGet]
         public ActionResult Inspector()

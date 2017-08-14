@@ -13,8 +13,11 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-// v1.1.3 and later include support for working with MeadCo.ScriptX.Print via a polyfill
+// v1.3.0 and later introduce an async model to enable async scenarios with ScriptX.Print Services.
+//
+// v1.2.0 and later include support for working with MeadCo.ScriptX.Print via a polyfill
 //  - include meadco-scriptxfactory.js before this file and call MeadCo.ScriptX.Print.HTML.connect() 
+//  see https://github.com/MeadCo/ScriptX.Print.Client
 //
 //
 
@@ -52,13 +55,246 @@
 //	MeadCo.Licensing.ReportError();
 // }
 
-"use strict";
-
-// MeadCo.ScriptX 
+// https://github.com/taylorhakes/promise-polyfill
 //
-(function(topLevelNs) {
+(function (root) {
 
-    console.log("Initialising MeadCo.ScriptX 1.1.4");
+    // Store setTimeout reference so promise-polyfill will be unaffected by
+    // other code modifying setTimeout (like sinon.useFakeTimers())
+    var setTimeoutFunc = setTimeout;
+
+    function noop() { }
+
+    // Polyfill for Function.prototype.bind
+    function bind(fn, thisArg) {
+        return function () {
+            fn.apply(thisArg, arguments);
+        };
+    }
+
+    function Promise(fn) {
+        if (typeof this !== 'object') throw new TypeError('Promises must be constructed via new');
+        if (typeof fn !== 'function') throw new TypeError('not a function');
+        this._state = 0;
+        this._handled = false;
+        this._value = undefined;
+        this._deferreds = [];
+
+        doResolve(fn, this);
+    }
+
+    function handle(self, deferred) {
+        while (self._state === 3) {
+            self = self._value;
+        }
+        if (self._state === 0) {
+            self._deferreds.push(deferred);
+            return;
+        }
+        self._handled = true;
+        Promise._immediateFn(function () {
+            var cb = self._state === 1 ? deferred.onFulfilled : deferred.onRejected;
+            if (cb === null) {
+                (self._state === 1 ? resolve : reject)(deferred.promise, self._value);
+                return;
+            }
+            var ret;
+            try {
+                ret = cb(self._value);
+            } catch (e) {
+                reject(deferred.promise, e);
+                return;
+            }
+            resolve(deferred.promise, ret);
+        });
+    }
+
+    function resolve(self, newValue) {
+        try {
+            // Promise Resolution Procedure: https://github.com/promises-aplus/promises-spec#the-promise-resolution-procedure
+            if (newValue === self) throw new TypeError('A promise cannot be resolved with itself.');
+            if (newValue && (typeof newValue === 'object' || typeof newValue === 'function')) {
+                var then = newValue.then;
+                if (newValue instanceof Promise) {
+                    self._state = 3;
+                    self._value = newValue;
+                    finale(self);
+                    return;
+                } else if (typeof then === 'function') {
+                    doResolve(bind(then, newValue), self);
+                    return;
+                }
+            }
+            self._state = 1;
+            self._value = newValue;
+            finale(self);
+        } catch (e) {
+            reject(self, e);
+        }
+    }
+
+    function reject(self, newValue) {
+        self._state = 2;
+        self._value = newValue;
+        finale(self);
+    }
+
+    function finale(self) {
+        if (self._state === 2 && self._deferreds.length === 0) {
+            Promise._immediateFn(function () {
+                if (!self._handled) {
+                    Promise._unhandledRejectionFn(self._value);
+                }
+            });
+        }
+
+        for (var i = 0, len = self._deferreds.length; i < len; i++) {
+            handle(self, self._deferreds[i]);
+        }
+        self._deferreds = null;
+    }
+
+    function Handler(onFulfilled, onRejected, promise) {
+        this.onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : null;
+        this.onRejected = typeof onRejected === 'function' ? onRejected : null;
+        this.promise = promise;
+    }
+
+    /**
+     * Take a potentially misbehaving resolver function and make sure
+     * onFulfilled and onRejected are only called once.
+     *
+     * Makes no guarantees about asynchrony.
+     */
+    function doResolve(fn, self) {
+        var done = false;
+        try {
+            fn(function (value) {
+                if (done) return;
+                done = true;
+                resolve(self, value);
+            }, function (reason) {
+                if (done) return;
+                done = true;
+                reject(self, reason);
+            });
+        } catch (ex) {
+            if (done) return;
+            done = true;
+            reject(self, ex);
+        }
+    }
+
+    Promise.prototype['catch'] = function (onRejected) {
+        return this.then(null, onRejected);
+    };
+
+    Promise.prototype.then = function (onFulfilled, onRejected) {
+        var prom = new (this.constructor)(noop);
+
+        handle(this, new Handler(onFulfilled, onRejected, prom));
+        return prom;
+    };
+
+    Promise.all = function (arr) {
+        var args = Array.prototype.slice.call(arr);
+
+        return new Promise(function (resolve, reject) {
+            if (args.length === 0) return resolve([]);
+            var remaining = args.length;
+
+            function res(i, val) {
+                try {
+                    if (val && (typeof val === 'object' || typeof val === 'function')) {
+                        var then = val.then;
+                        if (typeof then === 'function') {
+                            then.call(val, function (val) {
+                                res(i, val);
+                            }, reject);
+                            return;
+                        }
+                    }
+                    args[i] = val;
+                    if (--remaining === 0) {
+                        resolve(args);
+                    }
+                } catch (ex) {
+                    reject(ex);
+                }
+            }
+
+            for (var i = 0; i < args.length; i++) {
+                res(i, args[i]);
+            }
+        });
+    };
+
+    Promise.resolve = function (value) {
+        if (value && typeof value === 'object' && value.constructor === Promise) {
+            return value;
+        }
+
+        return new Promise(function (resolve) {
+            resolve(value);
+        });
+    };
+
+    Promise.reject = function (value) {
+        return new Promise(function (resolve, reject) {
+            reject(value);
+        });
+    };
+
+    Promise.race = function (values) {
+        return new Promise(function (resolve, reject) {
+            for (var i = 0, len = values.length; i < len; i++) {
+                values[i].then(resolve, reject);
+            }
+        });
+    };
+
+    // Use polyfill for setImmediate for performance gains
+    Promise._immediateFn = (typeof setImmediate === 'function' && function (fn) { setImmediate(fn); }) ||
+      function (fn) {
+          setTimeoutFunc(fn, 0);
+      };
+
+    Promise._unhandledRejectionFn = function _unhandledRejectionFn(err) {
+        if (typeof console !== 'undefined' && console) {
+            console.warn('Possible Unhandled Promise Rejection:', err); // eslint-disable-line no-console
+        }
+    };
+
+    /**
+     * Set the immediate function to execute callbacks
+     * @param fn {function} Function to execute
+     * @deprecated
+     */
+    Promise._setImmediateFn = function _setImmediateFn(fn) {
+        Promise._immediateFn = fn;
+    };
+
+    /**
+     * Change the function to execute on unhandled rejection
+     * @param {function} fn Function to execute on unhandled rejection
+     * @deprecated
+     */
+    Promise._setUnhandledRejectionFn = function _setUnhandledRejectionFn(fn) {
+        Promise._unhandledRejectionFn = fn;
+    };
+
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = Promise;
+    } else if (!root.Promise) {
+        root.Promise = Promise;
+    }
+
+})(window);
+
+// MeadCo.ScriptX - singleton
+//
+(function (topLevelNs) {
+    "use strict";
 
     if (typeof topLevelNs["ScriptX"] === "undefined") {
         console.log("intialising new ScriptX package");
@@ -67,27 +303,84 @@
 
     var scriptx = topLevelNs.ScriptX;
 
-    scriptx.LibVersion = "1.1.4";
+    scriptx.CONNECTED_NONE = 0;
+    scriptx.CONNECTED_ADDON = 1;
+    scriptx.CONNECTED_SERVICE = 2;
+
+    scriptx.LibVersion = "1.3.0";
+    scriptx.Connector = scriptx.CONNECTED_NONE;
+
+    scriptx.Factory = null;
     scriptx.Printing = null;
     scriptx.Utils = null;
+
+    console.log("Initialising MeadCo.ScriptX: " + scriptx.LibVersion);
 
     // Init()
     // Simple initialisation of the library
     // returns true if the MeadCo ScriptX factory object and printing object are available
     //
+    // With ScriptX.Print Services this will use a synchronous (blocking, deprecated) call to the server
+    //
     scriptx.Init = function () {
         if (scriptx.Printing == null) {
             console.log("scriptx.Init()");
-            var f = window.factory || document.getElementById("factory"); // we assume the <object /> has an id of 'factory'
-            if (f && f.object != null) {
-                console.log("found factory");
-                scriptx.Utils = f.object;
-                scriptx.Printing = f.printing;
+            if (findFactory()) {
+                // if we are connected to the ScriptX.Print implementation
+                // then check it has connected.
+                if (typeof scriptx.Printing.PolyfillInit === "function") {
+                    console.log("found ScriptX.Print Services");
+                    console
+                        .warn("Synchronous initialisation is deprecated - please update to MeadCo.ScriptX.InitAsync().");
+                    if (!scriptx.Printing.PolyfillInit()) {
+                        console.log("**warning** polyfill failed.");
+                        scriptx.Printing = null;
+                        scriptx.Connector = scriptx.CONNECTED_NONE;
+                    } else {
+                        scriptx.Connector = scriptx.CONNECTED_SERVICE;
+                    }
+                } else {
+                    scriptx.Connector = scriptx.CONNECTED_ADDON;
+                }
             } else {
                 console.log("** Warning -- no factory **");
             }
         }
+
         return scriptx.Printing != null;
+    }
+
+    scriptx.InitAsync = function () {
+        var prom;
+
+        console.log("scriptx.InitAsync()");
+        if (scriptx.Printing == null) {
+            console.log("unknown state ...");
+            prom = new Promise(function (resolve, reject) {
+                console.log("looking for state ...");
+                if (findFactory()) {
+                    console.log("look for Polyfill ..");
+                    if (typeof scriptx.Printing.PolyfillInitAsync === "function") {
+                        console.log("found async ScriptX.Print Services");
+                        scriptx.Printing.PolyfillInitAsync(resolve, reject);
+                    } else {
+                        scriptx.Connector = scriptx.CONNECTED_ADDON;
+                        console.log("no polyfill, using add-on");
+                        resolve();
+                    }
+                } else {
+                    console.log("** Warning -- no factory **");
+                    reject();
+                }
+            });
+        } else {
+            prom = new Promise(function (resolve, reject) {
+                resolve();
+            });
+        }
+
+        console.log("scriptx.InitAsync() returns promise");
+        return prom;
     }
 
     // InitWithVersion(strVersion)
@@ -126,8 +419,9 @@
     // PreviewPage
     // Preview the current document
     scriptx.PreviewPage = function () {
-        if (scriptx.Init())
+        if (scriptx.Init()) {
             scriptx.Printing.Preview();
+        }
     }
 
     // PreviewFrame
@@ -152,7 +446,7 @@
     // [optional] data
     // 
     var jobIndex = 1;
-    scriptx.BackgroundPrintURL = function(sUrl,bPrompt,fnCallback,data) {
+    scriptx.BackgroundPrintURL = function (sUrl, bPrompt, fnCallback, data) {
         if (scriptx.Init()) {
             if (typeof fnCallback == "undefined") {
                 fnCallback = progressMonitor;
@@ -168,7 +462,7 @@
     // BackgroundPrintHTML - requires license
     // Background print the html document contained in the string. The document must be complete and well formed.
     // All resource references in the HTML must be fully qualified unless a base element is included.
-    scriptx.BackgroundPrintHTML = function(sHtml,fnCallback,data) {
+    scriptx.BackgroundPrintHTML = function (sHtml, fnCallback, data) {
         return scriptx.BackgroundPrintURL("html://" + sHtml, false, fnCallback, data);
     }
 
@@ -182,6 +476,29 @@
         if (scriptx.Init())
             return scriptx.Printing.PrintSetup();
         return false;
+    }
+
+    // WaitForSpoolingComplete 
+    //
+    // A wrapper to hide differences between Add-on and ScriptX.Print Services 
+    //
+    scriptx.WaitForSpoolingComplete = function () {
+        if (scriptx.Connector === scriptx.CONNECTED_SERVICE) {
+            return new Promise(function (resolve, reject) {
+                window.setTimeout(function () {
+                    resolve();
+                },
+                    5000);
+            });
+        }
+
+        return new Promise(function (resolve, reject) {
+            window.setTimeout(function () {
+                scriptx.Printing.WaitforSpoolingComplete();
+                resolve();
+            }, 1);
+        });
+
     }
 
     // HasOrientation
@@ -241,6 +558,21 @@
     }
 
     // Private implementation
+
+    // findFactory
+    //
+    // hook up and instance of 'factory', either the add-on or polyfill.
+    function findFactory(parameters) {
+        var f = window.factory || document.getElementById("factory"); // we assume the <object /> has an id of 'factory'
+        if (f && f.object != null) {
+            scriptx.Factory = f;
+            scriptx.Utils = f.object;
+            scriptx.Printing = f.printing;
+            console.log("found factory");
+            return true;
+        }
+        return false;
+    }
 
     // compareVersions
     //
@@ -330,24 +662,44 @@
 
 }(window.MeadCo = window.MeadCo || {}));
 
-// MeadCo.Licensing 
+// MeadCo.Licensing - singleton
 //
 (function (topLeveNs) {
+    "use strict";
+
     topLeveNs.Licensing = {};
 
     var licensing = topLeveNs.Licensing;
 
-    licensing.LibVersion = "1.1.0";
+    licensing.LibVersion = "1.3.0";
     licensing.LicMgr = null;
 
     licensing.Init = function () {
         if (licensing.LicMgr == null) {
-            var l = window.secmgr || document.getElementById("secmgr") ;  // we assume the <object /> has an id of 'secmgr'
+            var l = window.secmgr || document.getElementById("secmgr");  // we assume the <object /> has an id of 'secmgr'
             if (l && l.object)
                 licensing.LicMgr = l.object;
         }
         return licensing.LicMgr != null && typeof (licensing.LicMgr.result) != "undefined";
     }
+
+    licensing.InitAsync = function () {
+
+        return new Promise(function (resolve, reject) {
+            if (licensing.LicMgr == null) {
+                var l = window.secmgr || document.getElementById("secmgr");  // we assume the <object /> has an id of 'secmgr'
+                if (l && l.object)
+                    licensing.LicMgr = l.object;
+            }
+
+            if (licensing.LicMgr != null && typeof (licensing.LicMgr.result) != "undefined")
+                resolve();
+            else
+                reject();
+        });
+
+    }
+
 
     // IsLicensed
     // Returns true if the document is licensed and advanced functionality will be available

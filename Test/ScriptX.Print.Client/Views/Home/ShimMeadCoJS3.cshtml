@@ -31,15 +31,15 @@
     <script src="@Url.Action("script","Home",new { filename= "meadco-core.js" })"></script>
     <script src="@Url.Action("script","Home",new { filename= "meadco-scriptxprint.js" })"></script>
     <script src="@Url.Action("script","Home",new { filename= "meadco-scriptxprinthtml.js" })"></script>
-    <script data-meadco-server="@server" data-meadco-license="@Model.License" src="@Url.Action("script","Home",new { filename= "meadco-scriptxfactory.js" })"></script>
+    <script data-meadco-server="@server" data-meadco-license="@Model.License" data-meadco-syncinit="false" src="@Url.Action("script","Home",new { filename= "meadco-scriptxfactory.js" })"></script>
 
     <script type="text/javascript">
         $(window).on("load", function () {
-            pageLogger("Shim factory test starting");
+            pageLogger("Shim factory async test starting");
             MeadCo.log = pageLogger;
 
             try {
-                if (MeadCo.ScriptX.Init()) {
+                MeadCo.ScriptX.InitAsync().then(function () {
                     pageLogger("Installed version of ScriptX is: " + MeadCo.ScriptX.Version());
                     MeadCo.ScriptX.Printing.header = "This is a MeadCoJSShim Header";
                     pageLogger("Header was set to: " + MeadCo.ScriptX.Printing.header);
@@ -58,12 +58,14 @@
                         e.preventDefault();
                         MeadCo.ScriptX.PrintFrame("infoframe");
                     });
-                } else {
+                }).catch(function () {
                     pageLogger("Failed to init");
-                }
+                });
             } catch (e) {
                 pageLogger("Error: " + e.message);
             }
+
+            pageLogger("Shim factory async test load event complete");
         });
     </script>
 }
