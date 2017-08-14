@@ -10,7 +10,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
 
-    var moduleversion = "0.0.6.8";
+    var moduleversion = "1.1.0.1";
 
     var mPageOrientation = {
         DEFAULT: 0,
