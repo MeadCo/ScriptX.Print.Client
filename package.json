@@ -1,6 +1,6 @@
 {
   "name": "scriptxprint-html",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "Scripts for using ScriptX.Print",
   "main": "index.js",
   "repository": { "type": "git", "url": "https://github.com/MeadCo/ScriptX.Print.Client" },
