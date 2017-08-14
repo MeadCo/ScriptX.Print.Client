@@ -13,7 +13,7 @@
         <description>This library implements an emulation of the MeadCo ScriptX Add-on for Internet Explorer to bring print services to all browsers. The MeadCoScriptXJS library is recommended to enable code to be written that will work with both the Add-on and ScriptX.Print Services.</description>
         <summary>Javascript emulation of the MeadCo ScriptX Add-on for Internet Explorer to bring print services to all browsers.</summary>
         <releaseNotes>v1.0.0 - Initial release.</releaseNotes>
-        <copyright>Copyright © 2017, Mead &amp; Co Ltd</copyright>
+        <copyright>Copyright ï¿½ 2017, Mead &amp; Co Ltd</copyright>
         <language>en-GB</language>
         <tags>MeadCo, ScriptX, Print, HTML</tags>
 		<dependencies>
