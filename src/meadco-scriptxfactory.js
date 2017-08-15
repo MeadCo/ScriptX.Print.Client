@@ -38,7 +38,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.1.0.2";
+    var moduleversion = "1.1.0.3";
     var emulatedVersion = "8.0.0.0";
     var module = this;
     var printApi = MeadCo.ScriptX.Print;
@@ -151,7 +151,6 @@
             var $this = $(this);
             module.factory.log("Auto connect to: " + $this.data("meadco-server") + ", with license: " + $this.data("meadco-license") + ", sync: " + $this.data("meadco-syncinit"));
             var sync = ("" + $this.data("meadco-syncinit")).toLowerCase(); // defaults to true if not specified
-            debugger;
             if (sync === "false") {
                 printApi.connectLite($this.data("meadco-server"), $this.data("meadco-license"));
             } else {
@@ -611,7 +610,6 @@
         },
 
         PolyfillInitAsync: function (resolve, reject) {
-            debugger;
             if (MeadCo.ScriptX.Print.isConnected) {
                 resolve();
             } else {
