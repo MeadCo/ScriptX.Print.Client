@@ -38,7 +38,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.1.0.3";
+    var moduleversion = "1.1.0.4";
     var emulatedVersion = "8.0.0.0";
     var module = this;
     var printApi = MeadCo.ScriptX.Print;
@@ -154,6 +154,7 @@
             if (sync === "false") {
                 printApi.connectLite($this.data("meadco-server"), $this.data("meadco-license"));
             } else {
+                console.warn("Synchronous connection is deprecated, please use data-meadco-syncinit='false'");
                 printHtml.connect($this.data("meadco-server"), $this.data("meadco-license"));
             }
             return false;
