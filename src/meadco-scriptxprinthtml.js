@@ -228,8 +228,9 @@
             $("head", $html).append(base);
         }
 
-        return $html.html();
+        var c = $html.html();
 
+        return c;
     }
 
     function documentHtml() {
@@ -289,6 +290,11 @@
         printFrame : function(sFrame, bPrompt) {
             MeadCo.log("html.printFrame: " + sFrame + " *warning* ignoring bPrompt");
             printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.INNERTHTML, frameContent(sFrame), settingsCache);
+        },
+
+        printHtml : function(sHtml) {
+            MeadCo.log("html.printHtml(string)");
+            printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.HTML, sHtml, settingsCache);
         },
 
         connect: function (serverUrl, licenseGuid) {

@@ -309,6 +309,20 @@
         PrintHTML : function(sUrl, bPrompt) {
             if (typeof (bPrompt) === 'undefined') bPrompt = true;
 
+            // if requesting snippet .... 
+            if (sUrl.indexOf('html://') === 0) {
+                var sHtml = sUrl.substring(7);
+                var docType = "<!doctype";
+
+                debugger;
+                // add-on scripters might also add doctype but the server handles this 
+                if (sHtml.substr(0, docType.length).toLowerCase() === docType) {
+                    sHtml = sHtml.substring(sHtml.indexOf(">")+1);
+                }
+
+                return printHtml.printHtml(sHtml);
+            }
+
             // if a relative URL supplied then add the base URL of this website
             if (!(sUrl.indexOf('http://') === 0 || sUrl.indexOf('https://') === 0)) {
                 var baseurl = module.factory.baseURL();
