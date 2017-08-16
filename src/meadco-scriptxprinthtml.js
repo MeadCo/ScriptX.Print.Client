@@ -228,9 +228,7 @@
             $("head", $html).append(base);
         }
 
-        var c = $html.html();
-
-        return c;
+        return $html.html();
     }
 
     function documentHtml() {

@@ -9,7 +9,7 @@
 <h2>@ViewBag.Title</h2>
 
 <div>
-    <button id="btn-printPage" class="btn btn-primary">Print page</button>&nbsp;<button id="btn-printDoc" class="btn btn-primary">Print doc</button>&nbsp;<button id="btn-printFrame" class="btn btn-primary">Print frame</button>
+    <button id="btn-printPage" class="btn btn-primary">Print page</button>&nbsp;<button id="btn-printDoc" class="btn btn-primary">Print doc</button>&nbsp;<button id="btn-printDocEx" class="btn btn-primary">Print doc (Ex)</button>&nbsp;<button id="btn-printFrame" class="btn btn-primary">Print frame</button>
 </div>
 
 <div style="margin: 20px; width: 50%; height: 500px">
@@ -40,7 +40,7 @@
 
             try {
                 MeadCo.ScriptX.InitAsync().then(function () {
-                    pageLogger("Installed version of ScriptX is: " + MeadCo.ScriptX.Version());
+                    pageLogger("InitAsync complete - installed version of ScriptX is: " + MeadCo.ScriptX.Version());
                     MeadCo.ScriptX.Printing.header = "This is a MeadCoJSShim Header";
                     pageLogger("Header was set to: " + MeadCo.ScriptX.Printing.header);
 
@@ -50,6 +50,12 @@
                     });
 
                     $("#btn-printDoc").click(function (e) {
+                        e.preventDefault();
+                        pageLogger("Start printDoc ...");
+                        MeadCo.ScriptX.Printing.PrintHTML("html://<!doctype html><html><body><h1>Hello world</h1></body></html>");
+                    });
+
+                    $("#btn-printDocEx").click(function (e) {
                         e.preventDefault();
                         MeadCo.ScriptX.BackgroundPrintURL("http://scriptx.meadroid.com");
                     });
@@ -65,7 +71,7 @@
                 pageLogger("Error: " + e.message);
             }
 
-            pageLogger("Shim factory async test load event complete");
+            pageLogger("Shim factory .on(load) event complete");
         });
     </script>
 }
