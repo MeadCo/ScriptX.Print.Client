@@ -48,8 +48,16 @@ namespace ScriptX.Print.Client.Controllers
                 {
                     Header = "Default header"
                 },
-                DeviceSettings = null
+                DeviceSettings = new DeviceSettings() // return data available to basic level subscribers
             };
+
+            DeviceSettings ds = allSettings.DeviceSettings;
+            ds.PrinterName = "UI Testing printer";
+            ds.PaperSizeName = "A4";
+            ds.PaperSourceName = "Automatically select";
+            ds.Copies = 1;
+            ds.Collate = BooleanOption.False;
+            ds.IsDefault = true;
 
             return Ok(allSettings);
         }

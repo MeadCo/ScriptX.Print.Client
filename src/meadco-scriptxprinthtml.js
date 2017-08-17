@@ -296,29 +296,27 @@
         },
 
         connect: function (serverUrl, licenseGuid) {
-            MeadCo.log("Print.HTML connection request");
+            MeadCo.log("Print.HTML SYNC connection request");
             MeadCo.ScriptX.Print.connectLite(serverUrl, licenseGuid);
             MeadCo.ScriptX.Print.getFromServer("/htmlPrintDefaults/?units=0",false,
                 function (data) {
                     MeadCo.log("got default html settings");
                     updateSettingsWithServerDefaults(data.htmlPrintSettings);
                     if (data.deviceSettings != null) {
-                        // note, this will cause a download of device settings.
-                        MeadCo.ScriptX.Print.printerName = "default";
+                        MeadCo.ScriptX.Print.connectDevice(data.deviceSettings);
                     }
                 });
         },
 
         connectAsync: function (serverUrl, licenseGuid,resolve,reject) {
-            MeadCo.log("Print.HTML connection request");
+            MeadCo.log("Print.HTML ASYNC connection request");
             MeadCo.ScriptX.Print.connectLite(serverUrl, licenseGuid);
             MeadCo.ScriptX.Print.getFromServer("/htmlPrintDefaults/?units=0",true,
                 function (data) {
                     MeadCo.log("got default html settings");
                     updateSettingsWithServerDefaults(data.htmlPrintSettings);
                     if (data.deviceSettings != null) {
-                        // note, this will cause a download of device settings.
-                        MeadCo.ScriptX.Print.printerName = "default";
+                        MeadCo.ScriptX.Print.connectDevice(data.deviceSettings);
                     }
                     resolve();
                 },reject);

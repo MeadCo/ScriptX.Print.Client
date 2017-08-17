@@ -38,7 +38,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.1.0.4";
+    var moduleversion = "1.1.0.5";
     var emulatedVersion = "8.0.0.0";
     var module = this;
     var printApi = MeadCo.ScriptX.Print;
@@ -144,6 +144,56 @@
     var module = this;
 
     module.factory.log("factory.Printing loaded.");
+
+    function printHtmlContent(sUrl, bPrompt, fnCallback, data) {
+        if (typeof (bPrompt) === 'undefined') bPrompt = true;
+        // if requesting snippet .... 
+        if (sUrl.indexOf('html://') === 0) {
+            var sHtml = sUrl.substring(7);
+            var docType = "<!doctype";
+
+            // add-on scripters might also add doctype but the server handles this 
+            if (sHtml.substr(0, docType.length).toLowerCase() === docType) {
+                sHtml = sHtml.substring(sHtml.indexOf(">") + 1);
+            }
+        } else {
+
+            // if a relative URL supplied then add the base URL of this website
+            if (!(sUrl.indexOf('http://') === 0 || sUrl.indexOf('https://') === 0)) {
+                var baseurl = module.factory.baseURL();
+                if (baseurl.substring(baseurl.length - 1, baseurl.length) !== "/") {
+                    if (sUrl.substring(0, 1) !== "/") {
+                        sUrl = baseurl + "/" + sUrl;
+                    } else {
+                        sUrl = baseurl + sUrl;
+                    }
+                } else {
+                    if (sUrl.substring(0, 1) !== "/") {
+                        sUrl = baseurl + sUrl;
+                    } else {
+                        sUrl = baseurl + sUrl.substring(1);
+                    }
+                }
+            }
+        }
+
+        if (bPrompt) {
+            if (MeadCo.ScriptX.Print.UI) {
+                MeadCo.ScriptX.Print.UI.PrinterSettings(function(dlgAccepted) {
+                    if (dlgAccepted) {
+                        return printHtml.printFromUrl(sUrl);
+                    }
+                    return 0;
+                });
+
+                return 0;
+            }
+            console.warn("prompted print requested but no UI library loaded");
+        }
+
+        return (sUrl.indexOf('html://') === 0) ? printHtml.printHtml(sHtml) : printHtml.printFromUrl(sUrl);
+
+    }
 
     if (this.jQuery) {
         module.factory.log("Looking for auto connect");
@@ -306,46 +356,12 @@
             return printHtml.printDocument(bPrompt);
         },
 
-        PrintHTML : function(sUrl, bPrompt) {
-            if (typeof (bPrompt) === 'undefined') bPrompt = true;
-
-            // if requesting snippet .... 
-            if (sUrl.indexOf('html://') === 0) {
-                var sHtml = sUrl.substring(7);
-                var docType = "<!doctype";
-
-                debugger;
-                // add-on scripters might also add doctype but the server handles this 
-                if (sHtml.substr(0, docType.length).toLowerCase() === docType) {
-                    sHtml = sHtml.substring(sHtml.indexOf(">")+1);
-                }
-
-                return printHtml.printHtml(sHtml);
-            }
-
-            // if a relative URL supplied then add the base URL of this website
-            if (!(sUrl.indexOf('http://') === 0 || sUrl.indexOf('https://') === 0)) {
-                var baseurl = module.factory.baseURL();
-                if (baseurl.substring(baseurl.length - 1, baseurl.length) !== "/") {
-                    if (sUrl.substring(0, 1) !== "/") {
-                        sUrl = baseurl + "/" + sUrl;
-                    } else {
-                        sUrl = baseurl + sUrl;
-                    }
-                } else {
-                    if (sUrl.substring(0, 1) !== "/") {
-                        sUrl = baseurl + sUrl;
-                    } else {
-                        sUrl = baseurl + sUrl.substring(1);
-                    }
-                }
-            }
-
-            return printHtml.printFromUrl(sUrl);
+        PrintHTML: function (sUrl, bPrompt) {
+            return printHtmlContent(sUrl, bPrompt);
         },
 
         PrintHTMLEx: function (sUrl, bPrompt, fnCallback, data) {
-            printApi.reportFeatureNotImplemented("PrintHtmlEx");
+            return printHtmlContent(sUrl,bPrompt,fnCallback,data);
         },
 
         // advanced (aka licensed properties - the server will reject

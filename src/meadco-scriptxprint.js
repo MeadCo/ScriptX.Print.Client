@@ -9,7 +9,7 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
-    var version = "1.1.0.3";
+    var version = "1.1.0.4";
     var printerName = "";
     var deviceSettings = {};
     var module = this;
@@ -377,6 +377,13 @@
         MeadCo.log("intervalId: " + intervalId);
     }
 
+    function addDeviceSettings(data) {
+        deviceSettings[data.printerName] = data;
+        if (data.isDefault && printerName.length === 0) {
+            printerName = data.printerName;
+        }
+    }
+
     function getDeviceSettings(oRequest) {
         MeadCo.log("Request get device info: " + oRequest.name);
         if (module.jQuery) {
@@ -394,10 +401,7 @@
                 })
                 .done(function (data) {
                     bConnected = true;
-                    deviceSettings[data.printerName] = data;
-                    if ( data.isDefault && printerName.length === 0) {
-                        printerName = data.printerName;
-                    }
+                    addDeviceSettings(data);
                     if (typeof oRequest.done === "function") {
                         oRequest.done(data);
                     }
@@ -481,6 +485,11 @@
 
         connectAsync: function (serverUrl, licenseGuid,resolve, reject) {
             connectToServerAsync(serverUrl, licenseGuid, resolve, reject);
+        },
+
+        connectDevice: function(deviceInfo) {
+            bConnected = true;
+            addDeviceSettings(deviceInfo);
         },
 
         get isConnected() {
