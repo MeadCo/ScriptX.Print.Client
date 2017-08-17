@@ -38,7 +38,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.1.0.5";
+    var moduleversion = "1.1.0.6";
     var emulatedVersion = "8.0.0.0";
     var module = this;
     var printApi = MeadCo.ScriptX.Print;
@@ -145,11 +145,32 @@
 
     module.factory.log("factory.Printing loaded.");
 
-    function printHtmlContent(sUrl, bPrompt, fnCallback, data) {
+    function promptAndPrint(bPrompt, fnPrint) {
         if (typeof (bPrompt) === 'undefined') bPrompt = true;
-        // if requesting snippet .... 
+        if (bPrompt) {
+            if (MeadCo.ScriptX.Print.UI) {
+                MeadCo.ScriptX.Print.UI.PrinterSettings(function (dlgAccepted) {
+                    if (dlgAccepted) {
+                        MeadCo.log("promptAndPrint requesting print ...");
+                        return fnPrint();
+                    }
+                    return 0;
+                });
+
+                MeadCo.log("promptAndPrint exits ...");
+                return 0;
+            }
+            console.warn("prompted print requested but no UI library loaded");
+        }
+        return fnPrint();
+    }
+
+    function printHtmlContent(sUrl, bPrompt, fnCallback, data) {
+        var sHtml = "";
+
+        // if requesting snippet then trim to just the html
         if (sUrl.indexOf('html://') === 0) {
-            var sHtml = sUrl.substring(7);
+            sHtml = sUrl.substring(7);
             var docType = "<!doctype";
 
             // add-on scripters might also add doctype but the server handles this 
@@ -157,7 +178,6 @@
                 sHtml = sHtml.substring(sHtml.indexOf(">") + 1);
             }
         } else {
-
             // if a relative URL supplied then add the base URL of this website
             if (!(sUrl.indexOf('http://') === 0 || sUrl.indexOf('https://') === 0)) {
                 var baseurl = module.factory.baseURL();
@@ -177,22 +197,11 @@
             }
         }
 
-        if (bPrompt) {
-            if (MeadCo.ScriptX.Print.UI) {
-                MeadCo.ScriptX.Print.UI.PrinterSettings(function(dlgAccepted) {
-                    if (dlgAccepted) {
-                        return printHtml.printFromUrl(sUrl);
-                    }
-                    return 0;
-                });
-
-                return 0;
-            }
-            console.warn("prompted print requested but no UI library loaded");
-        }
-
-        return (sUrl.indexOf('html://') === 0) ? printHtml.printHtml(sHtml) : printHtml.printFromUrl(sUrl);
-
+        return promptAndPrint(bPrompt,
+            function () {
+                MeadCo.log("printHtmlContent requesting print ...");
+                return sHtml.length > 0 ? printHtml.printHtml(sHtml) : printHtml.printFromUrl(sUrl);
+            });
     }
 
     if (this.jQuery) {
@@ -324,7 +333,8 @@
             return true;
         },
 
-        PageSetup : function() {
+        PageSetup: function () {
+            console.warn("PageSeup API in ScriptX.Print Service is not synchronous, there is no return value.");
             if (MeadCo.ScriptX.Print.UI) {
                 MeadCo.ScriptX.Print.UI.PageSetup();
             } else {
@@ -332,7 +342,8 @@
             }
         },
 
-        PrintSetup : function() {
+        PrintSetup: function () {
+            console.warn("PrintSetup API in ScriptX.Print Service is not synchronous, there is no return value.");
             if (MeadCo.ScriptX.Print.UI) {
                 MeadCo.ScriptX.Print.UI.PrinterSettings();
             } else {
@@ -345,15 +356,17 @@
         },
 
         Print : function(bPrompt, sOrOFrame) { // needs and wants update to ES2015
-            if (typeof (bPrompt) === 'undefined') bPrompt = true;
             if (typeof (sOrOFrame) === 'undefined') sOrOFrame = null;
 
-            if (sOrOFrame != null) {
-                var sFrame = typeof (sOrOFrame) === 'string' ? sOrOFrame : sOrOFrame.id;
-                return printHtml.printFrame(sFrame, bPrompt);
-            }
+            promptAndPrint(bPrompt,
+                function() {
+                    if (sOrOFrame != null) {
+                        var sFrame = typeof (sOrOFrame) === 'string' ? sOrOFrame : sOrOFrame.id;
+                        return printHtml.printFrame(sFrame, bPrompt);
+                    }
 
-            return printHtml.printDocument(bPrompt);
+                    return printHtml.printDocument(bPrompt);
+                });
         },
 
         PrintHTML: function (sUrl, bPrompt) {
