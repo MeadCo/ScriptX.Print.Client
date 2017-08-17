@@ -9,7 +9,7 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
-    var version = "1.1.0.4";
+    var version = "1.1.0.5";
     var printerName = "";
     var deviceSettings = {};
     var module = this;
@@ -102,8 +102,13 @@
         console.warn("Unable to find job: " + id + " to remove it");
     }
 
+    function progress(requestData, status, information) {
+        if (typeof requestData.OnProgress === "function") {
+            requestData.OnProgress(status, information, requestData.UserData);
+        }
+    }
 
-    function printHtmlAtServer(contentType, content, htmlPrintSettings,fnDone,fnNotify) {
+    function printHtmlAtServer(contentType, content, htmlPrintSettings, fnDone, fnNotify, fnCallback, data) {
         MeadCo.log("started MeadCo.ScriptX.Print.print.printHtmlAtServer() Type: " + contentType + ", printerName: " + printerName);
         var devInfo;
 
@@ -117,12 +122,15 @@
             ContentType: contentType,
             Content: content,
             Settings: htmlPrintSettings,
-            DeviceSettings: devInfo
+            DeviceSettings: devInfo,
+            OnProgress: fnCallback,
+            UserData: data
         }
 
         printAtServer(requestData,
         {
-            fail: function(jqXhr, textStatus, errorThrown) {
+            fail: function (jqXhr, textStatus, errorThrown) {
+                progress(requestData,enumPrintStatus.ERROR);
                 MeadCo.ScriptX.Print.reportServerError(errorThrown);
                 if (typeof fnDone === "function") {
                     fnDone(jqXhr);
@@ -131,15 +139,18 @@
 
             queuedToFile: function(data) {
                 MeadCo.log("default handler on queued to file response");
+                progress(requestData, enumPrintStatus.QUEUED);
+
                 if (typeof fnNotify === "function") {
                     data.fnNotify = fnNotify;
                     updateJob(data);
                 }
 
-                waitForJobComplete(data.jobIdentifier,
+                waitForJobComplete(requestData,data.jobIdentifier,
                     -1,
                     function (data) {
                         MeadCo.log("Will download printed file");
+                        progress(requestData, enumPrintStatus.COMPLETED);
                         window.open(server + "/download/" + data.jobIdentifier, "_self");
                         if (typeof fnDone === "function") {
                             fnDone(null);
@@ -148,14 +159,17 @@
             },
 
             queuedToDevice: function(data) {
+                progress(requestData, enumPrintStatus.QUEUED);
                 MeadCo.log("print was queued to device");
             },
 
             softError: function(data) {
+                progress(requestData, enumPrintStatus.ERROR);
                 MeadCo.log("print has soft error");
             },
 
-            ok: function(data) {
+            ok: function (data) {
+                progress(requestData, enumPrintStatus.COMPLETED);
                 MeadCo.log("printed ok, no further information");
             }
         });
@@ -289,7 +303,7 @@
         }
     }
 
-    function waitForJobComplete(jobId, timeOut,functionComplete) {
+    function waitForJobComplete(requestData,jobId, timeOut,functionComplete) {
         MeadCo.log("WaitForJobComplete: " + jobId);
         var counter = 0;
         var interval = 1000;
@@ -323,6 +337,7 @@
                             case enumPrintStatus.QUEUED:
                             case enumPrintStatus.STARTING:
                             case enumPrintStatus.PAUSED:
+                                progress(requestData, data.status, data.message);
                                 updateJob(data);
                                 // keep going
                                 if (timeOut > 0 && (++counter * interval) > timeOut) {
@@ -334,13 +349,15 @@
 
                            case enumPrintStatus.ERROR:
                            case enumPrintStatus.ABANDONED:
-                                MeadCo.log("error status in waitForJobComplete so clear interval: " + intervalId);
-                                updateJob(data);
-                                window.clearInterval(intervalId);
-                                MeadCo.ScriptX.Print.reportServerError("The print failed.\n\n" + data.message);
-                                break;
+                               MeadCo.log("error status in waitForJobComplete so clear interval: " + intervalId);
+                               progress(requestData, data.status, data.message);
+                               updateJob(data);
+                               window.clearInterval(intervalId);
+                               MeadCo.ScriptX.Print.reportServerError("The print failed.\n\n" + data.message);
+                               break;
 
-                            default:
+                           default:
+                                progress(requestData, data.status, data.message);
                                 MeadCo.log("unknown status in waitForJobComplete so clear interval: " + intervalId);
                                 removeJob(jobId);
                                 window.clearInterval(intervalId);

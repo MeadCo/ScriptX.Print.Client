@@ -10,7 +10,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
 
-    var moduleversion = "1.1.0.2";
+    var moduleversion = "1.1.0.3";
 
     var mPageOrientation = {
         DEFAULT: 0,
@@ -257,8 +257,8 @@
 
     }
 
-    function printHtmlAtServer(a, b, c, d) {
-        MeadCo.ScriptX.Print.printHtml(a, b, c, d);
+    function printHtmlAtServer(contentType, content, htmlPrintSettings, fnDone, fnNotify, fnCallback, data) {
+        MeadCo.ScriptX.Print.printHtml(contentType, content, htmlPrintSettings, fnDone, fnNotify, fnCallback, data);
     }
 
     MeadCo.log("MeadCo.ScriptX.Print.HTML " + moduleversion + " loaded.");
@@ -275,24 +275,24 @@
 
         settings: iSettings,
 
-        printFromUrl: function (sUrl) {
-            MeadCo.log("html.printFromUrl: " + sUrl);
-            printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.URL, sUrl, settingsCache);
-        },
-
         printDocument: function(bPrompt,fnCallOnDone) {
             MeadCo.log("html.printDocument. *warning* ignoring bPrompt");
-            printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.INNERTHTML, documentContent(), settingsCache,fnCallOnDone);
+            printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.INNERTHTML, documentContent(),settingsCache,fnCallOnDone);
         },
 
-        printFrame : function(sFrame, bPrompt) {
+        printFrame: function (sFrame, bPrompt, fnCallOnDone) {
             MeadCo.log("html.printFrame: " + sFrame + " *warning* ignoring bPrompt");
-            printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.INNERTHTML, frameContent(sFrame), settingsCache);
+            printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.INNERTHTML, frameContent(sFrame), settingsCache, fnCallOnDone);
         },
 
-        printHtml : function(sHtml) {
+        printFromUrl: function (sUrl, fnCallback, data) {
+            MeadCo.log("html.printFromUrl: " + sUrl);
+            printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.URL, sUrl, settingsCache, null,null,fnCallback, data);
+        },
+
+        printHtml: function (sHtml, fnCallback, data) {
             MeadCo.log("html.printHtml(string)");
-            printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.HTML, sHtml, settingsCache);
+            printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.HTML, sHtml, settingsCache, null, null,fnCallback, data);
         },
 
         connect: function (serverUrl, licenseGuid) {

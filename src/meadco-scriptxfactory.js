@@ -38,7 +38,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.1.0.6";
+    var moduleversion = "1.1.0.7";
     var emulatedVersion = "8.0.0.0";
     var module = this;
     var printApi = MeadCo.ScriptX.Print;
@@ -200,7 +200,7 @@
         return promptAndPrint(bPrompt,
             function () {
                 MeadCo.log("printHtmlContent requesting print ...");
-                return sHtml.length > 0 ? printHtml.printHtml(sHtml) : printHtml.printFromUrl(sUrl);
+                return sHtml.length > 0 ? printHtml.printHtml(sHtml, fnCallback, data) : printHtml.printFromUrl(sUrl, fnCallback, data);
             });
     }
 
