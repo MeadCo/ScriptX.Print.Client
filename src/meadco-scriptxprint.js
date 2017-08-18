@@ -14,7 +14,7 @@
     var deviceSettings = {};
     var module = this;
 
-    var queue = []; // current job queue
+    var activePrintQueue = []; // current job queue
 
     var server = ""; // url to the server, server is CORS restricted
     var licenseGuid = "";
@@ -51,20 +51,20 @@
     };
 
     function queueJob(data) {
-        queue.push(data);
-        MeadCo.log("ScriptX.Print queueJob, jobCount: " + queue.length);
+        activePrintQueue.push(data);
+        MeadCo.log("ScriptX.Print queueJob, jobCount: " + activePrintQueue.length);
     }
 
     function jobCount() {
-        MeadCo.log("ScriptX.Print jobCount: " + queue.length);
-        return queue.length;
+        MeadCo.log("ScriptX.Print jobCount: " + activePrintQueue.length);
+        return activePrintQueue.length;
     }
 
     function findJob(id) {
         var i;
-        for (i = 0; i < queue.length; i++) {
-            if (queue[i].jobIdentifier === id) {
-                return queue[i];
+        for (i = 0; i < activePrintQueue.length; i++) {
+            if (activePrintQueue[i].jobIdentifier === id) {
+                return activePrintQueue[i];
             }
         }
         return null;
@@ -72,17 +72,17 @@
 
     function updateJob(data) {
         var i;
-        for (i = 0; i < queue.length; i++) {
-            if (queue[i].jobIdentifier === data.jobIndentifier) {
+        for (i = 0; i < activePrintQueue.length; i++) {
+            if (activePrintQueue[i].jobIdentifier === data.jobIndentifier) {
                 var fnCallBack = data.fnNotify;
                 if (typeof fnCallBack !== "function") 
-                    data.fnNotify = queue[i].fnNotify;
+                    data.fnNotify = activePrintQueue[i].fnNotify;
 
-                if (typeof data.fnNotify === "function" && (data.status === enumResponseStatus.QUEUEDTOFILE || data.status !== queue[i].status) ) {
+                if (typeof data.fnNotify === "function" && (data.status === enumResponseStatus.QUEUEDTOFILE || data.status !== activePrintQueue[i].status) ) {
                     data.fnNotify(data);
                 }
 
-                queue[i] = data;
+                activePrintQueue[i] = data;
                 return;
             }
         }
@@ -92,10 +92,10 @@
 
     function removeJob(id) {
         var i;
-        for (i = 0; i < queue.length; i++) {
-            if (queue[i].jobIdentifier === id) {
-                queue.splice(i, 1);
-                MeadCo.log("ScriptX.Print remove job, jobCount: " + queue.length);
+        for (i = 0; i < activePrintQueue.length; i++) {
+            if (activePrintQueue[i].jobIdentifier === id) {
+                activePrintQueue.splice(i, 1);
+                MeadCo.log("ScriptX.Print remove job, jobCount: " + activePrintQueue.length);
                 return;
             }
         }
@@ -206,8 +206,14 @@
             throw new Error("MeadCo.ScriptX.Print : print server URL is not set or is invalid");
         }
 
+        var fakeJob = {
+            jobIdentifier: Date.now()
+        };
+
+
         if (module.jQuery) {
             MeadCo.log(".ajax() post to: " + server);
+            queueJob(fakeJob); // essentially a lock on the queue to stop it looking empty while we await the result
             module.jQuery.ajax(server + "/print",
                 {
                     data: requestData,
@@ -220,6 +226,7 @@
                 .done(function (data) {
                     MeadCo.log("Success response: " + data.status);
                     queueJob(data);
+                    removeJob(fakeJob.jobIdentifier);
                     switch (data.status) {
                     case enumResponseStatus.QUEUEDTOFILE:
                         responseInterface.queuedToFile(data);
@@ -246,7 +253,7 @@
                         "], [" +
                         jqXhr.responseText +
                         "]");
-
+                    removeJob(fakeJob.jobIdentifier);
                     if (typeof jqXhr.responseText !== "undefined") {
                         errorThrown = jqXhr.responseText;
                     }
@@ -526,6 +533,24 @@
         reportFeatureNotImplemented: function (featureDescription) {
             MeadCo.log("Call to not implemented: " + featureDescription);
             alert(featureDescription + "\n\nis not available.");
+        },
+
+        get queue() {
+            return activePrintQueue;
+        },
+
+        get activeJobs() {
+            return jobCount();
+        },
+
+        ensureSpoolingStatus: function () {
+            var lock = { jobIndentifier: Date.now };
+            queueJob(lock);
+            return lock;
+        },
+
+        freeSpoolStatus: function(lock) {
+            removeJob(lock.jobIdentifier);
         }
     };
 

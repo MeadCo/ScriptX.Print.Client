@@ -303,9 +303,11 @@
 
     var scriptx = topLevelNs.ScriptX;
 
-    scriptx.CONNECTED_NONE = 0;
-    scriptx.CONNECTED_ADDON = 1;
-    scriptx.CONNECTED_SERVICE = 2;
+    scriptx.Connection = {
+        NONE: 0,
+        ADDON: 1,
+        SERVICE: 2
+    }
 
     scriptx.LibVersion = "1.3.0";
     scriptx.Connector = scriptx.CONNECTED_NONE;
@@ -335,12 +337,12 @@
                     if (!scriptx.Printing.PolyfillInit()) {
                         console.log("**warning** polyfill failed.");
                         scriptx.Printing = null;
-                        scriptx.Connector = scriptx.CONNECTED_NONE;
+                        scriptx.Connector = scriptx.Connection.NONE;
                     } else {
-                        scriptx.Connector = scriptx.CONNECTED_SERVICE;
+                        scriptx.Connector = scriptx.Connection.SERVICE;
                     }
                 } else {
-                    scriptx.Connector = scriptx.CONNECTED_ADDON;
+                    scriptx.Connector = scriptx.Connection.ADDON;
                 }
             } else {
                 console.log("** Warning -- no factory **");
@@ -362,9 +364,12 @@
                     console.log("look for Polyfill ..");
                     if (typeof scriptx.Printing.PolyfillInitAsync === "function") {
                         console.log("found async ScriptX.Print Services");
-                        scriptx.Printing.PolyfillInitAsync(resolve, reject);
+                        scriptx.Printing.PolyfillInitAsync(function () {
+                            scriptx.Connector = scriptx.Connection.SERVICE;
+                            resolve();
+                        }, reject);
                     } else {
-                        scriptx.Connector = scriptx.CONNECTED_ADDON;
+                        scriptx.Connector = scriptx.Connection.ADDON;
                         console.log("no polyfill, using add-on");
                         resolve();
                     }
@@ -466,6 +471,9 @@
         return scriptx.BackgroundPrintURL("html://" + sHtml, false, fnCallback, data);
     }
 
+    // Page/Print Setup - these will work with both add-on and service
+    // but return value will be wrong for service since dialogs are async
+    // If the return value matters use xxxx2 api below.
     scriptx.PageSetup = function () {
         if (scriptx.Init())
             return scriptx.Printing.PageSetup();
@@ -478,23 +486,69 @@
         return false;
     }
 
+    // Promise versions to work with async dialogs with service
+    // These work with both add-on and service.
+    //
+    scriptx.PageSetup2 = function () {
+        return new Promise(function (resolve, reject) {
+            if (scriptx.Init()) {
+
+                if (scriptx.Connector === scriptx.Connection.SERVICE) {
+                    scriptx.Printing.PageSetup(function (dlgOK) {
+                        if (dlgOK)
+                            resolve();
+                        else
+                            reject();
+                    });
+                } else {
+                    if (scriptx.Printing.PageSetup()) {
+                        resolve();
+                    } else {
+                        reject();
+                    }
+                }
+            }
+            reject();
+        });
+    }
+
+    scriptx.PrintSetup2 = function() {
+        return new Promise(function(resolve, reject) {
+            if (scriptx.Init()) {
+                if (scriptx.Connector === scriptx.Connection.SERVICE) {
+                    scriptx.Printing.PrintSetup(function(dlgOK) {
+                        if (dlgOK)
+                            resolve();
+                        else
+                            reject();
+                    });
+                } else {
+                    if (scriptx.Printing.PrintSetup()) {
+                        resolve();
+                    } else {
+                        reject();
+                    }
+                }
+            }
+            reject();
+        });
+    }
+
+
     // WaitForSpoolingComplete 
     //
     // A wrapper to hide differences between Add-on and ScriptX.Print Services 
     //
     scriptx.WaitForSpoolingComplete = function () {
-        if (scriptx.Connector === scriptx.CONNECTED_SERVICE) {
+        if (scriptx.Connector === scriptx.Connection.SERVICE) {
             return new Promise(function (resolve, reject) {
-                window.setTimeout(function () {
-                    resolve();
-                },
-                    5000);
+                scriptx.Printing.WaitForSpoolingComplete(-1, resolve);
             });
         }
 
         return new Promise(function (resolve, reject) {
             window.setTimeout(function () {
-                scriptx.Printing.WaitforSpoolingComplete();
+                scriptx.Printing.WaitForSpoolingComplete();
                 resolve();
             }, 1);
         });

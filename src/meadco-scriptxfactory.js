@@ -145,16 +145,18 @@
 
     module.factory.log("factory.Printing loaded.");
 
-    function promptAndPrint(bPrompt, fnPrint) {
+    function promptAndPrint(bPrompt, fnPrint, fnNotifyStarted) {
         if (typeof (bPrompt) === 'undefined') bPrompt = true;
+        var lock = printApi.ensureSpoolingStatus();
         if (bPrompt) {
             if (MeadCo.ScriptX.Print.UI) {
                 MeadCo.ScriptX.Print.UI.PrinterSettings(function (dlgAccepted) {
                     if (dlgAccepted) {
                         MeadCo.log("promptAndPrint requesting print ...");
-                        return fnPrint();
+                        fnNotifyStarted(fnPrint());
                     }
-                    return 0;
+                    fnNotifyStarted(false);
+                    printApi.freeSpoolStatus(lock);
                 });
 
                 MeadCo.log("promptAndPrint exits ...");
@@ -162,10 +164,11 @@
             }
             console.warn("prompted print requested but no UI library loaded");
         }
-        return fnPrint();
+        fnNotifyStarted(fnPrint());
+        printApi.freeSpoolStatus(lock);
     }
 
-    function printHtmlContent(sUrl, bPrompt, fnCallback, data) {
+    function printHtmlContent(sUrl, bPrompt,fnNotifyStarted, fnCallback, data) {
         var sHtml = "";
 
         // if requesting snippet then trim to just the html
@@ -201,7 +204,7 @@
             function () {
                 MeadCo.log("printHtmlContent requesting print ...");
                 return sHtml.length > 0 ? printHtml.printHtml(sHtml, fnCallback, data) : printHtml.printFromUrl(sUrl, fnCallback, data);
-            });
+            },fnNotifyStarted);
     }
 
     if (this.jQuery) {
@@ -333,19 +336,27 @@
             return true;
         },
 
-        PageSetup: function () {
-            console.warn("PageSeup API in ScriptX.Print Service is not synchronous, there is no return value.");
+        PageSetup: function (fnNotify) {
+            if (typeof fnNotify === "undefined") {
+                console.warn("PageSeup API in ScriptX.Print Service is not synchronous, there is no return value.");
+                fnNotify = function (bDlgOK) { console.log("PageSetugDlg: " + bDlgOK); }
+            }
+
             if (MeadCo.ScriptX.Print.UI) {
-                MeadCo.ScriptX.Print.UI.PageSetup();
+                MeadCo.ScriptX.Print.UI.PageSetup(fnNotify);
             } else {
                 printApi.reportFeatureNotImplemented("Page setup dialog");
             }
         },
 
-        PrintSetup: function () {
-            console.warn("PrintSetup API in ScriptX.Print Service is not synchronous, there is no return value.");
+        PrintSetup: function (fnNotify) {
+            if (typeof fnNotify === "undefined") {
+                console.warn("PrintSetup API in ScriptX.Print Service is not synchronous, there is no return value.");
+                fnNotify = function (bDlgOK) { console.log("PrintSetugDlg: " + bDlgOK); }
+            }
+
             if (MeadCo.ScriptX.Print.UI) {
-                MeadCo.ScriptX.Print.UI.PrinterSettings();
+                MeadCo.ScriptX.Print.UI.PrinterSettings(fnNotify);
             } else {
                 printApi.reportFeatureNotImplemented("Print settings dialog");
             }
@@ -355,7 +366,10 @@
             printApi.reportFeatureNotImplemented("Preview");
         },
 
-        Print : function(bPrompt, sOrOFrame) { // needs and wants update to ES2015
+        Print: function (bPrompt, sOrOFrame, fnNotifyStarted) { // needs and wants update to ES2015 (for default values)
+            if (typeof fnNotifyStarted === "undefined") {
+                fnNotifyStarted = function (bStarted) { }
+            }
             if (typeof (sOrOFrame) === 'undefined') sOrOFrame = null;
 
             promptAndPrint(bPrompt,
@@ -366,16 +380,24 @@
                     }
 
                     return printHtml.printDocument(bPrompt);
-                });
+                },
+                fnNotifyStarted);
         },
 
-        PrintHTML: function (sUrl, bPrompt) {
-            return printHtmlContent(sUrl, bPrompt);
+        PrintHTML: function (sUrl, bPrompt, fnNotifyStarted) {
+            if (typeof fnNotifyStarted === "undefined") {
+                fnNotifyStarted = function (bStarted) { }
+            }
+            return printHtmlContent(sUrl, bPrompt,fnNotifyStarted);
         },
 
-        PrintHTMLEx: function (sUrl, bPrompt, fnCallback, data) {
-            return printHtmlContent(sUrl,bPrompt,fnCallback,data);
+        PrintHTMLEx: function (sUrl, bPrompt, fnCallback, data, fnNotifyStarted) {
+            if (typeof fnNotifyStarted === "undefined") {
+                fnNotifyStarted = function (bStarted) { }
+            }
+            return printHtmlContent(sUrl, bPrompt, fnNotifyStarted , fnCallback, data);
         },
+
 
         // advanced (aka licensed properties - the server will reject
         // use if no license available)
@@ -552,12 +574,12 @@
             }
         },
 
-        EnumJobs : function() {
+        EnumJobs : function(sPrinterName,iIndex,jobNameOut) {
             printApi.reportFeatureNotImplemented("EnumJobs");
         },
 
-        GetJobsCount : function() {
-            printApi.reportFeatureNotImplemented("GetJobsCount");
+        GetJobsCount : function(sPrinterName) {
+            return printApi.activeJobs;
         },
 
         printerControl: function (value) {
@@ -644,8 +666,28 @@
             printApi.reportFeatureNotImplemented("TotalPrintPages");
         },
 
-        WaitForSpoolingComplete: function () {
-            printApi.reportFeatureNotImplemented("WaitForSpoolingComplete");
+        WaitForSpoolingComplete: function (iTimeout, fnComplete) {
+            if (typeof fnComplete !== "function") {
+                throw "WaitForSpoolingComplete requires a completion callback";
+            }
+
+            var timerId;
+            var startTime = Date.now();
+            var interval = 250;
+
+            var intervalId = window.setInterval(function () {
+                    if (printApi.activeJobs === 0) {
+                        window.clearInterval(intervalId);
+                        fnComplete(true);
+                    } else {
+                        if (iTimeout >= 0 && Date.now() - startTime > iTimeout) {
+                            window.clearInterval(intervalId);
+                            fnComplete(printApi.activeJobs === 0);
+                        }
+                    }
+                },
+                interval);
+
         },
 
         // helpers for wrapper MeadCoJS

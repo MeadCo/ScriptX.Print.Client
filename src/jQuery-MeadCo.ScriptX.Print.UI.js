@@ -206,8 +206,8 @@
                                     '</fieldset>' +
                                 '</div>' +
                                 '<div class="modal-footer">' +
-                                    '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
-                                    '<button type="button" class="btn btn-primary" id="btn-saveoptions">Save changes</button>' +
+                                    '<button type="button" class="btn btn-primary" id="btn-saveoptions">OK</button>' +
+                                    '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>' +
                                 '</div>' +
                             '</div>' +
                             '<!-- /.modal-content -->' +
@@ -335,8 +335,8 @@
                                 //'</fieldset>' +
                             '</div>' +
                             '<div class="modal-footer">' +
-                                '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>' +
                                 '<button type="button" class="btn btn-primary" id="btn-savesettings">Print</button>' +
+                                '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>' +
                             '</div>' +
                         '</div>' +
                         '<!-- /.modal-content -->' +
