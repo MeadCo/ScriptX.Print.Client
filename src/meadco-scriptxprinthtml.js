@@ -10,7 +10,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
 
-    var moduleversion = "1.1.0.3";
+    var moduleversion = "1.1.0.4";
 
     var mPageOrientation = {
         DEFAULT: 0,
@@ -296,7 +296,7 @@
         },
 
         connect: function (serverUrl, licenseGuid) {
-            MeadCo.log("Print.HTML SYNC connection request");
+            MeadCo.warn("Print.HTML SYNC connection request");
             MeadCo.ScriptX.Print.connectLite(serverUrl, licenseGuid);
             MeadCo.ScriptX.Print.getFromServer("/htmlPrintDefaults/?units=0",false,
                 function (data) {
