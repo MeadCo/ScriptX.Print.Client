@@ -9,7 +9,7 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
-    var version = "1.1.0.5";
+    var version = "1.1.0.6";
     var printerName = "";
     var deviceSettings = {};
     var module = this;
@@ -73,7 +73,7 @@
     function updateJob(data) {
         var i;
         for (i = 0; i < activePrintQueue.length; i++) {
-            if (activePrintQueue[i].jobIdentifier === data.jobIndentifier) {
+            if (activePrintQueue[i].jobIdentifier === data.jobIdentifier) {
                 var fnCallBack = data.fnNotify;
                 if (typeof fnCallBack !== "function") 
                     data.fnNotify = activePrintQueue[i].fnNotify;
@@ -86,7 +86,7 @@
                 return;
             }
         }
-        console.warn("Unable to find job: " + data.jobIndentifier + " to update it");
+        console.warn("Unable to find job: " + data.jobIdentifier + " to update it");
 
     }
 
@@ -544,7 +544,7 @@
         },
 
         ensureSpoolingStatus: function () {
-            var lock = { jobIndentifier: Date.now };
+            var lock = { jobIdentifier: Date.now };
             queueJob(lock);
             return lock;
         },
