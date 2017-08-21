@@ -160,12 +160,13 @@
                 });
 
                 MeadCo.log("promptAndPrint exits ...");
-                return 0;
+                return true;
             }
             console.warn("prompted print requested but no UI library loaded");
         }
         fnNotifyStarted(fnPrint());
         printApi.freeSpoolStatus(lock);
+        return true;
     }
 
     function printHtmlContent(sUrl, bPrompt,fnNotifyStarted, fnCallback, data) {
@@ -372,7 +373,7 @@
             }
             if (typeof (sOrOFrame) === 'undefined') sOrOFrame = null;
 
-            promptAndPrint(bPrompt,
+            return promptAndPrint(bPrompt,
                 function() {
                     if (sOrOFrame != null) {
                         var sFrame = typeof (sOrOFrame) === 'string' ? sOrOFrame : sOrOFrame.id;

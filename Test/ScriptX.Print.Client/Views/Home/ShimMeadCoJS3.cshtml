@@ -33,64 +33,70 @@
 
     <script src="~/Scripts/meadco-scriptx.js"></script>
 
-    <script src="@Url.Action("script","Home",new { filename= "meadco-core.js" })"></script>
-    <script src="@Url.Action("script","Home",new { filename= "meadco-scriptxprint.js" })"></script>
-    <script src="@Url.Action("script","Home",new { filename= "meadco-scriptxprinthtml.js" })"></script>
-    <script data-meadco-server="@server" data-meadco-license="@Model.License" data-meadco-syncinit="false" src="@Url.Action("script","Home",new { filename= "meadco-scriptxfactory.js" })"></script>
+    <script src="@Url.Action("script", "Home", new {filename = "meadco-core.js"})"></script>
+    <script src="@Url.Action("script", "Home", new {filename = "meadco-scriptxprint.js"})"></script>
+    <script src="@Url.Action("script", "Home", new {filename = "meadco-scriptxprinthtml.js"})"></script>
+    <script data-meadco-server="@server" data-meadco-license="@Model.License" data-meadco-syncinit="false" src="@Url.Action("script", "Home", new {filename = "meadco-scriptxfactory.js"})"></script>
 
-    <script src="@Url.Action("script","Home",new { filename= "jQuery-MeadCo.ScriptX.Print.UI.js" })"></script>
+    <script src="@Url.Action("script", "Home", new {filename = "jQuery-MeadCo.ScriptX.Print.UI.js"})"></script>
 
     <script type="text/javascript">
-        $(window).on("load", function () {
-            pageLogger("Shim factory async test starting");
-            MeadCo.log = pageLogger;
+        $(window).on("load",
+            function() {
+                pageLogger("Shim factory async test starting");
+                MeadCo.log = pageLogger;
 
-            try {
-                MeadCo.ScriptX.InitAsync().then(function () {
-                    pageLogger("InitAsync complete - installed version of ScriptX is: " + MeadCo.ScriptX.Version());
-                    MeadCo.ScriptX.Printing.header = "This is a MeadCoJSShim Header";
-                    pageLogger("Header was set to: " + MeadCo.ScriptX.Printing.header);
+                try {
+                    MeadCo.ScriptX.InitAsync().then(function() {
+                        pageLogger("InitAsync complete - installed version of ScriptX is: " + MeadCo.ScriptX.Version());
+                        MeadCo.ScriptX.Printing.header = "This is a MeadCoJSShim Header";
+                        pageLogger("Header was set to: " + MeadCo.ScriptX.Printing.header);
 
-                    $("#btn-printPage").click(function (e) {
-                        e.preventDefault();
-                        MeadCo.ScriptX.PrintPage(true);
-                    });
-
-                    $("#btn-printDoc").click(function (e) {
-                        e.preventDefault();
-                        pageLogger("Start printDoc ...");
-                        MeadCo.ScriptX.Printing.PrintHTML("html://<!doctype html><html><body><h1>Hello world</h1></body></html>", true);
-                        pageLogger("done PrintHtml call ...");
-                    });
-
-                    $("#btn-printDocEx").click(function (e) {
-                        e.preventDefault();
-                        MeadCo.ScriptX.BackgroundPrintURL("http://scriptx.meadroid.com");
-                    });
-
-                    $("#btn-printFrame").click(function (e) {
-                        e.preventDefault();
-                        MeadCo.ScriptX.PrintFrame("infoframe");
-                    });
-
-                    $("#btn-printPage2").click(function (e) {
-                        e.preventDefault();
-                        pageLogger("request print page ... so start wait ....");
-                        MeadCo.ScriptX.PrintPage(false);
-                        MeadCo.ScriptX.WaitForSpoolingComplete().then(function() {
-                            pageLogger("Print page is completed");
+                        $("#btn-printPage").click(function(e) {
+                            e.preventDefault();
+                            MeadCo.ScriptX.PrintPage(true);
                         });
 
+                        $("#btn-printDoc").click(function(e) {
+                            e.preventDefault();
+                            pageLogger("Start printDoc ...");
+                            MeadCo.ScriptX.Printing
+                                .PrintHTML("html://<!doctype html><html><body><h1>Hello world</h1></body></html>",
+                                    true);
+                            pageLogger("done PrintHtml call ...");
+                        });
+
+                        $("#btn-printDocEx").click(function(e) {
+                            e.preventDefault();
+                            MeadCo.ScriptX.BackgroundPrintURL("http://scriptx.meadroid.com");
+                        });
+
+                        $("#btn-printFrame").click(function(e) {
+                            e.preventDefault();
+                            MeadCo.ScriptX.PrintFrame("infoframe");
+                        });
+
+                        $("#btn-printPage2").click(function(e) {
+                            e.preventDefault();
+                            pageLogger("Request print page ..");
+                            if (MeadCo.ScriptX.PrintPage(false)) {
+                                pageLogger("print in progress ... so start wait .... ");
+                                MeadCo.ScriptX.WaitForSpoolingComplete().then(function() {
+                                    pageLogger("Print page is completed");
+                                });
+                            } else {
+                                pageLogger("*** WARNING **** print didnt start for some reason");
+                            }
+                        });
+
+                    }).catch(function() {
+                        pageLogger("Failed to init");
                     });
+                } catch (e) {
+                    pageLogger("Error: " + e.message);
+                }
 
-                }).catch(function () {
-                    pageLogger("Failed to init");
-                });
-            } catch (e) {
-                pageLogger("Error: " + e.message);
-            }
-
-            pageLogger("Shim factory .on(load) event complete");
-        });
+                pageLogger("Shim factory .on(load) event complete");
+            });
     </script>
 }
