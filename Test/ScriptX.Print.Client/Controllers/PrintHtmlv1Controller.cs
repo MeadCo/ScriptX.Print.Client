@@ -19,7 +19,7 @@ namespace ScriptX.Print.Client.Controllers
     [RoutePrefix("api/v1/printHtml")]
     public class PrintHtmlv1Controller : ApiController
     {
-        private const int JobCounterWait = 1;
+        private const int JobCounterWait = 4;
         private static int _counter = 1;
         private static int _jobCounter = 1;
 
@@ -98,7 +98,7 @@ namespace ScriptX.Print.Client.Controllers
             return new JobStatus(jobIdentifier)
             {
                 Message = "Test",
-                Status = ++_counter > JobCounterWait ? PrintHtmlStatus.Printing : PrintHtmlStatus.Completed
+                Status = ++_counter > JobCounterWait ? PrintHtmlStatus.Completed : PrintHtmlStatus.Printing
             };
         }
 
