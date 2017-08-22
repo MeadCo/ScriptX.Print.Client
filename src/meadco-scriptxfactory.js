@@ -211,8 +211,12 @@
     if (this.jQuery) {
         module.factory.log("Looking for auto connect");
 
-        // this will be deprecated ...
+        // this will be deprecated in the next release and then bought back that data-meadco-server is the 'root' url and 
+        // the library wil add on the version and end points for the APIs it is written against...
         $("[data-meadco-server]").each(function () {
+            console
+                .warn("Deprecated factory auto-connect. please use data-meadco-printhtmlserver / data-meadco-subscription");
+
             var $this = $(this);
             module.factory.log("Auto connect to: " + $this.data("meadco-server") + ", with license: " + $this.data("meadco-license") + ", sync: " + $this.data("meadco-syncinit"));
             var sync = ("" + $this.data("meadco-syncinit")).toLowerCase(); // defaults to true if not specified
@@ -225,6 +229,7 @@
             return false;
         });
 
+        // explicit API connections 
         $("[data-meadco-printhtmlserver]").each(function () {
             var $this = $(this);
             module.factory.log("Auto connect to: " + $this.data("meadco-printhtmlserver") + ", with subscription: " + $this.data("meadco-subscription") + ", sync: " + $this.data("meadco-syncinit"));
