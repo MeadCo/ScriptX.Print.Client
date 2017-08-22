@@ -119,10 +119,10 @@
     log("'secmgr' loaded.");
 
     if (this.jQuery) {
-        module.factory.log("Looking for auto connect");
+        MeadCo.log("Looking for auto connect");
         $("[data-meadco-subscriptionserver]").each(function () {
             var $this = $(this);
-            module.factory.log("Auto connect to: " + $this.data("meadco-subscriptionserver") + ", with license: " + $this.data("meadco-subscription") + ", sync: " + $this.data("meadco-syncinit"));
+            MeadCo.log("Auto connect to: " + $this.data("meadco-subscriptionserver") + ", with license: " + $this.data("meadco-subscription") + ", sync: " + $this.data("meadco-syncinit"));
             var sync = ("" + $this.data("meadco-syncinit")).toLowerCase(); // defaults to true if not specified
             setSubscriptionServer($this.data("meadco-subscriptionserver"), $this.data("meadco-subscription"));
             return false;
