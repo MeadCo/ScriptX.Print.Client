@@ -35,7 +35,7 @@
 })('secmgr', function () {
 
     // protected API
-    var moduleversion = "1.1.0.3";
+    var moduleversion = "1.1.0.4";
     var emulatedVersion = "8.0.0.2";
     var module = this;
     var license = {};
