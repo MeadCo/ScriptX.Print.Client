@@ -38,7 +38,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.1.0.7";
+    var moduleversion = "1.1.0.8";
     var emulatedVersion = "8.0.0.0";
     var module = this;
     var printApi = MeadCo.ScriptX.Print;
@@ -210,6 +210,8 @@
 
     if (this.jQuery) {
         module.factory.log("Looking for auto connect");
+
+        // this will be deprecated ...
         $("[data-meadco-server]").each(function () {
             var $this = $(this);
             module.factory.log("Auto connect to: " + $this.data("meadco-server") + ", with license: " + $this.data("meadco-license") + ", sync: " + $this.data("meadco-syncinit"));
@@ -219,6 +221,19 @@
             } else {
                 console.warn("Synchronous connection is deprecated, please use data-meadco-syncinit='false'");
                 printHtml.connect($this.data("meadco-server"), $this.data("meadco-license"));
+            }
+            return false;
+        });
+
+        $("[data-meadco-printhtmlserver]").each(function () {
+            var $this = $(this);
+            module.factory.log("Auto connect to: " + $this.data("meadco-printhtmlserver") + ", with subscription: " + $this.data("meadco-subscription") + ", sync: " + $this.data("meadco-syncinit"));
+            var sync = ("" + $this.data("meadco-syncinit")).toLowerCase(); // defaults to true if not specified
+            if (sync === "false") {
+                printHtml.connectLite($this.data("meadco-printhtmlserver"), $this.data("meadco-subscription"));
+            } else {
+                console.warn("Synchronous connection is deprecated, please use data-meadco-syncinit='false'");
+                printHtml.connect($this.data("meadco-printhtmlserver"), $this.data("meadco-subscription"));
             }
             return false;
         });
