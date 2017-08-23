@@ -9,7 +9,7 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
-    var version = "1.1.0.6";
+    var version = "1.1.0.8";
     var printerName = "";
     var deviceSettings = {};
     var module = this;
@@ -140,7 +140,7 @@
         printAtServer(requestData,
         {
             fail: function (jqXhr, textStatus, errorThrown) {
-                progress(requestData,enumPrintStatus.ERROR);
+                progress(requestData,enumPrintStatus.ERROR,errorThrown);
                 MeadCo.ScriptX.Print.reportServerError(errorThrown);
                 if (typeof fnDone === "function") {
                     fnDone(jqXhr);
@@ -159,11 +159,14 @@
                 waitForJobComplete(requestData,data.jobIdentifier,
                     -1,
                     function (data) {
-                        MeadCo.log("Will download printed file");
-                        progress(requestData, enumPrintStatus.COMPLETED);
-                        window.open(server + "/download/" + data.jobIdentifier, "_self");
+                        if (data != null) {
+                            MeadCo.log("Will download printed file");
+                            progress(requestData, enumPrintStatus.COMPLETED);
+                            window.open(server + "/download/" + data.jobIdentifier, "_self");
+                        }
+
                         if (typeof fnDone === "function") {
-                            fnDone(null);
+                            fnDone(data != null ? "Server error" : null);
                         }
                     });
             },
@@ -368,9 +371,10 @@
                            case enumPrintStatus.ABANDONED:
                                MeadCo.log("error status in waitForJobComplete so clear interval: " + intervalId);
                                progress(requestData, data.status, data.message);
-                               updateJob(data);
+                               removeJob(data);
                                window.clearInterval(intervalId);
                                MeadCo.ScriptX.Print.reportServerError("The print failed.\n\n" + data.message);
+                               functionComplete(null);
                                break;
 
                            default:
@@ -378,6 +382,7 @@
                                 MeadCo.log("unknown status in waitForJobComplete so clear interval: " + intervalId);
                                 removeJob(jobId);
                                 window.clearInterval(intervalId);
+                                functionComplete(null);
                                 break;
                             }
                         })
@@ -399,8 +404,10 @@
                             }
 
                             MeadCo.log("error: " + errorThrown + " in waitForJobComplete so clear interval: " + intervalId);
+                            progress(requestData,enumPrintStatus.ERROR,errorThrown);
                             removeJob(jobId);
                             window.clearInterval(intervalId);
+                            functionComplete(null);
                         });
                 } else {
                     MeadCo.log("** info : still waiting for last status request to complete");
