@@ -108,6 +108,16 @@
         }
     }
 
+    // call api on server to print the content
+    //
+    // contentType - enum type of content given (html snippet, url)
+    // content - string
+    // htmlPrintSettings - html settings to use, the function will use device settings for the current print
+    // fnDone(errorXhr) - function called when printing complete (and output returned), arg is null on no error.
+    // fnNotify(data) - callback when job associated with this print is updated (data is server result)
+    // fnCallback(status,sInformation,data) - callback when job status is updated 
+    // data - date to give to fnCallback
+    //
     function printHtmlAtServer(contentType, content, htmlPrintSettings, fnDone, fnNotify, fnCallback, data) {
         MeadCo.log("started MeadCo.ScriptX.Print.print.printHtmlAtServer() Type: " + contentType + ", printerName: " + printerName);
         var devInfo;
@@ -551,6 +561,31 @@
 
         freeSpoolStatus: function(lock) {
             removeJob(lock.jobIdentifier);
+        },
+
+        WaitForSpoolingComplete: function (iTimeout, fnComplete) {
+            MeadCo.log("Started WaitForSpoolingComplete(" + iTimeout + ")");
+            if (typeof fnComplete !== "function") {
+                throw "WaitForSpoolingComplete requires a completion callback";
+            }
+
+            var timerId;
+            var startTime = Date.now();
+            var interval = 250;
+
+            var intervalId = window.setInterval(function () {
+                if (jobCount() === 0) {
+                    MeadCo.log("WaitForSpoolingComplete - complete");
+                    window.clearInterval(intervalId);
+                    fnComplete(true);
+                } else {
+                    if (iTimeout >= 0 && Date.now() - startTime > iTimeout) {
+                        MeadCo.log("WaitForSpoolingComplete - timeout");
+                        window.clearInterval(intervalId);
+                        fnComplete(jobCount() === 0);
+                    }
+                }
+            },interval);
         }
     };
 
