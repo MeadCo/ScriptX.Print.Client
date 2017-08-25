@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>MeadScriptXPrintHtml</id>
-        <version>1.1.0-beta12</version>
+        <version>1.1.0-beta14</version>
         <title>MeadCo ScriptX.Print Services Library</title>
         <authors>Pete Cole, MeadCo</authors>
         <owners>MeadCo</owners>
