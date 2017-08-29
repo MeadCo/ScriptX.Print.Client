@@ -9,16 +9,23 @@
 //
 // Dependency: bootstrap-select.js : Bootstrap-select v1.10.0 (http://silviomoreto.github.io/bootstrap-select)
 // The above dependency is completely optional - the code looks for the enabling class.
+//
+// Dependency: meadco-scriptxfactory.js
 
 
 (function (topLevelNs, $, undefined) {
     "use strict";
 
-    var sClass = ""; // "selectpicker";
+    var sClass = "";
+
+    // check for presence of bootstrap-select.js
+    if ($.fn.selectpicker) {
+        sClass = "selectpicker";
+    }
 
     var ui = MeadCo.createNS("MeadCo.ScriptX.Print.UI");
 
-    ui.moduleversion = "1.1.0.2";
+    ui.moduleversion = "1.1.0.3";
 
     // MeadCo.ScriptX.Print.UI.AttachPrintAction(
     //  el - clickable html element
@@ -227,20 +234,21 @@
                 switch ($(this).val()) {
                     case '2': // mm from inches
                         $('#dlg-printoptions input[type=text][data-rule=currency]').each(function () {
-                            ui.convertAndDisplayinchesToMM($(this));
+                            convertAndDisplayinchesToMM($(this));
                         });
                         break;
 
                     case '1': // inches from mm
                         $('#dlg-printoptions input[type=text][data-rule=currency]').each(function () {
-                            ui.convertAndDisplayMMtoInches($(this));
+                            convertAndDisplayMMtoInches($(this));
                         });
                         break;
                 }
             });
 
-            if ( $.fn.spinner )
+            if ($.fn.spinner) {
                 $('#dlg-printoptions [data-trigger="spinner"]').spinner();
+            }
         }
 
         var $dlg = $('#dlg-printoptions');
@@ -265,15 +273,17 @@
             $paperselect.append("<option>" + printerControl.Forms[i] + "</option>");
         }
 
-        if ($paperselect.hasClass("selectpicker"))
+        if ($paperselect.hasClass("selectpicker")) {
             $paperselect.selectpicker('refresh');
+        }
 
         $paperselect.val(MeadCo.ScriptX.Printing.paperSize);
 
         $dlg.modal('show');
- 
-        if ($paperselect.hasClass("selectpicker"))
+
+        if ($paperselect.hasClass("selectpicker")) {
             $paperselect.selectpicker('refresh');
+        }
 
     };
 
@@ -360,13 +370,13 @@
                 switch ($(this).val()) {
                     case '2': // mm from inches
                         $('#dlg-printersettings input[type=text][data-rule=currency]').each(function () {
-                            ui.convertAndDisplayinchesToMM($(this));
+                            convertAndDisplayinchesToMM($(this));
                         });
                         break;
 
                     case '1': // inches from mm
                         $('#dlg-printersettings input[type=text][data-rule=currency]').each(function () {
-                            ui.convertAndDisplayMMtoInches($(this));
+                            convertAndDisplayMMtoInches($(this));
                         });
                         break;
                 }
@@ -376,7 +386,7 @@
                 $('#dlg-printersettings [data-trigger="spinner"]').spinner();
             }
 
-            $('#dlg-printersettings .selectpicker').on('changed.bs.select', function(ev) {
+            $('#dlg-printersettings #fld-printerselect').on('changed.bs.select', function (ev) {
                 setPrinterSettings();
             });
         }
@@ -384,8 +394,9 @@
         setPrinterSettings();
         $('#dlg-printersettings').modal('show');
 
-        if ( sClass === "selectpicker" )
+        if (sClass === "selectpicker") {
             $('#dlg-printersettings .selectpicker').selectpicker('refresh');
+        }
     };
 
     function setPrinterSettings() {
@@ -396,7 +407,7 @@
         fillAndSetPrintersList();
         fillAndSetBinsList();
 
-        $dlg.find('#fld-collate').prop('checked', printer.collate === printHtml.CollateOptions.TRUE);
+        $dlg.find('#fld-collate').prop('checked', printer.collate);
         $dlg.find('#fld-copies').val(printer.copies);
 
     }
@@ -417,11 +428,9 @@
             settings.header = $dlg.find('#fld-header').val();
             settings.footer = $dlg.find('#fld-footer').val();
 
-
-            // MeadCo.ScriptX.Printing.paperSize = $('#fld-papersize').selectpicker('val');
             MeadCo.ScriptX.Printing.paperSize = $('#fld-papersize').val();
         }
-    };
+    }
 
     function savePrinterSettings() {
         var $dlg = $('#dlg-printersettings');
@@ -438,10 +447,10 @@
             printer.currentPrinter = $('#fld-printerselect').val();
             printer.paperSource = $('#fld-papersource').val();
 
-            printer.collate = $dlg.find('#fld-collate').prop('checked') ? printHtml.CollateOptions.TRUE : printHtml.CollateOptions.FALSE;
+            printer.collate = $dlg.find('#fld-collate').prop('checked');
             printer.copies = $dlg.find('#fld-copies').val();
         }
-    };
+    }
 
     function fillAndSetPrintersList() {
         var printer = MeadCo.ScriptX.Printing;
@@ -454,9 +463,10 @@
         }
 
         $printers.val(printer.currentPrinter);
-        if ($printers.hasClass("selectpicker"))
+        if ($printers.hasClass("selectpicker")) {
             $printers.selectpicker('refresh');
-    };
+        }
+    }
 
     function fillAndSetBinsList() {
         var printer = MeadCo.ScriptX.Printing;
@@ -470,9 +480,10 @@
 
         $bins.val(printer.paperSource);
 
-        if ($bins.hasClass("selectpicker"))
+        if ($bins.hasClass("selectpicker")) {
             $bins.selectpicker('refresh');
-    };
+        }
+    }
 
     // convert the current inches value in the control to MM
     function convertAndDisplayinchesToMM($el) {
