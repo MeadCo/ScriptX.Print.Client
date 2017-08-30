@@ -561,7 +561,7 @@
         },
 
         ensureSpoolingStatus: function () {
-            var lock = { jobIdentifier: Date.now };
+            var lock = { jobIdentifier: Date.now() };
             queueJob(lock);
             return lock;
         },

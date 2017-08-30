@@ -356,16 +356,6 @@
                 '<!-- /.modal -->';
             $('body').append(dlg);
 
-            $('#btn-savesettings').click(function (ev) {
-                ev.preventDefault();
-                savePrinterSettings();
-                $('#dlg-printersettings').modal('hide');
-
-                if (typeof fnCallBack === "function") {
-                    fnCallBack(true);
-                }
-            });
-
             $('[name="fld-measure"]').on('change', function () {
                 switch ($(this).val()) {
                     case '2': // mm from inches
@@ -390,6 +380,18 @@
                 setPrinterSettings();
             });
         }
+
+        // reattach click handler as callback function scoped variables may (probably will) have changed
+        $('#btn-savesettings')
+            .off("click")
+            .on("click", function (ev) {
+                ev.preventDefault();
+                savePrinterSettings();
+                $('#dlg-printersettings').modal('hide');
+                if (typeof fnCallBack === "function") {
+                    fnCallBack(true);
+                }
+            });
 
         setPrinterSettings();
         $('#dlg-printersettings').modal('show');
