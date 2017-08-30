@@ -1,6 +1,5 @@
 {
   "name": "scriptxprint-html",
-  "version": "1.0.6",
   "description": "Print html with the ScriptX.Print.HTML service from MeadCo.",
   "main": "meadco-scriptxprinthtml.js",
   "moduleType": [

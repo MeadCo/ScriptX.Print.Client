@@ -9,6 +9,8 @@
 // we anti-polyfill <object id="factory" />
 // enabling old code to run in modern browsers
 //
+// static singleton instances.
+//
 ; (function (name, definition,undefined) {
 
     if ( this[name] != undefined || document.getElementById(name) != null ) {
@@ -36,7 +38,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "0.0.5.15";
+    var moduleversion = "1.1.0.9";
     var emulatedVersion = "8.0.0.0";
     var module = this;
     var printApi = MeadCo.ScriptX.Print;
@@ -143,12 +145,103 @@
 
     module.factory.log("factory.Printing loaded.");
 
+    function promptAndPrint(bPrompt, fnPrint, fnNotifyStarted) {
+        if (typeof (bPrompt) === 'undefined') bPrompt = true;
+        var lock = printApi.ensureSpoolingStatus();
+        if (bPrompt) {
+            if (MeadCo.ScriptX.Print.UI) {
+                MeadCo.ScriptX.Print.UI.PrinterSettings(function (dlgAccepted) {
+                    if (dlgAccepted) {
+                        MeadCo.log("promptAndPrint requesting print ...");
+                        fnNotifyStarted(fnPrint());
+                    }
+                    else 
+                        fnNotifyStarted(false);
+
+                    printApi.freeSpoolStatus(lock);
+                });
+
+                MeadCo.log("promptAndPrint exits ...");
+                return true;
+            }
+            console.warn("prompted print requested but no UI library loaded");
+        }
+        fnNotifyStarted(fnPrint());
+        printApi.freeSpoolStatus(lock);
+        return true;
+    }
+
+    function printHtmlContent(sUrl, bPrompt,fnNotifyStarted, fnCallback, data) {
+        var sHtml = "";
+
+        // if requesting snippet then trim to just the html
+        if (sUrl.indexOf('html://') === 0) {
+            sHtml = sUrl.substring(7);
+            var docType = "<!doctype";
+
+            // add-on scripters might also add doctype but the server handles this 
+            if (sHtml.substr(0, docType.length).toLowerCase() === docType) {
+                sHtml = sHtml.substring(sHtml.indexOf(">") + 1);
+            }
+        } else {
+            // if a relative URL supplied then add the base URL of this website
+            if (!(sUrl.indexOf('http://') === 0 || sUrl.indexOf('https://') === 0)) {
+                var baseurl = module.factory.baseURL();
+                if (baseurl.substring(baseurl.length - 1, baseurl.length) !== "/") {
+                    if (sUrl.substring(0, 1) !== "/") {
+                        sUrl = baseurl + "/" + sUrl;
+                    } else {
+                        sUrl = baseurl + sUrl;
+                    }
+                } else {
+                    if (sUrl.substring(0, 1) !== "/") {
+                        sUrl = baseurl + sUrl;
+                    } else {
+                        sUrl = baseurl + sUrl.substring(1);
+                    }
+                }
+            }
+        }
+
+        return promptAndPrint(bPrompt,
+            function () {
+                MeadCo.log("printHtmlContent requesting print ...");
+                return sHtml.length > 0 ? printHtml.printHtml(sHtml, bPrompt, null, fnCallback, data) : printHtml.printFromUrl(sUrl, bPrompt, null, fnCallback, data);
+            },fnNotifyStarted);
+    }
+
     if (this.jQuery) {
         module.factory.log("Looking for auto connect");
+
+        // this will be deprecated in the next release and then bought back that data-meadco-server is the 'root' url and 
+        // the library wil add on the version and end points for the APIs it is written against...
         $("[data-meadco-server]").each(function () {
+            console
+                .warn("Deprecated factory auto-connect. please use data-meadco-printhtmlserver / data-meadco-subscription");
+
             var $this = $(this);
-            module.factory.log("Auto connect to: " + $this.data("meadco-server") + "with license: " + $this.data("meadco-license"));
-            printHtml.connect($this.data("meadco-server"), $this.data("meadco-license"));
+            module.factory.log("Auto connect to: " + $this.data("meadco-server") + ", with license: " + $this.data("meadco-license") + ", sync: " + $this.data("meadco-syncinit"));
+            var sync = ("" + $this.data("meadco-syncinit")).toLowerCase(); // defaults to true if not specified
+            if (sync === "false") {
+                printApi.connectLite($this.data("meadco-server"), $this.data("meadco-license"));
+            } else {
+                console.warn("Synchronous connection is deprecated, please use data-meadco-syncinit='false'");
+                printHtml.connect($this.data("meadco-server"), $this.data("meadco-license"));
+            }
+            return false;
+        });
+
+        // explicit API connections 
+        $("[data-meadco-printhtmlserver]").each(function () {
+            var $this = $(this);
+            module.factory.log("Auto connect to: " + $this.data("meadco-printhtmlserver") + ", with subscription: " + $this.data("meadco-subscription") + ", sync: " + $this.data("meadco-syncinit"));
+            var sync = ("" + $this.data("meadco-syncinit")).toLowerCase(); // defaults to true if not specified
+            if (sync === "false") {
+                printHtml.connectLite($this.data("meadco-printhtmlserver"), $this.data("meadco-subscription"));
+            } else {
+                console.warn("Synchronous connection is deprecated, please use data-meadco-syncinit='false'");
+                printHtml.connect($this.data("meadco-printhtmlserver"), $this.data("meadco-subscription"));
+            }
             return false;
         });
     }
@@ -266,17 +359,27 @@
             return true;
         },
 
-        PageSetup : function() {
+        PageSetup: function (fnNotify) {
+            if (typeof fnNotify === "undefined") {
+                console.warn("PageSeup API in ScriptX.Print Service is not synchronous, there is no return value.");
+                fnNotify = function (bDlgOK) { console.log("PageSetugDlg: " + bDlgOK); }
+            }
+
             if (MeadCo.ScriptX.Print.UI) {
-                MeadCo.ScriptX.Print.UI.PageSetup();
+                MeadCo.ScriptX.Print.UI.PageSetup(fnNotify);
             } else {
                 printApi.reportFeatureNotImplemented("Page setup dialog");
             }
         },
 
-        PrintSetup : function() {
+        PrintSetup: function (fnNotify) {
+            if (typeof fnNotify === "undefined") {
+                console.warn("PrintSetup API in ScriptX.Print Service is not synchronous, there is no return value.");
+                fnNotify = function (bDlgOK) { console.log("PrintSetugDlg: " + bDlgOK); }
+            }
+
             if (MeadCo.ScriptX.Print.UI) {
-                MeadCo.ScriptX.Print.UI.PrinterSettings();
+                MeadCo.ScriptX.Print.UI.PrinterSettings(fnNotify);
             } else {
                 printApi.reportFeatureNotImplemented("Print settings dialog");
             }
@@ -286,45 +389,38 @@
             printApi.reportFeatureNotImplemented("Preview");
         },
 
-        Print : function(bPrompt, sOrOFrame) { // needs and wants update to ES2015
-            if (typeof (bPrompt) === 'undefined') bPrompt = true;
+        Print: function (bPrompt, sOrOFrame, fnNotifyStarted) { // needs and wants update to ES2015 (for default values)
+            if (typeof fnNotifyStarted === "undefined") {
+                fnNotifyStarted = function (bStarted) { }
+            }
             if (typeof (sOrOFrame) === 'undefined') sOrOFrame = null;
 
-            if (sOrOFrame != null) {
-                var sFrame = typeof (sOrOFrame) === 'string' ? sOrOFrame : sOrOFrame.id;
-                return printHtml.printFrame(sFrame, bPrompt);
-            }
-
-            return printHtml.printDocument(bPrompt);
-        },
-
-        PrintHTML : function(sUrl, bPrompt) {
-            if (typeof (bPrompt) === 'undefined') bPrompt = true;
-
-            // if a relative URL supplied then add the base URL of this website
-            if (!(sUrl.indexOf('http://') === 0 || sUrl.indexOf('https://') === 0)) {
-                var baseurl = module.factory.baseURL();
-                if (baseurl.substring(baseurl.length - 1, baseurl.length) !== "/") {
-                    if (sUrl.substring(0, 1) !== "/") {
-                        sUrl = baseurl + "/" + sUrl;
-                    } else {
-                        sUrl = baseurl + sUrl;
+            return promptAndPrint(bPrompt,
+                function() {
+                    if (sOrOFrame != null) {
+                        var sFrame = typeof (sOrOFrame) === 'string' ? sOrOFrame : sOrOFrame.id;
+                        return printHtml.printFrame(sFrame, bPrompt);
                     }
-                } else {
-                    if (sUrl.substring(0, 1) !== "/") {
-                        sUrl = baseurl + sUrl;
-                    } else {
-                        sUrl = baseurl + sUrl.substring(1);
-                    }
-                }
+
+                    return printHtml.printDocument(bPrompt);
+                },
+                fnNotifyStarted);
+        },
+
+        PrintHTML: function (sUrl, bPrompt, fnNotifyStarted) {
+            if (typeof fnNotifyStarted === "undefined") {
+                fnNotifyStarted = function (bStarted) { }
             }
-
-            return printHtml.printFromUrl(sUrl);
+            return printHtmlContent(sUrl, bPrompt,fnNotifyStarted);
         },
 
-        PrintHTMLEx: function (sUrl, bPrompt, fnCallback, data) {
-            printApi.reportFeatureNotImplemented("PrintHtmlEx");
+        PrintHTMLEx: function (sUrl, bPrompt, fnCallback, data, fnNotifyStarted) {
+            if (typeof fnNotifyStarted === "undefined") {
+                fnNotifyStarted = function (bStarted) { }
+            }
+            return printHtmlContent(sUrl, bPrompt, fnNotifyStarted , fnCallback, data);
         },
+
 
         // advanced (aka licensed properties - the server will reject
         // use if no license available)
@@ -501,20 +597,20 @@
             }
         },
 
-        EnumJobs : function() {
+        EnumJobs : function(sPrinterName,iIndex,jobNameOut) {
             printApi.reportFeatureNotImplemented("EnumJobs");
         },
 
-        GetJobsCount : function() {
-            printApi.reportFeatureNotImplemented("GetJobsCount");
+        GetJobsCount : function(sPrinterName) {
+            return printApi.activeJobs;
         },
 
         printerControl: function (value) {
             // for now ignore value parameter and return an array of paper sizes in the Forms property
 
             return {
-                Forms : ["A3", "A4", "A5", "Letter"],
-                Bins : ["Automatically select", "Printer auto select", "Manual Feed Tray", "Tray 1", "Tray 2", "Tray 3", "Tray 4"],
+                Forms : ["A3", "A4", "A5", "Letter"], // TODO: fill properly
+                Bins: ["Automatically select", "Printer auto select", "Manual Feed Tray", "Tray 1", "Tray 2", "Tray 3", "Tray 4"], // TODO: fill properly
                 get Name() {
                     printApi.reportFeatureNotImplemented("printerControl.Name");
                 },
@@ -593,14 +689,23 @@
             printApi.reportFeatureNotImplemented("TotalPrintPages");
         },
 
-        WaitForSpoolingComplete: function () {
-            printApi.reportFeatureNotImplemented("WaitForSpoolingComplete");
+        WaitForSpoolingComplete: function (iTimeout, fnComplete) {
+            printApi.WaitForSpoolingComplete(iTimeout, fnComplete);
         },
 
         // helpers for wrapper MeadCoJS
         PolyfillInit: function () {
             return MeadCo.ScriptX.Print.isConnected;
+        },
+
+        PolyfillInitAsync: function (resolve, reject) {
+            if (MeadCo.ScriptX.Print.isConnected) {
+                resolve();
+            } else {
+                printHtml.connectAsync("", "", resolve, reject);
+            }
         }
+
     };
 
 });

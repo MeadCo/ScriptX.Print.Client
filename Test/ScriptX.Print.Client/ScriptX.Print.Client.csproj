@@ -164,7 +164,7 @@
     <Content Include="Scripts\jquery-3.1.1.min.js" />
     <Content Include="Scripts\jquery-3.1.1.slim.js" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.js" />
-    <Content Include="Scripts\meadco-scriptx-1.1.4.js" />
+    <Content Include="Scripts\meadco-scriptx.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
@@ -191,6 +191,7 @@
     <Content Include="Views\Shared\_LayoutFramedContent.cshtml" />
     <Content Include="Views\Home\ShimMeadCoJS2.cshtml" />
     <Content Include="Views\Home\Inspector.cshtml" />
+    <Content Include="Views\Home\ShimMeadCoJS3.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

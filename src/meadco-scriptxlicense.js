@@ -9,11 +9,11 @@
 // we anti-polyfill <object id="secmgr" /> 
 // enabling old code to run in modern browsers
 //
-; (function (name, definition,undefined) {
+; (function (name, definition, undefined) {
 
-    if ( this[name] != undefined || document.getElementById(name) != null ) {
+    if (this[name] != undefined || document.getElementById(name) != null) {
         console.log("MeadCo security manager anti-polyfill believes it may not be requred.");
-        if ( this[name] != undefined ) {
+        if (this[name] != undefined) {
             console.log("this[" + name + "] is defined");
         }
         if (document.getElementById(name) != null) {
@@ -35,29 +35,31 @@
 })('secmgr', function () {
 
     // protected API
-    var moduleversion = "0.0.5.8";
+    var moduleversion = "1.1.0.5";
     var emulatedVersion = "8.0.0.2";
     var module = this;
     var license = {};
-
+    var lastError = "Not loaded";
 
     var server = "";            // url to the server
     var licenseGuid = "";
 
-    function log (str) {
+    function log(str) {
         console.log("secmgr anti-polyfill :: " + str);
     }
 
-    function setLicensingServer(serverUrl, clientLicenseGuid) {
-        MeadCo.log("Licensing server requested: " + serverUrl + " with license: " + clientLicenseGuid);
+    function setSubscriptionServer(serverUrl, clientLicenseGuid) {
+        MeadCo.log("Subscription server requested: " + serverUrl + " with license: " + clientLicenseGuid);
         server = serverUrl;
         licenseGuid = clientLicenseGuid;
+        license = {};
+        lastError = "Not loaded";
     }
 
-    function getLicenseFromServer(onFail) {
+    function getSubscriptionFromServer(resolve, reject) {
 
         if (server.length <= 0) {
-            throw new Error("MeadCo.ScriptX.Licensing : licensing server URL is not set or is invalid");
+            throw new Error("MeadCo.ScriptX.Licensing : Subscription server URL is not set or is invalid");
         }
 
         if (module.jQuery) {
@@ -68,24 +70,28 @@
                     dataType: "json",
                     jsonp: false,
                     cache: false,
-                    async: false, // TODO: deprecated 
+                    async: typeof resolve === "function",
                     headers: {
                         "Authorization": "Basic " + btoa(licenseGuid + ":")
                     }
                 }).done(function (data) {
+                    lastError = "";
                     $.extend(license, data);
+                    if (typeof resolve === "function")
+                        resolve(license);
                 })
                 .fail(function (jqXHR, textStatus, errorThrown) {
-                    MeadCo.log("**warning: failure in MeadCo.ScriptX.Licensing.getLicenseFromServer: " + errorThrown);
-                    if (typeof onFail == "function")
-                        onFail(errorThrown);
+                    MeadCo.log("**warning: failure in MeadCo.ScriptX.Licensing.getSubscriptionFromServer: " + errorThrown);
+                    lastError = errorThrown;
+                    if (typeof reject == "function")
+                        reject(errorThrown);
                 });
             return license;
         }
     }
 
     // extend the namespace
-    module.extendSecMgrNamespace = function(name, definition) {
+    module.extendSecMgrNamespace = function (name, definition) {
         var theModule = definition();
 
         log("MeadCo security manager extending namespace2: " + name);
@@ -114,6 +120,17 @@
 
     log("'secmgr' loaded.");
 
+    if (this.jQuery) {
+        MeadCo.log("Looking for auto connect");
+        $("[data-meadco-subscriptionserver]").each(function () {
+            var $this = $(this);
+            MeadCo.log("Auto connect to: " + $this.data("meadco-subscriptionserver") + ", with license: " + $this.data("meadco-subscription") + ", sync: " + $this.data("meadco-syncinit"));
+            var sync = ("" + $this.data("meadco-syncinit")).toLowerCase(); // defaults to true if not specified
+            setSubscriptionServer($this.data("meadco-subscriptionserver"), $this.data("meadco-subscription"));
+            return false;
+        });
+    }
+
     // public API.
     return {
         log: log,
@@ -122,19 +139,23 @@
         },
 
         get result() {
-            return 0;
+            return lastError === "" ? 0 : 5; // => ok or not found
         },
 
         get validLicense() {
-            return true;
+            return typeof license.guid !== "undefined";
         },
 
         get License() {
-            var license = getLicenseFromServer();
-            return license;
+            var l = typeof license.guid !== "undefined" ? license : getSubscriptionFromServer();
+            return l;
         },
 
-        connect: setLicensingServer,
+        GetLicenseAsync: function (resolve, reject) {
+            getSubscriptionFromServer(resolve, reject);
+        },
+
+        connect: setSubscriptionServer
 
     };
 });

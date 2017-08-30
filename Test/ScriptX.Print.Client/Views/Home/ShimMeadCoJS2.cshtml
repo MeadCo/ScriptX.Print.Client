@@ -26,15 +26,15 @@
         }
     </script>
 
-    <script src="~/Scripts/meadco-scriptx-1.1.4.js"></script>
+    <script src="~/Scripts/meadco-scriptx.js"></script>
 
     <script src="@Url.Action("script","Home",new { filename= "meadco-core.js" })"></script>
     <script src="@Url.Action("script","Home",new { filename= "meadco-scriptxprint.js" })"></script>
     <script src="@Url.Action("script","Home",new { filename= "meadco-scriptxprinthtml.js" })"></script>
-    <script data-meadco-server="@server" data-meadco-license="@Model.License" src="@Url.Action("script","Home",new { filename= "meadco-scriptxfactory.js" })"></script>
+    <script data-meadco-printhtmlserver="@server" data-meadco-subscription="@Model.License" src="@Url.Action("script", "Home", new {filename = "meadco-scriptxfactory.js"})"></script>
 
     <script type="text/javascript">
-        $(function() {
+        $(window).on("load", function () {
             pageLogger("Shim factory test starting");
             MeadCo.log = pageLogger;
 

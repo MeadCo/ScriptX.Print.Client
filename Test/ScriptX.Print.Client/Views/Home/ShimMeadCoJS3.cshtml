@@ -1,0 +1,102 @@
+﻿@model ScriptX.Print.Client.Models.Sample
+
+@{
+    ViewBag.Title = Model.Title;
+    var frameUrl = Url.Action("FramedHeaderFooterArgs");
+    var server = $"{Request.Url.Scheme}://{Request.Url.Authority}{Url.Content("~/api/v1/printHtml")}";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <button id="btn-printPage" class="btn btn-primary">Print page</button>&nbsp;<button id="btn-printDoc" class="btn btn-primary">Print doc</button>&nbsp;<button id="btn-printDocEx" class="btn btn-primary">Print doc (Ex)</button>&nbsp;<button id="btn-printFrame" class="btn btn-primary">Print frame</button>
+</div>
+
+<p>.. and with WaitForSpoolingComplete ...</p>
+<div>
+    <button id="btn-printPage2" class="btn btn-primary">Print page</button>
+</div>
+
+<div style="margin: 20px; width: 50%; height: 500px">
+    <iframe style="width: 100%; height: 100%; border: 2px solid grey; margin: 0px" src="@frameUrl" id="infoframe"></iframe>
+</div>
+
+<div id="logPane"></div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        function pageLogger(txt) {
+            $("#logPane").append(txt + "<br/>");
+        }
+    </script>
+
+    <script src="~/Scripts/meadco-scriptx.js"></script>
+
+    <script src="@Url.Action("script", "Home", new {filename = "meadco-core.js"})"></script>
+    <script src="@Url.Action("script", "Home", new {filename = "meadco-scriptxprint.js"})"></script>
+    <script src="@Url.Action("script", "Home", new {filename = "meadco-scriptxprinthtml.js"})"></script>
+    <script data-meadco-printhtmlserver="@server" data-meadco-subscription="@Model.License" data-meadco-syncinit="false" src="@Url.Action("script", "Home", new {filename = "meadco-scriptxfactory.js"})"></script>
+
+    <script src="@Url.Action("script", "Home", new {filename = "jQuery-MeadCo.ScriptX.Print.UI.js"})"></script>
+
+    <script type="text/javascript">
+        $(window).on("load",
+            function() {
+                pageLogger("Shim factory async test starting");
+                MeadCo.log = pageLogger;
+
+                try {
+                    MeadCo.ScriptX.InitAsync().then(function() {
+                        pageLogger("InitAsync complete - installed version of ScriptX is: " + MeadCo.ScriptX.Version());
+                        MeadCo.ScriptX.Printing.header = "This is a MeadCoJSShim Header";
+                        pageLogger("Header was set to: " + MeadCo.ScriptX.Printing.header);
+
+                        $("#btn-printPage").click(function(e) {
+                            e.preventDefault();
+                            MeadCo.ScriptX.PrintPage(true);
+                        });
+
+                        $("#btn-printDoc").click(function(e) {
+                            e.preventDefault();
+                            pageLogger("Start printDoc ...");
+                            MeadCo.ScriptX.Printing
+                                .PrintHTML("html://<!doctype html><html><body><h1>Hello world</h1></body></html>",
+                                    true);
+                            pageLogger("done PrintHtml call ...");
+                        });
+
+                        $("#btn-printDocEx").click(function(e) {
+                            e.preventDefault();
+                            MeadCo.ScriptX.BackgroundPrintURL("http://scriptx.meadroid.com");
+                        });
+
+                        $("#btn-printFrame").click(function(e) {
+                            e.preventDefault();
+                            MeadCo.ScriptX.PrintFrame("infoframe");
+                        });
+
+                        $("#btn-printPage2").click(function(e) {
+                            e.preventDefault();
+                            pageLogger("Request print page ..");
+                            if (MeadCo.ScriptX.PrintPage(false)) {
+                                pageLogger("print in progress ... so start wait .... ");
+                                MeadCo.ScriptX.WaitForSpoolingComplete().then(function() {
+                                    pageLogger("Print page is completed");
+                                });
+                            } else {
+                                pageLogger("*** WARNING **** print didnt start for some reason");
+                            }
+                        });
+
+                    }).catch(function() {
+                        pageLogger("Failed to init");
+                    });
+                } catch (e) {
+                    pageLogger("Error: " + e.message);
+                }
+
+                pageLogger("Shim factory .on(load) event complete");
+            });
+    </script>
+}
