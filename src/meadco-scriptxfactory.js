@@ -38,7 +38,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.1.0.10";
+    var moduleversion = "1.1.1.2";
     var emulatedVersion = "8.0.0.0";
     var module = this;
     var printApi = MeadCo.ScriptX.Print;
@@ -489,19 +489,19 @@
         },
 
         set duplex(duplex) {
-            printApi.reportFeatureNotImplemented("set Duplex");
+            printApi.deviceSettings.duplex = duplex;
         },
 
         get duplex() {
-            printApi.reportFeatureNotImplemented("get Duplex");
+            return printApi.deviceSettings.duplex;
         },
 
         set duplex2(duplex) {
-            printApi.reportFeatureNotImplemented("set Duplex2");
+            printApi.deviceSettings.duplex = duplex;
         },
 
         get duplex2() {
-            printApi.reportFeatureNotImplemented("get Duplex2");
+            return printApi.deviceSettings.duplex;
         },
 
         set onbeforeprint(fn) {

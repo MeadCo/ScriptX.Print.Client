@@ -9,7 +9,7 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
-    var version = "1.1.0.8";
+    var version = "1.1.1.0";
     var printerName = "";
     var deviceSettings = {};
     var module = this;
@@ -49,6 +49,13 @@
         ERROR: -1,
         ABANDONED: -2
     };
+
+    var enumDuplex = {
+        DEFAULT: 0,
+        SIMPLEX: 1,
+        VERTICAL: 2,
+        HORIZONTAL: 3
+    }
 
     function queueJob(data) {
         activePrintQueue.push(data);

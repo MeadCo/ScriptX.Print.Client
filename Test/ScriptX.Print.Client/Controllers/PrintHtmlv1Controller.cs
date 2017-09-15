@@ -58,6 +58,7 @@ namespace ScriptX.Print.Client.Controllers
             ds.Copies = 1;
             ds.Collate = BooleanOption.False;
             ds.IsDefault = true;
+            ds.Duplex = Duplex.Simplex;
 
             ds.UnprintableMargins = new Margins() {Left = "10", Top = "10", Bottom = "10", Right = "10"};
             

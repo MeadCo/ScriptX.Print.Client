@@ -74,6 +74,8 @@
                             ", " +
                             p.unprintableBottom);
 
+                        pageLogger("Duplex: " + p.duplex + ", " + p.duplex2);
+
                         $("#btn-printPage").click(function(e) {
                             e.preventDefault();
                             MeadCo.ScriptX.PrintPage(true);
