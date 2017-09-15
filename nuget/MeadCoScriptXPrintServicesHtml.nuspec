@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>MeadScriptXPrintHtml</id>
-        <version>1.2.0</version>
+        <version>1.2.1</version>
         <title>MeadCo ScriptX.Print Services Library</title>
         <authors>Pete Cole, MeadCo</authors>
         <owners>MeadCo</owners>
@@ -12,8 +12,8 @@
 		<iconUrl>http://scriptx.meadroid.com/favicon.ico</iconUrl>
         <description>This library implements an emulation in javascript of the MeadCo ScriptX Add-on for Internet Explorer to bring print services to all browsers. To write javascript code that will work with both the Add-on and ScriptX.Print Services we recommend installing the MeadScriptXJS package, that package has this as a dependency.</description>
         <summary>Javascript emulation of the MeadCo ScriptX Add-on for Internet Explorer to bring print services to all browsers.</summary>
-        <releaseNotes>v1.2.0 - implement paperSource2 printer setting</releaseNotes>
-        <copyright>Copyright � 2017, Mead &amp; Co Ltd</copyright>
+        <releaseNotes>v1.2.1 - Make explicit that prompted printing is handled at the Add-on API emulation layer.</releaseNotes>
+        <copyright>Copyright (c) 2017, Mead &amp; Co Ltd</copyright>
         <language>en-GB</language>
         <tags>MeadCo, ScriptX, Print, HTML</tags>
     </metadata>
