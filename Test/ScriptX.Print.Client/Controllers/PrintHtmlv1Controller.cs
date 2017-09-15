@@ -59,6 +59,8 @@ namespace ScriptX.Print.Client.Controllers
             ds.Collate = BooleanOption.False;
             ds.IsDefault = true;
 
+            ds.UnprintableMargins = new Margins() {Left = "10", Top = "10", Bottom = "10", Right = "10"};
+            
             return Ok(allSettings);
         }
 

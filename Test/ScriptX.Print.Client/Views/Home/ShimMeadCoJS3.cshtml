@@ -52,6 +52,28 @@
                         MeadCo.ScriptX.Printing.header = "This is a MeadCoJSShim Header";
                         pageLogger("Header was set to: " + MeadCo.ScriptX.Printing.header);
 
+                        var p = MeadCo.ScriptX.Printing;
+
+                        pageLogger("paperSize: " + p.paperSize);
+
+                        pageLogger("print Margins: " +
+                            p.leftMargin +
+                            ", " +
+                            p.topMargin +
+                            ", " +
+                            p.rightMargin +
+                            ", " +
+                            p.bottomMargin);
+
+                        pageLogger("Unprintable margin: " +
+                            p.unprintableLeft +
+                            ", " +
+                            p.unprintableTop +
+                            "," +
+                            p.unprintableRight +
+                            ", " +
+                            p.unprintableBottom);
+
                         $("#btn-printPage").click(function(e) {
                             e.preventDefault();
                             MeadCo.ScriptX.PrintPage(true);

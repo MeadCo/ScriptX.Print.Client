@@ -557,35 +557,35 @@
         },
 
         set unprintableLeft(n) {
-            printApi.reportFeatureNotImplemented("set unprintableLeft");
+            printApi.deviceSettings.unprintableMargins.left = n;
         },
 
         get unprintableLeft() {
-            printApi.reportFeatureNotImplemented("get unprintableLeft");
+            return printApi.deviceSettings.unprintableMargins.left;
         },
 
         set unprintableRight(n) {
-            printApi.reportFeatureNotImplemented("set unprintableRight");
+            printApi.deviceSettings.unprintableMargins.right = n;
         },
 
         get unprintableRight() {
-            printApi.reportFeatureNotImplemented("get unprintableRight");
+            return printApi.deviceSettings.unprintableMargins.right;
         },
 
         set unprintableTop(n) {
-            printApi.reportFeatureNotImplemented("set unprintableTop");
+            printApi.deviceSettings.unprintableMargins.top = n;
         },
 
         get unprintableTop() {
-            printApi.reportFeatureNotImplemented("get unprintableTop");
+            return printApi.deviceSettings.unprintableMargins.top;
         },
 
         set unprintableBottom(n) {
-            printApi.reportFeatureNotImplemented("set unprintableBottom");
+            printApi.deviceSettings.unprintableMargins.bottom = n;
         },
 
         get unprintableBottom() {
-            printApi.reportFeatureNotImplemented("get unprintableBottom");
+            return printApi.deviceSettings.unprintableMargins.bottom;
         },
 
 
