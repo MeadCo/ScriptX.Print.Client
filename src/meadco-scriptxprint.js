@@ -9,7 +9,7 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
-    var version = "1.1.1.0";
+    var version = "1.1.3.0";
     var printerName = "";
     var deviceSettings = {};
     var module = this;
@@ -144,7 +144,7 @@
             UserData: data
         }
 
-        printAtServer(requestData,
+        return printAtServer(requestData,
         {
             fail: function (jqXhr, textStatus, errorThrown) {
                 progress(requestData,enumPrintStatus.ERROR,errorThrown);
@@ -286,6 +286,7 @@
                         responseInterface.fail(jqXhr, textStatus, errorThrown);
                     }
                 });
+            return true;
         } else {
             throw new Error("MeadCo.ScriptX.Print : no known ajax helper available");
         }
@@ -577,7 +578,11 @@
             removeJob(lock.jobIdentifier);
         },
 
-        WaitForSpoolingComplete: function (iTimeout, fnComplete) {
+        isSpooling : function() {
+            return jobCount() > 0; 
+        },
+
+        waitForSpoolingComplete: function (iTimeout, fnComplete) {
             MeadCo.log("Started WaitForSpoolingComplete(" + iTimeout + ")");
             if (typeof fnComplete !== "function") {
                 throw "WaitForSpoolingComplete requires a completion callback";

@@ -38,7 +38,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.1.1.2";
+    var moduleversion = "1.1.3.0";
     var emulatedVersion = "8.0.0.0";
     var module = this;
     var printApi = MeadCo.ScriptX.Print;
@@ -672,11 +672,11 @@
         },
 
         IsSpooling: function () {
-            printApi.reportFeatureNotImplemented("IsSpooling");
+            return printApi.isSpooling();
         },
 
         OwnQueue: function () {
-            printApi.reportFeatureNotImplemented("OwnQueue");
+            // NOTE: No-op, no concept of 'out of process' here
         },
 
         SetPageRange: function () {
@@ -688,6 +688,8 @@
         },
 
         Sleep: function () {
+            // If you need this, please implement your own for the browsers you are deploying to 
+            // Contact MeadCo for assistance if required.
             printApi.reportFeatureNotImplemented("Sleep");
         },
 
@@ -696,7 +698,7 @@
         },
 
         WaitForSpoolingComplete: function (iTimeout, fnComplete) {
-            printApi.WaitForSpoolingComplete(iTimeout, fnComplete);
+            printApi.waitForSpoolingComplete(iTimeout, fnComplete);
         },
 
         // helpers for wrapper MeadCoJS

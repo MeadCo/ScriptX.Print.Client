@@ -41,6 +41,14 @@
     <script src="@Url.Action("script", "Home", new {filename = "jQuery-MeadCo.ScriptX.Print.UI.js"})"></script>
 
     <script type="text/javascript">
+        function asyncInProgress() {
+            var bSpooling = MeadCo.ScriptX.Printing.IsSpooling();
+            pageLogger("Spooling: " + bSpooling);
+            if (bSpooling) {
+                window.setTimeout(asyncInProgress, 1000);
+            }
+        }
+
         $(window).on("load",
             function() {
                 pageLogger("Shim factory async test starting");
@@ -96,8 +104,14 @@
                         });
 
                         $("#btn-printFrame").click(function(e) {
+                            pageLogger("Print frame ...");
                             e.preventDefault();
-                            MeadCo.ScriptX.PrintFrame("infoframe");
+                            MeadCo.ScriptX.PrintFrame2("infoframe").then(function(bStarted) {
+                                if (bStarted) {
+                                    pageLogger("Print was started");
+                                    asyncInProgress();
+                                }
+                            });
                         });
 
                         $("#btn-printPage2").click(function(e) {
