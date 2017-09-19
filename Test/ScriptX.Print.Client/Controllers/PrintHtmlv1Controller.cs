@@ -34,8 +34,17 @@ namespace ScriptX.Print.Client.Controllers
         [Route("deviceinfo/{deviceName}/{units?}")]
         public IHttpActionResult GetDeviceInfo([FromUri] string deviceName, [FromUri] Page.PageMarginUnits units = Page.PageMarginUnits.Default)
         {
-            var settings = new DeviceSettings();
-            return Ok(settings);
+            var ds = new DeviceSettings();
+            ds.PrinterName = deviceName;
+            ds.PaperSizeName = "A4";
+            ds.PaperSourceName = "Automatically select";
+            ds.Copies = 1;
+            ds.Collate = BooleanOption.False;
+            ds.IsDefault = string.CompareOrdinal(deviceName, "UI Testing printer")==0;
+            ds.Duplex = Duplex.Simplex;
+            ds.UnprintableMargins = new Margins() { Left = "10", Top = "10", Bottom = "10", Right = "10" };
+
+            return Ok(ds);
         }
 
         [Route("htmlPrintDefaults/{units?}")]
@@ -48,11 +57,12 @@ namespace ScriptX.Print.Client.Controllers
                 {
                     Header = "Default header"
                 },
-                DeviceSettings = new DeviceSettings() // return data available to basic level subscribers
-            };
+                DeviceSettings = new DeviceSettings(), // return data available to basic level subscribers
+                AvailablePrinters = new string[] { "UI Testing printer", "UI Printer 2", "UI Printer 3" }
+           };
 
             DeviceSettings ds = allSettings.DeviceSettings;
-            ds.PrinterName = "UI Testing printer";
+            ds.PrinterName = allSettings.AvailablePrinters[0];
             ds.PaperSizeName = "A4";
             ds.PaperSourceName = "Automatically select";
             ds.Copies = 1;

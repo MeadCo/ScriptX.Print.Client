@@ -43,7 +43,7 @@
     <script type="text/javascript">
         function asyncInProgress() {
             var bSpooling = MeadCo.ScriptX.Printing.IsSpooling();
-            pageLogger("Spooling: " + bSpooling);
+            pageLogger("Spooling: " + bSpooling + ", jobCount: " + MeadCo.ScriptX.Printing.GetJobsCount(MeadCo.ScriptX.Printing.currentPrinter));
             if (bSpooling) {
                 window.setTimeout(asyncInProgress, 1000);
             }
@@ -83,6 +83,12 @@
                             p.unprintableBottom);
 
                         pageLogger("Duplex: " + p.duplex + ", " + p.duplex2);
+
+                        pageLogger("Printers: ");
+                        $.each(MeadCo.ScriptX.GetAvailablePrinters(),
+                            function(index, value) {
+                                pageLogger("Printer: " + index + ", " + value);
+                            });
 
                         $("#btn-printPage").click(function(e) {
                             e.preventDefault();

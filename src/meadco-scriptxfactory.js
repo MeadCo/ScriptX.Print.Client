@@ -532,6 +532,10 @@
             printApi.printerName = sPrinterName;
         },
 
+        get printer() {
+            return printApi.printerName;
+        },
+
         set printer(sPrinterName) {
             printApi.printerName = sPrinterName;
         },
@@ -588,27 +592,57 @@
             return printApi.deviceSettings.unprintableMargins.bottom;
         },
 
-
         // advanced methods :: require a subscription/license.
         EnumPrinters: function (index) {
-            if (index === 0) {
-                return this.CurrentPrinter;
+            var arP = printApi.availablePrinterNames;
+
+            if (!arP || arP.length === 0) {
+                if (index === 0) {
+                    return this.CurrentPrinter;
+                }
+            } else {
+                if (index < arP.length) {
+                    return arP[index];
+                }
             }
-                // TODO: Support many printers
-            else if (!index) {
-                return new Array(this.CurrentPrinter);
-            }
-            else {
-                return "";
-            }
+
+            return "";
         },
 
         EnumJobs: function (sPrinterName, iIndex, jobNameOut) {
-            printApi.reportFeatureNotImplemented("EnumJobs");
+
+            var jobs = printApi.queue;
+            var i;
+            var plist = new Array();
+
+            sPrinterName = sPrinterName.toLowerCase();
+            for (i = 0; i < jobs.length; i++) {
+                if (jobs[i].printerName.toLowerCase() === sPrinterName) {
+                    plist.push(jobs[i]);
+                }
+            }
+
+            if (iIndex < plist.length) {
+                jobNameOut.name = plist[iIndex].jobName;
+                return plist[iIndex].status;
+            }
+
+            return 0;
         },
 
         GetJobsCount: function (sPrinterName) {
-            return printApi.activeJobs;
+            // return printApi.activeJobs;
+            var jobs = printApi.queue;
+            var i;
+            var c = 0;
+
+            sPrinterName = sPrinterName.toLowerCase();
+            for (i = 0; i < jobs.length; i++) {
+                if (jobs[i].printerName.toLowerCase() === sPrinterName)
+                    c++;
+            }
+
+            return c;
         },
 
         printerControl: function (value) {
@@ -616,7 +650,7 @@
 
             return {
                 Forms: ["A3", "A4", "A5", "Letter"], // TODO: fill properly
-                Bins: ["Automatically select", "Printer auto select", "Manual Feed Tray", "Tray 1", "Tray 2", "Tray 3", "Tray 4"], // TODO: fill properly
+                Bins: ["Automatically select", "Printer auto select (" + value + ")", "Manual Feed Tray", value + ": Tray 1", "Tray 2", "Tray 3", "Tray 4"], // TODO: fill properly
                 get Name() {
                     printApi.reportFeatureNotImplemented("printerControl.Name");
                 },

@@ -20,6 +20,8 @@
     var licenseGuid = "";
     var bConnected = false;
 
+    var availablePrinters = [];
+
     var enumContentType = {
         URL: 1, // the url will be downloaded and printed
         HTML: 2, // the passed string is assumed to be a complete html document .. <html>..</html>
@@ -205,7 +207,7 @@
     function connectToServer(serverUrl, clientLicenseGuid) {
         setServer(serverUrl, clientLicenseGuid);
         // note that this will silently fail if no advanced printing license
-        getDeviceSettings({ name: "default" });
+        getDeviceSettings({ name: "default", async: false });
     }
 
     function connectToServerAsync(serverUrl, clientLicenseGuid,resolve,reject) {
@@ -213,9 +215,10 @@
             setServer(serverUrl, clientLicenseGuid);
 
         // note that this will silently fail if no advanced printing license
-        getDeviceSettings({ 
-            name: "default", 
-            done: resolve, 
+        getDeviceSettings({
+            name: "default",
+            done: resolve,
+            async: true,
             fail: reject});
     }
 
@@ -227,7 +230,9 @@
         }
 
         var fakeJob = {
-            jobIdentifier: Date.now()
+            jobIdentifier: Date.now(),
+            printerName: requestData.DeviceSettings.printerName,
+            jobName: "Job starting"
         };
 
 
@@ -245,6 +250,8 @@
                 })
                 .done(function (data) {
                     MeadCo.log("Success response: " + data.status);
+                    data.printerName = requestData.DeviceSettings.printerName;
+                    data.jobName = requestData.Settings.jobTitle;
                     queueJob(data);
                     removeJob(fakeJob.jobIdentifier);
                     switch (data.status) {
@@ -426,7 +433,7 @@
         MeadCo.log("intervalId: " + intervalId);
     }
 
-    function addDeviceSettings(data) {
+    function addOrUpdateDeviceSettings(data) {
         deviceSettings[data.printerName] = data;
         if (data.isDefault && printerName.length === 0) {
             printerName = data.printerName;
@@ -443,14 +450,14 @@
                     dataType: "json",
                     method: "GET",
                     cache: false,
-                    async: typeof oRequest.done === "function", // => async if we have a callback
+                    async: oRequest.async, // => async if we have a callback
                     headers: {
                         "Authorization": "Basic " + btoa(licenseGuid + ":")
                     }
                 })
                 .done(function (data) {
                     bConnected = true;
-                    addDeviceSettings(data);
+                    addOrUpdateDeviceSettings(data);
                     if (typeof oRequest.done === "function") {
                         oRequest.done(data);
                     }
@@ -498,13 +505,19 @@
         set printerName(deviceRequest) {
             if (!(deviceRequest === printerName || deviceRequest.name === printerName)) {
                 if (typeof deviceRequest === "string") {
-                    getDeviceSettings({
-                        name: deviceRequest,
-                        done: function (data) {
-                            printerName = data.printerName;
-                        },
-                        fail: function (eTxt) { MeadCo.ScriptX.Print.reportServerError(eTxt); }
-                    });
+                    // not already cached, go fetch (synchronously)
+                    if (typeof deviceSettings[deviceRequest] === "undefined") {
+                        getDeviceSettings({
+                            name: deviceRequest,
+                            done: function(data) {
+                                printerName = data.printerName;
+                            },
+                            async: false,
+                            fail: function(eTxt) { MeadCo.ScriptX.Print.reportServerError(eTxt); }
+                        });
+                    } else {
+                        printerName = deviceRequest;
+                    }
                 } else {
                     getDeviceSettings(deviceRequest);
                 }
@@ -516,7 +529,7 @@
         },
 
         set deviceSettings(settings) {
-            addDeviceSettings(settings);
+            addOrUpdateDeviceSettings(settings);
         },
 
         get deviceSettings() {
@@ -536,13 +549,18 @@
             connectToServerAsync(serverUrl, licenseGuid, resolve, reject);
         },
 
-        connectDevice: function(deviceInfo) {
+        connectDeviceAndPrinters: function (deviceInfo,arPrinters) {
             bConnected = true;
-            addDeviceSettings(deviceInfo);
+            addOrUpdateDeviceSettings(deviceInfo);
+            availablePrinters = arPrinters;
         },
 
         get isConnected() {
             return bConnected;
+        },
+
+        get availablePrinterNames() {
+            return availablePrinters;
         },
 
         getFromServer: getFromServer,
