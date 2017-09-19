@@ -38,7 +38,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.1.3.0";
+    var moduleversion = "1.1.4.0";
     var emulatedVersion = "8.0.0.0";
     var module = this;
     var printApi = MeadCo.ScriptX.Print;
@@ -645,41 +645,57 @@
             return c;
         },
 
-        printerControl: function (value) {
+        printerControl: function (printerName) {
             // for now ignore value parameter and return an array of paper sizes in the Forms property
 
             return {
-                Forms: ["A3", "A4", "A5", "Letter"], // TODO: fill properly
-                Bins: ["Automatically select", "Printer auto select (" + value + ")", "Manual Feed Tray", value + ": Tray 1", "Tray 2", "Tray 3", "Tray 4"], // TODO: fill properly
-                get Name() {
-                    printApi.reportFeatureNotImplemented("printerControl.Name");
+                get Forms() {
+                    return printApi.deviceSettingsFor(printerName).forms;
                 },
-                get Jobs() {
-                    printApi.reportFeatureNotImplemented("printerControl.Jobs");
+
+                get Bins() {
+                    return printApi.deviceSettingsFor(printerName).bins;
                 },
+
+                get forms() {
+                    return printApi.deviceSettingsFor(printerName).forms;
+                },
+
+                get bins() {
+                    return printApi.deviceSettingsFor(printerName).bins;
+                },
+
+                get name() {
+                    return printerName;
+                },
+
                 get port() {
-                    printApi.reportFeatureNotImplemented("printerControl.port");
+                    return printApi.deviceSettingsFor(printerName).port;
                 },
                 get attributes() {
-                    printApi.reportFeatureNotImplemented("printerControl.attributes");
+                    return printApi.deviceSettingsFor(printerName).attributes;
                 },
                 get serverName() {
-                    printApi.reportFeatureNotImplemented("printerControl.serverName");
+                    return printApi.deviceSettingsFor(printerName).serverName;
                 },
                 get shareName() {
-                    printApi.reportFeatureNotImplemented("printerControl.shareName");
+                    return printApi.deviceSettingsFor(printerName).shareName;
                 },
                 get location() {
-                    printApi.reportFeatureNotImplemented("printerControl.location");
+                    return printApi.deviceSettingsFor(printerName).location;
                 },
                 get isLocal() {
-                    printApi.reportFeatureNotImplemented("printerControl.isLocal");
+                    return printApi.deviceSettingsFor(printerName).isLocal;
                 },
                 get isNetwork() {
-                    printApi.reportFeatureNotImplemented("printerControl.isNetwork");
+                    return printApi.deviceSettingsFor(printerName).isNetwork;
                 },
                 get isShared() {
-                    printApi.reportFeatureNotImplemented("printerControl.isShared");
+                    return printApi.deviceSettingsFor(printerName).isShared;
+                },
+
+                get Jobs() {
+                    printApi.reportFeatureNotImplemented("printerControl.Jobs");
                 },
                 Purge: function () {
                     printApi.reportFeatureNotImplemented("printerControl.Purge()");

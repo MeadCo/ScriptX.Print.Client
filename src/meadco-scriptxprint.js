@@ -536,6 +536,10 @@
             return printerName !== "" ? deviceSettings[printerName] : {};
         },
 
+        deviceSettingsFor: function(sPrinterName) {
+            return typeof sPrinterName === "string" && sPrinterName !== "" ? deviceSettings[sPrinterName] : { };
+        },
+
         connect: function (serverUrl, licenseGuid) {
             connectToServer(serverUrl, licenseGuid);
         },

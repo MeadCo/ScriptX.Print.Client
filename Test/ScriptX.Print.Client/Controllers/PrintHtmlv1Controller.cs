@@ -36,13 +36,25 @@ namespace ScriptX.Print.Client.Controllers
         {
             var ds = new DeviceSettings();
             ds.PrinterName = deviceName;
-            ds.PaperSizeName = "A4";
+            ds.PaperSizeName = "Legal";
             ds.PaperSourceName = "Automatically select";
             ds.Copies = 1;
-            ds.Collate = BooleanOption.False;
+            ds.Collate = BooleanOption.True;
             ds.IsDefault = string.CompareOrdinal(deviceName, "UI Testing printer")==0;
             ds.Duplex = Duplex.Simplex;
             ds.UnprintableMargins = new Margins() { Left = "10", Top = "10", Bottom = "10", Right = "10" };
+
+            ds.IsLocal = true;
+            ds.Attributes = 0x46;
+            ds.Bins = new string[] { "Automatically select", "Tray 1" };
+            ds.Forms = new string[] { "A4", "Letter", "Legal" };
+            ds.IsNetwork = false;
+            ds.IsShared = false;
+            ds.Location = "Room 101";
+            ds.Port = "usb001";
+            ds.ServerName = "";
+            ds.ShareName = "";
+            ds.Status = 0;
 
             return Ok(ds);
         }
@@ -71,7 +83,19 @@ namespace ScriptX.Print.Client.Controllers
             ds.Duplex = Duplex.Simplex;
 
             ds.UnprintableMargins = new Margins() {Left = "10", Top = "10", Bottom = "10", Right = "10"};
-            
+
+            ds.IsLocal = true;
+            ds.Attributes = 0x46;
+            ds.Bins = new string[] { "Automatically select", "Manual Feed Tray","Tray 1", "Tray 2" };
+            ds.Forms = new string[] { "A3", "A4", "A5", "Letter" };
+            ds.IsNetwork = false;
+            ds.IsShared = false;
+            ds.Location = "ServiceHost";
+            ds.Port = "LPT1:";
+            ds.ServerName = "";
+            ds.ShareName = "";
+            ds.Status = 0;
+
             return Ok(allSettings);
         }
 
