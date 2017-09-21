@@ -306,7 +306,7 @@
                     MeadCo.log("got default html settings");
                     updateSettingsWithServerDefaults(data.htmlPrintSettings);
                     if (data.deviceSettings != null) {
-                        MeadCo.ScriptX.Print.connectDevice(data.deviceSettings);
+                        MeadCo.ScriptX.Print.connectDeviceAndPrinters(data.deviceSettings, data.availablePrinters);
                     }
                 });
         },
