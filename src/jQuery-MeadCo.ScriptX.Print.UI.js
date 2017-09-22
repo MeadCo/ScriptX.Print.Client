@@ -25,7 +25,7 @@
 
     var ui = MeadCo.createNS("MeadCo.ScriptX.Print.UI");
 
-    ui.moduleversion = "1.1.2.0";
+    ui.moduleversion = "1.1.3.0";
 
     // MeadCo.ScriptX.Print.UI.AttachPrintAction(
     //  el - clickable html element
@@ -267,7 +267,7 @@
 
         // grab the paper size options from printerControl
         var $paperselect = $('#fld-papersize');
-        var printerControl = MeadCo.ScriptX.Printing.printerControl();
+        var printerControl = MeadCo.ScriptX.Printing.printerControl(MeadCo.ScriptX.Printing.currentPrinter);
         $('#fld-papersize > option').remove();
         for (var i in printerControl.Forms) {
             $paperselect.append("<option>" + printerControl.Forms[i] + "</option>");
