@@ -9,7 +9,7 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
-    var version = "1.1.4.0";
+    var version = "1.1.5.0";
     var printerName = "";
     var deviceSettings = {};
     var module = this;
@@ -84,10 +84,10 @@
         for (i = 0; i < activePrintQueue.length; i++) {
             if (activePrintQueue[i].jobIdentifier === data.jobIdentifier) {
                 var fnCallBack = data.fnNotify;
-                if (typeof fnCallBack !== "function") 
+                if (typeof fnCallBack !== "function")
                     data.fnNotify = activePrintQueue[i].fnNotify;
 
-                if (typeof data.fnNotify === "function" && (data.status === enumResponseStatus.QUEUEDTOFILE || data.status !== activePrintQueue[i].status) ) {
+                if (typeof data.fnNotify === "function" && (data.status === enumResponseStatus.QUEUEDTOFILE || data.status !== activePrintQueue[i].status)) {
                     data.fnNotify(data);
                 }
 
@@ -149,14 +149,14 @@
         return printAtServer(requestData,
         {
             fail: function (jqXhr, textStatus, errorThrown) {
-                progress(requestData,enumPrintStatus.ERROR,errorThrown);
+                progress(requestData, enumPrintStatus.ERROR, errorThrown);
                 MeadCo.ScriptX.Print.reportServerError(errorThrown);
                 if (typeof fnDone === "function") {
                     fnDone(jqXhr);
                 }
             },
 
-            queuedToFile: function(data) {
+            queuedToFile: function (data) {
                 MeadCo.log("default handler on queued to file response");
                 progress(requestData, enumPrintStatus.QUEUED);
 
@@ -165,7 +165,7 @@
                     updateJob(data);
                 }
 
-                waitForJobComplete(requestData,data.jobIdentifier,
+                waitForJobComplete(requestData, data.jobIdentifier,
                     -1,
                     function (data) {
                         if (data != null) {
@@ -180,12 +180,12 @@
                     });
             },
 
-            queuedToDevice: function(data) {
+            queuedToDevice: function (data) {
                 progress(requestData, enumPrintStatus.QUEUED);
                 MeadCo.log("print was queued to device");
             },
 
-            softError: function(data) {
+            softError: function (data) {
                 progress(requestData, enumPrintStatus.ERROR);
                 MeadCo.log("print has soft error");
             },
@@ -197,8 +197,7 @@
         });
     };
 
-    function setServer(serverUrl, clientLicenseGuid)
-    {
+    function setServer(serverUrl, clientLicenseGuid) {
         MeadCo.log("Print server requested: " + serverUrl + " with license: " + clientLicenseGuid);
         server = serverUrl;
         licenseGuid = clientLicenseGuid;
@@ -210,8 +209,8 @@
         getDeviceSettings({ name: "default", async: false });
     }
 
-    function connectToServerAsync(serverUrl, clientLicenseGuid,resolve,reject) {
-        if ( serverUrl.length > 0 && clientLicenseGuid.length > 0 )
+    function connectToServerAsync(serverUrl, clientLicenseGuid, resolve, reject) {
+        if (serverUrl.length > 0 && clientLicenseGuid.length > 0)
             setServer(serverUrl, clientLicenseGuid);
 
         // note that this will silently fail if no advanced printing license
@@ -219,7 +218,8 @@
             name: "default",
             done: resolve,
             async: true,
-            fail: reject});
+            fail: reject
+        });
     }
 
 
@@ -255,21 +255,21 @@
                     queueJob(data);
                     removeJob(fakeJob.jobIdentifier);
                     switch (data.status) {
-                    case enumResponseStatus.QUEUEDTOFILE:
-                        responseInterface.queuedToFile(data);
-                        break;
+                        case enumResponseStatus.QUEUEDTOFILE:
+                            responseInterface.queuedToFile(data);
+                            break;
 
-                    case enumResponseStatus.QUEUEDTODEVICE:
-                        responseInterface.queuedToDevice(data);
-                        break;
+                        case enumResponseStatus.QUEUEDTODEVICE:
+                            responseInterface.queuedToDevice(data);
+                            break;
 
-                    case enumResponseStatus.SOFTERROR:
-                        responseInterface.softError(data);
-                        break;
+                        case enumResponseStatus.SOFTERROR:
+                            responseInterface.softError(data);
+                            break;
 
-                    case enumResponseStatus.OK:
-                        responseInterface.ok(data);
-                        break;
+                        case enumResponseStatus.OK:
+                            responseInterface.ok(data);
+                            break;
                     }
                 })
                 .fail(function (jqXhr, textStatus, errorThrown) {
@@ -299,7 +299,7 @@
         }
     }
 
-    function getFromServer(sApi,async,onSuccess,onFail) {
+    function getFromServer(sApi, async, onSuccess, onFail) {
         if (module.jQuery) {
             var serviceUrl = server + sApi;
             MeadCo.log(".ajax() get: " + serviceUrl);
@@ -308,7 +308,7 @@
                     method: "GET",
                     dataType: "json",
                     cache: false,
-                    async: async, 
+                    async: async,
                     headers: {
                         "Authorization": "Basic " + btoa(licenseGuid + ":")
                     }
@@ -338,26 +338,26 @@
         }
     }
 
-    function waitForJobComplete(requestData,jobId, timeOut,functionComplete) {
+    function waitForJobComplete(requestData, jobId, timeOut, functionComplete) {
         MeadCo.log("WaitForJobComplete: " + jobId);
         var counter = 0;
         var interval = 1000;
         var bWaiting = false;
-        var intervalId = window.setInterval(function() {
-                if (!bWaiting) {
-                    MeadCo.log("Going to request status with .ajax");
-                    bWaiting = true;
-                    $.ajax(server + "/status/" + jobId,
-                        {
-                            dataType: "json",
-                            method: "GET",
-                            cache: false,
-                            headers: {
-                                "Authorization": "Basic " + btoa(licenseGuid + ":")
-                            }
-                        }).done(function(data) {
-                            MeadCo.log("jobStatus: " + data.status);
-                            switch (data.status) {
+        var intervalId = window.setInterval(function () {
+            if (!bWaiting) {
+                MeadCo.log("Going to request status with .ajax");
+                bWaiting = true;
+                $.ajax(server + "/status/" + jobId,
+                    {
+                        dataType: "json",
+                        method: "GET",
+                        cache: false,
+                        headers: {
+                            "Authorization": "Basic " + btoa(licenseGuid + ":")
+                        }
+                    }).done(function (data) {
+                        MeadCo.log("jobStatus: " + data.status);
+                        switch (data.status) {
                             case enumPrintStatus.COMPLETED:
                                 MeadCo.log("clear interval: " + intervalId);
                                 window.clearInterval(intervalId);
@@ -382,52 +382,52 @@
                                 bWaiting = false;
                                 break;
 
-                           case enumPrintStatus.ERROR:
-                           case enumPrintStatus.ABANDONED:
-                               MeadCo.log("error status in waitForJobComplete so clear interval: " + intervalId);
-                               progress(requestData, data.status, data.message);
-                               removeJob(data);
-                               window.clearInterval(intervalId);
-                               MeadCo.ScriptX.Print.reportServerError("The print failed.\n\n" + data.message);
-                               functionComplete(null);
-                               break;
+                            case enumPrintStatus.ERROR:
+                            case enumPrintStatus.ABANDONED:
+                                MeadCo.log("error status in waitForJobComplete so clear interval: " + intervalId);
+                                progress(requestData, data.status, data.message);
+                                removeJob(data);
+                                window.clearInterval(intervalId);
+                                MeadCo.ScriptX.Print.reportServerError("The print failed.\n\n" + data.message);
+                                functionComplete(null);
+                                break;
 
-                           default:
+                            default:
                                 progress(requestData, data.status, data.message);
                                 MeadCo.log("unknown status in waitForJobComplete so clear interval: " + intervalId);
                                 removeJob(jobId);
                                 window.clearInterval(intervalId);
                                 functionComplete(null);
                                 break;
-                            }
-                        })
-                        .fail(function (jqXhr, textStatus, errorThrown) {
-                            MeadCo.log("**warning: failure in MeadCo.ScriptX.Print.waitForJobComplete: [" +
-                                textStatus +
-                                "], [" +
-                                errorThrown +
-                                "], [" +
-                                jqXhr.responseText +
-                                "]");
+                        }
+                    })
+                    .fail(function (jqXhr, textStatus, errorThrown) {
+                        MeadCo.log("**warning: failure in MeadCo.ScriptX.Print.waitForJobComplete: [" +
+                            textStatus +
+                            "], [" +
+                            errorThrown +
+                            "], [" +
+                            jqXhr.responseText +
+                            "]");
 
-                            if (typeof jqXhr.responseText !== "undefined") {
-                                errorThrown = jqXhr.responseText;
-                            }
+                        if (typeof jqXhr.responseText !== "undefined") {
+                            errorThrown = jqXhr.responseText;
+                        }
 
-                            if (errorThrown === "") {
-                                errorThrown = "Unknown server or network error";
-                            }
+                        if (errorThrown === "") {
+                            errorThrown = "Unknown server or network error";
+                        }
 
-                            MeadCo.log("error: " + errorThrown + " in waitForJobComplete so clear interval: " + intervalId);
-                            progress(requestData,enumPrintStatus.ERROR,errorThrown);
-                            removeJob(jobId);
-                            window.clearInterval(intervalId);
-                            functionComplete(null);
-                        });
-                } else {
-                    MeadCo.log("** info : still waiting for last status request to complete");
-                }
-            },
+                        MeadCo.log("error: " + errorThrown + " in waitForJobComplete so clear interval: " + intervalId);
+                        progress(requestData, enumPrintStatus.ERROR, errorThrown);
+                        removeJob(jobId);
+                        window.clearInterval(intervalId);
+                        functionComplete(null);
+                    });
+            } else {
+                MeadCo.log("** info : still waiting for last status request to complete");
+            }
+        },
             interval);
 
         MeadCo.log("intervalId: " + intervalId);
@@ -481,12 +481,27 @@
                 oRequest.fail("MeadCo.ScriptX.Print : no known ajax helper available");
             }
             else
-                throw new Error("MeadCo.ScriptX.Print : no known ajax helper available");   
+                throw new Error("MeadCo.ScriptX.Print : no known ajax helper available");
         }
 
     }
 
-    MeadCo.log("MeadCo.ScriptX.Print loaded: " + version);
+    function getDeviceSettingsFor(sPrinterName) {
+        if (typeof sPrinterName === "string" && sPrinterName != "") {
+            if (typeof deviceSettings[sPrinterName] === "undefined") {
+                getDeviceSettings({
+                    name: sPrinterName,
+                    async: false,
+                    fail: function (eTxt) { MeadCo.ScriptX.Print.reportServerError(eTxt); }
+                });
+            }
+
+            return deviceSettings[sPrinterName];
+        }
+
+        return {}
+    }
+
     if (!module.jQuery) {
         MeadCo.log("**** warning :: no jQuery");
     }
@@ -499,7 +514,7 @@
         ResponseType: enumResponseStatus,
 
         get printerName() {
-             return printerName;
+            return printerName;
         },
 
         set printerName(deviceRequest) {
@@ -509,11 +524,11 @@
                     if (typeof deviceSettings[deviceRequest] === "undefined") {
                         getDeviceSettings({
                             name: deviceRequest,
-                            done: function(data) {
+                            done: function (data) {
                                 printerName = data.printerName;
                             },
                             async: false,
-                            fail: function(eTxt) { MeadCo.ScriptX.Print.reportServerError(eTxt); }
+                            fail: function (eTxt) { MeadCo.ScriptX.Print.reportServerError(eTxt); }
                         });
                     } else {
                         printerName = deviceRequest;
@@ -536,8 +551,8 @@
             return printerName !== "" ? deviceSettings[printerName] : {};
         },
 
-        deviceSettingsFor: function(sPrinterName) {
-            return typeof sPrinterName === "string" && sPrinterName !== "" ? deviceSettings[sPrinterName] : { };
+        deviceSettingsFor: function (sPrinterName) {
+            return getDeviceSettingsFor(sPrinterName);
         },
 
         connect: function (serverUrl, licenseGuid) {
@@ -549,11 +564,11 @@
                 setServer(serverUrl, licenseGuid);
         },
 
-        connectAsync: function (serverUrl, licenseGuid,resolve, reject) {
+        connectAsync: function (serverUrl, licenseGuid, resolve, reject) {
             connectToServerAsync(serverUrl, licenseGuid, resolve, reject);
         },
 
-        connectDeviceAndPrinters: function (deviceInfo,arPrinters) {
+        connectDeviceAndPrinters: function (deviceInfo, arPrinters) {
             bConnected = true;
             addOrUpdateDeviceSettings(deviceInfo);
             availablePrinters = arPrinters;
@@ -572,7 +587,7 @@
         printHtml: printHtmlAtServer,
 
         // overridable function for reporting an error.
-        reportServerError : function(errorThrown) {
+        reportServerError: function (errorThrown) {
             alert("There was an error in the printing service\n\n" + errorThrown);
         },
 
@@ -596,12 +611,12 @@
             return lock;
         },
 
-        freeSpoolStatus: function(lock) {
+        freeSpoolStatus: function (lock) {
             removeJob(lock.jobIdentifier);
         },
 
-        isSpooling : function() {
-            return jobCount() > 0; 
+        isSpooling: function () {
+            return jobCount() > 0;
         },
 
         waitForSpoolingComplete: function (iTimeout, fnComplete) {
@@ -626,7 +641,7 @@
                         fnComplete(jobCount() === 0);
                     }
                 }
-            },interval);
+            }, interval);
         }
     };
 
