@@ -41,6 +41,14 @@
     <script src="@Url.Action("script", "Home", new {filename = "jQuery-MeadCo.ScriptX.Print.UI.js"})"></script>
 
     <script type="text/javascript">
+        function asyncInProgress() {
+            var bSpooling = MeadCo.ScriptX.Printing.IsSpooling();
+            pageLogger("Spooling: " + bSpooling + ", jobCount: " + MeadCo.ScriptX.Printing.GetJobsCount(MeadCo.ScriptX.Printing.currentPrinter));
+            if (bSpooling) {
+                window.setTimeout(asyncInProgress, 1000);
+            }
+        }
+
         $(window).on("load",
             function() {
                 pageLogger("Shim factory async test starting");
@@ -51,6 +59,36 @@
                         pageLogger("InitAsync complete - installed version of ScriptX is: " + MeadCo.ScriptX.Version());
                         MeadCo.ScriptX.Printing.header = "This is a MeadCoJSShim Header";
                         pageLogger("Header was set to: " + MeadCo.ScriptX.Printing.header);
+
+                        var p = MeadCo.ScriptX.Printing;
+
+                        pageLogger("paperSize: " + p.paperSize);
+
+                        pageLogger("print Margins: " +
+                            p.leftMargin +
+                            ", " +
+                            p.topMargin +
+                            ", " +
+                            p.rightMargin +
+                            ", " +
+                            p.bottomMargin);
+
+                        pageLogger("Unprintable margin: " +
+                            p.unprintableLeft +
+                            ", " +
+                            p.unprintableTop +
+                            "," +
+                            p.unprintableRight +
+                            ", " +
+                            p.unprintableBottom);
+
+                        pageLogger("Duplex: " + p.duplex + ", " + p.duplex2);
+
+                        pageLogger("Printers: ");
+                        $.each(MeadCo.ScriptX.GetAvailablePrinters(),
+                            function(index, value) {
+                                pageLogger("Printer: " + index + ", " + value);
+                            });
 
                         $("#btn-printPage").click(function(e) {
                             e.preventDefault();
@@ -72,8 +110,14 @@
                         });
 
                         $("#btn-printFrame").click(function(e) {
+                            pageLogger("Print frame ...");
                             e.preventDefault();
-                            MeadCo.ScriptX.PrintFrame("infoframe");
+                            MeadCo.ScriptX.PrintFrame2("infoframe").then(function(bStarted) {
+                                if (bStarted) {
+                                    pageLogger("Print was started");
+                                    asyncInProgress();
+                                }
+                            });
                         });
 
                         $("#btn-printPage2").click(function(e) {

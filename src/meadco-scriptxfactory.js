@@ -38,7 +38,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.1.0.10";
+    var moduleversion = "1.1.4.0";
     var emulatedVersion = "8.0.0.0";
     var module = this;
     var printApi = MeadCo.ScriptX.Print;
@@ -489,19 +489,19 @@
         },
 
         set duplex(duplex) {
-            printApi.reportFeatureNotImplemented("set Duplex");
+            printApi.deviceSettings.duplex = duplex;
         },
 
         get duplex() {
-            printApi.reportFeatureNotImplemented("get Duplex");
+            return printApi.deviceSettings.duplex;
         },
 
         set duplex2(duplex) {
-            printApi.reportFeatureNotImplemented("set Duplex2");
+            printApi.deviceSettings.duplex = duplex;
         },
 
         get duplex2() {
-            printApi.reportFeatureNotImplemented("get Duplex2");
+            return printApi.deviceSettings.duplex;
         },
 
         set onbeforeprint(fn) {
@@ -532,6 +532,10 @@
             printApi.printerName = sPrinterName;
         },
 
+        get printer() {
+            return printApi.printerName;
+        },
+
         set printer(sPrinterName) {
             printApi.printerName = sPrinterName;
         },
@@ -557,95 +561,141 @@
         },
 
         set unprintableLeft(n) {
-            printApi.reportFeatureNotImplemented("set unprintableLeft");
+            printApi.deviceSettings.unprintableMargins.left = n;
         },
 
         get unprintableLeft() {
-            printApi.reportFeatureNotImplemented("get unprintableLeft");
+            return printApi.deviceSettings.unprintableMargins.left;
         },
 
         set unprintableRight(n) {
-            printApi.reportFeatureNotImplemented("set unprintableRight");
+            printApi.deviceSettings.unprintableMargins.right = n;
         },
 
         get unprintableRight() {
-            printApi.reportFeatureNotImplemented("get unprintableRight");
+            return printApi.deviceSettings.unprintableMargins.right;
         },
 
         set unprintableTop(n) {
-            printApi.reportFeatureNotImplemented("set unprintableTop");
+            printApi.deviceSettings.unprintableMargins.top = n;
         },
 
         get unprintableTop() {
-            printApi.reportFeatureNotImplemented("get unprintableTop");
+            return printApi.deviceSettings.unprintableMargins.top;
         },
 
         set unprintableBottom(n) {
-            printApi.reportFeatureNotImplemented("set unprintableBottom");
+            printApi.deviceSettings.unprintableMargins.bottom = n;
         },
 
         get unprintableBottom() {
-            printApi.reportFeatureNotImplemented("get unprintableBottom");
+            return printApi.deviceSettings.unprintableMargins.bottom;
         },
-
 
         // advanced methods :: require a subscription/license.
         EnumPrinters: function (index) {
-            if (index === 0) {
-                return this.CurrentPrinter;
+            var arP = printApi.availablePrinterNames;
+
+            if (!arP || arP.length === 0) {
+                if (index === 0) {
+                    return this.CurrentPrinter;
+                }
+            } else {
+                if (index < arP.length) {
+                    return arP[index];
+                }
             }
-                // TODO: Support many printers
-            else if (!index) {
-                return new Array(this.CurrentPrinter);
-            }
-            else {
-                return "";
-            }
+
+            return "";
         },
 
         EnumJobs: function (sPrinterName, iIndex, jobNameOut) {
-            printApi.reportFeatureNotImplemented("EnumJobs");
+
+            var jobs = printApi.queue;
+            var i;
+            var plist = new Array();
+
+            sPrinterName = sPrinterName.toLowerCase();
+            for (i = 0; i < jobs.length; i++) {
+                if (jobs[i].printerName.toLowerCase() === sPrinterName) {
+                    plist.push(jobs[i]);
+                }
+            }
+
+            if (iIndex < plist.length) {
+                jobNameOut.name = plist[iIndex].jobName;
+                return plist[iIndex].status;
+            }
+
+            return 0;
         },
 
         GetJobsCount: function (sPrinterName) {
-            return printApi.activeJobs;
+            // return printApi.activeJobs;
+            var jobs = printApi.queue;
+            var i;
+            var c = 0;
+
+            sPrinterName = sPrinterName.toLowerCase();
+            for (i = 0; i < jobs.length; i++) {
+                if (jobs[i].printerName.toLowerCase() === sPrinterName)
+                    c++;
+            }
+
+            return c;
         },
 
-        printerControl: function (value) {
+        printerControl: function (printerName) {
             // for now ignore value parameter and return an array of paper sizes in the Forms property
 
             return {
-                Forms: ["A3", "A4", "A5", "Letter"], // TODO: fill properly
-                Bins: ["Automatically select", "Printer auto select", "Manual Feed Tray", "Tray 1", "Tray 2", "Tray 3", "Tray 4"], // TODO: fill properly
-                get Name() {
-                    printApi.reportFeatureNotImplemented("printerControl.Name");
+                get Forms() {
+                    return printApi.deviceSettingsFor(printerName).forms;
                 },
-                get Jobs() {
-                    printApi.reportFeatureNotImplemented("printerControl.Jobs");
+
+                get Bins() {
+                    return printApi.deviceSettingsFor(printerName).bins;
                 },
+
+                get forms() {
+                    return printApi.deviceSettingsFor(printerName).forms;
+                },
+
+                get bins() {
+                    return printApi.deviceSettingsFor(printerName).bins;
+                },
+
+                get name() {
+                    return printerName;
+                },
+
                 get port() {
-                    printApi.reportFeatureNotImplemented("printerControl.port");
+                    return printApi.deviceSettingsFor(printerName).port;
                 },
                 get attributes() {
-                    printApi.reportFeatureNotImplemented("printerControl.attributes");
+                    return printApi.deviceSettingsFor(printerName).attributes;
                 },
                 get serverName() {
-                    printApi.reportFeatureNotImplemented("printerControl.serverName");
+                    return printApi.deviceSettingsFor(printerName).serverName;
                 },
                 get shareName() {
-                    printApi.reportFeatureNotImplemented("printerControl.shareName");
+                    return printApi.deviceSettingsFor(printerName).shareName;
                 },
                 get location() {
-                    printApi.reportFeatureNotImplemented("printerControl.location");
+                    return printApi.deviceSettingsFor(printerName).location;
                 },
                 get isLocal() {
-                    printApi.reportFeatureNotImplemented("printerControl.isLocal");
+                    return printApi.deviceSettingsFor(printerName).isLocal;
                 },
                 get isNetwork() {
-                    printApi.reportFeatureNotImplemented("printerControl.isNetwork");
+                    return printApi.deviceSettingsFor(printerName).isNetwork;
                 },
                 get isShared() {
-                    printApi.reportFeatureNotImplemented("printerControl.isShared");
+                    return printApi.deviceSettingsFor(printerName).isShared;
+                },
+
+                get Jobs() {
+                    printApi.reportFeatureNotImplemented("printerControl.Jobs");
                 },
                 Purge: function () {
                     printApi.reportFeatureNotImplemented("printerControl.Purge()");
@@ -672,11 +722,11 @@
         },
 
         IsSpooling: function () {
-            printApi.reportFeatureNotImplemented("IsSpooling");
+            return printApi.isSpooling();
         },
 
         OwnQueue: function () {
-            printApi.reportFeatureNotImplemented("OwnQueue");
+            // NOTE: No-op, no concept of 'out of process' here
         },
 
         SetPageRange: function () {
@@ -688,6 +738,8 @@
         },
 
         Sleep: function () {
+            // If you need this, please implement your own for the browsers you are deploying to 
+            // Contact MeadCo for assistance if required.
             printApi.reportFeatureNotImplemented("Sleep");
         },
 
@@ -696,7 +748,7 @@
         },
 
         WaitForSpoolingComplete: function (iTimeout, fnComplete) {
-            printApi.WaitForSpoolingComplete(iTimeout, fnComplete);
+            printApi.waitForSpoolingComplete(iTimeout, fnComplete);
         },
 
         // helpers for wrapper MeadCoJS

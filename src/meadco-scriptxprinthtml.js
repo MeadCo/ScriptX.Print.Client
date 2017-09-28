@@ -10,7 +10,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
 
-    var moduleversion = "1.1.0.6";
+    var moduleversion = "1.1.7.0";
 
     var mPageOrientation = {
         DEFAULT: 0,
@@ -52,7 +52,8 @@
                 bottom: "",
                 right: ""
             }
-        }
+        },
+        jobTitle: ""
     };
 
     var iSettings =
@@ -257,8 +258,10 @@
 
     }
 
-    function printHtmlAtServer(contentType, content, htmlPrintSettings, fnDone, fnCallback, data) {
-        MeadCo.ScriptX.Print.printHtml(contentType, content, htmlPrintSettings, fnDone, null, fnCallback, data);
+    function printHtmlAtServer(contentType, content, title, fnDone, fnCallback, data) {
+        var htmlPrintSettings = settingsCache;
+        htmlPrintSettings.jobTitle = title;
+        return MeadCo.ScriptX.Print.printHtml(contentType, content, htmlPrintSettings, fnDone, null, fnCallback, data);
     }
 
     MeadCo.log("MeadCo.ScriptX.Print.HTML " + moduleversion + " loaded.");
@@ -276,19 +279,19 @@
         settings: iSettings,
 
         printDocument: function (fnCallOnDone, fnCallback, data) {
-            printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.INNERTHTML, documentContent(), settingsCache, fnCallOnDone, fnCallback, data);
+            return printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.INNERTHTML, documentContent(), document.title, fnCallOnDone, fnCallback, data);
         },
 
         printFrame: function (sFrame, fnCallOnDone, fnCallback, data) {
-            printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.INNERTHTML, frameContent(sFrame), settingsCache, fnCallOnDone, fnCallback, data);
+            return printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.INNERTHTML, frameContent(sFrame), document.title, fnCallOnDone, fnCallback, data);
         },
 
         printFromUrl: function (sUrl, fnCallOnDone, fnCallback, data) {
-            printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.URL, sUrl, settingsCache, fnCallOnDone, fnCallback, data);
+            return printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.URL, sUrl, sUrl, fnCallOnDone, fnCallback, data);
         },
 
         printHtml: function (sHtml, fnCallOnDone, fnCallback, data) {
-            printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.HTML, sHtml, settingsCache, fnCallOnDone, fnCallback, data);
+            return printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.HTML, sHtml, "HTML snippet", fnCallOnDone, fnCallback, data);
         },
 
         connectLite : function(serverUrl, licenseGuid) {
@@ -298,12 +301,12 @@
         connect: function (serverUrl, licenseGuid) {
             MeadCo.warn("Print.HTML SYNC connection request");
             MeadCo.ScriptX.Print.connectLite(serverUrl, licenseGuid);
-            MeadCo.ScriptX.Print.getFromServer("/htmlPrintDefaults/?units=0",false,
+            MeadCo.ScriptX.Print.getFromServer("/htmlPrintDefaults/?units=" + settingsCache.pageSettings.units, false,
                 function (data) {
                     MeadCo.log("got default html settings");
                     updateSettingsWithServerDefaults(data.htmlPrintSettings);
                     if (data.deviceSettings != null) {
-                        MeadCo.ScriptX.Print.connectDevice(data.deviceSettings);
+                        MeadCo.ScriptX.Print.connectDeviceAndPrinters(data.deviceSettings, data.availablePrinters);
                     }
                 });
         },
@@ -311,12 +314,12 @@
         connectAsync: function (serverUrl, licenseGuid,resolve,reject) {
             MeadCo.log("Print.HTML ASYNC connection request");
             MeadCo.ScriptX.Print.connectLite(serverUrl, licenseGuid);
-            MeadCo.ScriptX.Print.getFromServer("/htmlPrintDefaults/?units=0",true,
+            MeadCo.ScriptX.Print.getFromServer("/htmlPrintDefaults/?units=" + settingsCache.pageSettings.units, true,
                 function (data) {
                     MeadCo.log("got default html settings");
                     updateSettingsWithServerDefaults(data.htmlPrintSettings);
                     if (data.deviceSettings != null) {
-                        MeadCo.ScriptX.Print.connectDevice(data.deviceSettings);
+                        MeadCo.ScriptX.Print.connectDeviceAndPrinters(data.deviceSettings,data.availablePrinters);
                     }
                     resolve();
                 },reject);
