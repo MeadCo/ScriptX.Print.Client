@@ -123,52 +123,52 @@
 
         page: {
             set orientation(enumOrientation) {
-                settingsCache.pageSettings.orientation = enumOrientation;
+                settingsCache.page.orientation = enumOrientation;
             },
 
             get orientation() {
-                return settingsCache.pageSettings.orientation;
+                return settingsCache.page.orientation;
             },
 
             set units(enumUnits) {
-                settingsCache.pageSettings.units = enumUnits;
+                settingsCache.page.units = enumUnits;
             },
 
             get units() {
-                return settingsCache.pageSettings.units;
+                return settingsCache.page.units;
             },
 
             margins: {
                 set left(n) {
-                    settingsCache.pageSettings.margins.left = n;
+                    settingsCache.page.margins.left = n;
                 },
 
                 get left() {
-                    return settingsCache.pageSettings.margins.left;
+                    return settingsCache.page.margins.left;
                 },
 
                 set top(n) {
-                    settingsCache.pageSettings.margins.top = n;
+                    settingsCache.page.margins.top = n;
                 },
 
                 get top() {
-                    return settingsCache.pageSettings.margins.top;
+                    return settingsCache.page.margins.top;
                 },
 
                 set bottom(n) {
-                    settingsCache.pageSettings.margins.bottom = n;
+                    settingsCache.page.margins.bottom = n;
                 },
 
                 get bottom() {
-                    return settingsCache.pageSettings.margins.bottom;
+                    return settingsCache.page.margins.bottom;
                 },
 
                 set right(n) {
-                    settingsCache.pageSettings.margins.right = n;
+                    settingsCache.page.margins.right = n;
                 },
 
                 get right() {
-                    return settingsCache.pageSettings.margins.right;
+                    return settingsCache.page.margins.right;
                 }
 
             }
@@ -303,7 +303,7 @@
         connect: function (serverUrl, licenseGuid) {
             MeadCo.warn("Print.HTML SYNC connection request");
             MeadCo.ScriptX.Print.connectLite(serverUrl, licenseGuid);
-            MeadCo.ScriptX.Print.getFromServer("/htmlPrintDefaults/?units=" + settingsCache.pageSettings.units, false,
+            MeadCo.ScriptX.Print.getFromServer("/htmlPrintDefaults/?units=" + settingsCache.page.units, false,
                 function (data) {
                     MeadCo.log("got default html settings");
                     updateSettingsWithServerDefaults(data.htmlPrintSettings);
@@ -316,7 +316,7 @@
         connectAsync: function (serverUrl, licenseGuid,resolve,reject) {
             MeadCo.log("Print.HTML ASYNC connection request");
             MeadCo.ScriptX.Print.connectLite(serverUrl, licenseGuid);
-            MeadCo.ScriptX.Print.getFromServer("/htmlPrintDefaults/?units=" + settingsCache.pageSettings.units, true,
+            MeadCo.ScriptX.Print.getFromServer("/htmlPrintDefaults/?units=" + settingsCache.page.units, true,
                 function (data) {
                     MeadCo.log("got default html settings");
                     updateSettingsWithServerDefaults(data.htmlPrintSettings);
