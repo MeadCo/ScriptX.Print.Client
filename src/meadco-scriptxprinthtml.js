@@ -43,7 +43,7 @@
         shortDateFormat: "",
         longDateFormat: "",
         printBackgroundColorsAndImages: false,
-        pageSettings: {
+        page: {
             orientation: mPageOrientation.PORTRAIT,
             units: mPageMarginUnits.DEFAULT,
             margins: {
@@ -52,6 +52,8 @@
                 bottom: "",
                 right: ""
             }
+        },
+        enhancedFormatting: {           
         },
         jobTitle: ""
     };
