@@ -60,7 +60,7 @@
                 right: ""
             }
         },
-        extraHeadersAndFooters: {           
+        extraHeadersAndFooters: {
         },
         pageRange: "",
         printingPass: mPrintingPass.ALL,
@@ -128,70 +128,6 @@
 
         get printBackgroundColorsAndImages() {
             return settingsCache.printBackgroundColorsAndImages;
-        },
-
-        page: {
-            set orientation(enumOrientation) {
-                settingsCache.page.orientation = enumOrientation;
-            },
-
-            get orientation() {
-                return settingsCache.page.orientation;
-            },
-
-            set units(enumUnits) {
-                settingsCache.page.units = enumUnits;
-            },
-
-            get units() {
-                return settingsCache.page.units;
-            },
-
-            margins: {
-                set left(n) {
-                    settingsCache.page.margins.left = n;
-                },
-
-                get left() {
-                    return settingsCache.page.margins.left;
-                },
-
-                set top(n) {
-                    settingsCache.page.margins.top = n;
-                },
-
-                get top() {
-                    return settingsCache.page.margins.top;
-                },
-
-                set bottom(n) {
-                    settingsCache.page.margins.bottom = n;
-                },
-
-                get bottom() {
-                    return settingsCache.page.margins.bottom;
-                },
-
-                set right(n) {
-                    settingsCache.page.margins.right = n;
-                },
-
-                get right() {
-                    return settingsCache.page.margins.right;
-                }
-
-            }
-        },
-
-        get pageRange() { return settingsCache.pageRange; },
-        set pageRange(v) { settingsCache.pageRange = v; },
-
-        get printingPass() { return settingsCache.printingPass; },
-        set printingPass(v) {
-            if (typeof v === "number" && v >= mPrintingPass.ALL && v <= mPrintingPass.ODDANDEVEN) {
-                settingsCache.printingPass = v;
-            }
-            throw "Invalid argument";
         },
 
         extraHeadersAndFooters: {
@@ -279,6 +215,71 @@
                 }
                 settingsCache.extraHeadersAndFooters.extraFirstFooterHeight = v;
             }
+        },
+
+        page: {
+            set orientation(enumOrientation) {
+                settingsCache.page.orientation = enumOrientation;
+            },
+
+            get orientation() {
+                return settingsCache.page.orientation;
+            },
+
+            set units(enumUnits) {
+                settingsCache.page.units = enumUnits;
+            },
+
+            get units() {
+                return settingsCache.page.units;
+            },
+
+            margins: {
+                set left(n) {
+                    settingsCache.page.margins.left = n;
+                },
+
+                get left() {
+                    return settingsCache.page.margins.left;
+                },
+
+                set top(n) {
+                    settingsCache.page.margins.top = n;
+                },
+
+                get top() {
+                    return settingsCache.page.margins.top;
+                },
+
+                set bottom(n) {
+                    settingsCache.page.margins.bottom = n;
+                },
+
+                get bottom() {
+                    return settingsCache.page.margins.bottom;
+                },
+
+                set right(n) {
+                    settingsCache.page.margins.right = n;
+                },
+
+                get right() {
+                    return settingsCache.page.margins.right;
+                }
+
+            }
+        },
+
+        get pageRange() { return settingsCache.pageRange; },
+        set pageRange(v) { settingsCache.pageRange = v; },
+
+        get printingPass() { return settingsCache.printingPass; },
+        set printingPass(v) {
+            if (typeof v === "number" && v >= mPrintingPass.ALL && v <= mPrintingPass.ODDANDEVEN) {
+                settingsCache.printingPass = v;
+                return;
+            }
+            throw "Invalid argument";
         }
     
     };

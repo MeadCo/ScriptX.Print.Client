@@ -260,6 +260,143 @@
         }
     }
 
+    var iEnhancedFormatting = {
+        get allPagesHeader() {
+            return settings.extraHeadersAndFooters.allPagesHeader;
+        },
+        set allPagesHeader(v) {
+            settings.extraHeadersAndFooters.allPagesHeader = v;
+        },
+
+        get allPagesFooter() {
+            return settings.extraHeadersAndFooters.allPagesFooter;
+        },
+        set allPagesFooter(v) {
+            settings.extraHeadersAndFooters.allPagesFooter = v;
+        },
+
+        get firstPageHeader() {
+            return settings.extraHeadersAndFooters.firstPageHeader;
+        },
+        set firstPageHeader(v) {
+            settings.extraHeadersAndFooters.firstPageHeader = v;
+        },
+
+        get firstPageFooter() {
+            return settings.extraHeadersAndFooters.firstPageFooter;
+        },
+        set firstPageFooter(v) {
+            settings.extraHeadersAndFooters.firstPageFooter = v;
+        },
+
+        get extraFirstPageFooter() {
+            return settings.extraHeadersAndFooters.extraFirstPageFooter;
+        },
+        set extraFirstPageFooter(v) {
+            settings.extraHeadersAndFooters.extraFirstPageFooter = v;
+        },
+
+        get allHeaderHeight() {
+            return settings.extraHeadersAndFooters.allHeaderHeight;
+        },
+        set allHeaderHeight(v) {
+            if (typeof v !== "number") {
+                throw "Invalid argument";
+            }
+            settings.extraHeadersAndFooters.allHeaderHeight = v;
+        },
+
+        get allFooterHeight() {
+            return settings.extraHeadersAndFooters.allFooterHeight;
+        },
+        set allFooterHeight(v) {
+            if (typeof v !== "number") {
+                throw "Invalid argument";
+            }
+            settings.extraHeadersAndFooters.allFooterHeight = v;
+        },
+
+        get firstHeaderHeight() {
+            return settings.extraHeadersAndFooters.firstHeaderHeight;
+        },
+        set firstHeaderHeight(v) {
+            if (typeof v !== "number") {
+                throw "Invalid argument";
+            }
+            settings.extraHeadersAndFooters.firstHeaderHeight = v;
+        },
+
+        get firstFooterHeight() {
+            return settings.extraHeadersAndFooters.firstFooterHeight;
+        },
+        set firstFooterHeight(v) {
+            if (typeof v !== "number") {
+                throw "Invalid argument";
+            }
+            settings.extraHeadersAndFooters.firstFooterHeight = v;
+        },
+
+        get extraFirstFooterHeight() {
+            return settings.extraHeadersAndFooters.extraFirstFooterHeight;
+        },
+        set extraFirstFooterHeight(v) {
+            if (typeof v !== "number") {
+                throw "Invalid argument";
+            }
+            settings.extraHeadersAndFooters.extraFirstFooterHeight = v;
+        },
+
+        get pageRange() {
+            return settings.pageRange;
+        },
+        set pageRange(v) {
+            settings.pageRange = v;
+        },
+
+        get printingPass() {
+            var v = "";
+            switch (settings.printingPass) {
+            case printHtml.PrintingPasses.ALL:
+                v = "all";
+                break;
+
+            case printHtml.PrintingPasses.ODD:
+                v = "odd";
+                break;
+
+            case printHtml.PrintingPasses.EVEN:
+                v = "even";
+                break;
+
+            case printHtml.PrintingPasses.ODDANDEVEN:
+                v = "odd&even";
+                break;
+            }
+            return v;
+        },
+
+        set printingPass(v) {
+            var x = printHtml.PrintingPasses.ALL;
+            if (typeof v === "string") {
+                switch (v.toLowerCase()) {
+                case "odd":
+                    x = printHtml.PrintingPasses.ODD;
+                    break;
+
+                case "even":
+                    x = printHtml.PrintingPasses.EVEN;
+                    break;
+
+                case "odd&even":
+                    x = printHtml.PrintingPasses.ODDANDEVEN;
+                    break;
+                }
+            }
+            settings.printingPass = x;
+        }
+    };
+
+
     // public API
     return {
         // basic properties
@@ -753,143 +890,7 @@
             printApi.waitForSpoolingComplete(iTimeout, fnComplete);
         },
 
-        get enhancedFormatting() {
-            return {
-                get allPagesHeader() {
-                    return settings.extraHeadersAndFooters.allPagesHeader;
-                },
-                set allPagesHeader(v) {
-                    settings.extraHeadersAndFooters.allPagesHeader = v;
-                },
-
-                get allPagesFooter() {
-                    return settings.extraHeadersAndFooters.allPagesFooter;
-                },
-                set allPagesFooter(v) {
-                    settings.extraHeadersAndFooters.allPagesFooter = v;
-                },
-
-                get firstPageHeader() {
-                    return settings.extraHeadersAndFooters.firstPageHeader;
-                },
-                set firstPageHeader(v) {
-                    settings.extraHeadersAndFooters.firstPageHeader = v;
-                },
-
-                get firstPageFooter() {
-                    return settings.extraHeadersAndFooters.firstPageFooter;
-                },
-                set firstPageFooter(v) {
-                    settings.extraHeadersAndFooters.firstPageFooter = v;
-                },
-
-                get extraFirstPageFooter() {
-                    return settings.extraHeadersAndFooters.extraFirstPageFooter;
-                },
-                set extraFirstPageFooter(v) {
-                    settings.extraHeadersAndFooters.extraFirstPageFooter = v;
-                },
-
-                get allHeaderHeight() {
-                    return settings.extraHeadersAndFooters.allHeaderHeight;
-                },
-                set allHeaderHeight(v) {
-                    if (typeof v !== "number") {
-                        throw "Invalid argument";
-                    }
-                    settings.extraHeadersAndFooters.allHeaderHeight = v;
-                },
-
-                get allFooterHeight() {
-                    return settings.extraHeadersAndFooters.allFooterHeight;
-                },
-                set allFooterHeight(v) {
-                    if (typeof v !== "number") {
-                        throw "Invalid argument";
-                    }
-                    settings.extraHeadersAndFooters.allFooterHeight = v;
-                },
-
-                get firstHeaderHeight() {
-                    return settings.extraHeadersAndFooters.firstHeaderHeight;
-                },
-                set firstHeaderHeight(v) {
-                    if (typeof v !== "number") {
-                        throw "Invalid argument";
-                    }
-                    settings.extraHeadersAndFooters.firstHeaderHeight = v;
-                },
-
-                get firstFooterHeight() {
-                    return settings.extraHeadersAndFooters.firstFooterHeight;
-                },
-                set firstFooterHeight(v) {
-                    if (typeof v !== "number") {
-                        throw "Invalid argument";
-                    }
-                    settings.extraHeadersAndFooters.firstFooterHeight = v;
-                },
-
-                get extraFirstFooterHeight() {
-                    return settings.extraHeadersAndFooters.extraFirstFooterHeight;
-                },
-                set extraFirstFooterHeight(v) {
-                    if (typeof v !== "number") {
-                        throw "Invalid argument";
-                    }
-                    settings.extraHeadersAndFooters.extraFirstFooterHeight = v;
-                },
-
-                get pageRange() {
-                    return settings.pageRange;
-                },
-                set pageRange(v) {
-                    settings.pageRange = v;
-                },
-
-                get printingPass() {
-                    var v = "";
-                    switch ( settings.printingPass ) {
-                        case printHtml.PrintingPasses.ALL:
-                            v = "all";
-                            break;
-
-                        case printHtml.PrintingPasses.ODD:
-                            v = "odd";
-                            break;
-
-                        case printHtml.PrintingPasses.EVEN:
-                            v = "even";
-                            break;
-
-                        case printHtml.PrintingPasses.ODDANDEVEN:
-                            v = "odd&even";
-                            break;
-                    }
-                    return v;
-                },
-
-                set printingPass(v) {
-                    var x = printHtml.PrintingPasses.ALL;
-                    if (typeof v === "string") {
-                        switch ( v.toLowerCase() ) {
-                            case "odd":
-                                x = printHtml.PrintingPasses.ODD;
-                                break;
-
-                            case "even":
-                                x = printHtml.PrintingPasses.EVEN;
-                                break;
-
-                            case "odd&even":
-                                x = printHtml.PrintingPasses.ODDANDEVEN;
-                                break;
-                        }
-                    }
-                    settings.printingPass = x;
-                }       
-            }
-        },
+        enhancedFormatting: iEnhancedFormatting,
 
         // helpers for wrapper MeadCoJS
         PolyfillInit: function () {

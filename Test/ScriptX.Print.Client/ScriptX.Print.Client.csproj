@@ -192,6 +192,7 @@
     <Content Include="Views\Home\ShimMeadCoJS2.cshtml" />
     <Content Include="Views\Home\Inspector.cshtml" />
     <Content Include="Views\Home\ShimMeadCoJS3.cshtml" />
+    <Content Include="Views\Home\EnhfBasic.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
