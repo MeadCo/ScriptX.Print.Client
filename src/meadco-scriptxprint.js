@@ -231,7 +231,7 @@
 
         var fakeJob = {
             jobIdentifier: Date.now(),
-            printerName: requestData.DeviceSettings.printerName,
+            printerName: requestData.Device.printerName,
             jobName: "Job starting"
         };
 
@@ -250,7 +250,7 @@
                 })
                 .done(function (data) {
                     MeadCo.log("Success response: " + data.status);
-                    data.printerName = requestData.DeviceSettings.printerName;
+                    data.printerName = requestData.Device.printerName;
                     data.jobName = requestData.Settings.jobTitle;
                     queueJob(data);
                     removeJob(fakeJob.jobIdentifier);

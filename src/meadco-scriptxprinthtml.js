@@ -415,9 +415,9 @@
             MeadCo.ScriptX.Print.getFromServer("/htmlPrintDefaults/?units=" + settingsCache.page.units, false,
                 function (data) {
                     MeadCo.log("got default html settings");
-                    updateSettingsWithServerDefaults(data.htmlPrintSettings);
-                    if (data.deviceSettings != null) {
-                        MeadCo.ScriptX.Print.connectDeviceAndPrinters(data.deviceSettings, data.availablePrinters);
+                    updateSettingsWithServerDefaults(data.settings);
+                    if (data.device != null) {
+                        MeadCo.ScriptX.Print.connectDeviceAndPrinters(data.device, data.availablePrinters);
                     }
                 });
         },
@@ -428,9 +428,9 @@
             MeadCo.ScriptX.Print.getFromServer("/htmlPrintDefaults/?units=" + settingsCache.page.units, true,
                 function (data) {
                     MeadCo.log("got default html settings");
-                    updateSettingsWithServerDefaults(data.htmlPrintSettings);
-                    if (data.deviceSettings != null) {
-                        MeadCo.ScriptX.Print.connectDeviceAndPrinters(data.deviceSettings,data.availablePrinters);
+                    updateSettingsWithServerDefaults(data.settings);
+                    if (data.device != null) {
+                        MeadCo.ScriptX.Print.connectDeviceAndPrinters(data.device,data.availablePrinters);
                     }
                     resolve();
                 },reject);
