@@ -10,7 +10,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
 
-    var moduleversion = "1.1.7.0";
+    var moduleversion = "1.2.0.0";
 
     var mPageOrientation = {
         DEFAULT: 0,
@@ -28,6 +28,13 @@
         DEFAULT: 0,
         TRUE: 1,
         FALSE: 2
+    };
+
+    var mPrintingPass = {
+        ALL: 1,
+        ODD: 2,
+        EVEN: 3,
+        ODDANDEVEN: 4   
     };
 
     var settingsCache =
@@ -53,8 +60,10 @@
                 right: ""
             }
         },
-        enhancedFormatting: {           
+        extraHeadersAndFooters: {           
         },
+        pageRange: "",
+        printingPass: mPrintingPass.ALL,
         jobTitle: ""
     };
 
@@ -172,7 +181,106 @@
                 }
 
             }
+        },
+
+        get pageRange() { return settingsCache.pageRange; },
+        set pageRange(v) { settingsCache.pageRange = v; },
+
+        get printingPass() { return settingsCache.printingPass; },
+        set printingPass(v) {
+            if (typeof v === "number" && v >= mPrintingPass.ALL && v <= mPrintingPass.ODDANDEVEN) {
+                settingsCache.printingPass = v;
+            }
+            throw "Invalid argument";
+        },
+
+        extraHeadersAndFooters: {
+            get allPagesHeader() {
+                return settingsCache.extraHeadersAndFooters.allPagesHeader;
+            },
+            set allPagesHeader(v) {
+                settingsCache.extraHeadersAndFooters.allPagesHeader = v;
+            },
+
+            get allPagesFooter() {
+                return settingsCache.extraHeadersAndFooters.allPagesFooter;
+            },
+            set allPagesFooter(v) {
+                settingsCache.extraHeadersAndFooters.allPagesFooter = v;
+            },
+
+            get firstPageHeader() {
+                return settingsCache.extraHeadersAndFooters.firstPageHeader;
+            },
+            set firstPageHeader(v) {
+                settingsCache.extraHeadersAndFooters.firstPageHeader = v;
+            },
+
+            get firstPageFooter() {
+                return settingsCache.extraHeadersAndFooters.firstPageFooter;
+            },
+            set firstPageFooter(v) {
+                settingsCache.extraHeadersAndFooters.firstPageFooter = v;
+            },
+
+            get extraFirstPageFooter() {
+                return settingsCache.extraHeadersAndFooters.extraFirstPageFooter;
+            },
+            set extraFirstPageFooter(v) {
+                settingsCache.extraHeadersAndFooters.extraFirstPageFooter = v;
+            },
+
+            get allHeaderHeight() {
+                return settingsCache.extraHeadersAndFooters.allHeaderHeight;
+            },
+            set allHeaderHeight(v) {
+                if (typeof v !== "number") {
+                    throw "Invalid argument";
+                }
+                settingsCache.extraHeadersAndFooters.allHeaderHeight = v;
+            },
+
+            get allFooterHeight() {
+                return settingsCache.extraHeadersAndFooters.allFooterHeight;
+            },
+            set allFooterHeight(v) {
+                if (typeof v !== "number") {
+                    throw "Invalid argument";
+                }
+                settingsCache.extraHeadersAndFooters.allFooterHeight = v;
+            },
+
+            get firstHeaderHeight() {
+                return settingsCache.extraHeadersAndFooters.firstHeaderHeight;
+            },
+            set firstHeaderHeight(v) {
+                if (typeof v !== "number") {
+                    throw "Invalid argument";
+                }
+                settingsCache.extraHeadersAndFooters.firstHeaderHeight = v;
+            },
+
+            get firstFooterHeight() {
+                return settingsCache.extraHeadersAndFooters.firstFooterHeight;
+            },
+            set firstFooterHeight(v) {
+                if (typeof v !== "number") {
+                    throw "Invalid argument";
+                }
+                settingsCache.extraHeadersAndFooters.firstFooterHeight = v;
+            },
+
+            get extraFirstFooterHeight() {
+                return settingsCache.extraHeadersAndFooters.extraFirstFooterHeight;
+            },
+            set extraFirstFooterHeight(v) {
+                if (typeof v !== "number") {
+                    throw "Invalid argument";
+                }
+                settingsCache.extraHeadersAndFooters.extraFirstFooterHeight = v;
+            }
         }
+    
     };
 
     function updateSettingsWithServerDefaults(sDefaults) {
