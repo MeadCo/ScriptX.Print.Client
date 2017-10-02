@@ -9,7 +9,7 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
-    var version = "1.1.5.0";
+    var version = "1.1.6.0";
     var printerName = "";
     var deviceSettings = {};
     var module = this;
@@ -141,7 +141,7 @@
             ContentType: contentType,
             Content: content,
             Settings: htmlPrintSettings,
-            DeviceSettings: devInfo,
+            Device: devInfo,
             OnProgress: fnCallback,
             UserData: data
         }
