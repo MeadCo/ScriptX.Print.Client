@@ -385,6 +385,7 @@
         PageMarginUnits: mPageMarginUnits,
         PageOrientation: mPageOrientation,
         CollateOptions: mCollateOptions,
+        PrintingPasses: mPrintingPass,
 
         settings: iSettings,
 
