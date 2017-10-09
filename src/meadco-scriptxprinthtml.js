@@ -10,7 +10,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
 
-    var moduleversion = "1.2.0.0";
+    var moduleversion = "1.2.1.0";
 
     var mPageOrientation = {
         DEFAULT: 0,
@@ -34,7 +34,7 @@
         ALL: 1,
         ODD: 2,
         EVEN: 3,
-        ODDANDEVEN: 4   
+        ODDANDEVEN: 4
     };
 
     var settingsCache =
@@ -281,7 +281,7 @@
             }
             throw "Invalid argument";
         }
-    
+
     };
 
     function updateSettingsWithServerDefaults(sDefaults) {
@@ -331,13 +331,13 @@
         $("script", $html).remove();
         $("object", $html).remove();
 
-        if (!$("head>base",$html).length) {
+        if (!$("head>base", $html).length) {
             MeadCo.log("No base element, fabricating one to: " + getBaseHref());
-            var base = $("<base />",
+            var base = $("<base>",
             {
                 href: getBaseHref()
             });
-            $("head", $html).append(base);
+            $("head", $html).prepend(base);
         }
 
         return $html.html();
@@ -406,7 +406,7 @@
             return printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.HTML, sHtml, "HTML snippet", fnCallOnDone, fnCallback, data);
         },
 
-        connectLite : function(serverUrl, licenseGuid) {
+        connectLite: function (serverUrl, licenseGuid) {
             MeadCo.ScriptX.Print.connectLite(serverUrl, licenseGuid);
         },
 
@@ -423,7 +423,7 @@
                 });
         },
 
-        connectAsync: function (serverUrl, licenseGuid,resolve,reject) {
+        connectAsync: function (serverUrl, licenseGuid, resolve, reject) {
             MeadCo.log("Print.HTML ASYNC connection request");
             MeadCo.ScriptX.Print.connectLite(serverUrl, licenseGuid);
             MeadCo.ScriptX.Print.getFromServer("/htmlPrintDefaults/?units=" + settingsCache.page.units, true,
@@ -431,10 +431,10 @@
                     MeadCo.log("got default html settings");
                     updateSettingsWithServerDefaults(data.settings);
                     if (data.device != null) {
-                        MeadCo.ScriptX.Print.connectDeviceAndPrinters(data.device,data.availablePrinters);
+                        MeadCo.ScriptX.Print.connectDeviceAndPrinters(data.device, data.availablePrinters);
                     }
                     resolve();
-                },reject);
+                }, reject);
         },
 
         get version() { return moduleversion }
