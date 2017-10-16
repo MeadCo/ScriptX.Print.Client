@@ -59,6 +59,13 @@ namespace ScriptX.Print.Client.Controllers
             return View(new Models.Sample("Supporting async code written against 'MeadCo.ScriptX' included first"));
         }
 
+        [Route("EnhfBasic")]
+        [HttpGet]
+        public ActionResult EnhfBasic()
+        {
+            return View(new Models.Sample("Enhanced formatting with MeadCoJS shim"));
+        }
+
 
         [Route("Inspector")]
         [HttpGet]

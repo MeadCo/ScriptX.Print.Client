@@ -9,7 +9,7 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
-    var version = "1.1.5.0";
+    var version = "1.3.0.0";
     var printerName = "";
     var deviceSettings = {};
     var module = this;
@@ -141,7 +141,7 @@
             ContentType: contentType,
             Content: content,
             Settings: htmlPrintSettings,
-            DeviceSettings: devInfo,
+            Device: devInfo,
             OnProgress: fnCallback,
             UserData: data
         }
@@ -231,7 +231,7 @@
 
         var fakeJob = {
             jobIdentifier: Date.now(),
-            printerName: requestData.DeviceSettings.printerName,
+            printerName: requestData.Device.printerName,
             jobName: "Job starting"
         };
 
@@ -250,7 +250,7 @@
                 })
                 .done(function (data) {
                     MeadCo.log("Success response: " + data.status);
-                    data.printerName = requestData.DeviceSettings.printerName;
+                    data.printerName = requestData.Device.printerName;
                     data.jobName = requestData.Settings.jobTitle;
                     queueJob(data);
                     removeJob(fakeJob.jobIdentifier);

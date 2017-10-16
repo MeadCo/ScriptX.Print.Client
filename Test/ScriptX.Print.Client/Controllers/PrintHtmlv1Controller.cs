@@ -32,7 +32,7 @@ namespace ScriptX.Print.Client.Controllers
         }
 
         [Route("deviceinfo/{deviceName}/{units?}")]
-        public IHttpActionResult GetDeviceInfo([FromUri] string deviceName, [FromUri] Page.PageMarginUnits units = Page.PageMarginUnits.Default)
+        public IHttpActionResult GetDeviceInfo([FromUri] string deviceName, [FromUri] PageSettings.PageMarginUnits units = PageSettings.PageMarginUnits.Default)
         {
             var ds = new DeviceSettings();
             ds.PrinterName = deviceName;
@@ -61,19 +61,19 @@ namespace ScriptX.Print.Client.Controllers
 
         [Route("htmlPrintDefaults/{units?}")]
         [HttpGet]
-        public IHttpActionResult GetDefaults([FromUri] Page.PageMarginUnits units = Page.PageMarginUnits.Default)
+        public IHttpActionResult GetDefaults([FromUri] PageSettings.PageMarginUnits units = PageSettings.PageMarginUnits.Default)
         {
             PrintHtmlDefaultSettings allSettings = new PrintHtmlDefaultSettings()
             {
-                HtmlPrintSettings = new HtmlPrintSettings()
+                Settings = new HtmlPrintSettings()
                 {
                     Header = "Default header"
                 },
-                DeviceSettings = new DeviceSettings(), // return data available to basic level subscribers
+                Device = new DeviceSettings(), // return data available to basic level subscribers
                 AvailablePrinters = new string[] { "UI Testing printer", "UI Printer 2", "UI Printer 3" }
            };
 
-            DeviceSettings ds = allSettings.DeviceSettings;
+            DeviceSettings ds = allSettings.Device;
             ds.PrinterName = allSettings.AvailablePrinters[0];
             ds.PaperSizeName = "A4";
             ds.PaperSourceName = "Automatically select";

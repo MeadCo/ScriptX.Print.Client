@@ -1,6 +1,6 @@
 
-# ScriptX.Print.Client
-The MeadCo.ScriptX.Print project brings control of printing to browser based content in all browsers on all devices with
+# ScriptX.Service.Client
+The MeadCo.ScriptX Services project brings control of printing to browser based content in all browsers on all devices with
 out needing a binary add-on - something that has become persona non-grata due to the abuse of the power they have enabled 
 and power that has been taken by the unscrupulous.
 
