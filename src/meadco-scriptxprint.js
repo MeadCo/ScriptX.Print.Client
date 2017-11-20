@@ -9,7 +9,7 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
-    var version = "1.3.0.0";
+    var version = "1.3.1.0";
     var printerName = "";
     var deviceSettings = {};
     var module = this;
@@ -165,7 +165,7 @@
                     updateJob(data);
                 }
 
-                waitForJobComplete(requestData, data.jobIdentifier,
+                monitorJob(requestData, data.jobIdentifier,
                     -1,
                     function (data) {
                         if (data != null) {
@@ -183,6 +183,23 @@
             queuedToDevice: function (data) {
                 progress(requestData, enumPrintStatus.QUEUED);
                 MeadCo.log("print was queued to device");
+
+                if (typeof fnNotify === "function") {
+                    data.fnNotify = fnNotify;
+                    updateJob(data);
+                }
+
+                monitorJob(requestData, data.jobIdentifier,
+                    -1,
+                    function (data) {
+                        if (data != null) {
+                            progress(requestData, enumPrintStatus.COMPLETED);
+                        }
+
+                        if (typeof fnDone === "function") {
+                            fnDone(data != null ? "Server error" : null);
+                        }
+                    });
             },
 
             softError: function (data) {
@@ -193,6 +210,13 @@
             ok: function (data) {
                 progress(requestData, enumPrintStatus.COMPLETED);
                 MeadCo.log("printed ok, no further information");
+                if (typeof fnNotify === "function") {
+                    data.fnNotify = fnNotify;
+                    updateJob(data);
+                }
+                if (typeof fnDone === "function") {
+                    fnDone(null);
+                }
             }
         });
     };
@@ -210,7 +234,7 @@
     }
 
     function connectToServerAsync(serverUrl, clientLicenseGuid, resolve, reject) {
-        if (serverUrl.length > 0 && clientLicenseGuid.length > 0)
+        if (serverUrl.length > 0 )
             setServer(serverUrl, clientLicenseGuid);
 
         // note that this will silently fail if no advanced printing license
@@ -338,8 +362,8 @@
         }
     }
 
-    function waitForJobComplete(requestData, jobId, timeOut, functionComplete) {
-        MeadCo.log("WaitForJobComplete: " + jobId);
+    function monitorJob(requestData, jobId, timeOut, functionComplete) {
+        MeadCo.log("monitorJob: " + jobId);
         var counter = 0;
         var interval = 1000;
         var bWaiting = false;
@@ -384,7 +408,7 @@
 
                             case enumPrintStatus.ERROR:
                             case enumPrintStatus.ABANDONED:
-                                MeadCo.log("error status in waitForJobComplete so clear interval: " + intervalId);
+                                MeadCo.log("error status in monitorJob so clear interval: " + intervalId);
                                 progress(requestData, data.status, data.message);
                                 removeJob(data);
                                 window.clearInterval(intervalId);
@@ -394,7 +418,7 @@
 
                             default:
                                 progress(requestData, data.status, data.message);
-                                MeadCo.log("unknown status in waitForJobComplete so clear interval: " + intervalId);
+                                MeadCo.log("unknown status in monitorJob so clear interval: " + intervalId);
                                 removeJob(jobId);
                                 window.clearInterval(intervalId);
                                 functionComplete(null);
@@ -402,7 +426,7 @@
                         }
                     })
                     .fail(function (jqXhr, textStatus, errorThrown) {
-                        MeadCo.log("**warning: failure in MeadCo.ScriptX.Print.waitForJobComplete: [" +
+                        MeadCo.log("**warning: failure in MeadCo.ScriptX.Print.monitorJob: [" +
                             textStatus +
                             "], [" +
                             errorThrown +
@@ -418,7 +442,7 @@
                             errorThrown = "Unknown server or network error";
                         }
 
-                        MeadCo.log("error: " + errorThrown + " in waitForJobComplete so clear interval: " + intervalId);
+                        MeadCo.log("error: " + errorThrown + " in monitorJob so clear interval: " + intervalId);
                         progress(requestData, enumPrintStatus.ERROR, errorThrown);
                         removeJob(jobId);
                         window.clearInterval(intervalId);
@@ -441,7 +465,9 @@
     }
 
     function getDeviceSettings(oRequest) {
+        oRequest.name = oRequest.name.replace(/\\/g, "||");
         MeadCo.log("Request get device info: " + oRequest.name);
+
         if (module.jQuery) {
             var serviceUrl = server + "/deviceinfo/" + encodeURIComponent(oRequest.name) + "/0";
             MeadCo.log(".ajax() get: " + serviceUrl);
