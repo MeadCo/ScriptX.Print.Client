@@ -1,15 +1,14 @@
 
 # ScriptX.Service.Client
-The MeadCo.ScriptX Services project brings control of printing to browser based content in all browsers on all devices with
-out needing a binary add-on - something that has become persona non-grata due to the abuse of the power they have enabled 
-and power that has been taken by the unscrupulous.
+The MeadCo ScriptX Services project brings control of printing to browser based content in all browsers on all devices with
+out needing a binary add-on.
 
 In the binary free environment MeadCo.ScriptX.Client.xxxxx are the javascript libraries for interfacing between the client devices 
 and the server system that provides printing services where-ever that server may be:
 
 * in the cloud
 * an on-premise server
-* services on the device (PC)
+* services on the device (Windows PC)
 
 The library has three layers:
 
@@ -27,7 +26,7 @@ Script code in this scenario will be utilising the *'window.factory'* object. By
 to more modern browsers. With the proviso of course that the HTML that renders successfully in the older browser
 renders correctly in modern browsers.
 
-We do not want the MeadC.ScriptX.Client libraries to depend on anything other than thenselves. Our clients are many and varied and will no doubt be 
+We do not want the MeadC.ScriptX.Client libraries to depend on anything other than themselves. Our clients are many and varied and will no doubt be 
 taking dependencies on many libraries, we dont want to work against those choices but work with them. The core library abstracts behaviour
 and then the dependency dependent layer uses simple injection to configure the core layer for the environment.
 
