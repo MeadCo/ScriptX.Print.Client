@@ -9,7 +9,7 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
-    var version = "1.3.1.0";
+    var version = "1.4.0.0";
     var printerName = "";
     var deviceSettings = {};
     var module = this;

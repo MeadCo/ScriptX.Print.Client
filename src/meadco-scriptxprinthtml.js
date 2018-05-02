@@ -10,7 +10,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
 
-    var moduleversion = "1.3.1.0";
+    var moduleversion = "1.4.0.0";
 
     var mPageOrientation = {
         DEFAULT: 0,
@@ -64,7 +64,8 @@
         },
         pageRange: "",
         printingPass: mPrintingPass.ALL,
-        jobTitle: ""
+        jobTitle: "",
+        documentUrl: document.URL
     };
 
     var iSettings =
@@ -290,6 +291,7 @@
             ? navigator.languages[0]
             : navigator.language;
         settingsCache.timezoneOffset = (new Date()).getTimezoneOffset();
+        settingsCache.documentUrl = document.URL;
         MeadCo.log("Settings cache updated, .locale: [" + settingsCache.locale + "], .offset: " + settingsCache.timezoneOffset);
     }
 
