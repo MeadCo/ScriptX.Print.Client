@@ -1,0 +1,80 @@
+﻿@model ScriptX.Print.Client.Models.Sample
+
+@{
+    ViewBag.Title = Model.Title;
+
+    var server = $"{Request.Url.Scheme}://{Request.Url.Authority}{Url.Content("~/api/v1/printHtml")}";
+    var licenseServer = $"{Request.Url.Scheme}://{Request.Url.Authority}{Url.Content("~/api/v1/licensing")}";
+
+    var frameUrl = Url.Action("FramedHeaderFooterArgs");
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <button id="btn-printPage" class="btn btn-primary">Print page</button>&nbsp;<button id="btn-printDoc" class="btn btn-primary">Print doc</button>&nbsp;<button id="btn-printFrame" class="btn btn-primary">Print frame</button>
+</div>
+
+<div style="margin: 20px; width: 50%; height: 500px">
+    <iframe style="width: 100%; height: 100%; border: 2px solid grey; margin: 0px" src="@frameUrl" id="infoframe"></iframe> 
+</div>
+
+@section scripts
+{
+    <script src="@Url.Action("script","Home",new { filename= "meadco-core.js" })"></script>
+    
+    <script src="@Url.Action("script","Home",new { filename= "meadco-scriptxprintlicensing.js" })"></script>
+
+    <script src="@Url.Action("script","Home",new { filename= "meadco-scriptxprint.js" })"></script>
+    <script src="@Url.Action("script","Home",new { filename= "meadco-scriptxprinthtml.js" })"></script>
+
+    <script type="text/javascript">
+        if (window.jQuery) {
+            $(function() {
+                MeadCo.log("Page starting with jQuery");
+
+                try {
+                    // for Windows PC we have to supply the client license
+                    MeadCo.ScriptX.Print.Licensing.connect("@licenseServer");
+                    MeadCo.ScriptX.Print.Licensing.ApplyAsync("@Model.ClientLicense",
+                        @Model.ClientRevision,
+                        "@Model.ClientPath",
+                        function(license) {
+                            MeadCo.log("Applied license: " + license.company);
+                            MeadCo.ScriptX.Print.HTML.connect("@server", "@Model.License");
+                            MeadCo.ScriptX.Print.HTML.settings.header = "Modern ScriptX.Print&b&b&D";
+                            MeadCo.ScriptX.Print.HTML.settings.footer = "Page &p of &P";
+
+                            $("#btn-printPage").click(function (e) {
+                                e.preventDefault();
+                                MeadCo.ScriptX.Print.HTML.printDocument();
+                            });
+
+                            $("#btn-printDoc").click(function (e) {
+                                e.preventDefault();
+                                MeadCo.ScriptX.Print.HTML.printFromUrl("http://scriptx.meadroid.com");
+                            });
+
+                            $("#btn-printFrame").click(function (e) {
+                                e.preventDefault();
+                                MeadCo.ScriptX.Print.HTML.printFrame("infoframe");
+                            });
+                        },
+                        function(error) {
+                            alert("Failed to apply license: " + error);
+                        });
+
+                } catch (e) {
+                    console.log("error in page startup: " + e.message);
+                }
+            });
+        } else {
+            MeadCo.log("Page starting without jQuery");
+            try {
+                MeadCo.ScriptX.Print.HTML.printFromUrl("http://scriptx.meadroid.com");
+            } catch (e) {
+                console.log("error in page startup: " + e.message);
+            }
+        }
+    </script>
+}

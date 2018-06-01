@@ -31,6 +31,13 @@ namespace ScriptX.Print.Client.Controllers
             return View(new Models.Sample("Supporting modern code"));
         }
 
+        [Route("ModernPC")]
+        [HttpGet]
+        public ActionResult ModernPC()
+        {
+            return View(new Models.Sample("Supporting modern code for Windows PC"));
+        }
+
         [Route("FactoryShim")]
         [HttpGet]
         public ActionResult ShimFactory()
@@ -52,9 +59,23 @@ namespace ScriptX.Print.Client.Controllers
             return View(new Models.Sample("Supporting code written against 'MeadCo.ScriptX' included first"));
         }
 
+        [Route("MeadCoJSShim2PC")]
+        [HttpGet]
+        public ActionResult ShimMeadCoJS2PC()
+        {
+            return View(new Models.Sample("Supporting code written against 'MeadCo.ScriptX' included first for Windows PC"));
+        }
+
         [Route("MeadCoJSShim3")]
         [HttpGet]
         public ActionResult ShimMeadCoJS3()
+        {
+            return View(new Models.Sample("Supporting async code written against 'MeadCo.ScriptX' included first"));
+        }
+
+        [Route("MeadCoJSShim3PC")]
+        [HttpGet]
+        public ActionResult ShimMeadCoJS3PC()
         {
             return View(new Models.Sample("Supporting async code written against 'MeadCo.ScriptX' included first"));
         }

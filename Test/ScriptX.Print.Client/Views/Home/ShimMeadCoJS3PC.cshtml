@@ -1,0 +1,164 @@
+﻿@model ScriptX.Print.Client.Models.Sample
+
+@{
+    ViewBag.Title = Model.Title;
+    var frameUrl = Url.Action("FramedHeaderFooterArgs");
+    var server = $"{Request.Url.Scheme}://{Request.Url.Authority}";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <button id="btn-printPage" class="btn btn-primary">Print page</button>&nbsp;<button id="btn-printDoc" class="btn btn-primary">Print doc</button>&nbsp;<button id="btn-printDocEx" class="btn btn-primary">Print doc (Ex)</button>&nbsp;<button id="btn-printFrame" class="btn btn-primary">Print frame</button>
+</div>
+
+<p>.. and with WaitForSpoolingComplete ...</p>
+<div>
+    <button id="btn-printPage2" class="btn btn-primary">Print page</button>
+</div>
+
+<div style="margin: 20px; width: 50%; height: 500px">
+    <iframe style="width: 100%; height: 100%; border: 2px solid grey; margin: 0px" src="@frameUrl" id="infoframe"></iframe>
+</div>
+
+<div id="logPane"></div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        function pageLogger(txt) {
+            $("#logPane").append(txt + "<br/>");
+        }
+    </script>
+
+    <script src="~/Scripts/meadco-scriptx.js"></script>
+
+    <script src="@Url.Action("script", "Home", new {filename = "meadco-core.js"})"></script>
+    <script src="@Url.Action("script", "Home", new {filename = "meadco-scriptxprint.js"})"></script>
+    <script src="@Url.Action("script", "Home", new {filename = "meadco-scriptxprinthtml.js"})"></script>
+    <script src="@Url.Action("script", "Home", new {filename = "meadco-scriptxprintlicensing.js"})"></script>
+
+    <script data-meadco-server="@server"
+            data-meadco-license="@Model.ClientLicense"
+            data-meadco-license-path="@Model.ClientPath"
+            data-meadco-license-revision="@Model.ClientRevision"
+            data-meadco-syncinit="false"
+            src="@Url.Action("script", "Home", new {filename = "meadco-secmgr.js"})"></script>
+
+    <script src="@Url.Action("script", "Home", new {filename = "meadco-scriptxfactory.js"})"></script>
+
+    <script src="@Url.Action("script", "Home", new {filename = "jQuery-MeadCo.ScriptX.Print.UI.js"})"></script>
+
+    <script type="text/javascript">
+        function asyncInProgress() {
+            var bSpooling = MeadCo.ScriptX.Printing.IsSpooling();
+            pageLogger("Spooling: " +
+                bSpooling +
+                ", jobCount: " +
+                MeadCo.ScriptX.Printing.GetJobsCount(MeadCo.ScriptX.Printing.currentPrinter));
+            if (bSpooling) {
+                window.setTimeout(asyncInProgress, 1000);
+            }
+        }
+
+        $(window).on("load",
+            function() {
+                pageLogger("Shim factory async test starting");
+                MeadCo.log = pageLogger;
+
+                try {
+                    MeadCo.Licensing.InitAsync().then(function () {
+                        pageLogger("Initialised license");
+                        MeadCo.ScriptX.InitAsync().then(function() {
+                            pageLogger("InitAsync complete - installed version of ScriptX is: " +
+                                MeadCo.ScriptX.Version());
+                            MeadCo.ScriptX.Printing.header = "This is a MeadCoJSShim Header";
+                            pageLogger("Header was set to: " + MeadCo.ScriptX.Printing.header);
+
+                            var p = MeadCo.ScriptX.Printing;
+
+                            pageLogger("paperSize: " + p.paperSize);
+
+                            pageLogger("print Margins: " +
+                                p.leftMargin +
+                                ", " +
+                                p.topMargin +
+                                ", " +
+                                p.rightMargin +
+                                ", " +
+                                p.bottomMargin);
+
+                            pageLogger("Unprintable margin: " +
+                                p.unprintableLeft +
+                                ", " +
+                                p.unprintableTop +
+                                "," +
+                                p.unprintableRight +
+                                ", " +
+                                p.unprintableBottom);
+
+                            pageLogger("Duplex: " + p.duplex + ", " + p.duplex2);
+
+                            pageLogger("Printers: ");
+                            $.each(MeadCo.ScriptX.GetAvailablePrinters(),
+                                function(index, value) {
+                                    pageLogger("Printer: " + index + ", " + value);
+                                });
+
+                            $("#btn-printPage").click(function(e) {
+                                e.preventDefault();
+                                MeadCo.ScriptX.PrintPage(true);
+                            });
+
+                            $("#btn-printDoc").click(function(e) {
+                                e.preventDefault();
+                                pageLogger("Start printDoc ...");
+                                MeadCo.ScriptX.Printing
+                                    .PrintHTML("html://<!doctype html><html><body><h1>Hello world</h1></body></html>",
+                                        true);
+                                pageLogger("done PrintHtml call ...");
+                            });
+
+                            $("#btn-printDocEx").click(function(e) {
+                                e.preventDefault();
+                                MeadCo.ScriptX.BackgroundPrintURL("http://scriptx.meadroid.com");
+                            });
+
+                            $("#btn-printFrame").click(function(e) {
+                                pageLogger("Print frame ...");
+                                e.preventDefault();
+                                MeadCo.ScriptX.PrintFrame2("infoframe").then(function(bStarted) {
+                                    if (bStarted) {
+                                        pageLogger("Print was started");
+                                        asyncInProgress();
+                                    }
+                                });
+                            });
+
+                            $("#btn-printPage2").click(function(e) {
+                                e.preventDefault();
+                                pageLogger("Request print page ..");
+                                if (MeadCo.ScriptX.PrintPage(false)) {
+                                    pageLogger("print in progress ... so start wait .... ");
+                                    MeadCo.ScriptX.WaitForSpoolingComplete().then(function() {
+                                        pageLogger("Print page is completed");
+                                    });
+                                } else {
+                                    pageLogger("*** WARNING **** print didnt start for some reason");
+                                }
+                            });
+
+                        }).catch(function() {
+                            pageLogger("Failed to init");
+                        });
+                    }).catch(function(e) {
+                        pageLogger("Licenmse Failed to init: " + e);
+                    });
+                } catch (e) {
+                    pageLogger("Error: " + e.message);
+                }
+
+                pageLogger("Shim factory .on(load) event complete");
+            });
+    </script>
+}

@@ -110,7 +110,19 @@
                         log("installing implementation at: " + packageName);
                         scope[packageName] = theModule;
                     } else {
-                        log("Warning - not overwriting package: " + packageName);
+                        log("Warning - extending package: " + packageName);
+                        var oldscope = scope[packageName];
+                        scope[packageName] = theModule;
+
+                        var newscope = scope[packageName];
+
+                        console.log("preserving old scope ... ");
+                        for (var prop in oldscope) {
+                            if (oldscope.hasOwnProperty(prop)) {
+                                console.log("will preserve: " + prop);
+                                newscope[prop] = oldscope[prop];
+                            }
+                        }
                     }
                 } else if (typeof scope[packageName] === "undefined") {
                     log("initialising new: " + packageName);
@@ -160,7 +172,18 @@
             return parent;
         },
 
-        set scope(s) { module.scope = s;  }
+        set scope(s) { module.scope = s; },
+
+        makeApiEndPoint: function(serverUrl, apiLocation) {
+            // check if given partial ...
+            if (serverUrl.indexOf("/api/") === -1) {
+                if (serverUrl.lastIndexOf("/") !== (serverUrl.length - 1)) {
+                    serverUrl += "/";
+                }
+                serverUrl += "api/" + apiLocation;
+            }
+            return serverUrl;
+        }
     };
 
 });

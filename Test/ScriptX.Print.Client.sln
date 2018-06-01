@@ -35,9 +35,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7C47A878-72F
 		..\src\jQuery-MeadCo.ScriptX.Print.UI.js = ..\src\jQuery-MeadCo.ScriptX.Print.UI.js
 		..\src\meadco-core.js = ..\src\meadco-core.js
 		..\src\meadco-scriptxfactory.js = ..\src\meadco-scriptxfactory.js
-		..\src\meadco-scriptxlicense.js = ..\src\meadco-scriptxlicense.js
 		..\src\meadco-scriptxprint.js = ..\src\meadco-scriptxprint.js
 		..\src\meadco-scriptxprinthtml.js = ..\src\meadco-scriptxprinthtml.js
+		..\src\meadco-scriptxprintlicensing.js = ..\src\meadco-scriptxprintlicensing.js
+		..\src\meadco-secmgr.js = ..\src\meadco-secmgr.js
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{0B0CC34E-A750-4CBF-965B-B9D84CAAF4EF}"
