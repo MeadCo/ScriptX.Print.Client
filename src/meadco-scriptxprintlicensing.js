@@ -188,12 +188,15 @@
             if (licenseGuid === "")
                 return false;
 
+            if (licensePath === "") //subscription only
+                return true;
+
             applyLicense(licenseGuid, licenseRevision, licensePath);
             return typeof license.guid !== "undefined";
         },
 
         PolyfillInitAsync: function (resolve, reject) {
-            if (typeof license.guid !== "undefined") {
+            if (typeof license.guid !== "undefined" || licensePath === "") {
                 resolve(license);
             }
             else

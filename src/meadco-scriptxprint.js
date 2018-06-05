@@ -556,7 +556,7 @@
                         var $this = $(this);
                         var data = $this.data();
                         MeadCo.log("Auto connect susbcription to: " +
-                            data.meadcoServer +
+                            data.meadcoServer + ", or " + data.meadcoPrinthtmlserver +
                             ", with subscription: " +
                             data.meadcoSubscription +
                             ", sync: " +

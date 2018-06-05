@@ -29,7 +29,10 @@ namespace ScriptX.Print.Client.Controllers
         //
         // The consequence is you cannot obtain the details of an expired license.
         //
-        public IHttpActionResult Get(Guid? licenseGuid)
+        // Note: The license GUID is obtained from the authorisation header.
+        //
+        [HttpGet]
+        public IHttpActionResult Get()
         {
             return Ok(new MeadCo.ScriptX.Print.Messaging.Responses.License
             {
