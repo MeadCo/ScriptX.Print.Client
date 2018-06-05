@@ -11,7 +11,7 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.Licensing', function () {
-    var moduleversion = "1.4.0.1";
+    var moduleversion = "1.4.0.2";
     var apiLocation = "v1/licensing";
 
     var server = ""; // url to the server, server is CORS restricted
@@ -34,8 +34,9 @@
         server = MeadCo.makeApiEndPoint(serverUrl, apiLocation);
     }
 
-    function connectToServer(serverUrl) {
+    function connectToServer(serverUrl,slicenseGuid) {
         setServer(serverUrl);
+        licenseGuid = slicenseGuid;
     }
 
     function getSubscriptionFromServer(resolve, reject) {
@@ -82,15 +83,16 @@
         }
     }
 
-    function applyLicense(licenseGuid, revision, path, resolve, reject) {
-        MeadCo.log("Apply license: " + licenseGuid + ",revision: " + revision + ", path: " + path);
+    function applyLicense(slicenseGuid, revision, path, resolve, reject) {
+        MeadCo.log("Apply license: " + slicenseGuid + ",revision: " + revision + ", path: " + path);
 
         if (server.length <= 0) {
             throw new Error("MeadCo.ScriptX.Licensing : License server API URL is not set or is invalid");
         }
 
+        licenseGuid = slicenseGuid;
         var requestData = {
-            Guid: licenseGuid,
+            Guid: slicenseGuid,
             Url: path,
             Revision: revision
         }
@@ -141,22 +143,21 @@
             return moduleversion;
         },
 
-        connect: function (serverUrl) {
-            connectToServer(serverUrl);
+        connect: function (serverUrl, slicenseGuid) {
+            connectToServer(serverUrl,slicenseGuid);
         },
 
         connectLite: function (serverUrl, slicenseGuid, sRevision, sPath) {
-            connectToServer(serverUrl);
-            licenseGuid = slicenseGuid;
+            connectToServer(serverUrl,slicenseGuid);
             licenseRevision = sRevision;
             licensePath = sPath;
         },
 
-        Apply: function(licenseGuid, revision, path) {
+        apply: function(licenseGuid, revision, path) {
             return applyLicense(licenseGuid, revision, path);
         },
 
-        ApplyAsync: function(licenseGuid, revision, path, resolve, reject) {
+        applyAsync: function(licenseGuid, revision, path, resolve, reject) {
             applyLicense(licenseGuid, revision, path, resolve, reject);
         },
 
@@ -180,11 +181,18 @@
         // helpers for wrapper MeadCoJS - we apply the license here when working
         // with ScriptX.Services for Windows PC
         PolyfillInit: function () {
+            if (typeof license.guid !== "undefined") {
+                return true;
+            }
+
+            if (licenseGuid === "")
+                return false;
+
+            applyLicense(licenseGuid, licenseRevision, licensePath);
             return typeof license.guid !== "undefined";
         },
 
         PolyfillInitAsync: function (resolve, reject) {
-            debugger;
             if (typeof license.guid !== "undefined") {
                 resolve(license);
             }

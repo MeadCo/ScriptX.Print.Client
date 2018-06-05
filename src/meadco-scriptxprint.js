@@ -10,7 +10,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.4.0.0";
+    var version = "1.4.0.1";
     var apiLocation = "v1/printHtml";
 
     var printerName = "";
@@ -573,6 +573,10 @@
                         if (typeof server === "undefined") {
                             console.error("No server specified");
                         } else {
+                            // in case there will be a request for the subnscription info ..
+                            if (typeof licenseApi !== "undefined")
+                                licenseApi.connect(server, data.meadcoSubscription);
+
                             if (!syncInit) {
                                 MeadCo.log("Async connectlite...");
                                 printApi.connectLite(server, data.meadcoSubscription);
@@ -619,7 +623,7 @@
                         } else {
                             console
                                 .warn("Synchronous connection is deprecated, please use data-meadco-syncinit='false'");
-                            licenseApi.connect(server);
+                            licenseApi.connect(server, data.meadcoLicense);
                             if (typeof data.meadcoLicensePath !== "undefined" &&
                                 typeof data
                                 .meadcoLicenseRevision !==
