@@ -11,7 +11,7 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.Licensing', function () {
-    var moduleversion = "1.4.0.2";
+    var moduleversion = "1.4.0.3";
     var apiLocation = "v1/licensing";
 
     var server = ""; // url to the server, server is CORS restricted
@@ -102,8 +102,9 @@
             module.jQuery.ajax(server,
                 {
                     method: "POST",
-                    data: requestData,
+                    data: JSON.stringify(requestData),
                     dataType: "json",
+                    contentType: "application/json",
                     jsonp: false,
                     cache: false,
                     async: typeof resolve === "function"

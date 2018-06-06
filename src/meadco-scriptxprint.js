@@ -10,7 +10,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.4.0.1";
+    var version = "1.4.0.2";
     var apiLocation = "v1/printHtml";
 
     var printerName = "";
@@ -270,8 +270,9 @@
             queueJob(fakeJob); // essentially a lock on the queue to stop it looking empty while we await the result
             module.jQuery.ajax(server + "/print",
                 {
-                    data: requestData,
+                    data: JSON.stringify(requestData),
                     dataType: "json",
+                    contentType: "application/json",
                     method: "POST",
                     headers: {
                         "Authorization": "Basic " + btoa(licenseGuid + ":")
