@@ -10,7 +10,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.4.0.5";
+    var version = "1.4.8.0";
     var apiLocation = "v1/printHtml";
 
     var printerName = "";

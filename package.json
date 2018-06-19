@@ -1,6 +1,6 @@
 {
   "name": "scriptxprint-html",
-  "version": "1.4.7",
+  "version": "1.4.8",
   "description": "Scripts for using ScriptX Services",
   "main": "meadco-scriptxprinthtml.js",
   "repository": {
@@ -16,8 +16,5 @@
   ],
   "dependencies": {
     "jquery": ">=3.0.0"
-  },
-  "publishConfig": {
-    "tag": "beta"
   }
 }
