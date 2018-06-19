@@ -74,7 +74,7 @@
 
     // protected API
     var module = this;
-    var version = "1.4.0.0";
+    var version = "1.4.0.1";
 
     var log = function (str) {
         console.log("MeadCo :: " + str);
@@ -85,11 +85,11 @@
     }
 
     var error = function (str) {
-        console.warn("MeadCo :: " + str);
+        console.error("MeadCo :: " + str);
     }
 
     // extend the namespace
-    module.extendMeadCoNamespace = function(name,definition) {
+    module.extendMeadCoNamespace = function (name, definition) {
         var theModule = definition(),
             hasDefine = typeof define === 'function' && define.amd,
             hasExports = typeof module !== 'undefined' && module.exports;
@@ -146,7 +146,7 @@
         get version() { return version },
 
         // allow things such as MeadCo.createNS("MeadCo.ScriptX.Print.UI");
-        createNS: function(namespace) {
+        createNS: function (namespace) {
             var nsparts = namespace.split(".");
             var parent = window.MeadCo;
 
@@ -161,7 +161,7 @@
                 var partname = nsparts[i];
                 // check if the current parent already has the namespace declared
                 // if it isn't, then create it
-                if (typeof parent[partname] === "undefined" ) {
+                if (typeof parent[partname] === "undefined") {
                     parent[partname] = {};
                 }
                 // get a reference to the deepest element in the hierarchy so far
@@ -174,7 +174,7 @@
 
         set scope(s) { module.scope = s; },
 
-        makeApiEndPoint: function(serverUrl, apiLocation) {
+        makeApiEndPoint: function (serverUrl, apiLocation) {
             // check if given partial ...
             if (serverUrl.indexOf("/api/") === -1) {
                 if (serverUrl.lastIndexOf("/") !== (serverUrl.length - 1)) {

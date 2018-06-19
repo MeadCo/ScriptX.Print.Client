@@ -36,7 +36,7 @@
                 try {
                     // for Windows PC we have to supply the client license
                     MeadCo.ScriptX.Print.Licensing.connect("@licenseServer");
-                    MeadCo.ScriptX.Print.Licensing.ApplyAsync("@Model.ClientLicense",
+                    MeadCo.ScriptX.Print.Licensing.applyAsync("@Model.ClientLicense",
                         @Model.ClientRevision,
                         "@Model.ClientPath",
                         function(license) {

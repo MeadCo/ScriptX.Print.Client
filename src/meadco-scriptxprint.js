@@ -10,7 +10,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.4.0.2";
+    var version = "1.4.0.5";
     var apiLocation = "v1/printHtml";
 
     var printerName = "";
@@ -251,6 +251,50 @@
         });
     }
 
+    // testServerConnection
+    //
+    // Can we ask something and get a respponse, without using a license - checks the server is there.
+    //
+    function testServerConnection(serverUrl, resolve, reject) {
+        if (serverUrl.length > 0) {
+            // use the license API
+            var licenseApi = "v1/licensing";
+            MeadCo.log("Test server requested: " + serverUrl + " => " + MeadCo.makeApiEndPoint(serverUrl, licenseApi));
+            serverUrl = MeadCo.makeApiEndPoint(serverUrl, licenseApi);
+            if (module.jQuery) {
+                var serviceUrl = serverUrl + "/ping";
+                MeadCo.log(".ajax() get: " + serviceUrl);
+                module.jQuery.ajax(serviceUrl,
+                    {
+                        method: "GET",
+                        dataType: "json",
+                        cache: false,
+                        async: true,
+                    }).done(function (data) {
+                        resolve(data);
+                    })
+                    .fail(function (jqXhr, textStatus, errorThrown) {
+                        MeadCo.log("**warning: failure in MeadCo.ScriptX.Print.testServerConnection: [" +
+                            textStatus +
+                            "], [" +
+                            errorThrown +
+                            "], [" +
+                            jqXhr.responseText +
+                            "]");
+
+                        if (typeof jqXhr.responseText !== "undefined") {
+                            errorThrown = jqXhr.responseText;
+                        }
+
+                        if (errorThrown === "") {
+                            errorThrown = "Unknown server or network error";
+                        }
+                        if (typeof reject == "function")
+                            reject(errorThrown);
+                    });
+            }
+        }
+    }
 
     function printAtServer(requestData, responseInterface) {
 
@@ -536,7 +580,7 @@
 
     function processAttributes() {
         MeadCo.log("MeadCo.ScriptX.Print ... looking for auto connect: " + bDoneAuto);
-        if (this.jQuery && !bDoneAuto ) {
+        if (this.jQuery && !bDoneAuto) {
             // protected API
             var printHtml = MeadCo.ScriptX.Print.HTML;
             var printApi = MeadCo.ScriptX.Print;
@@ -617,7 +661,7 @@
 
                         if (!syncInit) {
                             MeadCo.log("Async connectlite...");
-                            licenseApi.connectLite(server,data.meadcoLicense,
+                            licenseApi.connectLite(server, data.meadcoLicense,
                                     data.meadcoLicenseRevision,
                                     data.meadcoLicensePath);
                             printApi.connectLite(server, data.meadcoLicense);
@@ -629,7 +673,7 @@
                                 typeof data
                                 .meadcoLicenseRevision !==
                                 "undefined") { // if these are not defined then you must use meadco-secmgr.js
-                                licenseApi.Apply(data.meadcoLicense,
+                                licenseApi.apply(data.meadcoLicense,
                                     data.meadcoLicenseRevision,
                                     data.meadcoLicensePath);
                             }
@@ -647,6 +691,8 @@
     if (!module.jQuery) {
         MeadCo.log("**** warning :: no jQuery");
     }
+
+    MeadCo.log("MeadCo.ScriptX.Print " + version + " loaded.");
 
     //////////////////////////////////////////////////
     // public API
@@ -697,7 +743,7 @@
             return getDeviceSettingsFor(sPrinterName);
         },
 
-        useAttributes: function() {
+        useAttributes: function () {
             processAttributes();
         },
 
@@ -716,6 +762,10 @@
 
         connectAsync: function (serverUrl, licenseGuid, resolve, reject) {
             connectToServerAsync(serverUrl, licenseGuid, resolve, reject);
+        },
+
+        connectTestAsync: function (serverUrl, resolve, reject) {
+            testServerConnection(serverUrl, resolve, reject);
         },
 
         connectDeviceAndPrinters: function (deviceInfo, arPrinters) {
