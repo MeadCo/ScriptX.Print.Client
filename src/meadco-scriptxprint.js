@@ -10,7 +10,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.4.8.0";
+    var version = "1.4.9.0";
     var apiLocation = "v1/printHtml";
 
     var printerName = "";
@@ -134,6 +134,9 @@
     //
     function printHtmlAtServer(contentType, content, htmlPrintSettings, fnDone, fnNotify, fnCallback, data) {
         MeadCo.log("started MeadCo.ScriptX.Print.print.printHtmlAtServer() Type: " + contentType + ", printerName: " + printerName);
+        if (contentType === enumContentType.URL) {
+            MeadCo.log(".. request print url: " + content);
+        }
         var devInfo;
 
         if (printerName === "") {
@@ -311,6 +314,8 @@
 
         if (module.jQuery) {
             MeadCo.log(".ajax() post to: " + server);
+            MeadCo.log(JSON.stringify(requestData));
+
             queueJob(fakeJob); // essentially a lock on the queue to stop it looking empty while we await the result
             module.jQuery.ajax(server + "/print",
                 {
@@ -460,7 +465,7 @@
                             case enumPrintStatus.ABANDONED:
                                 MeadCo.log("error status in monitorJob so clear interval: " + intervalId);
                                 progress(requestData, data.status, data.message);
-                                removeJob(data);
+                                removeJob(jobId);
                                 window.clearInterval(intervalId);
                                 MeadCo.ScriptX.Print.reportServerError("The print failed.\n\n" + data.message);
                                 functionComplete(null);
