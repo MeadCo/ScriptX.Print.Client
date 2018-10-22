@@ -38,7 +38,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.4.8.0";
+    var moduleversion = "1.4.9.0";
     var emulatedVersion = "8.0.0.0";
     var module = this;
 
@@ -186,7 +186,7 @@
             }
         } else {
             // if a relative URL supplied then add the base URL of this website
-            if (!(sUrl.indexOf('http://') === 0 || sUrl.indexOf('https://') === 0)) {
+            if ( sUrl.indexOf('://') === -1 && sUrl.indexOf('\\\\') === -1) {
                 var baseurl = module.factory.baseURL();
                 if (baseurl.substring(baseurl.length - 1, baseurl.length) !== "/") {
                     if (sUrl.substring(0, 1) !== "/") {
