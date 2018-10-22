@@ -3,7 +3,7 @@
  * Copyright 2017-2018 Mead & Company. All rights reserved.
  * https://github.com/MeadCo/ScriptX.Print.Client
  *
- * This module is only required when working with ScriptX.Services for Windows PC.
+ * This module is only required when working with ScriptX Services for Windows PC.
  * 
  * Released under the MIT license
  */
@@ -11,7 +11,7 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.Licensing', function () {
-    var moduleversion = "1.4.8.0";
+    var moduleversion = "1.4.9.0";
     var apiLocation = "v1/licensing";
 
     var server = ""; // url to the server, server is CORS restricted
@@ -180,7 +180,7 @@
         },
 
         // helpers for wrapper MeadCoJS - we apply the license here when working
-        // with ScriptX.Services for Windows PC
+        // with ScriptX Services for Windows PC
         PolyfillInit: function () {
             if (typeof license.guid !== "undefined") {
                 return true;

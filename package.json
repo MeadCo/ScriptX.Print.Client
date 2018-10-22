@@ -1,6 +1,6 @@
 {
   "name": "scriptxprint-html",
-  "version": "1.4.8",
+  "version": "1.4.9",
   "description": "Scripts for using ScriptX Services",
   "main": "meadco-scriptxprinthtml.js",
   "repository": {
@@ -10,7 +10,7 @@
   "author": "Pete Cole <pcole@meadroid.com>",
   "license": "MIT",
   "keywords": [ "meadco", "meadco-scriptx", "printing", "printing-html" ],
-  "homepage": "https://scriptx.services.meadroid.com/",
+  "homepage": "https://scriptxservices.meadroid.com/",
   "files": [
     "src/*.js"
   ],
