@@ -1,8 +1,31 @@
 [
   {
-    "outputFileName": "Scripts/meadco-scriptx-1.1.3.min.js",
+    "outputFileName": "../../dist/meadco-scriptxservicesprint.min.js",
     "inputFiles": [
-      "Scripts/meadco-scriptx-1.1.3.js"
+      "../../src/meadco-core.js",
+      "../../src/meadco-scriptxfactory.js",
+      "../../src/meadco-scriptxprint.js",
+      "../../src/meadco-scriptxprinthtml.js",
+      "../../src/jQuery-MeadCo.ScriptX.Print.UI.js"
+    ]
+  },
+  {
+    "outputFileName": "../../dist/meadco-scriptxserviceslicensing.min.js",
+    "inputFiles": [
+      "../../src/meadco-secmgr.js",
+      "../../src/meadco-scriptxprintlicensing.js"
+    ]
+  },
+  {
+    "outputFileName": "../../dist/meadco-scriptxservices.min.js",
+    "inputFiles": [
+      "../../src/meadco-core.js",
+      "../../src/meadco-scriptxfactory.js",
+      "../../src/meadco-scriptxprint.js",
+      "../../src/meadco-scriptxprinthtml.js",
+      "../../src/jQuery-MeadCo.ScriptX.Print.UI.js",
+      "../../src/meadco-secmgr.js",
+      "../../src/meadco-scriptxprintlicensing.js"
     ]
   }
 ]
