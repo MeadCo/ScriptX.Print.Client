@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptX.Print.Client", "Scr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{F483EA25-6581-4C95-80F9-42E54B1866FD}"
 	ProjectSection(SolutionItems) = preProject
-		..\.npmrc = ..\.npmrc
+		..\.unused-.npmrc = ..\.unused-.npmrc
 		..\book.json = ..\book.json
 		..\bower.json = ..\bower.json
 		ScriptX.Print.Client\bundleconfig.json = ScriptX.Print.Client\bundleconfig.json

@@ -1,8 +1,7 @@
 ## MeadCo ScriptX Service Client Library
-The MeadCo ScriptX Services project brings control of printing browser based content in all browsers on all devices.
 
-The MeadCo ScriptX Service Client Library brings an emulation of MeadCo's ScriptX Add-on for Internet Explorer on Windows to  
-working with ScriptX Services in any browser on any device and where-ever the service may be:
+The MeadCo ScriptX Service Client Library brings an emulation of MeadCo's ScriptX Add-on for Internet Explorer on Windows to 
+working with [MeadCo ScriptX Services](https://www.meadroid.com/Features/ScriptXServices) in any browser on any device and where-ever the service may be:
 
 * [in the cloud](https://scriptxservices.meadroid.com)
 * an on premise server
