@@ -28,21 +28,12 @@
 
     <script src="~/Scripts/meadco-scriptx.js"></script>
 
-    <script src="@Url.Action("script", "Home", new {filename = "meadco-core.js"})"></script>
-    <script src="@Url.Action("script", "Home", new {filename = "meadco-scriptxprint.js"})"></script>
-    <script src="@Url.Action("script", "Home", new {filename = "meadco-scriptxprinthtml.js"})"></script>
-    
-    <script src="@Url.Action("script", "Home", new {filename = "meadco-scriptxfactory.js"})"></script>
-
-    <script src="@Url.Action("script", "Home", new {filename = "meadco-scriptxprintlicensing.js"})"></script>
-
-    <script
+    <script 
         data-meadco-server="@server"
         data-meadco-license="@Model.ClientLicense"
         data-meadco-license-path="@Model.ClientPath"
         data-meadco-license-revision="@Model.ClientRevision"
-
-        src="@Url.Action("script", "Home", new {filename = "meadco-secmgr.js"})"></script>
+        src="@Url.Action("distscript","Home",new { filename= "meadco-scriptxservices.min.js" })"></script>
 
     <script type="text/javascript">
         $(window).on("load",

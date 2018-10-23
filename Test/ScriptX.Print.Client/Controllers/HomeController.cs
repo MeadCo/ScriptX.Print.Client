@@ -95,11 +95,25 @@ namespace ScriptX.Print.Client.Controllers
             return View(new Models.Sample("Looking into the implementation"));
         }
 
-        [Route("UmdInspector")]
+        [Route("DistLibrary1")]
         [HttpGet]
-        public ActionResult UmdInspector()
+        public ActionResult DistLibrary1()
         {
-            return View(new Models.Sample("Looking into the implementation"));
+            return View(new Models.Sample("Supporting code written against 'factory' with Minimised library"));
+        }
+
+        [Route("DistLibrary2")]
+        [HttpGet]
+        public ActionResult DistLibrary2()
+        {
+            return View(new Models.Sample("Supporting code written against 'MeadCo.ScriptX' included first for Windows PC with Minimised library"));
+        }
+
+        [Route("DistLibrary3")]
+        [HttpGet]
+        public ActionResult DistLibrary3()
+        {
+            return View(new Models.Sample("Supporting async code written against 'MeadCo.ScriptX' included first for Windows PC with Minimised library"));
         }
 
 
@@ -114,6 +128,20 @@ namespace ScriptX.Print.Client.Controllers
         {
             string absoluteName = Path.Combine(HostingEnvironment.MapPath("~"), Path.Combine("..\\..\\src",filename));
             Stream fileStream = new FileStream(absoluteName,FileMode.Open);
+            return File(fileStream, "application/javascript");
+        }
+
+        /// <summary>
+        /// Return a script file from outside the web app root.
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        [Route("distscript")]
+        [HttpGet]
+        public FileStreamResult DistScript(string filename)
+        {
+            string absoluteName = Path.Combine(HostingEnvironment.MapPath("~"), Path.Combine("..\\..\\dist", filename));
+            Stream fileStream = new FileStream(absoluteName, FileMode.Open);
             return File(fileStream, "application/javascript");
         }
 

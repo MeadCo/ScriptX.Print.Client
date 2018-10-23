@@ -40,6 +40,18 @@ Or, for print only to cloud/on premise services,
 <script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.4.9/dist/meadco-scriptxservicesprint.min.js"></script>
 ```
 
+#### Distribution packages
+
+Some minimised collections are provided:
+
+| Name | Purpose |
+|---|---|
+| meadco-scriptxservicesprint.min.js | All core modules print including window.factory emulation. No UI modules are included nor support for licensing for ScriptX Services on Windows PC.  |
+| meadco-scriptxservicesprintUI.min.js | As above but includes Page and Print setup UI dialogs.  |
+| meadco-scriptxservices.min.js | All modules including window.factory and window.secmgr emulation to support licensing for ScriptX Services on Windows PC. No UI modules are included. |
+| meadco-scriptxservicesUI.min.js | As above but includes Page and Print setup UI dialogs.  |
+| meadco-scriptxserviceslicensing.min.js | window.secmgr emulation support for licensing for ScriptX Services on Windows PC. |
+
 ### Nuget Gallery
 
 [MeadCo ScriptX.Print Services Library](https://www.nuget.org/packages/MeadScriptXPrintHtml/)

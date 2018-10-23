@@ -10,7 +10,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.4.9.0";
+    var version = "1.4.9.2";
     var apiLocation = "v1/printHtml";
 
     var printerName = "";
@@ -314,7 +314,7 @@
 
         if (module.jQuery) {
             MeadCo.log(".ajax() post to: " + server);
-            MeadCo.log(JSON.stringify(requestData));
+            // MeadCo.log(JSON.stringify(requestData));
 
             queueJob(fakeJob); // essentially a lock on the queue to stop it looking empty while we await the result
             module.jQuery.ajax(server + "/print",
@@ -584,7 +584,7 @@
     }
 
     function processAttributes() {
-        MeadCo.log("MeadCo.ScriptX.Print ... looking for auto connect: " + bDoneAuto);
+        MeadCo.log("MeadCo.ScriptX.Print ... looking for auto connect, already found?: " + bDoneAuto);
         if (this.jQuery && !bDoneAuto) {
             // protected API
             var printHtml = MeadCo.ScriptX.Print.HTML;
@@ -600,7 +600,7 @@
             // meadco-license present => for Windows PC service
             $("[data-meadco-subscription]").each(function () {
                 if (typeof printApi === "undefined" || typeof printHtml === "undefined") {
-                    console.error("Unable to auto-connect subscription - print or printHtml API not present");
+                    console.warn("Unable to auto-connect subscription - print or printHtml API not present (yet?)");
                 } else {
                     if (!bDoneAuto) {
                         var $this = $(this);
@@ -644,7 +644,7 @@
 
             $("[data-meadco-license]").each(function () {
                 if (typeof printApi === "undefined" || typeof printHtml === "undefined" || typeof licenseApi === "undefined") {
-                    console.error("Unable to auto-connect client license - print or printHtml or license API not present");
+                    console.warn("Unable to auto-connect client license - print or printHtml or license API not present (yet?)");
                 } else {
                     if (!bDoneAuto) {
                         var $this = $(this);
@@ -694,7 +694,7 @@
     }
 
     if (!module.jQuery) {
-        MeadCo.log("**** warning :: no jQuery");
+        MeadCo.log("**** warning :: no jQuery *******");
     }
 
     MeadCo.log("MeadCo.ScriptX.Print " + version + " loaded.");

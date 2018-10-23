@@ -158,6 +158,9 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="App_Data\Test.pdf" />
     <None Include="bundleconfig.json" />
+    <Content Include="bundleconfig.json.bindings">
+      <DependentUpon>bundleconfig.json</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -199,6 +202,9 @@
     <Content Include="Views\Home\ModernPC.cshtml" />
     <Content Include="Views\Home\ShimMeadCoJS2PC.cshtml" />
     <Content Include="Views\Home\ShimMeadCoJS3PC.cshtml" />
+    <Content Include="Views\Home\DistLibrary1.cshtml" />
+    <Content Include="Views\Home\DistLibrary2.cshtml" />
+    <Content Include="Views\Home\DistLibrary3.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

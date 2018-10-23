@@ -47,6 +47,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{0B0CC34E
 		..\nuget\MeadCoScriptXPrintServicesHtml.nuspec = ..\nuget\MeadCoScriptXPrintServicesHtml.nuspec
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dist", "dist", "{0F97F6FD-078E-41D0-B35B-5151D7B9ED95}"
+	ProjectSection(SolutionItems) = preProject
+		..\dist\meadco-scriptxservices.min.js = ..\dist\meadco-scriptxservices.min.js
+		..\dist\meadco-scriptxserviceslicensing.min.js = ..\dist\meadco-scriptxserviceslicensing.min.js
+		..\dist\meadco-scriptxservicesprint.min.js = ..\dist\meadco-scriptxservicesprint.min.js
+		..\dist\meadco-scriptxservicesprintUI.min.js = ..\dist\meadco-scriptxservicesprintUI.min.js
+		..\dist\meadco-scriptxservicesUI.min.js = ..\dist\meadco-scriptxservicesUI.min.js
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,5 +74,6 @@ Global
 		{6F1B6E72-BADC-427F-B43B-24A2CFC326A2} = {F483EA25-6581-4C95-80F9-42E54B1866FD}
 		{09B1AEEF-1A4F-4875-933C-71D32CBD1BD0} = {F483EA25-6581-4C95-80F9-42E54B1866FD}
 		{7C47A878-72F0-4EFE-B23F-EB6B67DE8594} = {F483EA25-6581-4C95-80F9-42E54B1866FD}
+		{0F97F6FD-078E-41D0-B35B-5151D7B9ED95} = {F483EA25-6581-4C95-80F9-42E54B1866FD}
 	EndGlobalSection
 EndGlobal

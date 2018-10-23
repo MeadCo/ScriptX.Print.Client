@@ -38,7 +38,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.4.9.0";
+    var moduleversion = "1.4.9.1";
     var emulatedVersion = "8.0.0.0";
     var module = this;
 
@@ -75,7 +75,7 @@
     }
 
 
-    log("'factory' loaded.");
+    log("'factory' loaded " + moduleversion);
 
     // public API.
     return {
@@ -451,8 +451,10 @@
         },
 
         // templateURL is a no-op at this time. In the future may
-        // enable alternative server behaviour.
+        // enable alternative server behaviour. Doing something
+        // is required by the minimiser or it optimises to bad code
         set templateURL(sUrl) {
+            var x = sUrl;
         },
 
         get templateURL() {
@@ -495,7 +497,7 @@
         },
 
         Preview: function (sOrOFrame) {
-            printApi.reportFeatureNotImplemented("Preview");
+            printApi.reportFeatureNotImplemented("Preview",sOrOFrame);
         },
 
         Print: function (bPrompt, sOrOFrame, fnNotifyStarted) { // needs and wants update to ES2015 (for default values)
@@ -608,15 +610,15 @@
         },
 
         set onbeforeprint(fn) {
-            printApi.reportFeatureNotImplemented("onbeforeprint");
+            printApi.reportFeatureNotImplemented("onbeforeprint",fn);
         },
 
         set onafterprint(fn) {
-            printApi.reportFeatureNotImplemented("onafterprint");
+            printApi.reportFeatureNotImplemented("onafterprint",fn);
         },
 
         set onuserprintpreview(fn) {
-            printApi.reportFeatureNotImplemented("onuserprintpreview");
+            printApi.reportFeatureNotImplemented("onuserprintpreview",fn);
         },
 
         get CurrentPrinter() {
@@ -644,7 +646,7 @@
         },
 
         set printToFileName(fn) {
-            printApi.reportFeatureNotImplemented("printToFileName");
+            printApi.reportFeatureNotImplemented("printToFileName",fn);
         },
 
         get printBackground() {
@@ -887,7 +889,7 @@
     module.factory.log("factory.object loaded.");
 
     // public API
-    return this.factory;
+    return module.factory;
 });
 
 ; (function (name, definition) {
