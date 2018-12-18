@@ -15,7 +15,7 @@ The library is used by our extensive set of [samples](https://scriptxprintsample
 
 ## Current Version
 
-1.4.9
+1.5.0
 
 ## Packages 
 
@@ -30,13 +30,13 @@ npm install scriptxprint-html --save
 For the complete library supporting Cloud, On Premise and Windows PC services:
 
 ```javascript
-<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.4.9/dist/meadco-scriptxservices.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.5.0/dist/meadco-scriptxservices.min.js"></script>
 ```
 
 Or, for print only to cloud/on premise services,
 
 ```javascript
-<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.4.9/dist/meadco-scriptxservicesprint.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.5.0/dist/meadco-scriptxservicesprint.min.js"></script>
 ```
 
 #### Distribution packages
@@ -73,7 +73,7 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
 <!-- ScriptX Services client emulation libraries - depend on jQuery -->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.1.1/dist/jquery.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.4.9/dist/meadco-scriptxservicesprint.min.js" 
+<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.5.0/dist/meadco-scriptxservicesprint.min.js" 
         data-meadco-server="https://scriptxservices.meadroid.com" 
         data-meadco-license="xxx-xxx-xxxxxxx-xxx"></script>
 

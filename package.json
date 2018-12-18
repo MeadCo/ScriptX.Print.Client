@@ -1,6 +1,6 @@
 {
   "name": "scriptxprint-html",
-  "version": "1.4.9",
+  "version": "1.5.0",
   "description": "Scripts for using ScriptX Services",
   "main": "meadco-scriptxprinthtml.js",
   "repository": {
@@ -12,7 +12,8 @@
   "keywords": [ "meadco", "meadco-scriptx", "printing", "printing-html" ],
   "homepage": "https://scriptxservices.meadroid.com/",
   "files": [
-    "src/*.js"
+    "src/*.js",
+    "dist/*.js"
   ],
   "dependencies": {
     "jquery": ">=3.0.0"
