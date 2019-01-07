@@ -1,0 +1,45 @@
+﻿@page
+@{
+    ViewData["Title"] = "-Core.js namespace update";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@section Scripts {
+    <script>
+        // Testing that existing namespaces are preserved by -core.js 
+        //
+        // This is stripped down MeadCoScriptXJS - creates window.MeadCo.ScriptX
+        //
+
+        // MeadCo.ScriptX - singleton
+        //
+        (function (topLevelNs) {
+            "use strict";
+
+            if (typeof topLevelNs["ScriptX"] === "undefined") {
+                console.log("intialising new ScriptX package");
+                topLevelNs.ScriptX = {};
+            }
+
+            var scriptx = topLevelNs.ScriptX;
+
+            scriptx.Connection = {
+                NONE: 0,
+                ADDON: 1,
+                SERVICE: 2
+            }
+
+            scriptx.LibVersion = "1.5.0";
+            scriptx.Connector = scriptx.Connection.NONE;
+        }(window.MeadCo = window.MeadCo || {}));
+    </script>
+
+    <script src="/scripts?name=src/meadco-core.js"></script>
+    <script src="/scripts?name=src/meadco-scriptxprint.js"></script>
+
+}
+
+@section TestScripts {
+    <script src="~/js/UnitTests/CoreNamespaces.js"></script>
+}

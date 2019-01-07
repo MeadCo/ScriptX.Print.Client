@@ -74,19 +74,19 @@
 
     // protected API
     var module = this;
-    var version = "1.4.9.0";
+    var version = "1.5.2.0";
 
     var log = function (str) {
         console.log("MeadCo :: " + str);
-    }
+    };
 
     var warn = function (str) {
         console.warn("MeadCo :: " + str);
-    }
+    };
 
     var error = function (str) {
         console.error("MeadCo :: " + str);
-    }
+    };
 
     // extend the namespace
     module.extendMeadCoNamespace = function (name, definition) {
@@ -143,7 +143,7 @@
         warn: warn,
         error: error,
 
-        get version() { return version },
+        get version() { return version; },
 
         // allow things such as MeadCo.createNS("MeadCo.ScriptX.Print.UI");
         createNS: function (namespace) {
@@ -176,11 +176,16 @@
 
         makeApiEndPoint: function (serverUrl, apiLocation) {
             // check if given partial ...
-            if (serverUrl.indexOf("/api/") === -1) {
+            var p = serverUrl.indexOf("/api");
+            if (p === -1) {
                 if (serverUrl.lastIndexOf("/") !== (serverUrl.length - 1)) {
                     serverUrl += "/";
                 }
                 serverUrl += "api/" + apiLocation;
+            }
+            else {
+                // given another api, chop and replace with requested api
+                serverUrl = serverUrl.substr(0, p) + "/api/" + apiLocation;
             }
             return serverUrl;
         }

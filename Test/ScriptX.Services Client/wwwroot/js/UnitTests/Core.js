@@ -16,4 +16,16 @@
     api = MeadCo.makeApiEndPoint(serverUrl, "v1/printHtml");
 
     assert.equal(api, serverUrl + "/printHtml", "Correct api endpoint");
+
+    var ns = MeadCo.createNS("MeadCo.Test.NS1");
+    assert.ok(ns, "Created namespace");
+
+    ns.test = function () { return 6; };
+    assert.equal(ns.test(),6, "function in namespace ns1 ok");
+
+    var ns2 = MeadCo.createNS("MeadCo.Test.NS1.NS2");
+    assert.ok(ns, "Created namespace ns2");
+    assert.equal(ns.test(),6, "function in namespace ns1 still ok");
+
 });
+

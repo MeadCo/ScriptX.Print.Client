@@ -56,7 +56,10 @@
         </script>
     </environment>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/vendor/js/qunit.js"></script>
+    @if (string.IsNullOrEmpty(ViewData["NoQunit"] as string))
+    {
+        <script src="~/vendor/js/qunit.js"></script>
+    }
 
     @RenderSection("Scripts", required: false)
 

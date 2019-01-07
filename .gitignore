@@ -268,3 +268,4 @@ _book
 *.mobi
 *.pdf
 *.txt
+/Test/ScriptX.Services Client/wwwroot/vendor
