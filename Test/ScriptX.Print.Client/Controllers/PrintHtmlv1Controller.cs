@@ -122,15 +122,15 @@ namespace ScriptX.Print.Client.Controllers
 
             _counter = 0;
             return new MeadCo.ScriptX.Print.Messaging.Responses.Print()
-            {           
+            {
                 Status = PrintRequestStatus.QueuedToFile,
                 Message = "Test",
-                JobIdentifier = _jobCounter++
+                JobIdentifier = (_jobCounter++).ToString()
             };
         }
 
-        [Route("status/{jobIdentifier:int}")]
-        public MeadCo.ScriptX.Print.Messaging.Responses.JobStatus GetStatus(int jobIdentifier)
+        [Route("status/{jobIdentifier}")]
+        public MeadCo.ScriptX.Print.Messaging.Responses.JobStatus GetStatus(string jobIdentifier)
         {
             return new JobStatus(jobIdentifier)
             {

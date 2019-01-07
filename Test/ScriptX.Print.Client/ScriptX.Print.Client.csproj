@@ -25,6 +25,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -157,9 +158,9 @@
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="App_Data\Test.pdf" />
-    <None Include="bundleconfig.json" />
+    <None Include="xx-unused-bundleconfig.json" />
     <Content Include="bundleconfig.json.bindings">
-      <DependentUpon>bundleconfig.json</DependentUpon>
+      <DependentUpon>xx-unused-bundleconfig.json</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />

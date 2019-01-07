@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <RootNamespace>ScriptX.Services_Client</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="distbundlesconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="distbundlesconfig.json" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Reference Include="MeadCo.ScriptX.Print.Messaging">
+      <HintPath>..\..\Libraries\MeadCo.ScriptX.Print.Messaging.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
