@@ -1,16 +1,23 @@
-/*!
- * MeadCo.ScriptX.Print (support for modern browsers and IE 11) JS client library
- * Copyright 2017-2018 Mead & Company. All rights reserved.
- * https://github.com/MeadCo/ScriptX.Print.Client
- *
- * Released under the MIT license
+/**
+ * MeadCo.ScriptX.Print
+ * 
+ * A static class wrapping calls to the server API. 
+ * 
+ * Includes processing of calls to the print api that return "printing to file" including collecting the 
+ * file output. 
+ * 
+ * Provides attribute based connection to the server.
+ * 
+ * @namespace MeadCoScriptXPrint
+ * @author Pete Cole <pcole@meadroid.com>
+ * @license MIT license
  */
 
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.4.9.2";
+    var version = "1.5.1.4";
     var apiLocation = "v1/printHtml";
 
     var printerName = "";
@@ -56,13 +63,6 @@
         ERROR: -1,
         ABANDONED: -2
     };
-
-    var enumDuplex = {
-        DEFAULT: 0,
-        SIMPLEX: 1,
-        VERTICAL: 2,
-        HORIZONTAL: 3
-    }
 
     function queueJob(data) {
         activePrintQueue.push(data);
@@ -122,9 +122,48 @@
         }
     }
 
+    function parseError(logText, jqXhr, textStatus, errorThrown) {
+        MeadCo.log("**warning: AJAX call failure in " + logText + ": [" +
+            textStatus +
+            "], [" +
+            errorThrown +
+            "], [" +
+            jqXhr.responseText +
+            "]");
+
+        if (errorThrown === "") {
+            if (typeof jqXhr.responseText !== "undefined" ) {
+                errorThrown = jqXhr.responseText;
+            }
+        }
+        else {
+            if (typeof errorThrown !== "undefined") {
+                errorThrown = errorThrown.toString();
+            }
+            else {
+                errorThrown = "";
+            }
+        }
+
+        //if (typeof jqXhr.responseText !== "undefined") {
+        //    errorThrown = jqXhr.responseText;
+        //}
+
+        if (errorThrown === "") {
+            if (textStatus !== "error") {
+                errorThrown = textStatus;
+            }
+            else {
+                errorThrown = "Unknown server or network error";
+            }
+        }
+
+        return errorThrown;
+    }
+
     // call api on server to print the content
     //
-    // contentType - enum type of content given (html snippet, url)
+    // contentType - 
     // content - string
     // htmlPrintSettings - html settings to use, the function will use device settings for the current print
     // fnDone(errorXhr) - function called when printing complete (and output returned), arg is null on no error.
@@ -132,6 +171,23 @@
     // fnCallback(status,sInformation,data) - callback when job status is updated 
     // data - date to give to fnCallback
     //
+
+    /*
+     * Post a request to the server api/v1/print to print some html and monitor the print job 
+     * to completion. If the server prints to file then the file is opened for the user (in a new window)
+     * 
+     * @function printHtmlAtServer
+     * @memberof MeadCoScriptXPrint
+
+     * @param {enumContentType} contentType enum type of content given (html snippet, url)
+     * @param {string} content the content - a url, html snippet or complete html
+     * @param {object} htmlPrintSettings the settings to use - device annd html such as headers and footers
+     * @param {function({object})} fnDone function to call when printing complete (and output returned), arg is null on no error.
+     * @param {function({object})} fnNotify function to call when job associated with this print is updated (data is server result)
+     * @param {function(status,sInformation,data)} fnCallback function to call when job status is updated
+     * @param {any} data object to give pass to fnCallback
+     * @return {boolean} - true if a print was started (otherwise an error will be thrown)
+     */
     function printHtmlAtServer(contentType, content, htmlPrintSettings, fnDone, fnNotify, fnCallback, data) {
         MeadCo.log("started MeadCo.ScriptX.Print.print.printHtmlAtServer() Type: " + contentType + ", printerName: " + printerName);
         if (contentType === enumContentType.URL) {
@@ -152,13 +208,13 @@
             Device: devInfo,
             OnProgress: fnCallback,
             UserData: data
-        }
+        };
 
         return printAtServer(requestData,
         {
             fail: function (jqXhr, textStatus, errorThrown) {
                 progress(requestData, enumPrintStatus.ERROR, errorThrown);
-                MeadCo.ScriptX.Print.reportServerError(errorThrown);
+                MeadCoScriptXPrint.reportServerError(errorThrown);
                 if (typeof fnDone === "function") {
                     fnDone(jqXhr);
                 }
@@ -277,22 +333,8 @@
                         resolve(data);
                     })
                     .fail(function (jqXhr, textStatus, errorThrown) {
-                        MeadCo.log("**warning: failure in MeadCo.ScriptX.Print.testServerConnection: [" +
-                            textStatus +
-                            "], [" +
-                            errorThrown +
-                            "], [" +
-                            jqXhr.responseText +
-                            "]");
-
-                        if (typeof jqXhr.responseText !== "undefined") {
-                            errorThrown = jqXhr.responseText;
-                        }
-
-                        if (errorThrown === "") {
-                            errorThrown = "Unknown server or network error";
-                        }
-                        if (typeof reject == "function")
+                        errorThrown = parseError("MeadCo.ScriptX.Print.testServerConnection:",jqXhr, textStatus, errorThrown);
+                        if (typeof reject === "function")
                             reject(errorThrown);
                     });
             }
@@ -374,10 +416,20 @@
                 });
             return true;
         } else {
-            throw new Error("MeadCo.ScriptX.Print : no known ajax helper available");
+            throw new Error("MeadCoScriptXPrint : no known ajax helper available");
         }
     }
 
+    /*
+     * Call an API on the server with GET
+     * 
+     * @function getFromServer
+     * @memberof MeadCoScriptXPrint
+     * @param {string} sApi the api to call on the connected server
+     * @param {bool} async true for asynchronous call, false for synchronous 
+     * @param {function} onSuccess function to call on success
+     * @param {function(errorText)} onFail function to call on failure
+     */
     function getFromServer(sApi, async, onSuccess, onFail) {
         if (module.jQuery) {
             var serviceUrl = server + sApi;
@@ -396,7 +448,7 @@
                     onSuccess(data);
                 })
                 .fail(function (jqXhr, textStatus, errorThrown) {
-                    MeadCo.log("**warning: failure in MeadCo.ScriptX.Print.getFromServer: [" +
+                    MeadCo.log("**warning: failure in MeadCoScriptXPrint.getFromServer: [" +
                         textStatus +
                         "], [" +
                         errorThrown +
@@ -411,7 +463,7 @@
                     if (errorThrown === "") {
                         errorThrown = "Unknown server or network error";
                     }
-                    if (typeof onFail == "function")
+                    if (typeof onFail === "function")
                         onFail(errorThrown);
                 });
         }
@@ -456,7 +508,7 @@
                                 // keep going
                                 if (timeOut > 0 && (++counter * interval) > timeOut) {
                                     window.clearInterval(intervalId);
-                                    MeadCo.ScriptX.Print.reportServerError("unknown failure while printing.");
+                                    MeadCoScriptXPrint.reportServerError("unknown failure while printing.");
                                 }
                                 bWaiting = false;
                                 break;
@@ -467,7 +519,7 @@
                                 progress(requestData, data.status, data.message);
                                 removeJob(jobId);
                                 window.clearInterval(intervalId);
-                                MeadCo.ScriptX.Print.reportServerError("The print failed.\n\n" + data.message);
+                                MeadCoScriptXPrint.reportServerError("The print failed.\n\n" + data.message);
                                 functionComplete(null);
                                 break;
 
@@ -481,7 +533,7 @@
                         }
                     })
                     .fail(function (jqXhr, textStatus, errorThrown) {
-                        MeadCo.log("**warning: failure in MeadCo.ScriptX.Print.monitorJob: [" +
+                        MeadCo.log("**warning: failure in MeadCoScriptXPrint.monitorJob: [" +
                             textStatus +
                             "], [" +
                             errorThrown +
@@ -544,25 +596,24 @@
                     }
                 })
                 .fail(function (jqXhr, textStatus, errorThrown) {
-                    if (errorThrown === "") {
-                        errorThrown = jqXhr.responseText;
-                    }
-                    else {
-                        bConnected = true; // we connected but the server doesnt like us
-                        errorThrown = errorThrown.toString();
-                    }
+                    // TODO: Review
+                    // if (errorThrown !== "") {
+                    //    bConnected = true; // we connected but the server doesnt like us
+                    //}
 
+                    errorThrown = parseError("MeadCo.ScriptX.Print.getDeviceSettings:", jqXhr, textStatus, errorThrown);
                     MeadCo.log("failed to getdevice: " + errorThrown);
+
                     if (typeof oRequest.fail === "function") {
                         oRequest.fail(errorThrown);
                     }
                 });
         } else {
             if (typeof oRequest.fail === "function") {
-                oRequest.fail("MeadCo.ScriptX.Print : no known ajax helper available");
+                oRequest.fail("MeadCoScriptXPrint : no known ajax helper available");
             }
             else
-                throw new Error("MeadCo.ScriptX.Print : no known ajax helper available");
+                throw new Error("MeadCoScriptXPrint : no known ajax helper available");
         }
 
     }
@@ -580,16 +631,20 @@
             return deviceSettings[sPrinterName];
         }
 
-        return {}
+        return {};
     }
 
+    // look for auto-processing attributes that define the server to connect to and the
+    // license/subscription to be used. 
+    //
+    // This implementation is called by the public api useAttributes (call by factory and secmgr implementations)
     function processAttributes() {
         MeadCo.log("MeadCo.ScriptX.Print ... looking for auto connect, already found?: " + bDoneAuto);
         if (this.jQuery && !bDoneAuto) {
             // protected API
-            var printHtml = MeadCo.ScriptX.Print.HTML;
-            var printApi = MeadCo.ScriptX.Print;
-            var licenseApi = MeadCo.ScriptX.Print.Licensing;
+            var printHtml = MeadCoScriptXPrint.HTML;
+            var printApi = MeadCoScriptXPrint;
+            var licenseApi = MeadCoScriptXPrint.Licensing;
 
             // general connection
             //
@@ -702,10 +757,27 @@
     //////////////////////////////////////////////////
     // public API
     return {
+        /**
+         * Enum for type of content being posted to printHtml API
+         * @readonly
+         * @memberof MeadCoScriptXPrint
+         * @enum { number }
+         */
         ContentType: enumContentType,
 
-        ResponseType: enumResponseStatus,
+        /** 
+         * Enum for status code returned from the print API
+         * @readonly
+         * @memberof MeadCoScriptXPrint
+         * @enum { number }
+         */
+        ResponseStatus: enumResponseStatus,
 
+        /** 
+         *  Get/set the currently active printer
+         *  @memberof MeadCoScriptXPrint
+         *  @property {string} printerName - The name of the current printer in use.
+         */
         get printerName() {
             return printerName;
         },
@@ -732,32 +804,78 @@
             }
         },
 
+        /**
+         * Get the version of this module as a string major.minor.hotfix.build
+         * @property {string} version
+         * @memberof MeadCoScriptXPrint
+         */
         get version() {
             return version;
+        },
+
+        /**
+         * Get/set the cached device settings (papersize etc) for the currently active printer
+         * @memberof MeadCoScriptXPrint
+         * @property {object} deviceSettings (see API /api/vi/printhtml/deviceInfo/ )
+         */
+        get deviceSettings() {
+            return printerName !== "" ? deviceSettings[printerName] : {};
         },
 
         set deviceSettings(settings) {
             addOrUpdateDeviceSettings(settings);
         },
 
-        get deviceSettings() {
-            return printerName !== "" ? deviceSettings[printerName] : {};
-        },
-
+        /**
+         * Get the device settings (papersize etc) for the named printer. This call is synchronous 
+         * and not recommended. 
+         * 
+         * @function deviceSettingsFor
+         * @memberof MeadCoScriptXPrint
+         * @param {string} sPrinterName the name of the printer device to return the settings for 
+         * @returns {object} object with properties 
+         */
         deviceSettingsFor: function (sPrinterName) {
             return getDeviceSettingsFor(sPrinterName);
         },
 
+        /**
+         * search for processing attibutes for connection and subscription/license and process
+         * them. 
+         * 
+         * @function useAttributes
+         * @memberof MeadCoScriptXPrint
+         */
         useAttributes: function () {
             processAttributes();
         },
 
+        /**
+         * Specify the server to use and the subscription/license id. 
+         * 
+         * Attempt to connect to the defined ScriptX.Services server and obtain
+         * the device settings for the default printer. This call is synchronous 
+         * and therefore not recommended. Use connectAsync()
+         * 
+         * @function connect
+         * @memberof MeadCoScriptXPrint
+         * @param {string} serverUrl the 'root' url to the server (the api path will be added by the library)
+         * @param {string} licenseGuid the license/subscription identifier
+         */
         connect: function (serverUrl, licenseGuid) {
             connectToServer(serverUrl, licenseGuid);
         },
 
+        /**
+         * Specify the server to use and the subscription/license id. 
+         * 
+         * @function connectLite
+         * @memberof MeadCoScriptXPrint
+         * @param {string} serverUrl the 'root' url to the server (the api path will be added by the library)
+         * @param {string} licenseGuid the license/subscription identifier
+         */
         connectLite: function (serverUrl, licenseGuid) {
-            // factory polyfill initialisation will result call with empty string
+            // factory polyfill initialisation will result in a call with empty string
             // values for both arguments via printHtml.connectAsync() as it doesnt 
             // know the values so we assume a connectLite has already been called
             // and dont overwrite with empty values.
@@ -765,65 +883,212 @@
                 setServer(serverUrl, licenseGuid);
         },
 
+        /**
+         * Specify the server to use and the subscription/license id.
+         *
+         * Attempt to connect to the defined ScriptX.Services server and obtain
+         * the device settings for the default printer. 
+         *
+         * @function connectAsync
+         * @memberof MeadCoScriptXPrint
+         * @param {string} serverUrl the 'root' url to the server (the api path will be added by the library)
+         * @param {string} licenseGuid the license/subscription identifier
+         * @param {function} resolve function to call on success
+         * @param {function} reject function to call on failure
+         */
         connectAsync: function (serverUrl, licenseGuid, resolve, reject) {
             connectToServerAsync(serverUrl, licenseGuid, resolve, reject);
         },
 
+        /**
+         * Test if there is a MeadCo PrintHtml API server at the url
+         * 
+         * @function connectTestAsync
+         * @memberof MeadCoScriptXPrint
+         * @param {string} serverUrl the 'root' url to the server (the api path will be added by the library)
+         * @param {function} resolve function to call on success
+         * @param {function({errorText})} reject function to call on failure
+         */
         connectTestAsync: function (serverUrl, resolve, reject) {
             testServerConnection(serverUrl, resolve, reject);
         },
 
+        /**
+         * Cache the given device info and available printers in this static class instance
+         * 
+         * Used by libraries that call api/v1/printHtml/htmlPrintDefaults
+         * 
+         * @function connectDeviceAndPrinters
+         * @memberof MeadCoScriptXPrint
+         * @param {object} deviceInfo the device name and settings (papersize etc)
+         * @param {array} arPrinters the names of the available printers
+         */
         connectDeviceAndPrinters: function (deviceInfo, arPrinters) {
             bConnected = true;
             addOrUpdateDeviceSettings(deviceInfo);
             availablePrinters = arPrinters;
         },
 
+        /**
+         * true if the library has succesfully connected to a server.
+         * 
+         * @memberof MeadCoScriptXPrint
+         * @property {bool} isConnected true if the library has succesfully connected to a server.
+         * @readonly
+         */
         get isConnected() {
             return bConnected;
         },
 
+        /**
+         * @property {array} availablePrinterNames an array of strings of the available printers
+         * @memberof MeadCoScriptXPrint
+         * @readonly
+         */
         get availablePrinterNames() {
             return availablePrinters;
         },
 
+        /**
+         * Call an API on the server with GET
+         * 
+         * @function getFromServer
+         * @memberof MeadCoScriptXPrint
+         * @param {string} sApi the api to call on the connected server
+         * @param {bool} async true for asynchronous call, false for synchronous 
+         * @param {function} onSuccess function to call on success
+         * @param {function(errorText)} onFail function to call on failure
+         */
         getFromServer: getFromServer,
 
+        /**
+         * Post a request to the server api/v1/print to print some html and monitor the print job 
+         * to completion. If the server prints to file then the file is opened for the user (in a new window)
+         * 
+         * @function printHtmlAtServer
+         * @memberof MeadCoScriptXPrint
+
+         * @param {enumContentType} contentType enum type of content given (html snippet, url)
+         * @param {string} content the content - a url, html snippet or complete html
+         * @param {object} htmlPrintSettings the settings to use - device annd html such as headers and footers
+         * @param {function({object})} fnDone function to call when printing complete (and output returned), arg is null on no error.
+         * @param {function({object})} fnNotify function to call when job associated with this print is updated (data is server result)
+         * @param {function(status,sInformation,data)} fnCallback function to call when job status is updated
+         * @param {any} data object to give pass to fnCallback
+         * @return {boolean} - true if a print was started (otherwise an error will be thrown)
+         */
         printHtml: printHtmlAtServer,
 
-        // overridable function for reporting an error.
+        /**
+         * overridable function for reporting an error. 'derived' classes call this
+         * function to report errors.
+         * 
+         * @memberof MeadCoScriptXPrint
+         * @function reportServerError 
+         * @param {string} errorThrown the error text to display
+         * 
+         * ```js
+         * // overload cloud print library report error
+         * MeadCo.ScriptX.Print.reportServerError = function (errorTxt) {
+         *    app.Messages.PrintErrorBox(errorTxt);
+         * }
+         * ```
+         */
         reportServerError: function (errorThrown) {
             alert("There was an error in the printing service\n\n" + errorThrown);
         },
 
-        // overridable function for reporting feature isnt available.
+        /**
+         * overridable function for reporting an implementation isnt available. 'derived' classes call this
+         * function to report functions that are not yet implemented.
+         * 
+         * @memberof MeadCoScriptXPrint
+         * @function reportFeatureNotImplemented
+         * @param {string} featureDescription descriptn of the feature that isnt available
+         * 
+         * ```js
+         * // overload cloud print library report error
+         * MeadCo.ScriptX.Print.reportFeatureNotImplemented = function (featureDescription) {
+         *   app.Messages.PrintErrorBox(featureDescription + " is not available yet with the ScriptX.Services.\n\nThis feature will be implemented soon.");
+         * }
+         * ```
+         */
         reportFeatureNotImplemented: function (featureDescription) {
             MeadCo.log("Call to not implemented: " + featureDescription);
             alert(featureDescription + "\n\nis not available.");
         },
 
+        /**
+         * The list of jobs currently active at the server for this client
+         * 
+         * @memberof MeadCoScriptXPrint
+         * @property {object[]} queue array of jobs 
+         * @readonly
+         */
         get queue() {
             return activePrintQueue;
         },
 
+        /**
+         * The number of jobs there are actgive at the server for this client
+         * (same as MeadCo.ScriptX.Print.queue.length)
+         * 
+         * @memberof MeadCoScriptXPrint
+         * @property {int} activeJobs the number of jobs
+         * @readonly
+         */
         get activeJobs() {
             return jobCount();
         },
 
+        /**
+         * make sure that spooling status is locked active while asynchronous UI that may start
+         * printing is displayed
+         * 
+         * @memberof MeadCoScriptXPrint
+         * @function ensureSpoolingStatus
+         * @returns {object} a fake job to lock the spooling status on
+         * 
+         * ```js
+         * var lock = MeadCo.ScriptX.Print.ensureSpoolingStatus
+         * ShowAsyncUI(function() {
+         *  MeadCo.ScriptX.Print.freeSpoolStatus(lock);
+         * });
+         * ```
+         */
         ensureSpoolingStatus: function () {
             var lock = { jobIdentifier: Date.now() };
             queueJob(lock);
             return lock;
         },
 
+        /**
+         * @memberof MeadCoScriptXPrint
+         * @function freeSpoolStatus
+         * @param {object} lock the lock object returned by ensureSpoolingStatus(
+         */
         freeSpoolStatus: function (lock) {
             removeJob(lock.jobIdentifier);
         },
 
-        isSpooling: function () {
+        /**
+         * Get if print is still 'spooling'.still queued at the server
+         * 
+         * @memberof MeadCoScriptXPrint
+         * @property {bool} isSpooling
+         * @readonly
+         */
+        get isSpooling() {
             return jobCount() > 0;
         },
 
+        /**
+         * Start (asynchronous) monitor to observe until no more job spooling/waiting at the server
+         * then call the given callback function
+         * 
+         * @param {int} iTimeout wait until complete or timeout (in ms) -1 => infinite
+         * @param {function({bool})} fnComplete callback function, arg is true if all jobs complete
+         */
         waitForSpoolingComplete: function (iTimeout, fnComplete) {
             MeadCo.log("Started WaitForSpoolingComplete(" + iTimeout + ")");
             if (typeof fnComplete !== "function") {

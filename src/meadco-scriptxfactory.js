@@ -1,9 +1,10 @@
-/*!
+/**
  * MeadCo ScriptX 'window.factory' shim (support for modern browsers and IE 11) JS client library
  * Copyright 2017 Mead & Company. All rights reserved.
  * https://github.com/MeadCo/ScriptX.Print.Client
  *
- * Released under the MIT license
+ * @author Pete Cole <pcole@meadroid.com>
+ * @license Released under the MIT license
  */
 
 // we anti-polyfill <object id="factory" />
@@ -38,7 +39,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.4.9.1";
+    var moduleversion = "1.5.1.1";
     var emulatedVersion = "8.0.0.0";
     var module = this;
 
@@ -825,7 +826,7 @@
         },
 
         IsSpooling: function () {
-            return printApi.isSpooling();
+            return printApi.isSpooling;
         },
 
         OwnQueue: function () {

@@ -1,9 +1,11 @@
-﻿/*!
- * MeadCo.Core (support for modern browsers and IE 11) JS client library
- * Copyright 2017 Mead & Company. All rights reserved.
- * https://github.com/MeadCo/ScriptX.Print.Client
- *
- * Released under the MIT license
+﻿/**
+ * Static class for namespace creation and core utility functions for ScriptX.Services client libraries
+ * 
+ * This must be included before any other files from this package.
+ * 
+ * @namespace MeadCo
+ * @author Pete Cole <pcole@meadroid.com>
+ * @license MIT license
  */
 
 // Extensible UMD Plugins 
@@ -13,6 +15,10 @@
 // and root implements the namespace build code as inheritable
 // function 'extend()'
 //  
+// Note that true inheritance is not implemented, essentially
+// this creates singleton objects that are conveniently named
+// within the browser. 
+
 
 // Module/Plugin core
 // Note: the wrapper code you see around the module is what enables
@@ -74,7 +80,7 @@
 
     // protected API
     var module = this;
-    var version = "1.5.1.2";
+    var version = "1.5.1.3";
 
     var log = function (str) {
         console.log("MeadCo :: " + str);
@@ -139,16 +145,50 @@
 
     // public API.
     return {
+        /**
+         * Sends the content to the console 
+         * @function log
+         * @memberof MeadCo
+         * @param {string} text to send to console
+         */
         log: log,
+
+        /**
+         * Marks the content as a warning and sends to the console 
+         * @function warn
+         * @memberof MeadCo
+         * @param {string} text to send to console
+         */
         warn: warn,
+
+        /**
+         * Marks the content as an error and sends to the console 
+         * @function error
+         * @memberof MeadCo 
+         * @param {string} text to send to console
+         */
         error: error,
 
+        /**
+         * Get the version of this module as a string major.minor.hotfix.build
+         * @property {string} version
+         * @memberof MeadCo
+         */
         get version() { return version; },
 
-        // allow things such as MeadCo.createNS("MeadCo.ScriptX.Print.UI");
+        /**
+         * Create a namespace
+         * @function createNS
+         * @memberof MeadCo
+         * @param {string} namespace path of the namespace
+         * @returns {object} static object for the namespace
+         * @example
+         * var ui = MeadCo.createNS("MeadCo.ScriptX.Print.UI");
+         *  ui.Show = function() { alert("hello"); }
+         */
         createNS: function (namespace) {
             var nsparts = namespace.split(".");
-            var parent = window.MeadCo;
+            var parent = module.scope.MeadCo;
 
             // we want to be able to include or exclude the root namespace so we strip
             // it if it's in the namespace
@@ -172,8 +212,20 @@
             return parent;
         },
 
+        /**
+         * @private
+         * @param {object} s the scope in which to create namesapces
+         */
         set scope(s) { module.scope = s; },
 
+        /**
+         * Get the url to a ScriptX.Services api endpoint
+         * @function makeApiEndPoint
+         * @memberof MeadCo
+         * @param {string} serverUrl url to the server
+         * @param {string} apiLocation the api, e.g. v1/printhtml
+         * @returns {string} url to the api
+         */
         makeApiEndPoint: function (serverUrl, apiLocation) {
             // check if given partial ...
             var p = serverUrl.indexOf("/api");

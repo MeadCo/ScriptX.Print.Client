@@ -1,7 +1,7 @@
 {
   "name": "scriptxprint-html",
   "version": "1.5.0",
-  "description": "Scripts for using ScriptX Services",
+  "description": "Emulation of ScriptX.Add-on for use with ScriptX.Services",
   "main": "meadco-scriptxprinthtml.js",
   "repository": {
     "type": "git",
@@ -9,12 +9,30 @@
   },
   "author": "Pete Cole <pcole@meadroid.com>",
   "license": "MIT",
-  "keywords": [ "meadco", "meadco-scriptx", "printing", "printing-html" ],
+  "keywords": [
+    "meadco",
+    "scriptx",
+    "meadco-scriptx",
+    "printing",
+    "printing-html"
+  ],
   "homepage": "https://scriptxservices.meadroid.com/",
   "files": [
     "src/*.js",
     "dist/*.js"
   ],
+  "devDependencies": {
+    "del": "^3.0.0",
+    "documentation": "^9.1.1",
+    "gulp": "^4.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-cssmin": "^0.2.0",
+    "gulp-documentation": "^3.2.1",
+    "gulp-htmlmin": "^5.0.1",
+    "gulp-uglify": "^3.0.1",
+    "merge-stream": "^1.0.1",
+    "readable-stream": "^3.1.1"
+  },
   "dependencies": {
     "jquery": ">=3.0.0"
   }

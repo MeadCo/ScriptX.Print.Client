@@ -1,16 +1,17 @@
-/*!
+/**
  * MeadCo.ScriptX.Print.HTML (support for modern browsers and IE 11) JS client library
  * Copyright 2017 Mead & Company. All rights reserved.
  * https://github.com/MeadCo/ScriptX.Print.Client
  *
- * Released under the MIT license
+ * @author Pete Cole <pcole@meadroid.com>
+ * @license Released under the MIT license
  */
 
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
 
-    var moduleversion = "1.4.9.0";
+    var moduleversion = "1.5.1.0";
 
     var mPageOrientation = {
         DEFAULT: 0,
@@ -28,6 +29,13 @@
         DEFAULT: 0,
         TRUE: 1,
         FALSE: 2
+    };
+
+    var mDuplexOptions = {
+        DEFAULT: 0,
+        SIMPLEX: 1,
+        VERTICAL: 2,
+        HORIZONTAL: 3
     };
 
     var mPrintingPass = {
@@ -389,6 +397,7 @@
         PageOrientation: mPageOrientation,
         CollateOptions: mCollateOptions,
         PrintingPasses: mPrintingPass,
+        DuplexOptions: mDuplexOptions,
 
         settings: iSettings,
 

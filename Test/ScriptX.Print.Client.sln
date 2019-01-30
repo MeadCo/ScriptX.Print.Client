@@ -56,11 +56,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dist", "dist", "{0F97F6FD-0
 		..\dist\meadco-scriptxservicesUI.min.js = ..\dist\meadco-scriptxservicesUI.min.js
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptX.Services Client", "ScriptX.Services Client\ScriptX.Services Client.csproj", "{1097C054-BAB0-4B08-A582-E6AD925BD423}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScriptX.Services Client", "ScriptX.Services Client\ScriptX.Services Client.csproj", "{1097C054-BAB0-4B08-A582-E6AD925BD423}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{492456B7-42C2-42E0-9579-9775FA833DD1}"
 	ProjectSection(SolutionItems) = preProject
 		..\Libraries\MeadCo.ScriptX.Print.Messaging.dll = ..\Libraries\MeadCo.ScriptX.Print.Messaging.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{06478A30-2FFD-4672-85A3-1A9857A1C9EF}"
+	ProjectSection(SolutionItems) = preProject
+		..\distbundlesconfig.json = ..\distbundlesconfig.json
+		..\gulpfile.js = ..\gulpfile.js
 	EndProjectSection
 EndProject
 Global

@@ -1,11 +1,12 @@
-/*! 
+/** 
  * MeadCo.ScriptX.Print.Licensing (support for modern browsers and IE 11) JS client library
  * Copyright 2017-2018 Mead & Company. All rights reserved.
  * https://github.com/MeadCo/ScriptX.Print.Client
  *
  * This module is only required when working with ScriptX Services for Windows PC.
  * 
- * Released under the MIT license
+ * @author Pete Cole <pcole@meadroid.com>
+ * @license Released under the MIT license
  */
 
 ; (function (name, definition) {

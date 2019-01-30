@@ -6,14 +6,6 @@
     <RootNamespace>ScriptX.Services_Client</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Content Remove="distbundlesconfig.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="distbundlesconfig.json" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />

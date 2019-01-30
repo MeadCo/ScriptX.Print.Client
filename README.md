@@ -97,6 +97,10 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
 
 Released under the [MIT](http://opensource.org/licenses/MIT) license. 
 
+### Documentation
+
+documentation build src/meadco-core.js -f html -o jsdoc --project-name "ScriptX.Services Client" --shallow
+
 Copyright (c) 2017, Mead & Co Limited.
 
 

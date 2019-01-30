@@ -1,9 +1,10 @@
-﻿/*!
+﻿/**
  * MeadCo ScriptX 'window.secmgr' shim (support for modern browsers and IE 11) JS client library
  * Copyright 2017 Mead & Company. All rights reserved.
  * https://github.com/MeadCo/ScriptX.Print.Client
  *
- * Released under the MIT license
+ * @author Pete Cole <pcole@meadroid.com>
+ * @license Released under the MIT license
  */
 
 // we anti-polyfill <object id="secmgr" /> 
