@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ScriptX.Services_Client.Controllers
@@ -15,6 +17,10 @@ namespace ScriptX.Services_Client.Controllers
     public class PrintHtmlv1Controller : ControllerBase
     {
         private ILogger _logger;
+        private const string AuthorizationHeaderName = "Authorization";
+        private const string BasicSchemeName = "Basic";
+
+        MeadCo.ScriptX.Print.Messaging.Responses.License _license;
 
         public PrintHtmlv1Controller(ILogger<PrintHtmlv1Controller> logger)
         {
@@ -56,10 +62,16 @@ namespace ScriptX.Services_Client.Controllers
 
         public ActionResult<DeviceSettings> GetDeviceInfo(string deviceName, PageSettings.PageMarginUnits units = PageSettings.PageMarginUnits.Default)
         {
+            HandleAuthentication();
+
+            if ( _license == null )
+            {
+                return NotFound();
+            }
             // we have had to replace \ with || to get past cors checking, so reinstate \ (NB: we are assuming || is rare in a printer name!)
             deviceName = deviceName.Replace("||", "\\");
             _logger.LogInformation("GET api/v1/printhtml/deviceinfo/{deviceName}/{units}", deviceName, units);
-            return new DeviceSettings();
+            return new DeviceSettings { PrinterName = "Test printer" };
         }
 
         /// <summary>
@@ -168,6 +180,30 @@ namespace ScriptX.Services_Client.Controllers
         public IActionResult GetDownloadPrint(string jobToken) // Dont attempt to update to ActionResult<PhysicalFileResult> - it wont work
         {
             return NotFound();
+        }
+
+        private void HandleAuthentication()
+        {
+            if ( AuthenticationHeaderValue.TryParse(Request.Headers[AuthorizationHeaderName], out AuthenticationHeaderValue headerValue))
+            {
+                if (BasicSchemeName.Equals(headerValue.Scheme, StringComparison.OrdinalIgnoreCase))
+                {
+                    byte[] headerValueBytes = Convert.FromBase64String(headerValue.Parameter);
+                    string guidValue = Encoding.UTF8.GetString(headerValueBytes);
+                    if (guidValue.Contains(':'))
+                    {
+                        guidValue = guidValue.Split(':')[0];
+                    }
+
+                    if (guidValue == "{666140C4-DFC8-435E-9243-E8A54042F918}")
+                    {
+                        _license = new License { Company = "MeadCo", Guid = new Guid(guidValue), Options = new LicenseOptions { AdvancedPrinting = true } };
+                    }
+                    else
+                        _license = null;
+                }
+
+            }
         }
     }
 }

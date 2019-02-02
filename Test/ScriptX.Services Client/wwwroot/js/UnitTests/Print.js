@@ -1,6 +1,16 @@
-﻿MeadCo.ScriptX.Print.reportServerError = function (txt) {
+﻿QUnit.config.reorder = false;
+
+MeadCo.ScriptX.Print.reportServerError = function (txt) {
     $("#qunit-fixture").text(txt);
 };
+
+function serverUrl() {
+    return window.location.protocol + "//" + window.location.host;
+    //return "https://scriptxservices.meadroid.com";
+    //return "http://127.0.0.1:41191/";
+}
+
+var licenseGuid = "{666140C4-DFC8-435E-9243-E8A54042F918}";
 
 QUnit.test("Testing meadco-scriptxprint.js A", function (assert) {
 
@@ -58,11 +68,12 @@ QUnit.test("Testing meadco-scriptxprint.js B", function (assert) {
 
 QUnit.test("Testing meadco-scriptxprint.js C", function (assert) {
 
-    var done = assert.async();
+    // assert.expect(2);
+    var done = assert.async(2);
 
     var api = MeadCo.ScriptX.Print;
 
-    var url = window.location.host;
+    var url = serverUrl();
 
     api.connectTestAsync("http://localhost:1234/", function () {
         assert.ok(false, "Should not have connected to: " + url);
@@ -72,4 +83,58 @@ QUnit.test("Testing meadco-scriptxprint.js C", function (assert) {
         done();
     });
 
+    api.connectTestAsync(url, function (data) {
+        assert.ok(true, "Test without license connected to: " + url);
+        assert.notOk(data.AdvancedPrinting, "Advanced printing not enabled");
+        assert.notOk(data.BasicPrinting, "BasicPrinting Printing not enabled");
+        assert.notOk(data.EnhancedFormatting, "EnhancedFormatting Printing not enabled");
+        assert.notOk(data.PrintPdf, "PrintPdf Printing not enabled");
+        assert.notOk(data.PrintRaw, "RAW Printing not enabled");
+        done();
+    }, function (errorText) {
+        assert.ok(false, "Should have connected to: " + url + " error: " + errorText);
+        done();
+    });
+});
+
+QUnit.test("Testing meadco-scriptxprint.js D", function (assert) {
+
+    var done = assert.async(4);
+
+    var api = MeadCo.ScriptX.Print;
+
+    var url = serverUrl();
+
+    api.connectAsync(url, "{}", function (data) {
+        assert.ok(false, "Should not have connected to: " + url + " with bad license");
+        done();
+    }, function (errorText) {
+        assert.ok(true, "Failed to connect to: " + url + " with bad license GUID, error: " + errorText);
+        done();
+    });
+
+    api.connectAsync(url, null, function (data) {
+        assert.ok(false, "Should not have connected to: " + url + " with bad license");
+        done();
+    }, function (errorText) {
+        assert.ok(true, "Failed to connect to: " + url + " with null license GUID, error: " + errorText);
+        done();
+    });
+
+    api.connectAsync(url, "", function (data) {
+        assert.ok(false, "Should not have connected to: " + url + " with bad license");
+        done();
+    }, function (errorText) {
+        assert.ok(true, "Failed to connect to: " + url + " with empty string license GUID, error: " + errorText);
+        done();
+    });
+
+    api.connectAsync(url, licenseGuid, function (data) {
+        assert.equal(data.printerName, "Test printer", "Connected async with correct device info");
+        assert.ok(api.isConnected, "isConnected");
+        done();
+    }, function (errorText) {
+        assert.ok(false, "Should have connected to: " + url + " error: " + errorText);
+        done();
+    });
 });

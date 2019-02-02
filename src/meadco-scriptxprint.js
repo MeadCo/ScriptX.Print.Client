@@ -893,7 +893,7 @@
          * @memberof MeadCoScriptXPrint
          * @param {string} serverUrl the 'root' url to the server (the api path will be added by the library)
          * @param {string} licenseGuid the license/subscription identifier
-         * @param {function} resolve function to call on success
+         * @param {function({dataObject})} resolve function to call on success, dataObject contains the device settings for the default device.
          * @param {function} reject function to call on failure
          */
         connectAsync: function (serverUrl, licenseGuid, resolve, reject) {
