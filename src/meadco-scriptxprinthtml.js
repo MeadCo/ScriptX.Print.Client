@@ -11,7 +11,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
 
-    var moduleversion = "1.5.1.0";
+    var moduleversion = "1.5.1.2";
 
     var mPageOrientation = {
         DEFAULT: 0,
@@ -382,7 +382,7 @@
     function printHtmlAtServer(contentType, content, title, fnDone, fnCallback, data) {
         var htmlPrintSettings = settingsCache;
         htmlPrintSettings.jobTitle = title;
-        return MeadCo.ScriptX.Print.printHtml(contentType, content, htmlPrintSettings, fnDone, null, fnCallback, data);
+        return MeadCo.ScriptX.Print.printHtml(contentType, content, htmlPrintSettings, fnDone, fnCallback, data);
     }
 
     MeadCo.log("MeadCo.ScriptX.Print.HTML " + moduleversion + " loaded.");

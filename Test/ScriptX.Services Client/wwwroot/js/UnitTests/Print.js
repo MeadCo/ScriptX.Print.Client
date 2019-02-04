@@ -1,4 +1,4 @@
-﻿QUnit.config.reorder = false;
+﻿//QUnit.config.reorder = false;
 
 MeadCo.ScriptX.Print.reportServerError = function (txt) {
     $("#qunit-fixture").text(txt);
@@ -19,13 +19,13 @@ QUnit.test("Namespace basics", function (assert) {
     assert.ok(MeadCo.ScriptX.Print, "MeadCo.ScriptX.Print namespace exists");
     var api = MeadCo.ScriptX.Print;
 
-    assert.equal(api.version, "1.5.1.5", "Correct version");
+    assert.equal(api.version, "1.5.1.7", "Correct version");
 
     assert.equal(api.ContentType.URL, 1, "ContentType enum is OK");
     assert.equal(api.ContentType.XX, undefined, "Unknown ContentType enum is OK");
 
-    assert.equal(api.ResponseStatus.QUEUEDTODEVICE, 1, "ResponseStatus enum is OK");
-    assert.equal(api.ResponseStatus.XX, undefined, "Unknown ResponseStatus enum is OK");
+    assert.equal(api.PrintStatus.DOWNLOADING, 3, "PrintStatus enum is OK");
+    assert.equal(api.PrintStatus.XX, undefined, "Unknown PrintStatus enum is OK");
 
     assert.equal(api.printerName, "", "Printer is empty string");
     assert.notEqual(api.deviceSettings, null, "Default device settings are not null");
@@ -81,7 +81,7 @@ QUnit.test("Testing connection", function (assert) {
         assert.ok(false, "Should not have connected to: " + url);
         done();
     }, function (errorText) {
-        assert.equal(errorText, "Unknown server or network error", "connectTestAsync failed with correct error");
+        assert.equal(errorText, "Server or network error", "connectTestAsync failed with correct error");
         done();
     });
 
@@ -295,6 +295,77 @@ QUnit.test("WaitForSpoolingComplete time out", function (assert) {
     });
 });
 
-QUnit.test("Printing", function (assert) {
+QUnit.test("Printing with no arguments", function (assert) {
 
+    var done = assert.async(4);
+    var api = MeadCo.ScriptX.Print;
+
+    api.connectLite(serverUrl, licenseGuid);
+    assert.ok(api.printHtml(), "No arguments succeeds");
+    done();
+
+    api.printHtml(0, null, null, function (jqXhr) {
+        assert.equal($("#qunit-fixture").text(), "Bad Request", "No arguments no callback raises correct error dialog");
+        done();
+    });
+
+    api.printHtml(0, null, null, function (errorText) {
+        assert.equal($("#qunit-fixture").text(), "Bad Request", "No arguments but with callback raises correct error dialog");
+        assert.equal(errorText, "Bad Request", "Correct error text");
+        done();
+    }, function (status, sInformation, data) {
+        assert.equal(data, "ProgressData", "On progress function receives data");
+        assert.equal(sInformation, "Bad Request", "progress callback gets correct error");
+        assert.equal(status, api.PrintStatus.ERROR, "Correct progress status (ERROR)");
+        done();
+    },
+    "ProgressData");
+});
+
+QUnit.test("Printing single piece of content", function (assert) {
+
+    var done = assert.async(4);
+
+    var api = MeadCo.ScriptX.Print;
+
+    api.connectLite(serverUrl, licenseGuid);
+
+    api.deviceSettings = {
+        printerName: "My printer",
+        isDefault: true,
+        paperSize: "A4"
+    };
+
+    // immediate completion
+    api.printHtml(api.ContentType.INNERHTML, "Hello world", {}, function (errorText) {
+        assert.equal(errorText,null, "Correct done call oin immediate completion");
+        done();
+    }, function (status, sInformation, data) {
+        assert.equal(data, "ProgressData", "On progress function receives data: " + status);
+    },
+    "ProgressData");
+
+    // error in job from server
+    api.printHtml(api.ContentType.URL, "Hello world", {}, function (errorText) {
+        assert.equal(errorText, "Server error", "Correct done call (mocked abandoned)");
+        assert.equal($("#qunit-fixture").text(), "The print failed with the error: Mocked abandon", "Correct error dialog raised");
+        done();
+    }, function (status, sInformation, data) {
+        assert.equal(data, "ProgressData", "On progress function receives data: " + status);
+    },
+        "ProgressData");
+
+    // requires monitor to run a few loops
+    api.printHtml(api.ContentType.HTML, "Hello world", {}, function (errorText) {
+        assert.equal(errorText, null, "Correct done call on long running job");
+        done();
+    }, function (status, sInformation, data) {
+        assert.equal(data, "ProgressData", "On progress function receives data: " + status);
+    },
+        "ProgressData");
+
+    api.waitForSpoolingComplete(10000, function (bComplete) {
+        assert.ok(bComplete, "WaitForSpoolingComplete ok - all jobs done.");
+        done();
+    });
 });

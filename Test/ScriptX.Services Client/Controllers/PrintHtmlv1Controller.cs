@@ -22,6 +22,8 @@ namespace ScriptX.Services_Client.Controllers
 
         MeadCo.ScriptX.Print.Messaging.Responses.License _license;
 
+        private static int counter = 0;
+
         public PrintHtmlv1Controller(ILogger<PrintHtmlv1Controller> logger)
         {
             _logger = logger;
@@ -133,6 +135,7 @@ namespace ScriptX.Services_Client.Controllers
                 //throw new ArgumentNullException(nameof(requestMessage), "Html options are required.");
                 requestMessage.Settings = new HtmlPrintSettings();
             }
+
             // in the basic use case, client may not send any device settings. 
             if (requestMessage.Device == null)
             {
@@ -146,8 +149,9 @@ namespace ScriptX.Services_Client.Controllers
                 throw new ArgumentException("Printer not available", nameof(requestMessage.Device.PrinterName));
             }
 
-            Print printResponse = new Print();
+            Print printResponse = new Print { Status = PrintRequestStatus.QueuedToDevice, JobIdentifier = requestMessage.ContentType.ToString(), Message="No message" };
 
+            counter = 0;
             _logger.LogInformation("Returning {status} [{message}], jobToken: {token}", printResponse.Status, printResponse.Message, printResponse.JobIdentifier);
 
             return printResponse;
@@ -173,6 +177,32 @@ namespace ScriptX.Services_Client.Controllers
             if (!HandleAuthentication())
             {
                 return Unauthorized();
+            }
+
+            ContentType cType;
+
+            if (Enum.TryParse<ContentType>(jobToken, true, out cType))
+            {
+                switch ( cType )
+                {
+                    case ContentType.InnerHtml:
+                        js.Status = PrintHtmlStatus.Completed;
+                        break;
+
+                    case ContentType.Url:
+                        js.Status = PrintHtmlStatus.Abandoned;
+                        js.Message = "Mocked abandon";
+                        break;
+
+                    case ContentType.Html:
+                        js.Status = ++counter < 3 ? PrintHtmlStatus.Printing : PrintHtmlStatus.Completed;
+                        break;
+                }
+            }
+            else
+            {
+                js.Status = PrintHtmlStatus.ItemError;
+                js.Message = "Bad jobToken";
             }
 
             return js;

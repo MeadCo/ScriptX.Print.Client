@@ -17,7 +17,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.5.1.5";
+    var version = "1.5.1.7";
     var apiLocation = "v1/printHtml";
 
     var printerName = "";
@@ -37,10 +37,11 @@
     var enumContentType = {
         URL: 1, // the url will be downloaded and printed
         HTML: 2, // the passed string is assumed to be a complete html document .. <html>..</html>
-        INNERTHTML: 4 // the passed string is a complete html document but missing the html tags
+        INNERHTML: 4 // the passed string is a complete html document but missing the html tags
     };
 
     var enumResponseStatus = {
+        UNKNOWN: 0,
         QUEUEDTODEVICE: 1,
         QUEUEDTOFILE: 2,
         SOFTERROR: 3,
@@ -88,14 +89,6 @@
         var i;
         for (i = 0; i < activePrintQueue.length; i++) {
             if (activePrintQueue[i].jobIdentifier === data.jobIdentifier) {
-                var fnCallBack = data.fnNotify;
-                if (typeof fnCallBack !== "function")
-                    data.fnNotify = activePrintQueue[i].fnNotify;
-
-                if (typeof data.fnNotify === "function" && (data.status === enumResponseStatus.QUEUEDTOFILE || data.status !== activePrintQueue[i].status)) {
-                    data.fnNotify(data);
-                }
-
                 activePrintQueue[i] = data;
                 return;
             }
@@ -163,7 +156,11 @@
                 errorThrown = jqXhr.responseText || textStatus;
             }
             else {
-                errorThrown = "Unknown server or network error";
+                if (typeof jqXhr.responseText === "string") {
+                    errorThrown = jqXhr.responseText;
+                }
+                else 
+                    errorThrown = "Server or network error";
             }
         }
 
@@ -181,13 +178,12 @@
      * @param {enumContentType} contentType enum type of content given (html snippet, url)
      * @param {string} content the content - a url, html snippet or complete html
      * @param {object} htmlPrintSettings the settings to use - device annd html such as headers and footers
-     * @param {function({object})} fnDone function to call when printing complete (and output returned), arg is null on no error.
-     * @param {function({object})} fnNotify function to call when job associated with this print is updated (data is server result)
+     * @param {function({string})} fnDone function to call when printing complete (and output returned), arg is null on no error, else error message
      * @param {function(status,sInformation,data)} fnCallback function to call when job status is updated
      * @param {any} data object to give pass to fnCallback
      * @return {boolean} - true if a print was started (otherwise an error will be thrown)
      */
-    function printHtmlAtServer(contentType, content, htmlPrintSettings, fnDone, fnNotify, fnCallback, data) {
+    function printHtmlAtServer(contentType, content, htmlPrintSettings, fnDone, fnCallback, data) {
         MeadCo.log("started MeadCo.ScriptX.Print.print.printHtmlAtServer() Type: " + contentType + ", printerName: " + printerName);
         if (contentType === enumContentType.URL) {
             MeadCo.log(".. request print url: " + content);
@@ -215,52 +211,40 @@
                 progress(requestData, enumPrintStatus.ERROR, errorThrown);
                 MeadCo.ScriptX.Print.reportServerError(errorThrown);
                 if (typeof fnDone === "function") {
-                    fnDone(jqXhr);
+                    fnDone(parseError("MeadCo.ScriptX.Print.printHtmlAtServer", jqXhr, textStatus, errorThrown));
                 }
             },
 
             queuedToFile: function (data) {
                 MeadCo.log("default handler on queued to file response");
                 progress(requestData, enumPrintStatus.QUEUED);
-
-                if (typeof fnNotify === "function") {
-                    data.fnNotify = fnNotify;
-                    updateJob(data);
-                }
-
                 monitorJob(requestData, data.jobIdentifier,
                     -1,
                     function (data) {
-                        if (data != null) {
+                        if (data !== null) {
                             MeadCo.log("Will download printed file");
                             progress(requestData, enumPrintStatus.COMPLETED);
                             window.open(server + "/download/" + data.jobIdentifier, "_self");
                         }
 
                         if (typeof fnDone === "function") {
-                            fnDone(data != null ? "Server error" : null);
+                            fnDone(data === null ? "Server error" : null);
                         }
                     });
             },
 
             queuedToDevice: function (data) {
-                progress(requestData, enumPrintStatus.QUEUED);
                 MeadCo.log("print was queued to device");
-
-                if (typeof fnNotify === "function") {
-                    data.fnNotify = fnNotify;
-                    updateJob(data);
-                }
-
+                progress(requestData, enumPrintStatus.QUEUED);
                 monitorJob(requestData, data.jobIdentifier,
                     -1,
                     function (data) {
-                        if (data != null) {
+                        if (data !== null) {
                             progress(requestData, enumPrintStatus.COMPLETED);
                         }
 
                         if (typeof fnDone === "function") {
-                            fnDone(data != null ? "Server error" : null);
+                            fnDone(data === null ? "Server error" : null);
                         }
                     });
             },
@@ -268,15 +252,14 @@
             softError: function (data) {
                 progress(requestData, enumPrintStatus.ERROR);
                 MeadCo.log("print has soft error");
+                if (typeof fnDone === "function") {
+                    fnDone("Unknown soft error");
+                }
             },
 
             ok: function (data) {
                 progress(requestData, enumPrintStatus.COMPLETED);
                 MeadCo.log("printed ok, no further information");
-                if (typeof fnNotify === "function") {
-                    data.fnNotify = fnNotify;
-                    updateJob(data);
-                }
                 if (typeof fnDone === "function") {
                     fnDone(null);
                 }
@@ -384,6 +367,7 @@
                             break;
 
                         case enumResponseStatus.SOFTERROR:
+                        case enumResponseStatus.UNKNOWN:
                             responseInterface.softError(data);
                             break;
 
@@ -523,7 +507,7 @@
                                 // keep going
                                 if (timeOut > 0 && (++counter * interval) > timeOut) {
                                     window.clearInterval(intervalId);
-                                    MeadCoScriptXPrint.reportServerError("unknown failure while printing.");
+                                    MeadCo.ScriptX.Print.reportServerError("unknown failure while printing.");
                                 }
                                 bWaiting = false;
                                 break;
@@ -534,7 +518,7 @@
                                 progress(requestData, data.status, data.message);
                                 removeJob(jobId);
                                 window.clearInterval(intervalId);
-                                MeadCoScriptXPrint.reportServerError("The print failed.\n\n" + data.message);
+                                MeadCo.ScriptX.Print.reportServerError("The print failed with the error: " + data.message);
                                 functionComplete(null);
                                 break;
 
@@ -786,12 +770,12 @@
         ContentType: enumContentType,
 
         /** 
-         * Enum for status code returned from the print API
+         * Enum for status code returned to print progress callbacks
          * @readonly
          * @memberof MeadCoScriptXPrint
          * @enum { number }
          */
-        ResponseStatus: enumResponseStatus,
+        PrintStatus: enumPrintStatus,
 
         /** 
          *  Get/set the currently active printer
@@ -991,9 +975,8 @@
          * @param {enumContentType} contentType enum type of content given (html snippet, url)
          * @param {string} content the content - a url, html snippet or complete html
          * @param {object} htmlPrintSettings the settings to use - device annd html such as headers and footers
-         * @param {function({object})} fnDone function to call when printing complete (and output returned), arg is null on no error.
-         * @param {function({object})} fnNotify function to call when job associated with this print is updated (data is server result)
-         * @param {function(status,sInformation,data)} fnCallback function to call when job status is updated
+         * @param {function({string})} fnDone function to call when printing complete (and output returned), arg is null on no error, else error message.
+         * @param {function(status,sInformation,data)} fnProgress function to call when job status is updated
          * @param {any} data object to give pass to fnCallback
          * @return {boolean} - true if a print was started (otherwise an error will be thrown)
          */
