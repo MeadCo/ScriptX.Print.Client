@@ -17,7 +17,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.5.1.4";
+    var version = "1.5.1.5";
     var apiLocation = "v1/printHtml";
 
     var printerName = "";
@@ -131,46 +131,45 @@
             jqXhr.responseText +
             "]");
 
-        if (errorThrown === "") {
-            if (typeof jqXhr.responseText !== "undefined" ) {
-                errorThrown = jqXhr.responseText;
-            }
-        }
-        else {
-            if (typeof errorThrown !== "undefined") {
-                errorThrown = errorThrown.toString();
-            }
-            else {
-                errorThrown = "";
-            }
-        }
+        //if (errorThrown === "") {
+        //    if (typeof jqXhr.responseText !== "undefined" ) {
+        //        errorThrown = jqXhr.responseText;
+        //    }
+        //}
+        //else {
+        //    if (typeof errorThrown !== "undefined") {
+        //        errorThrown = errorThrown.toString();
+        //    }
+        //    else {
+        //        errorThrown = "";
+        //    }
+        //}
 
         //if (typeof jqXhr.responseText !== "undefined") {
         //    errorThrown = jqXhr.responseText;
         //}
 
+        //if (errorThrown === "") {
+        //    if (textStatus !== "error") {
+        //        errorThrown = textStatus;
+        //    }
+        //    else {
+        //        errorThrown = "Unknown server or network error";
+        //    }
+        //}   
+
         if (errorThrown === "") {
             if (textStatus !== "error") {
-                errorThrown = textStatus;
+                errorThrown = jqXhr.responseText || textStatus;
             }
             else {
                 errorThrown = "Unknown server or network error";
             }
         }
 
+        MeadCo.log(" error parsed to --> [" + errorThrown + "]");
         return errorThrown;
     }
-
-    // call api on server to print the content
-    //
-    // contentType - 
-    // content - string
-    // htmlPrintSettings - html settings to use, the function will use device settings for the current print
-    // fnDone(errorXhr) - function called when printing complete (and output returned), arg is null on no error.
-    // fnNotify(data) - callback when job associated with this print is updated (data is server result)
-    // fnCallback(status,sInformation,data) - callback when job status is updated 
-    // data - date to give to fnCallback
-    //
 
     /*
      * Post a request to the server api/v1/print to print some html and monitor the print job 
@@ -214,7 +213,7 @@
         {
             fail: function (jqXhr, textStatus, errorThrown) {
                 progress(requestData, enumPrintStatus.ERROR, errorThrown);
-                MeadCoScriptXPrint.reportServerError(errorThrown);
+                MeadCo.ScriptX.Print.reportServerError(errorThrown);
                 if (typeof fnDone === "function") {
                     fnDone(jqXhr);
                 }
@@ -394,21 +393,24 @@
                     }
                 })
                 .fail(function (jqXhr, textStatus, errorThrown) {
-                    MeadCo.log("Fail response from server: [" +
-                        textStatus +
-                        "], [" +
-                        errorThrown +
-                        "], [" +
-                        jqXhr.responseText +
-                        "]");
-                    removeJob(fakeJob.jobIdentifier);
-                    if (typeof jqXhr.responseText !== "undefined") {
-                        errorThrown = jqXhr.responseText;
-                    }
+                    //MeadCo.log("Fail response from server: [" +
+                    //    textStatus +
+                    //    "], [" +
+                    //    errorThrown +
+                    //    "], [" +
+                    //    jqXhr.responseText +
+                    //    "]");
 
-                    if (errorThrown === "") {
-                        errorThrown = "Unknown server or network error";
-                    }
+                    removeJob(fakeJob.jobIdentifier);
+
+                    //if (typeof jqXhr.responseText !== "undefined") {
+                    //    errorThrown = jqXhr.responseText;
+                    //}
+
+                    //if (errorThrown === "") {
+                    //    errorThrown = "Unknown server or network error";
+                    //}
+                    errorThrown = parseError("MeadCo.ScriptX.Print.printAtServer:", jqXhr, textStatus, errorThrown);
 
                     if (typeof responseInterface.fail === "function") {
                         responseInterface.fail(jqXhr, textStatus, errorThrown);
@@ -416,7 +418,12 @@
                 });
             return true;
         } else {
-            throw new Error("MeadCoScriptXPrint : no known ajax helper available");
+            if (typeof responseInterface.fail === "function") {
+                responseInterface.fail("MeadCo.ScriptX.Print : no known ajax helper available");
+            }
+            else {
+                throw new Error("MeadCo.ScriptX.Print : no known ajax helper available");
+            }
         }
     }
 
@@ -448,25 +455,33 @@
                     onSuccess(data);
                 })
                 .fail(function (jqXhr, textStatus, errorThrown) {
-                    MeadCo.log("**warning: failure in MeadCoScriptXPrint.getFromServer: [" +
-                        textStatus +
-                        "], [" +
-                        errorThrown +
-                        "], [" +
-                        jqXhr.responseText +
-                        "]");
+                    //MeadCo.log("**warning: failure in MeadCoScriptXPrint.getFromServer: [" +
+                    //    textStatus +
+                    //    "], [" +
+                    //    errorThrown +
+                    //    "], [" +
+                    //    jqXhr.responseText +
+                    //    "]");
 
-                    if (typeof jqXhr.responseText !== "undefined") {
-                        errorThrown = jqXhr.responseText;
-                    }
+                    //if (typeof jqXhr.responseText !== "undefined") {
+                    //    errorThrown = jqXhr.responseText;
+                    //}
 
-                    if (errorThrown === "") {
-                        errorThrown = "Unknown server or network error";
-                    }
+                    //if (errorThrown === "") {
+                    //    errorThrown = "Unknown server or network error";
+                    //}
+                    errorThrown = parseError("MeadCo.ScriptX.Print.getFromServer:", jqXhr, textStatus, errorThrown);
                     if (typeof onFail === "function")
                         onFail(errorThrown);
                 });
+        } else {
+            if (typeof onFail === "function") {
+                onFail("MeadCo.ScriptX.Print : no known ajax helper available");
+            }
+            else
+                throw new Error("MeadCo.ScriptX.Print : no known ajax helper available");
         }
+
     }
 
     function monitorJob(requestData, jobId, timeOut, functionComplete) {
@@ -533,21 +548,22 @@
                         }
                     })
                     .fail(function (jqXhr, textStatus, errorThrown) {
-                        MeadCo.log("**warning: failure in MeadCoScriptXPrint.monitorJob: [" +
-                            textStatus +
-                            "], [" +
-                            errorThrown +
-                            "], [" +
-                            jqXhr.responseText +
-                            "]");
+                        //MeadCo.log("**warning: failure in MeadCoScriptXPrint.monitorJob: [" +
+                        //    textStatus +
+                        //    "], [" +
+                        //    errorThrown +
+                        //    "], [" +
+                        //    jqXhr.responseText +
+                        //    "]");
 
-                        if (typeof jqXhr.responseText !== "undefined") {
-                            errorThrown = jqXhr.responseText;
-                        }
+                        //if (typeof jqXhr.responseText !== "undefined") {
+                        //    errorThrown = jqXhr.responseText;
+                        //}
 
-                        if (errorThrown === "") {
-                            errorThrown = "Unknown server or network error";
-                        }
+                        //if (errorThrown === "") {
+                        //    errorThrown = "Unknown server or network error";
+                        //}
+                        errorThrown = parseError("MeadCo.ScriptX.Print.monitorJob:", jqXhr, textStatus, errorThrown);
 
                         MeadCo.log("error: " + errorThrown + " in monitorJob so clear interval: " + intervalId);
                         progress(requestData, enumPrintStatus.ERROR, errorThrown);
@@ -610,10 +626,10 @@
                 });
         } else {
             if (typeof oRequest.fail === "function") {
-                oRequest.fail("MeadCoScriptXPrint : no known ajax helper available");
+                oRequest.fail("MeadCo.ScriptX.Print : no known ajax helper available");
             }
             else
-                throw new Error("MeadCoScriptXPrint : no known ajax helper available");
+                throw new Error("MeadCo.ScriptX.Print : no known ajax helper available");
         }
 
     }
@@ -762,6 +778,10 @@
          * @readonly
          * @memberof MeadCoScriptXPrint
          * @enum { number }
+         * 
+         * URL: 1 a get request will be issued to the url and the returned content will be printed
+         * HTML: 2 the passed string is assumed to be a complete html document .. <html>..</html>
+         * INNERTHTML: 4 the passed string is a complete html document but missing the html tags
          */
         ContentType: enumContentType,
 
@@ -879,7 +899,7 @@
             // values for both arguments via printHtml.connectAsync() as it doesnt 
             // know the values so we assume a connectLite has already been called
             // and dont overwrite with empty values.
-            if (arguments.length === 2 && serverUrl.length > 0 && licenseGuid.length > 0)
+            if (arguments.length === 2 && serverUrl !== null && licenseGuid !== null && serverUrl.length > 0 && licenseGuid.length > 0)
                 setServer(serverUrl, licenseGuid);
         },
 

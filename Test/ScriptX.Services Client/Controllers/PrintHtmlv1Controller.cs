@@ -39,6 +39,11 @@ namespace ScriptX.Services_Client.Controllers
         [Produces("application/json")]
         public ActionResult<HtmlPrintSettings> GetSettings()
         {
+            if (!HandleAuthentication())
+            {
+                return Unauthorized();
+            }
+
             var settings = new HtmlPrintSettings();
 
             _logger.LogInformation("GET api/v1/printHtml/settings");
@@ -62,15 +67,15 @@ namespace ScriptX.Services_Client.Controllers
 
         public ActionResult<DeviceSettings> GetDeviceInfo(string deviceName, PageSettings.PageMarginUnits units = PageSettings.PageMarginUnits.Default)
         {
-            HandleAuthentication();
-
-            if ( _license == null )
-            {
-                return NotFound();
-            }
             // we have had to replace \ with || to get past cors checking, so reinstate \ (NB: we are assuming || is rare in a printer name!)
             deviceName = deviceName.Replace("||", "\\");
             _logger.LogInformation("GET api/v1/printhtml/deviceinfo/{deviceName}/{units}", deviceName, units);
+
+            if (!HandleAuthentication())
+            {
+                return Unauthorized();
+            }
+
             return new DeviceSettings { PrinterName = "Test printer" };
         }
 
@@ -89,7 +94,10 @@ namespace ScriptX.Services_Client.Controllers
         public ActionResult<PrintHtmlDefaultSettings> GetHtmlPrintDefaults(PageSettings.PageMarginUnits units = PageSettings.PageMarginUnits.Default)
         {
             _logger.LogInformation("GET api/v1/printhtml/htmlPrintDefaults/{units}", units);
-
+            if (!HandleAuthentication())
+            {
+                return Unauthorized();
+            }
             return new PrintHtmlDefaultSettings();
         }
 
@@ -109,6 +117,11 @@ namespace ScriptX.Services_Client.Controllers
         public ActionResult<Print> PostPrint([FromBody] PrintHtmlDescription requestMessage)
         {
             _logger.LogInformation("POST api/v1/printHtml");
+
+            if (!HandleAuthentication())
+            {
+                return Unauthorized();
+            }
 
             if (requestMessage == null)
             {
@@ -157,6 +170,11 @@ namespace ScriptX.Services_Client.Controllers
         {
             JobStatus js = new JobStatus(jobToken);
             _logger.LogInformation("Status of job {jobToken} is {status} [{message}]", jobToken, js.Status, js.Message);
+            if (!HandleAuthentication())
+            {
+                return Unauthorized();
+            }
+
             return js;
         }
 
@@ -182,8 +200,9 @@ namespace ScriptX.Services_Client.Controllers
             return NotFound();
         }
 
-        private void HandleAuthentication()
+        private bool HandleAuthentication()
         {
+            _license = null;
             if ( AuthenticationHeaderValue.TryParse(Request.Headers[AuthorizationHeaderName], out AuthenticationHeaderValue headerValue))
             {
                 if (BasicSchemeName.Equals(headerValue.Scheme, StringComparison.OrdinalIgnoreCase))
@@ -199,11 +218,10 @@ namespace ScriptX.Services_Client.Controllers
                     {
                         _license = new License { Company = "MeadCo", Guid = new Guid(guidValue), Options = new LicenseOptions { AdvancedPrinting = true } };
                     }
-                    else
-                        _license = null;
                 }
-
             }
+
+            return _license != null;
         }
     }
 }
