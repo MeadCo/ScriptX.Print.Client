@@ -17,10 +17,56 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.5.1.7";
+    var version = "1.5.1.8";
     var apiLocation = "v1/printHtml";
 
+    // default printer 
     var printerName = "";
+
+    /**
+     * @typedef PageSize
+     * @property {number} width width of paper in requested units
+     * @property {number} height height of paper in requested units
+     * */
+    var PageSize;  // for doc generator
+
+    /**
+     * @typedef Margins
+     * @property {number} left left margin in requested units
+     * @property {number} top top margin in requested units
+     * @property {number} right right margin in requested units
+     * @property {number} bottom bottom margin in requested units
+     * */
+    var Margins;  // for doc generator
+
+    /**
+     * Information about and the settings to use with an output printing device
+     * See also: https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXServices/WebServiceAPIReference/PrintHtml/deviceinfoGET
+     * 
+     * @typedef DeviceSettingsObject
+     * @property {string} printerName The name of the printer
+     * @property {string} paperSizeName The descriptive name of the papersize, e.g. "A4"
+     * @property {string} paperSourceName The descriptive name of the paper source, e.g. "Upper tray"
+     * @property {CollateOptions} collate The collation to use when printing
+     * @property {number} copies The number of copies to print
+     * @property {DuplexOptions} duplex The dulex printing option
+     * @property {PageSize} paperPageSize The size of the paper (in requested units)
+     * @property {Margins} unprintableMargins The margin that cannot be printed in (in requested units)
+     * @property {number} status Status code for the status of the device 
+     * @property {string} port Printer connection port name/description
+     * @property {number} attributes Printer attributes
+     * @property {string} serverName Name of the server to which the printer is connected
+     * @property {string} shareName Name of the share 
+     * @property {string} location description of the location of the printer
+     * @property {boolean} isLocal true if the printer is local to the server
+     * @property {boolean} isNetwork true if the server is on the network
+     * @property {boolean} isShared true if the printer is shared 
+     * @property {boolean} isDefault true if this is the default printer on the service
+     * @property {Array.<string>} bins Array of the names of the available paper sources
+     * @property {Array.<string>} forms Array of the names of the avbailable paper sizes
+     * */
+    var DeviceSettingsObject; // for doc generator
+
     var deviceSettings = {};
     var module = this;
 
@@ -34,6 +80,17 @@
 
     var availablePrinters = [];
 
+    /**
+     * Enum for type of content being posted to printHtml API
+     *
+     * @memberof MeadCoScriptXPrint    
+     * @typedef {number} ContentType
+     * @enum {ContentType}
+     * @readonly
+     * @property {number} URL 1 the url will be downloaded and printed
+     * @property {number} HTML 2 the passed string is assumed to be a complete html document .. <html>..</html>
+     * @property {number} INNERHTML 4 the passed string is a complete html document but missing the html tags
+     */
     var enumContentType = {
         URL: 1, // the url will be downloaded and printed
         HTML: 2, // the passed string is assumed to be a complete html document .. <html>..</html>
@@ -48,6 +105,25 @@
         OK: 4
     };
 
+    /**
+     * Enum for status code returned to print progress callbacks
+     *
+     * @memberof MeadCoScriptXPrint    
+     * @typedef {number} PrintStatus
+     * @enum {PrintStatus}
+     * @readonly
+     * @property {number} NOTSTARTED 0
+     * @property {number} QUEUED 1
+     * @property {number} STARTING 2
+     * @property {number} DOWNLOADING 3
+     * @property {number} DOWNLOADED 4
+     * @property {number} PRINTING 5
+     * @property {number} COMPLETED 6
+     * @property {number} PAUSED 7
+     * @property {number} PRINTPDF 8
+     * @property {number} ERROR -1
+     * @property {number} ABANDONED -2
+     */
     var enumPrintStatus = {
         NOTSTARTED: 0,
 
@@ -63,6 +139,42 @@
 
         ERROR: -1,
         ABANDONED: -2
+    };
+
+    /**
+     * Enum to describe the collation option when printing 
+     *
+     * @memberof MeadCoScriptXPrint   
+     * @typedef {number} CollateOptions
+     * @enum {CollateOptions}
+     * @readonly
+     * @property {number} DEFAULT 0 use the default at the print server
+     * @property {number} TRUE 1 collate pages when printing
+     * @property {number} FALSE 2 do not collate pages
+     */
+    var enumCollateOptions = {
+        DEFAULT: 0,
+        TRUE: 1,
+        FALSE: 2
+    };
+
+    /**
+     * Enum to describe the duplex print option to use when printing 
+     *
+     * @memberof MeadCoScriptXPrint
+     * @typedef {number} DuplexOptions
+     * @enum {DuplexOptions}
+     * @readonly
+     * @property {number} DEFAULT 0 use the default at the print server
+     * @property {number} SIMPLEX 1 
+     * @property {number} VERTICAL 2 
+     * @property {number} HORIZONTAL 3
+     */
+    var enumDuplexOptions = {
+        DEFAULT: 0,
+        SIMPLEX: 1,
+        VERTICAL: 2,
+        HORIZONTAL: 3
     };
 
     function queueJob(data) {
@@ -175,7 +287,7 @@
      * @function printHtmlAtServer
      * @memberof MeadCoScriptXPrint
 
-     * @param {enumContentType} contentType enum type of content given (html snippet, url)
+     * @param {ContentType} contentType enum type of content given (html snippet, url)
      * @param {string} content the content - a url, html snippet or complete html
      * @param {object} htmlPrintSettings the settings to use - device annd html such as headers and footers
      * @param {function({string})} fnDone function to call when printing complete (and output returned), arg is null on no error, else error message
@@ -757,11 +869,11 @@
     //////////////////////////////////////////////////
     // public API
     return {
-        /**
+        /*
          * Enum for type of content being posted to printHtml API
          * @readonly
          * @memberof MeadCoScriptXPrint
-         * @enum { number }
+         * @enum { ContentType }
          * 
          * URL: 1 a get request will be issued to the url and the returned content will be printed
          * HTML: 2 the passed string is assumed to be a complete html document .. <html>..</html>
@@ -769,13 +881,16 @@
          */
         ContentType: enumContentType,
 
-        /** 
+        /* 
          * Enum for status code returned to print progress callbacks
          * @readonly
          * @memberof MeadCoScriptXPrint
-         * @enum { number }
+         * @enum PrintStatus { number }
          */
         PrintStatus: enumPrintStatus,
+
+        CollateOptions: enumCollateOptions,
+        DuplexOptions: enumDuplexOptions,   
 
         /** 
          *  Get/set the currently active printer
@@ -820,7 +935,7 @@
         /**
          * Get/set the cached device settings (papersize etc) for the currently active printer
          * @memberof MeadCoScriptXPrint
-         * @property {object} deviceSettings (see API /api/vi/printhtml/deviceInfo/ )
+         * @property {DeviceSettingsObject} deviceSettings (see API /api/vi/printhtml/deviceInfo/ )
          */
         get deviceSettings() {
             return printerName !== "" ? deviceSettings[printerName] : {};
@@ -837,7 +952,7 @@
          * @function deviceSettingsFor
          * @memberof MeadCoScriptXPrint
          * @param {string} sPrinterName the name of the printer device to return the settings for 
-         * @returns {object} object with properties 
+         * @returns {DeviceSettingsObject} object with properties
          */
         deviceSettingsFor: function (sPrinterName) {
             return getDeviceSettingsFor(sPrinterName);
@@ -871,8 +986,8 @@
         },
 
         /**
-         * Specify the server to use and the subscription/license id. 
-         * 
+         * Specify the server and the subscription/license id to use on AJAX calls. No call is made in this function
+         *
          * @function connectLite
          * @memberof MeadCoScriptXPrint
          * @param {string} serverUrl the 'root' url to the server (the api path will be added by the library)
@@ -972,7 +1087,7 @@
          * @function printHtmlAtServer
          * @memberof MeadCoScriptXPrint
 
-         * @param {enumContentType} contentType enum type of content given (html snippet, url)
+         * @param {ContentType} contentType enum type of content given (html snippet, url)
          * @param {string} content the content - a url, html snippet or complete html
          * @param {object} htmlPrintSettings the settings to use - device annd html such as headers and footers
          * @param {function({string})} fnDone function to call when printing complete (and output returned), arg is null on no error, else error message.
@@ -1089,6 +1204,8 @@
          * Start (asynchronous) monitor to observe until no more job spooling/waiting at the server
          * then call the given callback function
          * 
+         * @memberof MeadCoScriptXPrint
+         * @function waitForSpoolingComplete
          * @param {int} iTimeout wait until complete or timeout (in ms) -1 => infinite
          * @param {function({bool})} fnComplete callback function, arg is true if all jobs complete
          */

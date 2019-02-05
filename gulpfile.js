@@ -27,6 +27,10 @@ var docFiles = [
     {
         inputName: "./src/meadco-scriptxprint.js",
         outputFolder: "scriptxprint"
+    },
+    {
+        inputName: "./src/meadco-scriptxprinthtml.js",
+        outputFolder: "scriptxprinthtml"
     }
 ];
 
@@ -114,16 +118,13 @@ exports.buildDist = gulp.series(cleanDist, mintoDist);
 exports.cleanDocs = cleanDocs;
 
 exports.buildHtmlDocs = () => { return buildDocs('html'); };
-exports.buildDocFiles = gulp.series(cleanDocs, () => { return buildDocFiles('html'); });
+exports.buildHtmlDocFiles = gulp.series(cleanDocs, () => { return buildDocFiles('html'); });
 
 exports.buildMdDocs = () => { buildDocs('md'); };
 exports.buildMdDocFiles = gulp.series(cleanDocs, () => { return buildDocFiles('md'); });
 
-exports.buildHtmlDocs = () => { return buildDocs('html'); };
-exports.buildDocFiles = gulp.series(cleanDocs, () => { return buildDocFiles('html'); });
-
 exports.buildJsonDocs = () => { buildDocs('json'); };
 exports.buildJSonDocFiles = gulp.series(cleanDocs, () => { return buildDocFiles('json'); });
 
-exports.buildDocs = gulp.series(cleanDocs, gulp.parallel(exports.buildDocFiles, exports.buildMdDocFiles));
+exports.buildDocs = gulp.series(cleanDocs, gulp.parallel(exports.buildHtmlDocFiles, exports.buildMdDocFiles));
 

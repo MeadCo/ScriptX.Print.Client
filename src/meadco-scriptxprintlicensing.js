@@ -75,7 +75,7 @@
                 .fail(function (jqXHR, textStatus, errorThrown) {
                     MeadCo.log("**warning: failure in MeadCo.ScriptX.Licensing.getSubscriptionFromServer: " + errorThrown);
                     lastError = errorThrown;
-                    if (typeof reject == "function") {
+                    if (typeof reject === "function") {
                         reject(errorThrown);
                         return;
                     }
@@ -96,7 +96,7 @@
             Guid: slicenseGuid,
             Url: path,
             Revision: revision
-        }
+        };
 
         if (module.jQuery) {
             MeadCo.log(".ajax() post: " + server);
@@ -120,7 +120,7 @@
                 .fail(function (jqXHR, textStatus, errorThrown) {
                     MeadCo.log("**warning: failure in MeadCo.ScriptX.Print.Licensing.applyLicense: " + errorThrown);
                     lastError = errorThrown;
-                    if (typeof reject == "function") {
+                    if (typeof reject === "function") {
                         reject(errorThrown);
                         return;
                     }

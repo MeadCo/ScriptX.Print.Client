@@ -1,25 +1,11 @@
 ﻿//QUnit.config.reorder = false;
 
-MeadCo.ScriptX.Print.reportServerError = function (txt) {
-    $("#qunit-fixture").text(txt);
-};
-
-var badServerUrl = "http://localhost:12";
-
-var serverUrl = window.location.protocol + "//" + window.location.host;
-//var serverUrl = "https://scriptxservices.meadroid.com";
-//var serverUrl = "http://127.0.0.1:41191/";
-
-var licenseGuid = "{666140C4-DFC8-435E-9243-E8A54042F918}";
-
-var badLicenseGuid = "123";
-
 QUnit.test("Namespace basics", function (assert) {
 
     assert.ok(MeadCo.ScriptX.Print, "MeadCo.ScriptX.Print namespace exists");
     var api = MeadCo.ScriptX.Print;
 
-    assert.equal(api.version, "1.5.1.7", "Correct version");
+    assert.equal(api.version, "1.5.1.8", "Correct version");
 
     assert.equal(api.ContentType.URL, 1, "ContentType enum is OK");
     assert.equal(api.ContentType.XX, undefined, "Unknown ContentType enum is OK");
@@ -77,7 +63,7 @@ QUnit.test("Testing connection", function (assert) {
 
     var url = serverUrl;
 
-    api.connectTestAsync("http://localhost:1234/", function () {
+    api.connectTestAsync(badServerUrl, function () {
         assert.ok(false, "Should not have connected to: " + url);
         done();
     }, function (errorText) {

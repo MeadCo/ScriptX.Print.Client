@@ -14,15 +14,15 @@
 //
 ; (function (name, definition, undefined) {
 
-    if (this[name] != undefined || document.getElementById(name) != null) {
+    if (this[name] !== undefined || document.getElementById(name) !== null) {
         console.log("ScriptX factory anti-polyfill believes it may not be requred.");
-        if (this[name] != undefined) {
+        if (this[name] !== undefined) {
             console.log("this[" + name + "] is defined");
         }
-        if (document.getElementById(name) != null) {
+        if (document.getElementById(name) !== null) {
             console.log("document.getElementById(" + name + ") is defined");
         }
-        if (this[name].object != undefined) {
+        if (this[name].object !== undefined) {
             console.log("this[" + name + "].object is defined -- not required!!!");
             return;
         } else {
@@ -503,7 +503,7 @@
 
         Print: function (bPrompt, sOrOFrame, fnNotifyStarted) { // needs and wants update to ES2015 (for default values)
             if (typeof fnNotifyStarted === "undefined") {
-                fnNotifyStarted = function (bStarted) { }
+                fnNotifyStarted = function (bStarted) { };
             }
             if (typeof (sOrOFrame) === 'undefined') sOrOFrame = null;
 
@@ -521,14 +521,14 @@
 
         PrintHTML: function (sUrl, bPrompt, fnNotifyStarted) {
             if (typeof fnNotifyStarted === "undefined") {
-                fnNotifyStarted = function (bStarted) { }
+                fnNotifyStarted = function (bStarted) { };
             }
             return printHtmlContent(sUrl, bPrompt, fnNotifyStarted);
         },
 
         PrintHTMLEx: function (sUrl, bPrompt, fnCallback, data, fnNotifyStarted) {
             if (typeof fnNotifyStarted === "undefined") {
-                fnNotifyStarted = function (bStarted) { }
+                fnNotifyStarted = function (bStarted) { };
             }
             return printHtmlContent(sUrl, bPrompt, fnNotifyStarted, fnCallback, data);
         },
@@ -587,11 +587,11 @@
         },
 
         set collate(bCollate) {
-            printApi.deviceSettings.collate = (bCollate === true || bCollate === 1) ? printHtml.CollateOptions.TRUE : printHtml.CollateOptions.FALSE;
+            printApi.deviceSettings.collate = (bCollate === true || bCollate === 1) ? printApi.CollateOptions.TRUE : printApi.CollateOptions.FALSE;
         },
 
         get collate() {
-            return printApi.deviceSettings.collate === printHtml.CollateOptions.TRUE;
+            return printApi.deviceSettings.collate === printApi.CollateOptions.TRUE;
         },
 
         set duplex(duplex) {

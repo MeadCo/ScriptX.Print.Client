@@ -1,0 +1,59 @@
+﻿@page
+@{
+    ViewData["Title"] = "-PrintHtml.js";
+    ViewData["NoQunit"] = "true";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+
+@section Scripts {
+    <script src="/scripts?name=src/meadco-core.js"></script>
+    <script src="/scripts?name=src/meadco-scriptxprint.js"></script>
+    <script src="/scripts?name=src/meadco-scriptxprinthtml.js"></script>
+}
+
+@section TestScripts {
+    <script type="text/javascript">
+        $(function () {
+            $("#btn-test").click(function () {
+                // var c = MeadCo.ScriptX.Print.HTML.frameContentToPrint("testFrame-2");
+                var c = MeadCo.ScriptX.Print.HTML.documentContentToPrint;
+                console.log(c);
+                return false;
+            });
+        });
+    </script>
+}
+
+@*<iframe name="testFrame-2" src="@Url.Page("/Tests/Frame2")"></iframe>*@
+
+<form>
+    <div class="form-group">
+        <label for="personname">Person:</label>
+        <input type="text" class="form-control" id="personname" placeholder="your name" />
+    </div>
+
+    <div class="form-group">
+        <label for="personemail">Person email:</label>
+        <input type="email" class="form-control" id="personemail" placeholder="enter email" />
+        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    </div>
+
+    <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+    </div>
+
+    <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+        <label class="form-check-label" for="exampleCheck1">Check me out</label>
+    </div>
+
+    <div class="form-group">
+        <label for="chatter">Anything to add</label>
+        <textarea class="form-control" id="chatter"></textarea>
+    </div>
+</form>
+<button id="btn-test" class="btn btn-primary">Test</button>
+

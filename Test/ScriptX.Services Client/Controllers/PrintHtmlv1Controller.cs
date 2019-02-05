@@ -100,7 +100,15 @@ namespace ScriptX.Services_Client.Controllers
             {
                 return Unauthorized();
             }
-            return new PrintHtmlDefaultSettings();
+
+            return new PrintHtmlDefaultSettings {
+                AvailablePrinters = new string[] { "A3 Printer", "Test printer" },
+                Device = new DeviceSettings { PrinterName = "Test printer", IsDefault = true },
+                Settings = new HtmlPrintSettings
+                {
+                    Header = "Default header from server"
+                }
+            }; 
         }
 
         /// <summary>

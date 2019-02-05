@@ -5,14 +5,12 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<div id="qunit"></div>
-<div id="qunit-fixture"></div>
-
 @section Scripts {
     <script src="/scripts?name=src/meadco-core.js"></script>
     <script src="/scripts?name=src/meadco-scriptxprint.js"></script>
 }
 
 @section TestScripts {
+    <script src="~/js/UnitTests/serverinfo.js" asp-append-version="true"></script>
     <script src="~/js/UnitTests/Print.js"></script>
 }
