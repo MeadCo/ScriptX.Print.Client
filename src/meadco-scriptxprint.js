@@ -3,6 +3,8 @@
  * 
  * A static class wrapping calls to the server API. 
  * 
+ * Requires: meadco-core.js
+ * 
  * Includes processing of calls to the print api that return "printing to file" including collecting the 
  * file output. 
  * 
@@ -384,6 +386,11 @@
             MeadCo.log("Print server requested: " + serverUrl + " => " + MeadCo.makeApiEndPoint(serverUrl, apiLocation) + " with license: " + clientLicenseGuid);
             server = MeadCo.makeApiEndPoint(serverUrl, apiLocation);
             licenseGuid = clientLicenseGuid;
+            printerName = "";
+            deviceSettings = {};
+            activePrintQueue = []; // warning, will kill any current monitoring
+            bConnected = false;
+            availablePrinters = [];
         }
     }
 

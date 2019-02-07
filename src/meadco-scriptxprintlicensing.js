@@ -4,6 +4,8 @@
  * A static class wrapping calls to the server API to install / manage a client 
  * license for ScriptX.Services for Windows PC. 
  * 
+ * Requires: meadco-core.js
+ * 
  * This module is only required when working with ScriptX Services for Windows PC.
  * 
  * A license must be 'applied' to the current html document/window before calls to printing APIs that 
@@ -70,6 +72,11 @@
     function connectToServer(serverUrl,slicenseGuid) {
         setServer(serverUrl);
         licenseGuid = slicenseGuid;
+        license = {};
+        bConnected = false;
+        lastError = "";
+        licenseRevision = 0;
+        licensePath = ""; 
     }
 
     function getSubscriptionFromServer(resolve, reject) {
@@ -195,8 +202,6 @@
         },
 
         /**
-         * Deprecated - do not use, except as folllows:
-         * 
          * Specify the server to use and the license Guid in order to get details on the license via the License property
          * or function GetLicenseAsync() 
          *

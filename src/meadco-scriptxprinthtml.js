@@ -2,6 +2,8 @@
  * MeadCo.ScriptX.Print.HTML
  *
  * A static class providing printing of HTML content.
+ * 
+ * Requires: meadco-core.js, meadco-scriptxprint.js
  *
  * Includes processing of calls to the print api that return "printing to file" including collecting the
  * file output.
