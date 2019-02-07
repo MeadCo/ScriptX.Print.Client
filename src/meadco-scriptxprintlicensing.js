@@ -1,18 +1,27 @@
 /** 
- * MeadCo.ScriptX.Print.Licensing (support for modern browsers and IE 11) JS client library
- * Copyright 2017-2018 Mead & Company. All rights reserved.
- * https://github.com/MeadCo/ScriptX.Print.Client
+ * MeadCo.ScriptX.Print.Licensing
  *
+ * A static class wrapping calls to the server API to install / manage a client 
+ * license for ScriptX.Services for Windows PC. 
+ * 
  * This module is only required when working with ScriptX Services for Windows PC.
  * 
+ * A license must be 'applied' to the current html document/window before calls to printing APIs that 
+ * use the license can be made.
+ *
+ * This module is NOT required when working with Cloud or On Premise services as the the license
+ * installation and management occurs at the server. 
+
+ * @namespace MeadCoScriptXPrintLicensing
  * @author Pete Cole <pcole@meadroid.com>
- * @license Released under the MIT license
+ * @license MIT license
+ * 
  */
 
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.Licensing', function () {
-    var moduleversion = "1.4.9.0";
+    var moduleversion = "1.5.1.0";
     var apiLocation = "v1/licensing";
 
     var server = ""; // url to the server, server is CORS restricted
@@ -22,6 +31,29 @@
     var lastError = "";
 
     var module = this;
+
+    /**
+     * @typedef LicenseOptions 
+     * 
+     * @property {boolean} BasicHtmlPrinting True if Add-on compatible basic html printing is available (always true)
+     * @property {boolean} AdvancedPrinting True if Add-on compatible advanced html printing features are available
+     * @property {boolean} EnhancedFormatting True if Add-on compatible enhanced formatting is available
+     * @property {boolean} PrintPdf True if printing PDF files is available
+     * @property {boolean} PrintRaw True if Raw printing is available
+     * */
+    var LicenseOptions; // for doc generator
+
+    /**
+     * @typedef license
+     * 
+     * @property {string} Guid The unique id of the license
+     * @property {string} Company The name of the license owner
+     * @property {string} CompanyHomePage Url of company home page 
+     * @property {Date} From Date license is valid from
+     * @property {Date} To Date license is vaid till 
+     * @property {LicenseOptions} Options The options enabled by the license
+     * @property {Array.string} Domains the domains the license can be used from
+     * */
     var license = {};
 
     var bConnected = false;
@@ -141,41 +173,135 @@
     //////////////////////////////////////////////////
     // public API
     return {
+        /**
+         * Get the version of this module as a string major.minor.hotfix.build
+         * @property {string} version
+         * @memberof MeadCoScriptXPrintLicensing
+         */
         get version() {
             return moduleversion;
         },
 
+        /**
+         * Specify the server to use and the license Guid. 
+         * 
+         * @function connect
+         * @memberof MeadCoScriptXPrintLicensing
+         * @param {string} serverUrl the 'root' url to the server (the api path will be added by the library)
+         * @param {string} slicenseGuid the license GUID as provided by MeadCo. Optional unless will call GetLicenseAsync() without calling apply
+         */
         connect: function (serverUrl, slicenseGuid) {
             connectToServer(serverUrl,slicenseGuid);
         },
 
-        connectLite: function (serverUrl, slicenseGuid, sRevision, sPath) {
+        /**
+         * Deprecated - do not use, except as folllows:
+         * 
+         * Specify the server to use and the license Guid in order to get details on the license via the License property
+         * or function GetLicenseAsync() 
+         *
+         * @memberof MeadCoScriptXPrintLicensing
+         * @function connectLite
+         * @memberof MeadCoScriptXPrintLicensing
+         * @param {string} serverUrl the 'root' url to the server (the api path will be added by the library)
+         * @param {string} slicenseGuid the license GUID as provided by MeadCo. Optional unless will call GetLicenseAsync() without calling apply
+         * @param {number} revision the revision number of the licsnse as provided by MeadCo.
+         * @param {string} path fully qualified path to the license file (.mlf file). Use the value 'warehouse' to download from the public MeadCo License warehouse
+         *
+         */
+        connectLite: function (serverUrl, slicenseGuid, revision, path) {
+            MeadCo.warn("MeadCo.ScriptX.Print.Licensing.connectLite is deprecated, please use connect/apply")
             connectToServer(serverUrl,slicenseGuid);
-            licenseRevision = sRevision;
-            licensePath = sPath;
+            licenseRevision = revision;
+            licensePath = path;
         },
 
+        /**
+         * Apply (make usable) the MeadCo ScriptX Client license for use with this content. If the license is not already cached it will be downloaded and cached. 
+         * It is strongly suggested you request that the silent option is enabled in the license (it is by default for ScriptX.Services for Windows PC licenses)
+         * 
+         * The license must list the url of the content to which it is being applied.
+         * 
+         * This call is synchronous and therefore not recommended. Use applyAsync()         
+         * 
+         * @memberof MeadCoScriptXPrintLicensing
+         * @function apply
+         * @param {string} licenseGuid the license GUID as provided by MeadCo.
+         * @param {number} revision the revision number of the licsnse as provided by MeadCo.
+         * @param {string} path fully qualified path to the license file (.mlf file). Use the value 'warehouse' to download from the public MeadCo License warehouse
+         * @returns {license} details the license that was sucessfully applied, null if none available
+         */
         apply: function(licenseGuid, revision, path) {
             return applyLicense(licenseGuid, revision, path);
         },
 
+        /**
+         * Apply (make usable) the MeadCo ScriptX Client license for use with this content. If the license is not already cached it will be downloaded and cached.
+         * It is strongly suggested you request that the silent option is enabled in the license (it is by default for ScriptX.Services for Windows PC licenses)
+         *
+         * The license must list the url of the content to which it is being applied.
+         *
+         * @memberof MeadCoScriptXPrintLicensing
+         * @function applyAsync
+         * @param {string} licenseGuid the license GUID as provided by MeadCo.
+         * @param {number} revision the revision number of the licsnse as provided by MeadCo.
+         * @param {string} path fully qualified path to the license file (.mlf file). Use the value 'warehouse' to download from the public MeadCo License warehouse
+
+         * @param {function({license})} resolve function to call on success
+         * @param {function({string})} reject function to call on failure with reason for failure
+         */
         applyAsync: function(licenseGuid, revision, path, resolve, reject) {
             applyLicense(licenseGuid, revision, path, resolve, reject);
         },
 
+        /**
+         * Get the result code for the last attempt to apply a license.
+         * 
+         * Basically faked for the benefit of code compatibility with the add-on
+         * 
+         * @property {number} result
+         * @memberof MeadCoScriptXPrintLicensing         
+         * 
+         */
         get result() {
             return lastError === "" ? 0 : 5; // => ok or not found
         },
 
+        /**
+         * Get whether a license has been applied successfully
+         * 
+         * @property {boolean} validLicense
+         * @memberof MeadCoScriptXPrintLicensing
+         *
+         */
         get validLicense() {
             return typeof license.guid !== "undefined";
         },
 
+        /**
+         * Get the details on the connected license. If it hasnt been applied yet, then query
+         * for the details (but dont apply it and connectLite() MUST have been called).
+         * 
+         * Warning this function is synchronous, GetLicenseAsync() should be used.
+         *
+         * @property {license} License
+         * @memberof MeadCoScriptXPrintLicensing
+         * 
+         */
         get License() {
             var l = typeof license.guid !== "undefined" ? license : getSubscriptionFromServer();
             return l;
         },
 
+        /**
+         * Get the details on the connected license. If it hasnt been applied yet, then query
+         * for the details (but dont apply it and connectLite() MUST have been called).
+         *
+         * @memberof MeadCoScriptXPrintLicensing
+         * @function GetLicenseAsync
+         * @param {function({license})} resolve function to call on success
+         * @param {function({string})} reject function to call on failure with reason for failure
+         */
         GetLicenseAsync: function (resolve, reject) {
             getSubscriptionFromServer(resolve, reject);
         },

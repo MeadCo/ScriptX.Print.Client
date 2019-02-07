@@ -31,6 +31,10 @@ var docFiles = [
     {
         inputName: "./src/meadco-scriptxprinthtml.js",
         outputFolder: "scriptxprinthtml"
+    },
+    {
+        inputName: "./src/meadco-scriptxprintlicensing.js",
+        outputFolder: "scriptxprintlicensing"
     }
 ];
 
@@ -107,11 +111,6 @@ function cleanDist() {
 function cleanDocs() {
     return del(['./jsDoc/**', '!./jsDoc'], { force: true }).then(paths => { console.log('Deleted:\n', paths.join('\n')); });
 }
-
-var build = gulp.series(cleanDist, mintoDist);
-
-//exports.clean = cleanDist;
-//exports.minDist = mintoDist;
 
 exports.buildDist = gulp.series(cleanDist, mintoDist);
 
