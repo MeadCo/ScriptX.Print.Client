@@ -3,6 +3,7 @@ using MeadCo.ScriptX.Print.Messaging.Requests;
 using MeadCo.ScriptX.Print.Messaging.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ScriptX.Services_Client.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,16 +18,14 @@ namespace ScriptX.Services_Client.Controllers
     public class PrintHtmlv1Controller : ControllerBase
     {
         private ILogger _logger;
-        private const string AuthorizationHeaderName = "Authorization";
-        private const string BasicSchemeName = "Basic";
-
-        MeadCo.ScriptX.Print.Messaging.Responses.License _license;
+        private IMockAuthentication _mockAuthentication;
 
         private static int counter = 0;
 
-        public PrintHtmlv1Controller(ILogger<PrintHtmlv1Controller> logger)
+        public PrintHtmlv1Controller(ILogger<PrintHtmlv1Controller> logger, IMockAuthentication mockAuthentication)
         {
             _logger = logger;
+            _mockAuthentication = mockAuthentication;
         }
 
         /// <summary>
@@ -252,26 +251,7 @@ namespace ScriptX.Services_Client.Controllers
 
         private bool HandleAuthentication()
         {
-            _license = null;
-            if ( AuthenticationHeaderValue.TryParse(Request.Headers[AuthorizationHeaderName], out AuthenticationHeaderValue headerValue))
-            {
-                if (BasicSchemeName.Equals(headerValue.Scheme, StringComparison.OrdinalIgnoreCase))
-                {
-                    byte[] headerValueBytes = Convert.FromBase64String(headerValue.Parameter);
-                    string guidValue = Encoding.UTF8.GetString(headerValueBytes);
-                    if (guidValue.Contains(':'))
-                    {
-                        guidValue = guidValue.Split(':')[0];
-                    }
-
-                    if (guidValue == "{666140C4-DFC8-435E-9243-E8A54042F918}")
-                    {
-                        _license = new License { Company = "MeadCo", Guid = new Guid(guidValue), Options = new LicenseOptions { AdvancedPrinting = true } };
-                    }
-                }
-            }
-
-            return _license != null;
+            return _mockAuthentication.CheckAuthorized();
         }
     }
 }

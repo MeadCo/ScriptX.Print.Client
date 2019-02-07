@@ -684,9 +684,11 @@
     }
 
     function addOrUpdateDeviceSettings(data) {
-        deviceSettings[data.printerName] = data;
-        if (data.isDefault && printerName.length === 0) {
-            printerName = data.printerName;
+        if (typeof data.printerName === "string") {
+            deviceSettings[data.printerName] = data;
+            if (data.isDefault && printerName.length === 0) {
+                printerName = data.printerName;
+            }
         }
     }
 

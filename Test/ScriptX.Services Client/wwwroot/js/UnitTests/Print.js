@@ -15,6 +15,8 @@ QUnit.test("Namespace basics", function (assert) {
     assert.equal(api.PrintStatus.DOWNLOADING, 3, "PrintStatus enum is OK");
     assert.equal(api.PrintStatus.XX, undefined, "Unknown PrintStatus enum is OK");
 
+    api.connectLite("http://clearServer", "");
+
     assert.equal(api.printerName, "", "Printer is empty string");
     assert.notEqual(api.deviceSettings, null, "Default device settings are not null");
     assert.deepEqual(api.deviceSettings, {}, "Default device settings are empty object");
@@ -135,18 +137,11 @@ QUnit.test("Device values and available printers", function (assert) {
 
     assert.equal(api.availablePrinterNames.length, 0, "Correct available (empty) printer names array");
     api.connectDeviceAndPrinters(
-        [
-            {
-                printerName: "A3 printer",
-                paperSize: "A3",
-                isDefaut: true
-
-            },
-            {
-                printerName: "A4 printer",
-                paperSize: "A4"
-            }
-        ],
+        {
+            printerName: "A3 printer",
+            paperSize: "A3",
+            isDefault: true
+        },
         ["A3 printer", "A4 printer"]);
 
     assert.notDeepEqual(api.deviceSettings, {}, "Set default device settings are not empty object");

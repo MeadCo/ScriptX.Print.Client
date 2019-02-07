@@ -37,24 +37,24 @@
     /**
      * @typedef LicenseOptions 
      * 
-     * @property {boolean} BasicHtmlPrinting True if Add-on compatible basic html printing is available (always true)
-     * @property {boolean} AdvancedPrinting True if Add-on compatible advanced html printing features are available
-     * @property {boolean} EnhancedFormatting True if Add-on compatible enhanced formatting is available
-     * @property {boolean} PrintPdf True if printing PDF files is available
-     * @property {boolean} PrintRaw True if Raw printing is available
+     * @property {boolean} basicHtmlPrinting True if Add-on compatible basic html printing is available (always true)
+     * @property {boolean} advancedPrinting True if Add-on compatible advanced html printing features are available
+     * @property {boolean} enhancedFormatting True if Add-on compatible enhanced formatting is available
+     * @property {boolean} printPdf True if printing PDF files is available
+     * @property {boolean} printRaw True if Raw printing is available
      * */
     var LicenseOptions; // for doc generator
 
     /**
      * @typedef license
      * 
-     * @property {string} Guid The unique id of the license
-     * @property {string} Company The name of the license owner
-     * @property {string} CompanyHomePage Url of company home page 
-     * @property {Date} From Date license is valid from
-     * @property {Date} To Date license is vaid till 
-     * @property {LicenseOptions} Options The options enabled by the license
-     * @property {Array.string} Domains the domains the license can be used from
+     * @property {string} guid The unique id of the license
+     * @property {string} company The name of the license owner
+     * @property {string} companyHomePage Url of company home page 
+     * @property {Date} from Date license is valid from
+     * @property {Date} to Date license is vaid till 
+     * @property {LicenseOptions} options The options enabled by the license
+     * @property {Array.string} domains the domains the license can be used from
      * */
     var license = {};
 

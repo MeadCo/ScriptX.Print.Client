@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using ScriptX.Services_Client.Authentication;
 
 namespace ScriptX.Services_Client
 {
@@ -38,9 +39,13 @@ namespace ScriptX.Services_Client
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            services.AddHttpContextAccessor();
+
             IFileProvider scriptFileProvider = new PhysicalFileProvider(Path.Combine(_hostingEnvironment.ContentRootPath,"..\\..\\"));
 
             services.AddSingleton<IFileProvider>(scriptFileProvider);
+
+            services.AddScoped<Authentication.IMockAuthentication, MockAuthentication>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

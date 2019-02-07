@@ -1,0 +1,16 @@
+﻿@page
+@{
+    ViewData["Title"] = "-Licensing.js";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@section Scripts {
+    <script src="/scripts?name=src/meadco-core.js"></script>
+    <script src="/scripts?name=src/meadco-scriptxprintlicensing.js"></script>
+}
+
+@section TestScripts {
+    <script src="~/js/UnitTests/serverinfo.js" asp-append-version="true"></script>
+    <script src="~/js/UnitTests/licensing.js"></script>
+}
