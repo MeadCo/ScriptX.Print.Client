@@ -3,7 +3,7 @@
     assert.ok(MeadCo.ScriptX.Print.HTML, "MeadCo.ScriptX.Print.HTML namespace exists");
     var api = MeadCo.ScriptX.Print.HTML;
 
-    assert.equal(api.version, "1.5.1.2", "Correct version");
+    assert.equal(api.version, "1.5.1.4", "Correct version");
 
     assert.equal(api.PageMarginUnits.MM, 2, "PageMarginUnits enum is OK");
     assert.equal(api.PageMarginUnits.XX, undefined, "PageMarginUnits ContentType enum is OK");
@@ -18,7 +18,10 @@
         : navigator.language;   
 
     assert.notStrictEqual(locale,undefined,"There is a browser locale: " + locale);
-    assert.notStrictEqual(api.settings.locale,undefined,"There is a locale: " + api.settings.locale);
+    assert.notStrictEqual(api.settings.locale, undefined, "There is a locale: " + api.settings.locale);
+
+
+    assert.equal(MeadCo.ScriptX.Print.ContentType.INNERHTML, 4, "MeadCo.ScriptX.Print.ContentType.INNERHTML enum is available");
 
 });
 
@@ -75,7 +78,63 @@ QUnit.test("Grabbing content", function (assert) {
     var f = api.frameContentToPrint("testFrame");
     var f2 = api.frameContentToPrint("testFrame-2");
 
+    assert.notStrictEqual(d.indexOf("<h1>-PrintHtml.js</h1>"), -1, "document heading gathered");
     assert.notStrictEqual(f.indexOf("A massively simple frame"), -1, "Frame content gathered by frame id");
     assert.notStrictEqual(f2.indexOf("A massively simple frame"), -1, "Frame content gathered by frame name");
+
+});
+
+QUnit.test("Printing content", function (assert) {
+
+    var done = assert.async(1);
+
+    var api = MeadCo.ScriptX.Print.HTML;
+
+    api.connectAsync(serverUrl, licenseGuid, function (data) {
+
+        assert.equal(MeadCo.ScriptX.Print.printerName, "Test printer", "Default printer name has been set");
+        assert.equal(api.settings.header, "Default header from server", "header values collected from server");
+        assert.notStrictEqual(api.settings.locale, undefined, "There is a locale: " + api.settings.locale);
+        done();
+
+        var done2 = assert.async(4);
+
+        // immediate completion
+        api.printDocument(function (errorText) {
+            assert.equal(errorText, null, "Correct done call on immediate completion");
+            done2();
+        }, function (status, sInformation, data) {
+            assert.equal(data, "ProgressData", "On progress function receives data: " + status);
+        },
+            "ProgressData");
+
+        // error in job from server
+        api.printFromUrl("http://www.meadroid.com", function (errorText) {
+            assert.equal(errorText, "Server error", "Correct done call (mocked abandoned)");
+            assert.equal($("#qunit-fixture").text(), "The print failed with the error: Mocked abandon", "Correct error dialog raised");
+            done2();
+        }, function (status, sInformation, data) {
+            assert.equal(data, "ProgressData", "On progress function receives data: " + status);
+        },
+            "ProgressData");
+
+        // requires monitor to run a few loops
+        api.printHtml("<!Doctype html><html><body>Hello world</body></html>", function (errorText) {
+            assert.equal(errorText, null, "Correct done call on long running job");
+            done2();
+        }, function (status, sInformation, data) {
+            assert.equal(data, "ProgressData", "On progress function receives data: " + status);
+        },
+            "ProgressData");
+
+        MeadCo.ScriptX.Print.waitForSpoolingComplete(10000, function (bComplete) {
+            assert.ok(bComplete, "WaitForSpoolingComplete ok - all jobs done.");
+            done2();
+        });
+
+    }, function (errorText) {
+        assert.ok(false, "Should have connected to: " + url + " error: " + errorText);
+        done();
+    });
 
 });

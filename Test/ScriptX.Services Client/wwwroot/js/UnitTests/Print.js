@@ -9,6 +9,8 @@ QUnit.test("Namespace basics", function (assert) {
 
     assert.equal(api.ContentType.URL, 1, "ContentType enum is OK");
     assert.equal(api.ContentType.XX, undefined, "Unknown ContentType enum is OK");
+    assert.equal(MeadCo.ScriptX.Print.ContentType.INNERHTML, 4, "MeadCo.ScriptX.Print.ContentType.INNERHTML enum is available");
+
 
     assert.equal(api.PrintStatus.DOWNLOADING, 3, "PrintStatus enum is OK");
     assert.equal(api.PrintStatus.XX, undefined, "Unknown PrintStatus enum is OK");

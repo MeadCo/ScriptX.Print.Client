@@ -159,6 +159,13 @@ namespace ScriptX.Services_Client.Controllers
 
             Print printResponse = new Print { Status = PrintRequestStatus.QueuedToDevice, JobIdentifier = requestMessage.ContentType.ToString(), Message="No message" };
 
+            if (requestMessage.ContentType != ContentType.Html && requestMessage.ContentType != ContentType.InnerHtml && requestMessage.ContentType != ContentType.Url )
+            {
+                printResponse.Status = PrintRequestStatus.SoftError;
+                printResponse.JobIdentifier = "";
+                printResponse.Message = $"Unsupported print content type: {requestMessage.ContentType}"; 
+            }
+
             counter = 0;
             _logger.LogInformation("Returning {status} [{message}], jobToken: {token}", printResponse.Status, printResponse.Message, printResponse.JobIdentifier);
 
@@ -204,6 +211,11 @@ namespace ScriptX.Services_Client.Controllers
 
                     case ContentType.Html:
                         js.Status = ++counter < 3 ? PrintHtmlStatus.Printing : PrintHtmlStatus.Completed;
+                        break;
+
+                    default:
+                        js.Status = PrintHtmlStatus.ItemError;
+                        js.Message = "Bad type from jobToken: " + jobToken;
                         break;
                 }
             }

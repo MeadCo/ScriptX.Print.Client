@@ -365,7 +365,7 @@
                 progress(requestData, enumPrintStatus.ERROR);
                 MeadCo.log("print has soft error");
                 if (typeof fnDone === "function") {
-                    fnDone("Unknown soft error");
+                    fnDone(data.message);
                 }
             },
 

@@ -16,7 +16,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
 
-    var moduleversion = "1.5.1.2";
+    var moduleversion = "1.5.1.4";
 
     /**
      * Enum to describe the orientation of the paper
@@ -517,6 +517,12 @@
         /**
          * Get the complete currently displayed document as string of HTML.
          * 
+         * Form values are preserved in the source document then the document cloned.
+         * 
+         * A <base /> element is created if required.
+         * <style /> elements are included.
+         * <script /> and <object /> elements are not included.
+         * 
          * @memberof MeadCoScriptXPrintHTML
          * @property {string} documentContentToPrint the current content in the window document as html 
          * */
@@ -526,6 +532,12 @@
 
         /**
          * Get the complete currently displayed document in a frame as string of HTML.
+         *
+         * Form values are preserved in the source document then the document cloned.
+         *
+         * A <base /> element is created if required.
+         * <style /> elements are included.
+         * <script /> and <object /> elements are not included.
          *
          * @memberof MeadCoScriptXPrintHTML
          * @function frameContentToPrint
@@ -547,7 +559,7 @@
         * @returns {boolean} - true if a print was started (otherwise an error will be thrown)
         */
         printDocument: function (fnCallOnDone, fnCallback, data) {
-            return printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.INNERTHTML, documentContent(), document.title, fnCallOnDone, fnCallback, data);
+            return printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.INNERHTML, documentContent(), document.title, fnCallOnDone, fnCallback, data);
         },
 
        /**
@@ -562,7 +574,7 @@
         * @return {boolean} - true if a print was started (otherwise an error will be thrown)
         */
         printFrame: function (sFrame, fnCallOnDone, fnCallback, data) {
-            return printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.INNERTHTML, frameContent(sFrame), document.title, fnCallOnDone, fnCallback, data);
+            return printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.INNERHTML, frameContent(sFrame), document.title, fnCallOnDone, fnCallback, data);
         },
 
        /**
