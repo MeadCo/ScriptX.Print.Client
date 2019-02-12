@@ -1,0 +1,20 @@
+﻿@page
+@{
+    ViewData["Title"] = "-Factory.js";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@section Scripts {
+    <script src="/scripts?name=src/meadco-core.js"></script>
+    <script src="/scripts?name=src/meadco-scriptxprint.js"></script>
+    <script src="/scripts?name=src/meadco-scriptxprinthtml.js"></script>
+    <script src="/scripts?name=src/meadco-scriptxfactory.js"></script>
+}
+
+@section TestScripts {
+    <script src="~/js/UnitTests/serverinfo.js" asp-append-version="true"></script>
+    <script src="~/js/UnitTests/factory.js"></script>
+}
+
+<iframe style="visibility: hidden; display: none" id="testFrame" src="@Url.Page("/Tests/Frame")"></iframe>

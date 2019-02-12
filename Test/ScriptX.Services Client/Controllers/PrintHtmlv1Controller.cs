@@ -77,7 +77,17 @@ namespace ScriptX.Services_Client.Controllers
                 return Unauthorized();
             }
 
-            return new DeviceSettings { PrinterName = "Test printer" };
+            if (string.CompareOrdinal(deviceName, "default") != 0  && string.CompareOrdinal(deviceName, "Test printer") != 0 && string.CompareOrdinal(deviceName, "A3 Printer") != 0)
+            {
+                return NotFound();
+            }
+
+            if (string.CompareOrdinal(deviceName, "default") == 0 )
+            {
+                return new DeviceSettings { PrinterName = "Test printer", IsDefault = true, PaperSizeName = "A4" };
+            }
+
+            return new DeviceSettings { PrinterName = deviceName, PaperSizeName = "A5" };
         }
 
         /// <summary>
@@ -102,7 +112,7 @@ namespace ScriptX.Services_Client.Controllers
 
             return new PrintHtmlDefaultSettings {
                 AvailablePrinters = new string[] { "A3 Printer", "Test printer" },
-                Device = new DeviceSettings { PrinterName = "Test printer", IsDefault = true },
+                Device = new DeviceSettings { PrinterName = "Test printer", IsDefault = true, PaperSizeName = "A4" },
                 Settings = new HtmlPrintSettings
                 {
                     Header = "Default header from server"

@@ -35,6 +35,10 @@ var docFiles = [
     {
         inputName: "./src/meadco-scriptxprintlicensing.js",
         outputFolder: "scriptxprintlicensing"
+    },
+    {
+        inputName: "./src/meadco-scriptxfactory.js",
+        outputFolder: "scriptxfactory"
     }
 ];
 

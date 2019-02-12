@@ -1,11 +1,11 @@
-﻿//QUnit.config.reorder = false;
+﻿QUnit.config.reorder = false;
 
 QUnit.test("Namespace basics", function (assert) {
 
     assert.ok(MeadCo.ScriptX.Print, "MeadCo.ScriptX.Print namespace exists");
     var api = MeadCo.ScriptX.Print;
 
-    assert.equal(api.version, "1.5.1.8", "Correct version");
+    assert.equal(api.version, "1.5.1.9", "Correct version");
 
     assert.equal(api.ContentType.URL, 1, "ContentType enum is OK");
     assert.equal(api.ContentType.XX, undefined, "Unknown ContentType enum is OK");
@@ -134,6 +134,8 @@ QUnit.test("Connecting", function (assert) {
 QUnit.test("Device values and available printers", function (assert) {
 
     var api = MeadCo.ScriptX.Print;
+
+    api.connectLite("http://clearServer", " ");
 
     assert.equal(api.availablePrinterNames.length, 0, "Correct available (empty) printer names array");
     api.connectDeviceAndPrinters(

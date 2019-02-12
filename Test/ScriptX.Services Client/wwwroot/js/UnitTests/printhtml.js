@@ -3,9 +3,9 @@
     assert.ok(MeadCo.ScriptX.Print.HTML, "MeadCo.ScriptX.Print.HTML namespace exists");
     var api = MeadCo.ScriptX.Print.HTML;
 
-    assert.equal(api.version, "1.5.1.4", "Correct version");
+    assert.equal(api.version, "1.5.1.5", "Correct version");
 
-    assert.equal(api.PageMarginUnits.MM, 2, "PageMarginUnits enum is OK");
+    assert.equal(api.PageMarginUnits.MM, 1, "PageMarginUnits enum is OK");
     assert.equal(api.PageMarginUnits.XX, undefined, "PageMarginUnits ContentType enum is OK");
 
     assert.strictEqual(api.settings.viewScale,0,"Settings object readable");

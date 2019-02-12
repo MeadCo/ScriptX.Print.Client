@@ -11,3 +11,7 @@ var badLicenseGuid = "123";
 MeadCo.ScriptX.Print.reportServerError = function (txt) {
     $("#qunit-fixture").text(txt);
 };
+
+MeadCo.ScriptX.Print.reportFeatureNotImplemented = function (featureDescription) {
+    $("#qunit-fixture").text(featureDescription);
+};

@@ -6,6 +6,10 @@
  * 
  * Requires: meadco-core.js
  * 
+ * The purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the code
+ * intact when transitioning to using ScriptX.Servers instead/as well.
+ * 
+ * 
  * This module is only required when working with ScriptX Services for Windows PC.
  * 
  * A license must be 'applied' to the current html document/window before calls to printing APIs that 

@@ -5,6 +5,9 @@
  * 
  * Requires: meadco-core.js, meadco-scriptxprint.js
  *
+ * The purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the code
+ * intact when transitioning to using ScriptX.Servers instead/as well.
+ * 
  * Includes processing of calls to the print api that return "printing to file" including collecting the
  * file output.
  *
@@ -18,7 +21,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
 
-    var moduleversion = "1.5.1.4";
+    var moduleversion = "1.5.1.5";
 
     /**
      * Enum to describe the orientation of the paper
@@ -45,13 +48,13 @@
      * @enum {PageMarginUnits}
      * @readonly
      * @property {number} DEFAULT 0 use the default at the print server
-     * @property {number} INCHES 1 
-     * @property {number} MM 2 millimeters
+     * @property {number} MM 1 millimeters
+     * @property {number} INCHES 2 
      */
     var mPageMarginUnits = {
         DEFAULT: 0,
-        INCHES: 1,
-        MM: 2
+        MM: 1,
+        INCHES: 2
     };
 
     /**
@@ -160,7 +163,7 @@
             settingsCache.header = str;
         },
         get header() {
-            return settingsCache.header;
+            return (settingsCache.header === null || settingsCache.header === "%20") ? "" : settingsCache.header;
         },
 
         set footer(str) {
@@ -171,7 +174,7 @@
         },
 
         get footer() {
-            return settingsCache.footer;
+            return (settingsCache.footer === null || settingsCache.footer === "%20") ? "" : settingsCache.footer;
         },
 
         set headerFooterFont(str) {
@@ -182,7 +185,7 @@
         },
 
         get headerFooterFont() {
-            return settingsCache.headerFooterFont;
+            return (settingsCache.headerFooterFont === null || settingsCache.headerFooterFont === "%20") ? "" : settingsCache.headerFooterFont;
         },
 
         get locale() {

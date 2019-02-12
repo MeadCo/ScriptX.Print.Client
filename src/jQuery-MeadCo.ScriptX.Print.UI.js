@@ -25,7 +25,7 @@
 
     var ui = MeadCo.createNS("MeadCo.ScriptX.Print.UI");
 
-    ui.moduleversion = "1.4.9.0";
+    ui.moduleversion = "1.5.1.1";
 
     // MeadCo.ScriptX.Print.UI.AttachPrintAction(
     //  el - clickable html element
@@ -59,7 +59,7 @@
     });
 
     // MeadCo.ScriptX.Print.UI.PageSetup()
-    ui.PageSetup = function () {
+    ui.PageSetup = function (fnCallBack) {
         // page setup modal to attach to the page
         if (!$('#dlg-printoptions').length) {
             var dlg = '<style>' +
@@ -224,12 +224,6 @@
                     '<!-- /.modal -->';
             $('body').append(dlg);
 
-            $('#btn-saveoptions').click(function (ev) {
-                ev.preventDefault();
-                savePageSetup();
-                $('#dlg-printoptions').modal('hide');
-            });
-
             $('[name="fld-measure"]').on('change', function () {
                 switch ($(this).val()) {
                     case '2': // mm from inches
@@ -250,6 +244,26 @@
                 $('#dlg-printoptions [data-trigger="spinner"]').spinner();
             }
         }
+
+        // reattach click handler as callback function scoped variables may (probably will) have changed
+        $('#btn-saveoptions')
+            .off("click")
+            .on("click", function (ev) {
+                ev.preventDefault();
+                savePageSetup();
+                $('#dlg-printoptions').modal('hide');
+                if (typeof fnCallBack === "function") {
+                    fnCallBack(true);
+                }
+            });
+
+        $("#dlg-printoptions")
+            .off('hidden.bs.modal')
+            .on('hidden.bs.modal', function () {
+                if (typeof fnCallBack === "function") {
+                    fnCallBack(false);
+                }
+            });
 
         var $dlg = $('#dlg-printoptions');
         var settings = MeadCo.ScriptX.Print.HTML.settings;
@@ -526,7 +540,7 @@
         $el.val(((parseFloat($el.val()) * 2540) / 100).toFixed(2));
     }
 
-    // convery the current mm value in the control to inches
+    // convert the current mm value in the control to inches
     function convertAndDisplayMMtoInches($el) {
         $el.val(((parseFloat($el.val()) * 100) / 2540).toFixed(2));
     }

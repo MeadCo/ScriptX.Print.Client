@@ -5,6 +5,9 @@
  * 
  * Requires: meadco-core.js
  * 
+ * The purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the code
+ * intact when transitioning to using ScriptX.Servers instead/as well.
+ * 
  * Includes processing of calls to the print api that return "printing to file" including collecting the 
  * file output. 
  * 
@@ -19,7 +22,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.5.1.8";
+    var version = "1.5.1.9";
     var apiLocation = "v1/printHtml";
 
     // default printer 
@@ -106,6 +109,22 @@
         SOFTERROR: 3,
         OK: 4
     };
+
+    /**
+     * Enum for type of content being posted to printHtml API
+     *
+     * @memberof MeadCoScriptXPrint    
+     * @typedef {number} ErrorAction
+     * @enum {ErrorAction}
+     * @readonly
+     * @property {number} REPORT 1 Call MeadCo.ScriptX.Print.reportServerError(errMsg)
+     * @property {number} THROW 2 throw an error : throw errMsg
+     */
+    var enumErrorAction = {
+        REPORT: 1,
+        THROW: 2
+    };
+    var errorAction = enumErrorAction.REPORT;
 
     /**
      * Enum for status code returned to print progress callbacks
@@ -323,7 +342,7 @@
         {
             fail: function (jqXhr, textStatus, errorThrown) {
                 progress(requestData, enumPrintStatus.ERROR, errorThrown);
-                MeadCo.ScriptX.Print.reportServerError(errorThrown);
+                MeadCo.ScriptX.Print.reportError(errorThrown);
                 if (typeof fnDone === "function") {
                     fnDone(parseError("MeadCo.ScriptX.Print.printHtmlAtServer", jqXhr, textStatus, errorThrown));
                 }
@@ -626,7 +645,7 @@
                                 // keep going
                                 if (timeOut > 0 && (++counter * interval) > timeOut) {
                                     window.clearInterval(intervalId);
-                                    MeadCo.ScriptX.Print.reportServerError("unknown failure while printing.");
+                                    MeadCo.ScriptX.Print.reportError("unknown failure while printing.");
                                 }
                                 bWaiting = false;
                                 break;
@@ -637,7 +656,7 @@
                                 progress(requestData, data.status, data.message);
                                 removeJob(jobId);
                                 window.clearInterval(intervalId);
-                                MeadCo.ScriptX.Print.reportServerError("The print failed with the error: " + data.message);
+                                MeadCo.ScriptX.Print.reportError("The print failed with the error: " + data.message);
                                 functionComplete(null);
                                 break;
 
@@ -745,7 +764,7 @@
                 getDeviceSettings({
                     name: sPrinterName,
                     async: false,
-                    fail: function (eTxt) { MeadCo.ScriptX.Print.reportServerError(eTxt); }
+                    fail: function (eTxt) { MeadCo.ScriptX.Print.reportError(eTxt); }
                 });
             }
 
@@ -763,9 +782,9 @@
         MeadCo.log("MeadCo.ScriptX.Print ... looking for auto connect, already found?: " + bDoneAuto);
         if (this.jQuery && !bDoneAuto) {
             // protected API
-            var printHtml = MeadCoScriptXPrint.HTML;
-            var printApi = MeadCoScriptXPrint;
-            var licenseApi = MeadCoScriptXPrint.Licensing;
+            var printHtml = MeadCo.ScriptX.Print.HTML;
+            var printApi = MeadCo.ScriptX.Print;
+            var licenseApi = MeadCo.ScriptX.Print.Licensing;
 
             // general connection
             //
@@ -898,8 +917,24 @@
          */
         PrintStatus: enumPrintStatus,
 
+        ErrorAction: enumErrorAction,
+
         CollateOptions: enumCollateOptions,
         DuplexOptions: enumDuplexOptions,   
+
+        /**
+         * Get/set the action to take when an error occurs
+         * 
+         * @memberof MeadCoScriptXPrint
+         * @property {ErrorAction} onErrorAction - the action
+         */
+        get onErrorAction() {
+            return errorAction;
+        },
+
+        set onErrorAction(action) {
+            errorAction = action;
+        },
 
         /** 
          *  Get/set the currently active printer
@@ -921,7 +956,9 @@
                                 printerName = data.printerName;
                             },
                             async: false,
-                            fail: function (eTxt) { MeadCo.ScriptX.Print.reportServerError(eTxt); }
+                            fail: function (eTxt) {
+                                MeadCo.ScriptX.Print.reportError(eTxt);
+                            }
                         });
                     } else {
                         printerName = deviceRequest;
@@ -1107,12 +1144,31 @@
         printHtml: printHtmlAtServer,
 
         /**
+         * 'derived' classes call this function to report errors, will either throw or report depending on option
+         * 
+         * @memberof MeadCoScriptXPrint
+         * @function reportError 
+         * @param {string} errorTxt the error text to display
+         * 
+         */
+        reportError: function (errorTxt) {
+            switch (errorAction) {
+                case enumErrorAction.REPORT:
+                    MeadCo.ScriptX.Print.reportServerError(errorTxt);
+                    break;
+
+                case enumErrorAction.THROW:
+                    throw new Error(errorTxt);
+            }
+        },
+
+        /**
          * overridable function for reporting an error. 'derived' classes call this
          * function to report errors.
          * 
          * @memberof MeadCoScriptXPrint
          * @function reportServerError 
-         * @param {string} errorThrown the error text to display
+         * @param {string} errorTxt the error text to display
          * 
          * ```js
          * // overload cloud print library report error
@@ -1121,8 +1177,8 @@
          * }
          * ```
          */
-        reportServerError: function (errorThrown) {
-            alert("There was an error in the printing service\n\n" + errorThrown);
+        reportServerError: function (errorTxt) {
+            alert("There was an error in the printing service\n\n" + errorTxt);
         },
 
         /**

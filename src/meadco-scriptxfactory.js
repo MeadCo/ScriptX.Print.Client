@@ -1,10 +1,60 @@
 /**
- * MeadCo ScriptX 'window.factory' shim (support for modern browsers and IE 11) JS client library
- * Copyright 2017 Mead & Company. All rights reserved.
- * https://github.com/MeadCo/ScriptX.Print.Client
+ * MeadCo ScriptX 'window.factory' shim (support for modern browsers and IE 11) JS client library. 
+ * 
+ * The purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the code 
+ * intact when transitioning to using ScriptX.Servers instead/as well.
+ * 
+ * The ScriptX.Add-on Add-on for Internet Explorer is included on a html document with an <object id='factory' /> element with a de-facto standard id of 'factory'.
+ * 
+ * The object is referenced with the property window.factory which exposes properties and methods.
+ * 
+ * The object has two further properties:
+ *  object (in turn has object.js)
+ *  printing (in turn has printerControl, enhancedFormatting)
  *
+ * This javascript provides partial emulation of window.factory, window.factory.object and window.factory.object.js
+ * 
+ * Full emulation (and almost complete implementation) is provided for window.factory.printing, window.factory.printing.printerControl, window.factory.printing.enhancedFormatting. The most notable absent implementation is an implementation of print preview.
+ * 
+ * ScriptX Add-on for Internet Explorer intercepts the browser UI for printing. For obvious reasons this is not possible with script, however ::
+ * 
+ * PLEASE NOTE: This library replaces window.print()
+ * 
+ * Full documentation on the properties/methods is provided by the technical reference documentation for the ScriptX Add-on for Internet Explorer: https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn. That documentation is not reproduced here.
+ * 
+ * If the startup script determines that the ScriptX Add.on for IE is already active then it will quietly give priority to the object. In other words, the Add-on has precedence on Internet Explorer.
+ * 
+ * This enables the same experience (almost) to be delivered to any browser on any device with the same html/javascript code.
+ * 
+ * It is strongly recommended that the MeadCoScriptJS library (https://github.com/MeadCo/MeadCoScriptXJS) is used in conjunction with this library as it provides code (Promises) to assist
+ * with working with the significant difference between the synchronous nature of the functions of ScriptX.Add-on (which hide the underlying asynchrony) and the asynchronous nature of javascript AJAX processing.
+ * 
+ * Some APIs lead to system provided dialogs (e.g. printer and paper setup) - support for implementing the dialogs in javascript as simple plug-ins is provided, along with an example implementation using bootstrap/jQuery (see jQuery-MeadCo.ScriptX.Print.UI.js)
+ * 
+ * @example
+ * MeadCo.ScriptX.Print.UI = {
+ *    PageSetup: function(fnDialgCompleteCallBack) { ... dialog code ...},
+ *    PrinterSettings: function(fnDialgCompleteCallBack) { ... dialog code ...}
+ * }
+ *
+ * @namespace factory
+ * @namespace factoryprinting
+ * @namespace factoryobject
+ * @namespace factoryjs
+ *
+ * Requires:
+ *      MeadCo.Core
+ *      MeadCo.ScriptX.Print
+ *      MeadCo.ScriptX.Print.HTML
+ *
+ *      MeadCo.ScriptX.Print.Licensing when using ScritpX.Services for Windows PC
+ *      
+ * MeadCo.ScriptX.Print.HTML.connect[Async]() or MeadCo.ScriptX.Print.connect[Async]() *MUST* be called before using the apis in this library.
+ * 
+ * See https://scriptxprintsamples.meadroid.com for a lot of samples on using this code.
+ * 
  * @author Pete Cole <pcole@meadroid.com>
- * @license Released under the MIT license
+ * @license MIT license
  */
 
 // we anti-polyfill <object id="factory" />
@@ -39,7 +89,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.5.1.1";
+    var moduleversion = "1.5.1.2";
     var emulatedVersion = "8.0.0.0";
     var module = this;
 
@@ -73,7 +123,7 @@
             scope = scope[packageName];
         }
 
-    }
+    };
 
 
     log("'factory' loaded " + moduleversion);
@@ -83,6 +133,11 @@
         log: log,
 
         // 'factory' functions
+
+        /* GetComponentVersion is no longer documented . It is implemented as MeadCoScriptJS relies on it.
+         * 
+         * Only ScriptX related ProgIds are supported.
+         */
         GetComponentVersion: function (sComponent, a, b, c, d) {
             log("factory.object.getcomponentversion: " + sComponent);
             var v = emulatedVersion;
@@ -92,22 +147,20 @@
                     v = emulatedVersion;
                     break;
 
-                case "scriptx.factory.cloud":
+                case "scriptx.factory.services":
                     v = moduleversion;
                     break;
 
                 case "meadco.secmgr":
                     try {
                         v = module.secmgr.version;
-                    } catch (e) {
-                    }
+                    } catch (e) { v = "0.0.0.0"; }
                     break;
 
                 case "meadco.triprint":
                     try {
                         v = MeadCo.ScriptX.Print.HTML.version;
-                    } catch (e) {
-                    }
+                    } catch (e) { v = "0.0.0.0"; }
                     break;
             }
 
@@ -118,15 +171,59 @@
             d[0] = v[3];
         },
 
-        get ScriptXVersion() { return emulatedVersion },
-        get SecurityManagerVersion() { return emulatedVersion },
+        /*
+         * Only ScriptX related ProgIds are supported.
+         *
+         */
+        ComponentVersionString: function (sProgId) {
+            var a = new Object();
+            var b = new Object();
+            var c = new Object();
+            var d = new Object();
 
-        baseURL: function (sRelative) {
-            return window.location.href.substring(0, window.location.href.length - window.location.pathname.length);
+            module.factory.GetComponentVersion(sProgId, a, b, c, d);
+            return a[0] + "." + b[0] + "." + c[0] + "." + d[0];
+        },
+
+        get ScriptXVersion() { return emulatedVersion; },
+        get SecurityManagerVersion() { return emulatedVersion; },
+
+        /*
+         * Unique IDs are not suported in servics
+         */
+        IsUniqueIDAvailable: function (bForMachine) { return false; },
+        UniqueID: function (bForMachine) { return 0; },
+        ResetUniqueID: function (bForMachine) { return 0; },
+
+        baseURL: function (sUrl) {
+            var link = document.createElement("a");
+            link.href = sUrl;
+            return link.href;
         },
 
         relativeURL: function (sUrl) {
-            throw "MeadCo.ScriptX.Print :: relativeUrl is not implemented yet.";
+            throw "MeadCo.ScriptX.Print :: relativeUrl is not implemented.\n\nPlease see https://github.com/medialize/URI.js for an alternative.";
+        },
+
+        OnDocumentComplete: function (frameOrWindow, callback) {
+            // other windows is an anachronism we dont support, this window is, by 
+            // definition, complete
+            if (typeof frameOrWindow.contentWindow === "undefined") {
+                callback();
+            }
+            else {
+                // a frame .. listen for load 
+                frameOrWindow.addEventListener("load", function (e) {
+                    callback();
+                }, { once: true });
+            }
+        },
+
+        /*
+         * A no op for services 
+         */
+        Shutdown: function () {
+            return null;
         }
     };
 });
@@ -187,22 +284,7 @@
             }
         } else {
             // if a relative URL supplied then add the base URL of this website
-            if ( sUrl.indexOf('://') === -1 && sUrl.indexOf('\\\\') === -1) {
-                var baseurl = module.factory.baseURL();
-                if (baseurl.substring(baseurl.length - 1, baseurl.length) !== "/") {
-                    if (sUrl.substring(0, 1) !== "/") {
-                        sUrl = baseurl + "/" + sUrl;
-                    } else {
-                        sUrl = baseurl + sUrl;
-                    }
-                } else {
-                    if (sUrl.substring(0, 1) !== "/") {
-                        sUrl = baseurl + sUrl;
-                    } else {
-                        sUrl = baseurl + sUrl.substring(1);
-                    }
-                }
-            }
+            sUrl = module.factory.baseURL(sUrl);
         }
 
         return promptAndPrint(bPrompt,
@@ -362,7 +444,12 @@
         }
     };
 
-    printApi.useAttributes();
+    if (typeof printApi !== "undefined") {
+        printApi.useAttributes();
+    }
+    else {
+        MeadCo.error("MeadCo.ScriptX.Print is not available to ScriptX.Services factory emulation.");
+    }
 
     // public API
     return {
@@ -393,7 +480,6 @@
         get headerFooterFont() {
             return settings.headerFooterFont;
         },
-
 
         set orientation(sOrientation) {
             switch (sOrientation.toLowerCase()) {
@@ -472,20 +558,21 @@
         },
 
         PageSetup: function (fnNotify) {
-            if (typeof fnNotify === "undefined") {
+            if (typeof fnNotify !== "function") {
                 console.warn("PageSeup API in ScriptX.Print Service is not synchronous, there is no return value.");
-                fnNotify = function (bDlgOK) { console.log("PageSetugDlg: " + bDlgOK); }
+                fnNotify = function (bDlgOK) { console.log("PageSetugDlg: " + bDlgOK); };
             }
 
             if (MeadCo.ScriptX.Print.UI) {
                 MeadCo.ScriptX.Print.UI.PageSetup(fnNotify);
             } else {
                 printApi.reportFeatureNotImplemented("Page setup dialog");
+                fnNotify(false);
             }
         },
 
         PrintSetup: function (fnNotify) {
-            if (typeof fnNotify === "undefined") {
+            if (typeof fnNotify !== "function") {
                 console.warn("PrintSetup API in ScriptX.Print Service is not synchronous, there is no return value.");
                 fnNotify = function (bDlgOK) { console.log("PrintSetugDlg: " + bDlgOK); }
             }
@@ -494,6 +581,7 @@
                 MeadCo.ScriptX.Print.UI.PrinterSettings(fnNotify);
             } else {
                 printApi.reportFeatureNotImplemented("Print settings dialog");
+                fnNotify(false);
             }
         },
 
@@ -509,7 +597,7 @@
 
             return promptAndPrint(bPrompt,
                 function () {
-                    if (sOrOFrame != null) {
+                    if (sOrOFrame !== null) {
                         var sFrame = typeof (sOrOFrame) === 'string' ? sOrOFrame : sOrOFrame.id;
                         return printHtml.printFrame(sFrame);
                     }
@@ -533,11 +621,7 @@
             return printHtmlContent(sUrl, bPrompt, fnNotifyStarted, fnCallback, data);
         },
 
-
-        // advanced (aka licensed properties - the server will reject
-        // use if no license available)
         set units(enumUnits) {
-            // TODO: Check licensed (or will obviously fail on the server)
             this.SetMarginMeasure(enumUnits);
         },
 
@@ -545,7 +629,6 @@
             return this.GetMarginMeasure();
         },
 
-        // advanced functions
         set paperSize(sPaperSize) {
             printApi.deviceSettings.paperSizeName = sPaperSize;
         },
@@ -622,12 +705,13 @@
             printApi.reportFeatureNotImplemented("onuserprintpreview",fn);
         },
 
+        // duplicate to cope with COM objects were/are not case senstive
         get CurrentPrinter() {
             return printApi.printerName;
         },
 
         set CurrentPrinter(sPrinterName) {
-            printApi.printerName = sPrinterName;
+            this.currentPrinter = sPrinterName;
         },
 
         get currentPrinter() {
@@ -635,7 +719,16 @@
         },
 
         set currentPrinter(sPrinterName) {
-            printApi.printerName = sPrinterName;
+            var a = printApi.onErrorAction;
+
+            printApi.onErrorAction = printApi.ErrorAction.THROW;
+
+            try {
+                printApi.printerName = sPrinterName;
+            } catch (e) {
+                printApi.onErrorAction = a;
+                throw e;
+            }
         },
 
         get printer() {
@@ -643,7 +736,15 @@
         },
 
         set printer(sPrinterName) {
-            printApi.printerName = sPrinterName;
+            var a = printApi.onErrorAction;
+
+            printApi.onErrorAction = printApi.ErrorAction.THROW;
+
+            try {
+                printApi.printerName = sPrinterName;
+            } catch (e) {
+                printApi.onErrorAction = a;
+            }
         },
 
         set printToFileName(fn) {
@@ -698,7 +799,6 @@
             return printApi.deviceSettings.unprintableMargins.bottom;
         },
 
-        // advanced methods :: require a subscription/license.
         EnumPrinters: function (index) {
             var arP = printApi.availablePrinterNames;
 
@@ -814,11 +914,11 @@
         },
 
         GetMarginMeasure: function () {
-            return settings.page.units === printHtml.PageMarginUnits.INCHES ? 2 : 1;
+            return settings.page.units === printHtml.PageMarginUnits.INCHES ? printHtml.PageMarginUnits.INCHES : printHtml.PageMarginUnits.MM;
         },
 
         SetMarginMeasure: function (enumUnits) {
-            settings.page.units = enumUnits === 2 ? printHtml.PageMarginUnits.INCHES : printHtml.PageMarginUnits.MM;
+            settings.page.units = enumUnits === printHtml.PageMarginUnits.INCHES ? printHtml.PageMarginUnits.INCHES : printHtml.PageMarginUnits.MM;
         },
 
         SetPrintScale: function (value) {
@@ -831,6 +931,7 @@
 
         OwnQueue: function () {
             // NOTE: No-op, no concept of 'out of process' here
+            return null;
         },
 
         SetPageRange: function (bSelectionOnly, iFrom, iTo) {
@@ -846,7 +947,7 @@
         },
 
         Sleep: function () {
-            // If you need this, please implement your own for the browsers you are deploying to 
+            // If you need this, please implement your own for the browsers you are deploying to. 
             // Contact MeadCo for assistance if required.
             printApi.reportFeatureNotImplemented("Sleep");
         },
@@ -889,7 +990,13 @@
 
     module.factory.log("factory.object loaded.");
 
-    // public API
+    /**
+     * Compatibility with Add-on to allow inspection of <object /> and this javascript
+     * for the underlyinbg object implementing 'factory'.
+     * 
+     * @property {object} factory
+     * @namespace factoryobject
+     */
     return module.factory;
 });
 
@@ -906,6 +1013,14 @@
 
     // public API
     return {
+        /**
+         * Convert object to number -- required for some code compatibility only. Do not use
+         * 
+         * @function FormatNumber
+         * @namespace factoryjs
+         * @param {any} arg object to convert
+         * @returns {Number} arg as a number if it can be converted, else 0 
+         */
         FormatNumber: function (arg) {
             if (isNaN(arg)) {
                 return 0;
