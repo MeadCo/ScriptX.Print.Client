@@ -705,7 +705,7 @@
             printApi.reportFeatureNotImplemented("onuserprintpreview",fn);
         },
 
-        // duplicate to cope with COM objects were/are not case senstive
+        // duplicate to cope with COM objects were/are not case sensitive
         get CurrentPrinter() {
             return printApi.printerName;
         },
