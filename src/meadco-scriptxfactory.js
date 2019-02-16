@@ -247,12 +247,21 @@
     function promptAndPrint(bPrompt, fnPrint, fnNotifyStarted) {
         if (typeof (bPrompt) === 'undefined') bPrompt = true;
         var lock = printApi.ensureSpoolingStatus();
+        var bStarted = false;
+        var err = null;
+
         if (bPrompt) {
             if (MeadCo.ScriptX.Print.UI) {
                 MeadCo.ScriptX.Print.UI.PrinterSettings(function (dlgAccepted) {
                     if (dlgAccepted) {
                         MeadCo.log("promptAndPrint requesting print ...");
-                        fnNotifyStarted(fnPrint());
+                        try {
+                            bStarted = fnPrint();
+                            fnNotifyStarted(bStarted);
+                        }
+                        catch (e) {
+                            err = e;
+                        }
                     }
                     else
                         fnNotifyStarted(false);
@@ -260,14 +269,31 @@
                     printApi.freeSpoolStatus(lock);
                 });
 
+                if (err !== null) {
+                    throw err;
+                }
+
                 MeadCo.log("promptAndPrint exits ...");
-                return true;
+                return bStarted;
             }
             console.warn("prompted print requested but no UI library loaded");
         }
-        fnNotifyStarted(fnPrint());
-        printApi.freeSpoolStatus(lock);
-        return true;
+
+        try {
+            bStarted = fnPrint();
+            fnNotifyStarted(bStarted);
+        }
+        catch (e) {
+            err = e;
+        }
+        finally {
+            printApi.freeSpoolStatus(lock);
+        }
+
+        if (err !== null)
+            throw err;
+
+        return bStarted;
     }
 
     function printHtmlContent(sUrl, bPrompt, fnNotifyStarted, fnCallback, data) {
@@ -591,7 +617,7 @@
 
         Print: function (bPrompt, sOrOFrame, fnNotifyStarted) { // needs and wants update to ES2015 (for default values)
             if (typeof fnNotifyStarted === "undefined") {
-                fnNotifyStarted = function (bStarted) { };
+                fnNotifyStarted = function (bStarted) { MeadCo.warn("A print has started"); };
             }
             if (typeof (sOrOFrame) === 'undefined') sOrOFrame = null;
 

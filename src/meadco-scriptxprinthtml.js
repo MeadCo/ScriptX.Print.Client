@@ -21,7 +21,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
 
-    var moduleversion = "1.5.1.5";
+    var moduleversion = "1.5.1.6";
 
     /**
      * Enum to describe the orientation of the paper
@@ -157,7 +157,7 @@
     {
         set header(str) {
             MeadCo.log("MeadCo.ScriptX.Print.HTML setting header: " + str);
-            if (str.length === 0) {
+            if (str !== null && str.length === 0) {
                 str = "%20";
             }
             settingsCache.header = str;
@@ -167,7 +167,7 @@
         },
 
         set footer(str) {
-            if (str.length === 0) {
+            if (str !== null && str.length === 0) {
                 str = "%20";
             }
             settingsCache.footer = str;

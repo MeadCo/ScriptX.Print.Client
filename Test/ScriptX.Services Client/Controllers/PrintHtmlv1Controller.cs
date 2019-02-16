@@ -87,7 +87,17 @@ namespace ScriptX.Services_Client.Controllers
                 return new DeviceSettings { PrinterName = "Test printer", IsDefault = true, PaperSizeName = "A4" };
             }
 
-            return new DeviceSettings { PrinterName = deviceName, PaperSizeName = "A5" };
+            return new DeviceSettings { PrinterName = deviceName, PaperSizeName = "A5",
+                Forms = new string[] { "A3", "A4", "A5" },
+                Bins = new string[] { "Upper", "Lower" },
+                Attributes = 1,
+                Collate = BooleanOption.False,
+                Duplex = Duplex.Default,
+                IsLocal = true,
+                PaperSourceName = "Upper",
+                Status = 0,
+                Copies = 1
+            };
         }
 
         /// <summary>
@@ -112,7 +122,18 @@ namespace ScriptX.Services_Client.Controllers
 
             return new PrintHtmlDefaultSettings {
                 AvailablePrinters = new string[] { "A3 Printer", "Test printer" },
-                Device = new DeviceSettings { PrinterName = "Test printer", IsDefault = true, PaperSizeName = "A4" },
+
+                Device = new DeviceSettings { PrinterName = "Test printer", IsDefault = true, PaperSizeName = "A4",
+                    Forms = new string[] { "A3", "A4", "A5" },
+                    Bins = new string[] { "Upper", "Lower" },
+                    Attributes = 1,
+                    Collate = BooleanOption.False,
+                    Duplex = Duplex.Default,
+                    IsLocal = true,
+                    PaperSourceName = "Upper",
+                    Status =0,
+                    Copies = 1 },
+
                 Settings = new HtmlPrintSettings
                 {
                     Header = "Default header from server"

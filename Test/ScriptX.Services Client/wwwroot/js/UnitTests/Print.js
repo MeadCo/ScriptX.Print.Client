@@ -323,7 +323,7 @@ QUnit.test("Printing single piece of content", function (assert) {
 
     // immediate completion
     api.printHtml(api.ContentType.INNERHTML, "Hello world", {}, function (errorText) {
-        assert.equal(errorText,null, "Correct done call oin immediate completion");
+        assert.equal(errorText,null, "Correct done call in immediate completion");
         done();
     }, function (status, sInformation, data) {
         assert.equal(data, "ProgressData", "On progress function receives data: " + status);

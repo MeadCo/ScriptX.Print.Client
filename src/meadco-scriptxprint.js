@@ -323,6 +323,14 @@
         }
         var devInfo;
 
+        if (content === null || typeof content === "undefined" || (typeof content === "string" && content.length === 0)) {
+            MeadCo.ScriptX.Print.reportError("Request to print no content - access denied?");          
+            if (typeof fnDone === "function") {
+                fnDone("Request to print no content");
+            }
+            return false;
+        }
+
         if (printerName === "") {
             devInfo = {};
         } else {
@@ -1144,7 +1152,8 @@
         printHtml: printHtmlAtServer,
 
         /**
-         * 'derived' classes call this function to report errors, will either throw or report depending on option
+         * 'derived' classes call this function to report errors, will either throw or report depending on 
+         * value of onErrorAction.
          * 
          * @memberof MeadCoScriptXPrint
          * @function reportError 
@@ -1152,6 +1161,7 @@
          * 
          */
         reportError: function (errorTxt) {
+            MeadCo.error("ReportError: " + errorTxt);
             switch (errorAction) {
                 case enumErrorAction.REPORT:
                     MeadCo.ScriptX.Print.reportServerError(errorTxt);
@@ -1240,7 +1250,7 @@
          * ```
          */
         ensureSpoolingStatus: function () {
-            var lock = { jobIdentifier: Date.now() };
+            var lock = { jobIdentifier: Date.now(), printerName: "ensureJobsPrinter", jobName: "null Job" };
             queueJob(lock);
             return lock;
         },
