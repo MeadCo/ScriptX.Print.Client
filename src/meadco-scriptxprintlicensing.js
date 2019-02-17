@@ -4,20 +4,19 @@
  * A static class wrapping calls to the server API to install / manage a client 
  * license for ScriptX.Services for Windows PC. 
  * 
- * Requires: meadco-core.js
- * 
  * The purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the code
- * intact when transitioning to using ScriptX.Servers instead/as well.
- * 
+ * intact when transitioning to using ScriptX.Services instead/as well.
  * 
  * This module is only required when working with ScriptX Services for Windows PC.
  * 
  * A license must be 'applied' to the current html document/window before calls to printing APIs that 
  * use the license can be made.
  *
- * This module is NOT required when working with Cloud or On Premise services as the the license
+ * This module is NOT required when working with Cloud or On Premise services as the license
  * installation and management occurs at the server. 
-
+ *
+ * Requires: meadco-core.js
+ * 
  * @namespace MeadCoScriptXPrintLicensing
  * @author Pete Cole <pcole@meadroid.com>
  * @license MIT license

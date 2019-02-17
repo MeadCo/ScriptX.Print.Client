@@ -2,7 +2,7 @@
  * Static class for namespace creation and core utility functions for ScriptX.Services client libraries
  * 
  * The purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the code
- * intact when transitioning to using ScriptX.Servers instead/as well.
+ * intact when transitioning to using ScriptX.Services instead/as well.
  * 
  * This must be included before any other files from this package.
  * 
@@ -187,7 +187,7 @@
          * @returns {object} static object for the namespace
          * @example
          * var ui = MeadCo.createNS("MeadCo.ScriptX.Print.UI");
-         *  ui.Show = function() { alert("hello"); }
+         * ui.Show = function() { alert("hello"); }
          */
         createNS: function (namespace) {
             var nsparts = namespace.split(".");

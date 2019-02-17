@@ -6,7 +6,7 @@
  * Requires: meadco-core.js, meadco-scriptxprint.js
  *
  * The purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the code
- * intact when transitioning to using ScriptX.Servers instead/as well.
+ * intact when transitioning to using ScriptX.Services instead/as well.
  * 
  * Includes processing of calls to the print api that return "printing to file" including collecting the
  * file output.
