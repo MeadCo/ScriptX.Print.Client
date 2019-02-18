@@ -5,9 +5,6 @@
  * 
  * Requires: meadco-core.js
  * 
- * The purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the code
- * intact when transitioning to using ScriptX.Services instead/as well.
- * 
  * Includes processing of calls to the print api that return "printing to file" including collecting the file output. 
  * 
  * Provides attribute based connection to the server.
@@ -15,10 +12,7 @@
  * Synchronous AJAX calls are deprecated in all browsers but may be useful to "quick start" use of older code. It is recommended that code is moved
  * to using asynchronous calls as soon as practical. The MeadCoScriptXJS library can assist with this as it delivers promise rather than callback based code.
  *
- * 
  * @namespace MeadCoScriptXPrint
- * @author Pete Cole <pcole@meadroid.com>
- * @license MIT license
  */
 
 ; (function (name, definition) {
@@ -1045,17 +1039,16 @@
          * <script src="lib/meadco-scriptxservicesprintUI.min.js" 
          *      data-meadco-server="https://app.corpservices/" 
          *      data-meadco-subscription="" data-meadco-syncinit="false">
-         * </script>
+         * </script>;
          * 
          * <!-- an example connection to ScriptX.Services for Windows PC -->
-         * <script src="lib/meadco-scriptxservicesUI.min.js" 
+         * <script src="lib/meadco-scriptxservicesUI.min.js"
          *      data-meadco-server="http://127.0.0.1:41191" 
          *      data-meadco-license="{6BC6808B-D645-40B6-AE80-E9D0825797EF}" 
-         *      data-meadco-syncinit="false" >
+         *      data-meadco-syncinit="false" 
          *      data-meadco-license-path="warehouse"
-         *      data-meadco-license-revision="3"
+         *      data-meadco-license-revision="3">
          * </script>
-         * 
          */
         useAttributes: function () {
             processAttributes();

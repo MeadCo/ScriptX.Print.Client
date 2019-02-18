@@ -1,8 +1,5 @@
 ﻿/**
  * MeadCo ScriptX 'window.secmgr' shim (support for modern browsers and IE 11) JS client library
- * 
- * The purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the code
- * intact when transitioning to using ScriptX.Services instead/as well.
  *
  * The MeadCo Security Manager Add-on for Internet Explorer is included on a html document with an &lt;object id='secmgr' /&gt; element with a de-facto standard id of 'secmgr'.
  *
@@ -32,9 +29,6 @@
  *  meadco-scriptxprintlicensing.js
  *  
  * @namespace secmgr
- * @author Pete Cole <pcole@meadroid.com>
- * @license Released under the MIT license
- *
  * 
  */
 

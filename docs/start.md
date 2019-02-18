@@ -1,21 +1,4 @@
-## MeadCo ScriptX Service Client Library
-
-The MeadCo ScriptX Service Client Library brings an emulation of MeadCo's ScriptX Add-on for Internet Explorer on Windows to 
-working with [MeadCo ScriptX Services](https://www.meadroid.com/Features/ScriptXServices) in any browser on any device and where-ever the service may be:
-
-* [in the cloud](https://scriptxservices.meadroid.com)
-* an on premise server
-* services on a Microsoft Windows PC
-
-In combination with the [MeadCoScriptXJS library](https://github.com/MeadCo/MeadCoScriptXJS) the emulation provides 
-significant levels of compatibility with in-browser script written for the Add-on so allowing the same code to run with either the Add-on for Internet Explorer or ScriptX Services depending on the client device. 
-It may also be used 'stand-alone' although the code is not very modern due to the requirement to support older versions of Internet Explorer.
-
-The library is used by our extensive set of [samples](https://scriptxprintsamples.meadroid.com). 
-
-## Current Version
-
-1.5.1
+# Getting started
 
 ## Packages 
 
@@ -93,13 +76,3 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
    });
 </script>
 ```
-### License
-
-Released under the [MIT](http://opensource.org/licenses/MIT) license. 
-
-Copyright (c) 2017, Mead & Co Limited.
-
-
-
-
-

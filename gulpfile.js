@@ -122,6 +122,12 @@ function cleanDocs() {
 
 exports.buildDist = gulp.series(cleanDist, mintoDist);
 
+// Build docs using documentation(js)
+//
+// Deprecated in favour of using jsdoc2md and gitbook workflow.
+//
+// That could be incorporated in here but for the moment remains as npm scripts.
+//
 exports.cleanDocs = cleanDocs;
 
 exports.buildHtmlDocs =  gulp.series(cleanDocs,() => { return buildDocs('html'); });

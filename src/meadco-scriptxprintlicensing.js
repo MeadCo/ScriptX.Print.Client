@@ -18,8 +18,6 @@
  * Requires: meadco-core.js
  * 
  * @namespace MeadCoScriptXPrintLicensing
- * @author Pete Cole <pcole@meadroid.com>
- * @license MIT license
  * 
  */
 

@@ -12,8 +12,6 @@
  * file output.
  *
  * @namespace MeadCoScriptXPrintHTML
- * @author Pete Cole <pcole@meadroid.com>
- * @license MIT license
  *
  */
 
@@ -528,9 +526,9 @@
          * 
          * Form values are preserved in the source document then the document cloned.
          * 
-         * A <base /> element is created if required.
-         * <style /> elements are included.
-         * <script /> and <object /> elements are not included.
+         * A base element is created if required.
+         * style elements are included.
+         * script and object elements are not included.
          * 
          * @memberof MeadCoScriptXPrintHTML
          * @property {string} documentContentToPrint the current content in the window document as html 
@@ -544,9 +542,9 @@
          *
          * Form values are preserved in the source document then the document cloned.
          *
-         * A <base /> element is created if required.
-         * <style /> elements are included.
-         * <script /> and <object /> elements are not included.
+         * A base element is created if required.
+         * style elements are included.
+         * script and object elements are not included.
          *
          * @memberof MeadCoScriptXPrintHTML
          * @function frameContentToPrint

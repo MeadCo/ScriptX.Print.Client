@@ -1,0 +1,99 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{F483EA25-6581-4C95-80F9-42E54B1866FD}"
+	ProjectSection(SolutionItems) = preProject
+		..\.unused-.npmrc = ..\.unused-.npmrc
+		..\book.json = ..\book.json
+		..\bower.json = ..\bower.json
+		ScriptX.Print.Client\bundleconfig.json = ScriptX.Print.Client\bundleconfig.json
+		..\LICENSE = ..\LICENSE
+		..\package.json = ..\package.json
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{6F1B6E72-BADC-427F-B43B-24A2CFC326A2}"
+	ProjectSection(SolutionItems) = preProject
+		..\docs\_config.yml = ..\docs\_config.yml
+		..\docs\api.md = ..\docs\api.md
+		..\docs\intro.md = ..\docs\intro.md
+		..\docs\start.md = ..\docs\start.md
+		..\docs\toc.md = ..\docs\toc.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7C47A878-72F0-4EFE-B23F-EB6B67DE8594}"
+	ProjectSection(SolutionItems) = preProject
+		..\src\jQuery-MeadCo.ScriptX.Print.UI.js = ..\src\jQuery-MeadCo.ScriptX.Print.UI.js
+		..\src\meadco-core.js = ..\src\meadco-core.js
+		..\src\meadco-scriptxfactory.js = ..\src\meadco-scriptxfactory.js
+		..\src\meadco-scriptxprint.js = ..\src\meadco-scriptxprint.js
+		..\src\meadco-scriptxprinthtml.js = ..\src\meadco-scriptxprinthtml.js
+		..\src\meadco-scriptxprintlicensing.js = ..\src\meadco-scriptxprintlicensing.js
+		..\src\meadco-secmgr.js = ..\src\meadco-secmgr.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{0B0CC34E-A750-4CBF-965B-B9D84CAAF4EF}"
+	ProjectSection(SolutionItems) = preProject
+		..\nuget\MeadCoScriptXPrintServicesHtml.nuspec = ..\nuget\MeadCoScriptXPrintServicesHtml.nuspec
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dist", "dist", "{0F97F6FD-078E-41D0-B35B-5151D7B9ED95}"
+	ProjectSection(SolutionItems) = preProject
+		..\dist\meadco-scriptxservices.min.js = ..\dist\meadco-scriptxservices.min.js
+		..\dist\meadco-scriptxserviceslicensing.min.js = ..\dist\meadco-scriptxserviceslicensing.min.js
+		..\dist\meadco-scriptxservicesprint.min.js = ..\dist\meadco-scriptxservicesprint.min.js
+		..\dist\meadco-scriptxservicesprintUI.min.js = ..\dist\meadco-scriptxservicesprintUI.min.js
+		..\dist\meadco-scriptxservicesUI.min.js = ..\dist\meadco-scriptxservicesUI.min.js
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScriptX.Services Client", "ScriptX.Services Client\ScriptX.Services Client.csproj", "{1097C054-BAB0-4B08-A582-E6AD925BD423}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{492456B7-42C2-42E0-9579-9775FA833DD1}"
+	ProjectSection(SolutionItems) = preProject
+		..\Libraries\MeadCo.ScriptX.Print.Messaging.dll = ..\Libraries\MeadCo.ScriptX.Print.Messaging.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{06478A30-2FFD-4672-85A3-1A9857A1C9EF}"
+	ProjectSection(SolutionItems) = preProject
+		..\distbundlesconfig.json = ..\distbundlesconfig.json
+		..\gulpfile.js = ..\gulpfile.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tooling", "tooling", "{C916B2C2-9774-4ECC-9840-2DAD44ADD9F3}"
+	ProjectSection(SolutionItems) = preProject
+		..\tooling\archive-readme.md = ..\tooling\archive-readme.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{6FD10DBB-3406-4F8D-837D-BB17B3B5FB6C}"
+	ProjectSection(SolutionItems) = preProject
+		..\tooling\docs\body.hbs = ..\tooling\docs\body.hbs
+		..\tooling\docs\header.hbs = ..\tooling\docs\header.hbs
+		..\tooling\docs\jsdoc.json = ..\tooling\docs\jsdoc.json
+		..\tooling\docs\link.hbs = ..\tooling\docs\link.hbs
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1097C054-BAB0-4B08-A582-E6AD925BD423}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1097C054-BAB0-4B08-A582-E6AD925BD423}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1097C054-BAB0-4B08-A582-E6AD925BD423}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1097C054-BAB0-4B08-A582-E6AD925BD423}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6F1B6E72-BADC-427F-B43B-24A2CFC326A2} = {F483EA25-6581-4C95-80F9-42E54B1866FD}
+		{C916B2C2-9774-4ECC-9840-2DAD44ADD9F3} = {F483EA25-6581-4C95-80F9-42E54B1866FD}
+		{6FD10DBB-3406-4F8D-837D-BB17B3B5FB6C} = {C916B2C2-9774-4ECC-9840-2DAD44ADD9F3}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C379D40C-85D3-4629-97D1-696E28711D63}
+	EndGlobalSection
+EndGlobal
