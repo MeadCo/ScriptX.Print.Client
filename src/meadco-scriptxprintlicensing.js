@@ -38,6 +38,9 @@
     var module = this;
 
     /**
+     * The capabilities that can be licensed.
+     * 
+     * @memberof MeadCoScriptXPrintLicensing
      * @typedef LicenseOptions 
      * 
      * @property {boolean} basicHtmlPrinting True if Add-on compatible basic html printing is available (always true)
@@ -49,6 +52,8 @@
     var LicenseOptions; // for doc generator
 
     /**
+     * License details 
+     * @memberof MeadCoScriptXPrintLicensing
      * @typedef license
      * 
      * @property {string} guid The unique id of the license

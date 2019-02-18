@@ -77,6 +77,7 @@
     /**
      * Enum to describe a boolean value or use the default 
      *
+     * @memberof MeadCoScriptXPrintHTML
      * @typedef {number} BooleanOption
      * @enum {BooleanOption}
      * @readonly
@@ -92,6 +93,7 @@
 
     /**
      * @typedef Margins
+     * @memberof MeadCoScriptXPrintHTML
      * @property {number} left left margin in requested units
      * @property {number} top top margin in requested units
      * @property {number} right right margin in requested units
@@ -101,6 +103,7 @@
 
     /**
      * @typedef PageSettings
+     * @memberof MeadCoScriptXPrintHTML
      * @property {PageOrientation} orientation orientation of the paper (size and source is a device setting)
      * @property {PageMarginUnits} units measurement units for margins
      * @property {Margins} margins margins to use
@@ -109,6 +112,7 @@
 
     /**
      * @typedef ExtraHeaderAndFooterSettings
+     * @memberof MeadCoScriptXPrintHTML
      * @property {string} allPagesHeader
      * @property {string} allPagesFooter
      * @property {string} firstPageHeader

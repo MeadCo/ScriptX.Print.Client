@@ -37,11 +37,6 @@
  *    PrinterSettings: function(fnDialgCompleteCallBack) { ... dialog code ...}
  * }
  *
- * @namespace factory
- * @namespace factoryprinting
- * @namespace factoryobject
- * @namespace factoryjs
- *
  * Requires:
  *      MeadCo.Core
  *      MeadCo.ScriptX.Print
@@ -53,8 +48,13 @@
  * 
  * See https://scriptxprintsamples.meadroid.com for a lot of samples on using this code.
  * 
+ * @namespace factory
+ * 
  * @author Pete Cole <pcole@meadroid.com>
  * @license MIT license
+ * 
+
+ *
  */
 
 // we anti-polyfill <object id="factory" />
@@ -1016,12 +1016,14 @@
 
     module.factory.log("factory.object loaded.");
 
-    /**
+    /*
+     * This completes the emulation of an <object /> element
+     *
      * Compatibility with Add-on to allow inspection of <object /> and this javascript
-     * for the underlyinbg object implementing 'factory'.
+     * for the underlying object implementing 'factory'.
      * 
      * @property {object} factory
-     * @namespace factoryobject
+     * @memberof factoryobject
      */
     return module.factory;
 });
@@ -1039,11 +1041,11 @@
 
     // public API
     return {
-        /**
+        /*
          * Convert object to number -- required for some code compatibility only. Do not use
          * 
          * @function FormatNumber
-         * @namespace factoryjs
+         * @memberof factoryjs
          * @param {any} arg object to convert
          * @returns {Number} arg as a number if it can be converted, else 0 
          */

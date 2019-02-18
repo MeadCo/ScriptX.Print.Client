@@ -33,6 +33,7 @@
 
     /**
      * @typedef PageSize
+     * @memberof MeadCoScriptXPrint
      * @property {number} width width of paper in requested units
      * @property {number} height height of paper in requested units
      * */
@@ -40,6 +41,7 @@
 
     /**
      * @typedef Margins
+     * @memberof MeadCoScriptXPrint
      * @property {number} left left margin in requested units
      * @property {number} top top margin in requested units
      * @property {number} right right margin in requested units
@@ -52,6 +54,7 @@
      * See also: https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXServices/WebServiceAPIReference/PrintHtml/deviceinfoGET
      * 
      * @typedef DeviceSettingsObject
+     * @memberof MeadCoScriptXPrint
      * @property {string} printerName The name of the printer
      * @property {string} paperSizeName The descriptive name of the papersize, e.g. "A4"
      * @property {string} paperSourceName The descriptive name of the paper source, e.g. "Upper tray"

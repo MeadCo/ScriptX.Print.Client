@@ -39,6 +39,10 @@ var docFiles = [
     {
         inputName: "./src/meadco-scriptxfactory.js",
         outputFolder: "scriptxfactory"
+    },
+    {
+        inputName: "./src/meadco-secmgr.js",
+        outputFolder: "secmgr"
     }
 ];
 
@@ -71,7 +75,7 @@ function docOutputLocation(fmt, doc) {
 
 
 function buildDocs(fmt) {
-    return gulp.src('../../src/*.js')
+    return gulp.src('./src/*.js')
         .pipe(gulpDocumentation(fmt, {},
             {
                 name: 'ScriptX.Services Client',
@@ -120,13 +124,13 @@ exports.buildDist = gulp.series(cleanDist, mintoDist);
 
 exports.cleanDocs = cleanDocs;
 
-exports.buildHtmlDocs = () => { return buildDocs('html'); };
+exports.buildHtmlDocs =  gulp.series(cleanDocs,() => { return buildDocs('html'); });
 exports.buildHtmlDocFiles = gulp.series(cleanDocs, () => { return buildDocFiles('html'); });
 
-exports.buildMdDocs = () => { buildDocs('md'); };
+exports.buildMdDocs = gulp.series(cleanDocs,() => { buildDocs('md'); });
 exports.buildMdDocFiles = gulp.series(cleanDocs, () => { return buildDocFiles('md'); });
 
-exports.buildJsonDocs = () => { buildDocs('json'); };
+exports.buildJsonDocs = gulp.series(cleanDocs,() => { buildDocs('json'); });
 exports.buildJSonDocFiles = gulp.series(cleanDocs, () => { return buildDocFiles('json'); });
 
 exports.buildDocs = gulp.series(cleanDocs, gulp.parallel(exports.buildHtmlDocFiles, exports.buildMdDocFiles));
