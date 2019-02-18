@@ -327,7 +327,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 **Example**  
 ```js
-<!-- an example connection to an On Premise server for ScriptX.Services --><script src="lib/meadco-scriptxservicesprintUI.min.js"      data-meadco-server="https://app.corpservices/"      data-meadco-subscription="" data-meadco-syncinit="false"></script>;&lt;!-- an example connection to ScriptX.Services for Windows PC -->&lt;script src="lib/meadco-scriptxservicesUI.min.js"     data-meadco-server="http://127.0.0.1:41191"      data-meadco-license="{6BC6808B-D645-40B6-AE80-E9D0825797EF}"      data-meadco-syncinit="false"      data-meadco-license-path="warehouse"     data-meadco-license-revision="3" &gt;&lt;/script&gt;
+<!-- an example connection to an On Premise server for ScriptX.Services --><script src="lib/meadco-scriptxservicesprintUI.min.js"      data-meadco-server="https://app.corpservices/"      data-meadco-subscription="" data-meadco-syncinit="false"></script>;<!-- an example connection to ScriptX.Services for Windows PC --><script src="lib/meadco-scriptxservicesUI.min.js"     data-meadco-server="http://127.0.0.1:41191"      data-meadco-license="{6BC6808B-D645-40B6-AE80-E9D0825797EF}"      data-meadco-syncinit="false"      data-meadco-license-path="warehouse"     data-meadco-license-revision="3"></script>
 ```
 <br/>
 <a id="MeadCoScriptXPrint.connect"></a>

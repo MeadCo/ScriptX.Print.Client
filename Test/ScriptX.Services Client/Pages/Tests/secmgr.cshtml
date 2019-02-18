@@ -6,9 +6,15 @@
 <h1>@ViewData["Title"]</h1>
 
 @section Scripts {
+
+<environment include="Development">
     <script src="/scripts?name=src/meadco-core.js"></script>
     <script src="/scripts?name=src/meadco-scriptxprintlicensing.js"></script>
     <script src="/scripts?name=src/meadco-secmgr.js"></script>
+</environment>
+    <environment exclude="Development">
+        <script src="/scripts?name=dist/meadco-scriptxservices.min.js"></script>
+    </environment>
 }
 
 @section TestScripts {
