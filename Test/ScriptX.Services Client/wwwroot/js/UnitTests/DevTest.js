@@ -1,35 +1,30 @@
-﻿QUnit.test("factory.printing - do printing with *no* UI", function (assert) {
+﻿QUnit.test("Printing with no arguments", function (assert) {
 
-    var api = window.factory.printing;
-    var api2 = MeadCo.ScriptX.Print.HTML;
+    var done = assert.async(2);
+    var api = MeadCo.ScriptX.Print;
 
-    var done = assert.async(3);
+    api.connectLite(serverUrl, licenseGuid);
+    assert.notOk(api.printHtml(), "No arguments correctly returns false");
+    done();
 
-    var url = serverUrl;
-
-    api2.connectAsync(url, licenseGuid, function (data) {
-        assert.ok(true, "Connected to server");
-        done();
-
-        // with no UI, implictly taken that user accepted the prompt
-        MeadCo.ScriptX.Print.UI = null;
-
-        assert.ok(api.Print(true, "testFrame", (bStarted) => {
-            assert.ok(bStarted, "Prompted print frame did start");
-            assert.strictEqual(api.GetJobsCount(api.printer), 1, "There is a printframe job for the printer");
-            done();
-
-            api.WaitForSpoolingComplete(3000, (bAllComplete) => {
-                assert.ok(bAllComplete, "All jobs are complete");
-                assert.strictEqual(api.GetJobsCount(api.printer), 0, "There are no jobs for the printer");
-                done();
-                });
-        }), "Print api returned true");
-
-    }, function (errorText) {
-        assert.ok(false, "Should have connected to: " + url + " error: " + errorText);
+    api.printHtml(0, null, null, function (txt) {
+        assert.equal($("#qunit-fixture").text(), "Request to print no content - access denied?", "No arguments no callback raises correct error dialog");
+        assert.ok(txt, "Error message supplied to fnDone()");
+        assert.strictEqual(txt, "Request to print no content","Correct error message supplied to fnDone()");
         done();
     });
 
+    //api.printHtml(0, null, null, function (errorText) {
+    //    assert.equal($("#qunit-fixture").text(), "Bad Request", "No arguments but with callback raises correct error dialog");
+    //    assert.equal(errorText, "Bad Request", "Correct error text");
+    //    done();
+    //}, function (status, sInformation, data) {
+    //    assert.equal(data, "ProgressData", "On progress function receives data");
+    //    assert.equal(sInformation, "Bad Request", "progress callback gets correct error");
+    //    assert.equal(status, api.PrintStatus.ERROR, "Correct progress status (ERROR)");
+    //    done();
+    //},
+    //    "ProgressData");
 });
+
 
