@@ -66,7 +66,7 @@ namespace ScriptX.Services_Client.Controllers
         [Route("deviceinfo/{deviceName}/{units?}")]
         [Produces("application/json")]
 
-        public ActionResult<DeviceSettings> GetDeviceInfo(string deviceName, PageSettings.PageMarginUnits units = PageSettings.PageMarginUnits.Default)
+        public ActionResult<DeviceSettings> GetDeviceInfo(string deviceName, MeasurementUnits units = MeasurementUnits.Default)
         {
             // we have had to replace \ with || to get past cors checking, so reinstate \ (NB: we are assuming || is rare in a printer name!)
             deviceName = deviceName.Replace("||", "\\");
@@ -112,7 +112,7 @@ namespace ScriptX.Services_Client.Controllers
         /// GET api/v1/printhtml/htmlPrintDefaults
         [Route("htmlPrintDefaults/{units?}")]
         [Produces("application/json")]
-        public ActionResult<PrintHtmlDefaultSettings> GetHtmlPrintDefaults(PageSettings.PageMarginUnits units = PageSettings.PageMarginUnits.Default)
+        public ActionResult<PrintHtmlDefaultSettings> GetHtmlPrintDefaults(MeasurementUnits units = MeasurementUnits.Default)
         {
             _logger.LogInformation("GET api/v1/printhtml/htmlPrintDefaults/{units}", units);
             if (!HandleAuthentication())

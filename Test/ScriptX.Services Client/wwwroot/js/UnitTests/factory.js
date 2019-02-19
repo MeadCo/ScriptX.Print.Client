@@ -4,7 +4,7 @@ QUnit.test("Namespace basics", function (assert) {
 
     assert.ok(window.factory, "factory namespace exists");
     var api = window.factory;
-    var expectedVersion = "1.5.2.0";
+    var expectedVersion = "1.5.2.1";
 
     var a = new Object();
     var b = new Object();
@@ -165,8 +165,8 @@ QUnit.test("factory.printing device settings", function (assert) {
 
     var api = window.factory.printing;
 
-    assert.strictEqual(api.units, MeadCo.ScriptX.Print.HTML.PageMarginUnits.MM, "Default margin units correct");
-    assert.strictEqual(api.GetMarginMeasure(), MeadCo.ScriptX.Print.HTML.PageMarginUnits.MM, "Default margin measure units correct");
+    assert.strictEqual(api.units, MeadCo.ScriptX.Print.MeasurementUnits.MM, "Default margin units correct");
+    assert.strictEqual(api.GetMarginMeasure(), MeadCo.ScriptX.Print.MeasurementUnits.MM, "Default margin measure units correct");
 
     assert.strictEqual(api.printer, "", "Correct null startup printer");
 

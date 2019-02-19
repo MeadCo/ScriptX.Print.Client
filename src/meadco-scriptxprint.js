@@ -19,11 +19,28 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.5.2.0";
+    var version = "1.5.2.1";
     var apiLocation = "v1/printHtml";
 
     // default printer 
     var printerName = "";
+
+    /**
+     * Enum to describe the units used on measurements 
+     *
+     * @memberof MeadCoScriptXPrint
+     * @typedef {number} MeasurementUnits
+     * @enum {MeasurementUnits}
+     * @readonly
+     * @property {number} DEFAULT 0 use the default at the print server
+     * @property {number} MM 1 millimeters
+     * @property {number} INCHES 2 
+     */
+    var enumMeasurementUnits = {
+        DEFAULT: 0,
+        MM: 1,
+        INCHES: 2
+    };
 
     /**
      * Describe the size of a page by its width and height.
@@ -934,6 +951,7 @@
 
         CollateOptions: enumCollateOptions,
         DuplexOptions: enumDuplexOptions,   
+        MeasurementUnits: enumMeasurementUnits,
 
         /**
          * Get/set the action to take when an error occurs

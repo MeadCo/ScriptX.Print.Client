@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
 
-    var moduleversion = "1.5.2.0";
+    var moduleversion = "1.5.2.1";
 
     /**
      * Enum to describe the orientation of the paper
@@ -36,23 +36,6 @@
         DEFAULT: 0,
         LANDSCAPE: 1,
         PORTRAIT: 2
-    };
-
-    /**
-     * Enum to describe the units used on measurements 
-     *
-     * @memberof MeadCoScriptXPrintHTML    
-     * @typedef {number} PageMarginUnits
-     * @enum {PageMarginUnits}
-     * @readonly
-     * @property {number} DEFAULT 0 use the default at the print server
-     * @property {number} MM 1 millimeters
-     * @property {number} INCHES 2 
-     */
-    var mPageMarginUnits = {
-        DEFAULT: 0,
-        MM: 1,
-        INCHES: 2
     };
 
     /**
@@ -103,7 +86,7 @@
      * @typedef PageSettings
      * @memberof MeadCoScriptXPrintHTML
      * @property {PageOrientation} orientation orientation of the paper (size and source is a device setting)
-     * @property {PageMarginUnits} units measurement units for margins
+     * @property {MeasurementUnits} units measurement units for margins
      * @property {Margins} margins margins to use
      * */
     var PageSettings;  // for doc generator
@@ -139,7 +122,7 @@
         printBackgroundColorsAndImages: false,
         page: {
             orientation: mPageOrientation.PORTRAIT,
-            units: mPageMarginUnits.DEFAULT,
+            units: MeadCo.ScriptX.Print.MeasurementUnits.DEFAULT,
             margins: {
                 left: "",
                 top: "",
@@ -493,7 +476,6 @@
 
     // public API
     return {
-        PageMarginUnits: mPageMarginUnits,
         PageOrientation: mPageOrientation, 
         PrintingPasses: mPrintingPass,
 
