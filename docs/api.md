@@ -1,6 +1,6 @@
 <br/>
 <a id="MeadCo"></a>
-<h2 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h2 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCo : object</h2>Static class for namespace creation and core utility functions for ScriptX.Services client librariesThis must be included before any other files from this package.
 
 
@@ -14,7 +14,7 @@
 
 <br/>
 <a id="MeadCo.version"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCo.version</h3>Get the version of this module as a string major.minor.hotfix.build
 
 **Properties**
@@ -25,7 +25,7 @@
 
 <br/>
 <a id="MeadCo.log"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCo.log(text)</h3>Sends the content to the console
 
 
@@ -35,7 +35,7 @@
 
 <br/>
 <a id="MeadCo.warn"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCo.warn(text)</h3>Marks the content as a warning and sends to the console
 
 
@@ -45,7 +45,7 @@
 
 <br/>
 <a id="MeadCo.error"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCo.error(text)</h3>Marks the content as an error and sends to the console
 
 
@@ -55,7 +55,7 @@
 
 <br/>
 <a id="MeadCo.createNS"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCo.createNS(namespace) ⇒ object</h3>Create a namespace
 
 
@@ -70,7 +70,7 @@ var ui = MeadCo.createNS("MeadCo.ScriptX.Print.UI");ui.Show = function() { aler
 ```
 <br/>
 <a id="MeadCo.makeApiEndPoint"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCo.makeApiEndPoint(serverUrl, apiLocation) ⇒ string</h3>Get the url to a ScriptX.Services api endpoint
 
 
@@ -82,7 +82,7 @@ var ui = MeadCo.createNS("MeadCo.ScriptX.Print.UI");ui.Show = function() { aler
 **Returns**: string - url to the api  
 <br/>
 <a id="factory"></a>
-<h2 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h2 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     factory : object</h2>MeadCo ScriptX 'window.factory' shim (support for modern browsers and IE 11) JS client library. The ScriptX.Add-on Add-on for Internet Explorer is included on a html document with an <object id='factory' /> element with a de-facto standard id of 'factory'.The object is referenced with the property window.factory which exposes properties and methods.The object has two further properties: object (in turn has object.js) printing (in turn has printerControl, enhancedFormatting)This javascript provides partial emulation of window.factory, window.factory.object and window.factory.object.jsFull emulation (and almost complete implementation) is provided for window.factory.printing, window.factory.printing.printerControl, window.factory.printing.enhancedFormatting. The most notable absent implementation is an implementation of print preview.ScriptX Add-on for Internet Explorer intercepts the browser UI for printing. For obvious reasons this is not possible with script, however ::PLEASE NOTE: This library replaces window.print()Full documentation on the properties/methods is provided by the technical reference documentation for the ScriptX Add-on for Internet Explorer: https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn. That documentation is not reproduced here.If the startup script determines that the ScriptX Add.on for IE is already active then it will quietly give priority to the object. In other words, the Add-on has precedence on Internet Explorer.This enables the same experience (almost) to be delivered to any browser on any device with the same html/javascript code.It is strongly recommended that the MeadCoScriptJS library (https://github.com/MeadCo/MeadCoScriptXJS) is used in conjunction with this library as it provides code (Promises) to assistwith working with the significant difference between the synchronous nature of the functions of ScriptX.Add-on (which hide the underlying asynchrony) and the asynchronous nature of javascript AJAX processing.Some APIs lead to system provided dialogs (e.g. printer and paper setup) - support for implementing the dialogs in javascript as simple plug-ins is provided, along with an example implementation using bootstrap/jQuery (see jQuery-MeadCo.ScriptX.Print.UI.js)
 
 **Example**  
@@ -91,7 +91,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 ```
 <br/>
 <a id="MeadCoScriptXPrint"></a>
-<h2 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h2 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint : object</h2>MeadCo.ScriptX.PrintA static class wrapping calls to the server API. Requires: meadco-core.jsIncludes processing of calls to the print api that return "printing to file" including collecting the file output. Provides attribute based connection to the server.Synchronous AJAX calls are deprecated in all browsers but may be useful to "quick start" use of older code. It is recommended that code is movedto using asynchronous calls as soon as practical. The MeadCoScriptXJS library can assist with this as it delivers promise rather than callback based code.
 
 
@@ -131,7 +131,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.onErrorAction"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.onErrorAction</h3>Get/set the action to take when an error occurs
 
 **Properties**
@@ -142,7 +142,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.printerName"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.printerName</h3>Get/set the currently active printer
 
 **Properties**
@@ -153,7 +153,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.version"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.version</h3>Get the version of this module as a string major.minor.hotfix.build
 
 **Properties**
@@ -164,7 +164,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.deviceSettings"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.deviceSettings</h3>Get/set the cached device settings (papersize etc) for the currently active printer
 
 **Properties**
@@ -175,7 +175,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.isConnected"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.isConnected</h3>true if the library has succesfully connected to a server.
 
 **Read only**: true  
@@ -187,17 +187,19 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.availablePrinterNames"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.availablePrinterNames</h3>**Read only**: true  
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCoScriptXPrint.availablePrinterNames</h3>Get the list of printers availablefrom the server.
+
+**Read only**: true  
 **Properties**
 
 | Name | Type | Description |
 | --- | --- | --- |
-| availablePrinterNames | array | an array of strings of the available printers |
+| availablePrinterNames | Array.&lt;string&gt; | an array of strings of the names of the available printers |
 
 <br/>
 <a id="MeadCoScriptXPrint.queue"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.queue</h3>The list of jobs currently active at the server for this client
 
 **Read only**: true  
@@ -209,7 +211,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.activeJobs"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.activeJobs</h3>The number of jobs there are actgive at the server for this client(same as MeadCo.ScriptX.Print.queue.length)
 
 **Read only**: true  
@@ -221,7 +223,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.isSpooling"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.isSpooling</h3>Get if print is still 'spooling'.still queued at the server
 
 **Read only**: true  
@@ -233,7 +235,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.ContentType"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.ContentType : enum</h3>Enum for type of content being posted to printHtml API
 
 **Read only**: true  
@@ -247,7 +249,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.ErrorAction"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.ErrorAction : enum</h3>Enum for type of content being posted to printHtml API
 
 **Read only**: true  
@@ -260,7 +262,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.PrintStatus"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.PrintStatus : enum</h3>Enum for status code returned to print progress callbacks
 
 **Read only**: true  
@@ -282,7 +284,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.CollateOptions"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.CollateOptions : enum</h3>Enum to describe the collation option when printing
 
 **Read only**: true  
@@ -296,7 +298,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.DuplexOptions"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.DuplexOptions : enum</h3>Enum to describe the duplex print option to use when printing
 
 **Read only**: true  
@@ -311,7 +313,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.deviceSettingsFor"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.deviceSettingsFor(sPrinterName) ⇒ DeviceSettingsObject</h3>Get the device settings (papersize etc) for the named printer. This call is synchronous and not recommended.
 
 
@@ -322,7 +324,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 **Returns**: DeviceSettingsObject - object with properties  
 <br/>
 <a id="MeadCoScriptXPrint.useAttributes"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.useAttributes()</h3>search for processing attibutes for connection and subscription/license and processthem. The attibutes can be on any elementdata-meadco-server value is the root url, api/v1/printhtml, api/v1/licensing will be added by the librarydata-meadco-syncinit default is true for synchronous calls to the server, value 'false' to use asynchronous calls to the serverdata-meadco-subscription present => cloud/on premise service, value is the subscription GUIDdata-meadco-license present => for Windows PC service, value is the license GUIDIf data-meadco-license is present then the following additional attributes can be used:data-meadco-license-revision, value is the revision number of the licensedata-meadco-license-path,, value is the path to the license file (sxlic.mlf). A value of "warehouse" will cause the license to be downloaded from MeadCo's License WarehouseSynchronous AJAX calls are deprecated in all browsers but may be useful to "quick start" use of older code. It is recommended that code is movedto using asynchronous calls as soon as practical. The MeadCoScriptXJS library can assist with this as it delivers promise rather than callback based code.
 
 **Example**  
@@ -331,7 +333,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 ```
 <br/>
 <a id="MeadCoScriptXPrint.connect"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.connect(serverUrl, licenseGuid)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtainthe device settings for the default printer. This call is synchronous and therefore not recommended. Use connectAsync()
 
 
@@ -342,7 +344,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.connectLite"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.connectLite(serverUrl, licenseGuid)</h3>Specify the server and the subscription/license id to use on AJAX calls. No call is made in this function
 
 
@@ -353,7 +355,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.connectAsync"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.connectAsync(serverUrl, licenseGuid, resolve, reject)</h3>Specify the server to use and the subscription/license id.Attempt to connect to the defined ScriptX.Services server and obtainthe device settings for the default printer.
 
 
@@ -366,7 +368,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.connectTestAsync"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.connectTestAsync(serverUrl, resolve, reject)</h3>Test if there is a MeadCo PrintHtml API server at the url
 
 
@@ -378,7 +380,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.connectDeviceAndPrinters"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.connectDeviceAndPrinters(deviceInfo, arPrinters)</h3>Cache the given device info and available printers in this static class instanceUsed by libraries that call api/v1/printHtml/htmlPrintDefaults
 
 
@@ -389,7 +391,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.getFromServer"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.getFromServer(sApi, async, onSuccess, onFail)</h3>Call an API on the server with GET
 
 
@@ -402,7 +404,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.printHtmlAtServer"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.printHtmlAtServer(contentType, content, htmlPrintSettings, fnDone, fnProgress, data) ⇒ boolean</h3>Post a request to the server api/v1/print to print some html and monitor the print job to completion. If the server prints to file then the file is opened for the user (in a new window)
 
 
@@ -418,7 +420,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 **Returns**: boolean - - true if a print was started (otherwise an error will be thrown)  
 <br/>
 <a id="MeadCoScriptXPrint.reportError"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.reportError(errorTxt)</h3>'derived' classes call this function to report errors, will either throw or report depending on value of onErrorAction.
 
 
@@ -428,7 +430,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.reportServerError"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.reportServerError(errorTxt)</h3>overridable function for reporting an error. 'derived' classes call thisfunction to report errors.
 
 
@@ -438,7 +440,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.reportFeatureNotImplemented"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.reportFeatureNotImplemented(featureDescription)</h3>overridable function for reporting an implementation isnt available. 'derived' classes call thisfunction to report functions that are not yet implemented.
 
 
@@ -448,21 +450,27 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.ensureSpoolingStatus"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.ensureSpoolingStatus() ⇒ object</h3>make sure that spooling status is locked active while asynchronous UI that may startprinting is displayed
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCoScriptXPrint.ensureSpoolingStatus() ⇒ object</h3>Make sure that spooling status is locked active while asynchronous UI that may startprinting is displayed by placing a lock on the queue.
 
-**Returns**: object - a fake job to lock the spooling status on```jsvar lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { MeadCo.ScriptX.Print.freeSpoolStatus(lock);});```  
+**Returns**: object - a fake job to lock the spooling status on  
+**Example**  
+```js
+var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { MeadCo.ScriptX.Print.freeSpoolStatus(lock);});
+```
 <br/>
 <a id="MeadCoScriptXPrint.freeSpoolStatus"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.freeSpoolStatus(lock)</h3>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCoScriptXPrint.freeSpoolStatus(lock)</h3>Remove a lock on the queue that was created by a call to ensureSpoolingStatus().
+
+
 | Param | Type | Description |
 | --- | --- | --- |
-| lock | object | the lock object returned by ensureSpoolingStatus( |
+| lock | object | the lock object returned by ensureSpoolingStatus() |
 
 <br/>
 <a id="MeadCoScriptXPrint.waitForSpoolingComplete"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.waitForSpoolingComplete(iTimeout, fnComplete)</h3>Start (asynchronous) monitor to observe until no more job spooling/waiting at the serverthen call the given callback function
 
 
@@ -473,8 +481,10 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.PageSize"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.PageSize</h3>**Properties**
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCoScriptXPrint.PageSize</h3>Describe the size of a page by its width and height.
+
+**Properties**
 
 | Name | Type | Description |
 | --- | --- | --- |
@@ -483,8 +493,10 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.Margins"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.Margins</h3>**Properties**
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCoScriptXPrint.Margins</h3>Describe the margins within which to print.
+
+**Properties**
 
 | Name | Type | Description |
 | --- | --- | --- |
@@ -495,7 +507,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrint.DeviceSettingsObject"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrint.DeviceSettingsObject</h3>Information about and the settings to use with an output printing deviceSee also: https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXServices/WebServiceAPIReference/PrintHtml/deviceinfoGET
 
 **Properties**
@@ -525,7 +537,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintHTML"></a>
-<h2 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h2 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintHTML : object</h2>MeadCo.ScriptX.Print.HTMLA static class providing printing of HTML content.Requires: meadco-core.js, meadco-scriptxprint.jsThe purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the codeintact when transitioning to using ScriptX.Services instead/as well.Includes processing of calls to the print api that return "printing to file" including collecting thefile output.
 
 
@@ -551,7 +563,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintHTML.documentContentToPrint"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintHTML.documentContentToPrint</h3>Get the complete currently displayed document as string of HTML.Form values are preserved in the source document then the document cloned.A base element is created if required.style elements are included.script and object elements are not included.
 
 **Properties**
@@ -562,7 +574,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintHTML.version"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintHTML.version</h3>Get the version of this module as a string major.minor.hotfix.build
 
 **Properties**
@@ -573,7 +585,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintHTML.PageOrientation"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintHTML.PageOrientation : enum</h3>Enum to describe the orientation of the paper
 
 **Read only**: true  
@@ -587,7 +599,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintHTML.PageMarginUnits"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintHTML.PageMarginUnits : enum</h3>Enum to describe the units used on measurements
 
 **Read only**: true  
@@ -601,7 +613,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintHTML.PrintingPass"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintHTML.PrintingPass : enum</h3>Enum to describe the pages to be printed
 
 **Read only**: true  
@@ -615,7 +627,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintHTML.BooleanOption"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintHTML.BooleanOption : enum</h3>Enum to describe a boolean value or use the default
 
 **Read only**: true  
@@ -629,7 +641,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintHTML.frameContentToPrint"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintHTML.frameContentToPrint(sFrame) ⇒ string</h3>Get the complete currently displayed document in a frame as string of HTML.Form values are preserved in the source document then the document cloned.A base element is created if required.style elements are included.script and object elements are not included.
 
 
@@ -640,7 +652,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 **Returns**: string - the current content in the frame window document as html  
 <br/>
 <a id="MeadCoScriptXPrintHTML.printDocument"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintHTML.printDocument(fnCallOnDone, fnCallback, data) ⇒ boolean</h3>Print the complete current document in the window using the settings made by property updates before this function is called.
 
 
@@ -653,7 +665,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 **Returns**: boolean - - true if a print was started (otherwise an error will be thrown)  
 <br/>
 <a id="MeadCoScriptXPrintHTML.printFrame"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintHTML.printFrame(sFrame, fnCallOnDone, fnCallback, data) ⇒ boolean</h3>Print the complete current document in the named iframe using the settings made by property updates before this function is called.
 
 
@@ -667,7 +679,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 **Returns**: boolean - - true if a print was started (otherwise an error will be thrown)  
 <br/>
 <a id="MeadCoScriptXPrintHTML.printFromUrl"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintHTML.printFromUrl(sUrl, fnCallOnDone, fnCallback, data) ⇒ boolean</h3>Print the document obtained by downloading the given url using the settings made by property updates before this function is called.
 
 
@@ -681,7 +693,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 **Returns**: boolean - - true if a print was started (otherwise an error will be thrown)  
 <br/>
 <a id="MeadCoScriptXPrintHTML.printHtml"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintHTML.printHtml(sHtml, fnCallOnDone, fnCallback, data) ⇒ boolean</h3>Print the fragment of html using the settings made by property updates before this function is called.
 
 
@@ -695,7 +707,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 **Returns**: boolean - - true if a print was started (otherwise an error will be thrown)  
 <br/>
 <a id="MeadCoScriptXPrintHTML.connectLite"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintHTML.connectLite(serverUrl, licenseGuid)</h3>Specify the server and the subscription/license id to use on AJAX calls. No call is made in this function
 
 
@@ -706,7 +718,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintHTML.connect"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintHTML.connect(serverUrl, licenseGuid)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtaindefault soft html and device settings for the default device as well as the listof available printers. This call is synchronous and therefore not recommended. Use connectAsync()
 
 
@@ -717,7 +729,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintHTML.connectAsync"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintHTML.connectAsync(serverUrl, licenseGuid, resolve, reject)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtaindefault soft html and device settings for the default device as wll as the listof available printers.
 
 
@@ -730,7 +742,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintHTML.Margins"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintHTML.Margins</h3>**Properties**
 
 | Name | Type | Description |
@@ -742,7 +754,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintHTML.PageSettings"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintHTML.PageSettings</h3>**Properties**
 
 | Name | Type | Description |
@@ -753,7 +765,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintHTML.ExtraHeaderAndFooterSettings"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintHTML.ExtraHeaderAndFooterSettings</h3>**Properties**
 
 | Name | Type |
@@ -771,7 +783,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintHTML.Settings"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintHTML.Settings</h3>The soft settings to use when printing html content - headers, footers and margins(Device settings such as papersize, printer are described with MeadCo.ScriptX.Print.deviceSettings)
 
 **Properties**
@@ -796,7 +808,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintLicensing"></a>
-<h2 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h2 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintLicensing : object</h2>MeadCo.ScriptX.Print.LicensingA static class wrapping calls to the server API to install / manage a client license for ScriptX.Services for Windows PC. The purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the codeintact when transitioning to using ScriptX.Services instead/as well.This module is only required when working with ScriptX Services for Windows PC.A license must be 'applied' to the current html document/window before calls to printing APIs that use the license can be made.This module is NOT required when working with Cloud or On Premise services as the licenseinstallation and management occurs at the server. Requires: meadco-core.js
 
 
@@ -815,7 +827,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintLicensing.version"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintLicensing.version</h3>Get the version of this module as a string major.minor.hotfix.build
 
 **Properties**
@@ -826,7 +838,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintLicensing.result"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintLicensing.result</h3>Get the result code for the last attempt to apply a license.Basically faked for the benefit of code compatibility with the add-on
 
 **Properties**
@@ -837,7 +849,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintLicensing.validLicense"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintLicensing.validLicense</h3>Get whether a license has been applied successfully
 
 **Properties**
@@ -848,7 +860,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintLicensing.License"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintLicensing.License</h3>Get the details on the connected license. If it hasnt been applied yet, then queryfor the details (but dont apply it and connectLite() MUST have been called).Warning this function is synchronous, GetLicenseAsync() should be used.
 
 **Properties**
@@ -859,7 +871,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintLicensing.connect"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintLicensing.connect(serverUrl, slicenseGuid)</h3>Specify the server to use and the license Guid.
 
 
@@ -870,7 +882,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintLicensing.connectLite"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintLicensing.connectLite(serverUrl, slicenseGuid, revision, path)</h3>Specify the server to use and the license Guid in order to get details on the license via the License propertyor function GetLicenseAsync()
 
 
@@ -883,7 +895,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintLicensing.apply"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintLicensing.apply(licenseGuid, revision, path) ⇒ license</h3>Apply (make usable) the MeadCo ScriptX Client license for use with this content. If the license is not already cached it will be downloaded and cached. It is strongly suggested you request that the silent option is enabled in the license (it is by default for ScriptX.Services for Windows PC licenses)The license must list the url of the content to which it is being applied.This call is synchronous and therefore not recommended. Use applyAsync()
 
 
@@ -896,7 +908,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 **Returns**: license - details the license that was sucessfully applied, null if none available  
 <br/>
 <a id="MeadCoScriptXPrintLicensing.applyAsync"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintLicensing.applyAsync(licenseGuid, revision, path, resolve, reject)</h3>Apply (make usable) the MeadCo ScriptX Client license for use with this content. If the license is not already cached it will be downloaded and cached.It is strongly suggested you request that the silent option is enabled in the license (it is by default for ScriptX.Services for Windows PC licenses)The license must list the url of the content to which it is being applied.
 
 
@@ -910,7 +922,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintLicensing.GetLicenseAsync"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintLicensing.GetLicenseAsync(resolve, reject)</h3>Get the details on the connected license. If it hasnt been applied yet, then queryfor the details (but dont apply it and connectLite() MUST have been called).
 
 
@@ -921,7 +933,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintLicensing.LicenseOptions"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintLicensing.LicenseOptions</h3>The capabilities that can be licensed.
 
 **Properties**
@@ -936,7 +948,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="MeadCoScriptXPrintLicensing.license"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCoScriptXPrintLicensing.license</h3>License details
 
 **Properties**
@@ -953,7 +965,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="secmgr"></a>
-<h2 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h2 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     secmgr : object</h2>MeadCo ScriptX 'window.secmgr' shim (support for modern browsers and IE 11) JS client libraryThe MeadCo Security Manager Add-on for Internet Explorer is included on a html document with an &lt;object id='secmgr' /&gt; element with a de-facto standard id of 'secmgr'.The object is referenced with the property window.secmgr which exposes properties and methods.The MeadCo Security Manager Add-on for Internet Explorer provided for prompting the user to accept use of the license that enabled advanced features of ScriptX.Add-on. Frequentlythere was then no further reference to Security Manager and in such cases this shim is not required.This use case can be emulated by using appropriate attributes on an element (for example a &lt;script&gt;&lt;/script&gt;) on the page and including meadco-scriptxprint.js to process the attributes. This shim is then *not* required.Please note that when working with ScriptX.Services for Windows PC meadco-scriptxprintlicensing.js is required even with the use of attributes.This shim is required if you have code that relies upon being able to inspect the availability of a license.Full documentation on the properties/methods is provided by the technical reference documentation for the ScriptX Add-on for Internet Explorer: https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn/secmgr. That documentation is not reproduced here.If the startup script determines that the MeadCo Security Manager Add-on for IE is already active then it will quietly give priority to the object. In other words, the Add-on has precedence on Internet Explorer.This enables the same experience (almost) to be delivered to any browser on any device with the same html/javascript code.It is strongly recommended that the MeadCoScriptJS library (https://github.com/MeadCo/MeadCoScriptXJS) is used in conjunction with this library as it provides code (Promises) to assistwith working with the significant difference between the synchronous nature of the functions of ScriptX.Add-on (which hide the underlying asynchrony) and the asynchronous nature of javascript AJAX processing. Requires:  meadco-core.js meadco-scriptxprint.js meadco-scriptxprintlicensing.js
 
 
@@ -963,7 +975,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="secmgr.version"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     secmgr.version</h3>Get the version of this module as a string major.minor.hotfix.build
 
 **Properties**
@@ -974,7 +986,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 <br/>
 <a id="secmgr.GetLicenseAsync"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; padding: 5px 5px 0px 5px; border-style: solid; border-color: #ede9e9">
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     secmgr.GetLicenseAsync(resolve, reject)</h3>Get the details of the license using Asynchronous calls to the server.See meadco-scriptxprintlicensing.js for more detail
 
 

@@ -1,4 +1,4 @@
-# Table of content
+# Table of contents
 * [Getting Started](start.md)
 * [The API Reference](api.md)
   * [MeadCo namespace root](api.md#MeadCo) 

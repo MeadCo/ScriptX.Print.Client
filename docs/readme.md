@@ -2,7 +2,7 @@
 
 ## Current Version
 
-1.5.1
+1.5.2
 
 The MeadCo ScriptX Services project brings control of printing to browser based content in all browsers on all devices with
 out needing a binary add-on.
@@ -33,13 +33,22 @@ However, the MeadCo ScriptX add-on continues to be available and supports old ve
 By use of a compatibility layer written in javascript that same code can be bought to more modern browsers. With the proviso of course that the HTML that renders successfully in the older browser
 renders correctly in modern browsers.
 
-We do not want the ScriptX.Print.Client libraries to depend on anything other than themselves. Our clients are many and varied and will no doubt be 
+Preferably the ScriptX.Print.Client libraries will not depend on anything other than themselves. Our clients are many and varied and will no doubt be 
 taking dependencies on many libraries, we don't want to work against those choices but work with them. 
 
-We will implement a jQuery dependent layer as it is a commonly used library. We will implement an/or assist with other dependency layers as 
-demand arises.
+However, in the current version there is a dependency upon jQuery for:
 
-See:
+* Implementation of AJAX calls
+* Extraction of document content for printing
+* Simple discovery of elements with given attributes 
+
+These dependencies will be removed over time.
+
+See also:
  * [Getting Started](start.md) for an introduction to using the libraries
  * [API Reference](api.md) for details on the APIs available
+ * [MeadCoScriptXJS](https://github.com/MeadCo/MeadCoScriptXJS) project for a higher level abstraction which provides a number of conventient functions for the use of ScriptX in any of its forms, Add-on or Services.
+ * [ScriptX Add-on for Internet Explorer API reference](https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn).
+ * [ScriptX.Services on Cloud](https://scriptxservices.meadroid.com/)
+ * [ScriptX Services Samples - Cloud, On Premise, for Windows PC](https://scriptxprintsamples.meadroid.com/) the samples make use of MeadCoScriptXJS and ScriptX.Services.Client to deliver samples that work in any scenario with the same code.
 

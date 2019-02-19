@@ -18,9 +18,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{6F1B6E72-B
 	ProjectSection(SolutionItems) = preProject
 		..\docs\_config.yml = ..\docs\_config.yml
 		..\docs\api.md = ..\docs\api.md
-		..\docs\intro.md = ..\docs\intro.md
+		..\docs\readme.md = ..\docs\readme.md
 		..\docs\start.md = ..\docs\start.md
-		..\docs\toc.md = ..\docs\toc.md
+		..\docs\styles\website.css = ..\docs\styles\website.css
+		..\docs\summary.md = ..\docs\summary.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7C47A878-72F0-4EFE-B23F-EB6B67DE8594}"

@@ -81,7 +81,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.5.1.2";
+    var moduleversion = "1.5.2.0";
     var emulatedVersion = "8.0.0.0";
     var module = this;
 

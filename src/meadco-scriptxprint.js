@@ -19,13 +19,15 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.5.1.9";
+    var version = "1.5.2.0";
     var apiLocation = "v1/printHtml";
 
     // default printer 
     var printerName = "";
 
     /**
+     * Describe the size of a page by its width and height.
+     * 
      * @typedef PageSize
      * @memberof MeadCoScriptXPrint
      * @property {number} width width of paper in requested units
@@ -34,6 +36,8 @@
     var PageSize;  // for doc generator
 
     /**
+     * Describe the margins within which to print.
+     * 
      * @typedef Margins
      * @memberof MeadCoScriptXPrint
      * @property {number} left left margin in requested units
@@ -1145,7 +1149,9 @@
         },
 
         /**
-         * @property {array} availablePrinterNames an array of strings of the available printers
+         * Get the list of printers availablefrom the server.
+         * 
+         * @property {string[]} availablePrinterNames an array of strings of the names of the available printers
          * @memberof MeadCoScriptXPrint
          * @readonly
          */
@@ -1266,19 +1272,18 @@
         },
 
         /**
-         * make sure that spooling status is locked active while asynchronous UI that may start
-         * printing is displayed
+         * Make sure that spooling status is locked active while asynchronous UI that may start
+         * printing is displayed by placing a lock on the queue.
          * 
          * @memberof MeadCoScriptXPrint
          * @function ensureSpoolingStatus
          * @returns {object} a fake job to lock the spooling status on
          * 
-         * ```js
+         * @example
          * var lock = MeadCo.ScriptX.Print.ensureSpoolingStatus
          * ShowAsyncUI(function() {
          *  MeadCo.ScriptX.Print.freeSpoolStatus(lock);
          * });
-         * ```
          */
         ensureSpoolingStatus: function () {
             var lock = { jobIdentifier: Date.now(), printerName: "ensureJobsPrinter", jobName: "null Job" };
@@ -1287,9 +1292,11 @@
         },
 
         /**
+         * Remove a lock on the queue that was created by a call to ensureSpoolingStatus().
+         * 
          * @memberof MeadCoScriptXPrint
          * @function freeSpoolStatus
-         * @param {object} lock the lock object returned by ensureSpoolingStatus(
+         * @param {object} lock the lock object returned by ensureSpoolingStatus()
          */
         freeSpoolStatus: function (lock) {
             removeJob(lock.jobIdentifier);

@@ -15,7 +15,7 @@ The library is used by our extensive set of [samples](https://scriptxprintsample
 
 ## Current Version
 
-1.5.1
+1.5.2
 
 ## Packages 
 
@@ -68,12 +68,12 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
 
 ```javascript
 <!-- MeadCoScriptXJS Library -->
-<script src="https://cdn.jsdelivr.net/npm/meadco-scriptxjs@1.5.1/src/meadco-scriptx.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/meadco-scriptxjs@1.5.2/src/meadco-scriptx.min.js"></script>
 
 <!-- ScriptX Services client emulation libraries - depend on jQuery -->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.1.1/dist/jquery.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.5.0/dist/meadco-scriptxservicesprint.min.js" 
+<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.5.2/dist/meadco-scriptxservicesprint.min.js" 
         data-meadco-server="https://scriptxservices.meadroid.com" 
         data-meadco-license="xxx-xxx-xxxxxxx-xxx"></script>
 
@@ -93,6 +93,19 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
    });
 </script>
 ```
+
+### Resources
+
+* [API Reference](docs/readme.md)
+
+* [ScriptX.Services Client Library getting started and API reference book](https://meadco.gitbooks.io/meadco-scriptx-print-client/).
+
+* [ScriptX Add-on for Internet Explorer API reference](https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn).
+
+* [ScriptX.Services on Cloud](https://scriptxservices.meadroid.com/)
+
+* [ScriptX Services Samples - Cloud, On Premise, for Windows PC](https://scriptxprintsamples.meadroid.com/) the samples make use of MeadCoScriptXJS and ScriptX.Services.Client to deliver samples that work in any scenario with the same code.
+
 ### License
 
 Released under the [MIT](http://opensource.org/licenses/MIT) license. 
