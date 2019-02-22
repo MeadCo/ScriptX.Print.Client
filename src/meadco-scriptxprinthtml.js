@@ -628,7 +628,7 @@
                 function (data) {
                     MeadCo.log("got default html settings");
                     updateSettingsWithServerDefaults(data.settings);
-                    if (data.device != null) {
+                    if (data.device !== null) {
                         MeadCo.ScriptX.Print.connectDeviceAndPrinters(data.device, data.availablePrinters);
                     }
                 });
@@ -655,7 +655,7 @@
                 function (data) {
                     MeadCo.log("got default html settings");
                     if ( updateSettingsWithServerDefaults(data.settings) ) {
-                        if (data.device != null) {
+                        if (data.device !== null) {
                             MeadCo.ScriptX.Print.connectDeviceAndPrinters(data.device, data.availablePrinters);
                         }
                         resolve();

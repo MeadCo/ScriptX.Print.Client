@@ -6,6 +6,16 @@
     <RootNamespace>ScriptX.Services_Client</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Pages\Tests\printpdf.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Pages\Tests\printpdf.js">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />

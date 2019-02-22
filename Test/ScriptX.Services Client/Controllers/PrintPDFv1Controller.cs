@@ -67,7 +67,10 @@ namespace ScriptX.Services_Client.Controllers
                 throw new ArgumentException("Printer not available", nameof(requestMessage.Device.PrinterName));
             }
 
-            Print printResponse = new Print { Status = PrintRequestStatus.QueuedToDevice, JobIdentifier = requestMessage.Document.ToString(), Message = "No message" };
+            string[] parsedQuery = requestMessage.Document.Query.Split('=');
+            string jobId = parsedQuery.Length == 2 ? parsedQuery[1] : "pdf";
+
+            Print printResponse = new Print { Status = PrintRequestStatus.QueuedToDevice, JobIdentifier = $"{jobId}:job", Message = "No message" };
 
             if (requestMessage.Document.IsUnc)
             {
@@ -99,22 +102,22 @@ namespace ScriptX.Services_Client.Controllers
                 return Unauthorized();
             }
 
-            ContentType cType;
+            string[] parts = jobToken.Split(':', StringSplitOptions.RemoveEmptyEntries);
 
-            if (Enum.TryParse<ContentType>(jobToken, true, out cType))
+            if (parts.Length > 0 )
             {
-                switch (cType)
+                switch (parts[0])
                 {
-                    case ContentType.InnerHtml:
+                    case "pdf0":
                         js.Status = PrintHtmlStatus.Completed;
                         break;
 
-                    case ContentType.Url:
+                    case "pdf1":
                         js.Status = PrintHtmlStatus.Abandoned;
                         js.Message = "Mocked abandon";
                         break;
 
-                    case ContentType.Html:
+                    case "pdf2":
                         js.Status = ++counter < 3 ? PrintHtmlStatus.Printing : PrintHtmlStatus.Completed;
                         break;
 
@@ -127,7 +130,7 @@ namespace ScriptX.Services_Client.Controllers
             else
             {
                 js.Status = PrintHtmlStatus.ItemError;
-                js.Message = "Bad jobToken";
+                js.Message = "Bad PDF print jobToken";
             }
 
             return js;

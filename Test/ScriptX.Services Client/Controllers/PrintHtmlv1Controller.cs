@@ -252,7 +252,7 @@ namespace ScriptX.Services_Client.Controllers
             else
             {
                 js.Status = PrintHtmlStatus.ItemError;
-                js.Message = "Bad jobToken";
+                js.Message = "Bad Html print jobToken";
             }
 
             return js;

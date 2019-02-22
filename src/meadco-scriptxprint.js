@@ -19,8 +19,9 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.5.2.1";
-    var apiLocation = "v1/printHtml";
+    var version = "1.5.2.3";
+    var htmlApiLocation = "v1/printHtml";
+    var pdfApiLocation = "v1/printPdf";
 
     // default printer 
     var printerName = "";
@@ -76,6 +77,7 @@
      * @property {CollateOptions} collate The collation to use when printing
      * @property {number} copies The number of copies to print
      * @property {DuplexOptions} duplex The dulex printing option
+     * @property {MeasurementUnits} units Measurement units for papersize and margins
      * @property {PageSize} paperPageSize The size of the paper (in requested units)
      * @property {Margins} unprintableMargins The margin that cannot be printed in (in requested units)
      * @property {number} status Status code for the status of the device 
@@ -333,11 +335,11 @@
      * @param {string} content the content - a url, html snippet or complete html
      * @param {object} htmlPrintSettings the settings to use - device annd html such as headers and footers
      * @param {function({string})} fnDone function to call when printing complete (and output returned), arg is null on no error, else error message
-     * @param {function(status,sInformation,data)} fnCallback function to call when job status is updated
+     * @param {function(status,sInformation,data)} fnProgress function to call when job status is updated
      * @param {any} data object to give pass to fnCallback
      * @return {boolean} - true if a print was started (otherwise an error will be thrown)
      */
-    function printHtmlAtServer(contentType, content, htmlPrintSettings, fnDone, fnCallback, data) {
+    function printHtmlAtServer(contentType, content, htmlPrintSettings, fnDone, fnProgress, data) {
         MeadCo.log("started MeadCo.ScriptX.Print.print.printHtmlAtServer() Type: " + contentType + ", printerName: " + printerName);
         if (contentType === enumContentType.URL) {
             MeadCo.log(".. request print url: " + content);
@@ -363,11 +365,12 @@
             Content: content,
             Settings: htmlPrintSettings,
             Device: devInfo,
-            OnProgress: fnCallback,
+            OnProgress: fnProgress,
             UserData: data
         };
 
-        return printAtServer(requestData,
+        var serverApi = MeadCo.makeApiEndPoint(server, htmlApiLocation);
+        return printAtServer(serverApi,requestData,
         {
             fail: function (jqXhr, textStatus, errorThrown) {
                 progress(requestData, enumPrintStatus.ERROR, errorThrown);
@@ -380,7 +383,7 @@
             queuedToFile: function (data) {
                 MeadCo.log("default handler on queued to file response");
                 progress(requestData, enumPrintStatus.QUEUED);
-                monitorJob(requestData, data.jobIdentifier,
+                monitorJob(serverApi,requestData, data.jobIdentifier,
                     -1,
                     function (data) {
                         if (data !== null) {
@@ -398,7 +401,7 @@
             queuedToDevice: function (data) {
                 MeadCo.log("print was queued to device");
                 progress(requestData, enumPrintStatus.QUEUED);
-                monitorJob(requestData, data.jobIdentifier,
+                monitorJob(serverApi,requestData, data.jobIdentifier,
                     -1,
                     function (data) {
                         if (data !== null) {
@@ -429,10 +432,115 @@
         });
     };
 
+    /**
+     * Post a request to the server api/v1/print to print some html and monitor the print job 
+     * to completion. If the server prints to file then the file is opened for the user (in a new window)
+     * 
+     * @function printPdfAtServer
+     * @memberof MeadCoScriptXPrint
+     * @param {string} document full url to the pdf document to be printed
+     * @param {object} pdfPrintSettings the settings to use such as rotation, scaling. device settings (printer to use, copies etc) are taken from this static
+     * @param {function({string})} fnDone function to call when printing complete (and output returned), arg is null on no error, else error message.
+     * @param {function(status,sInformation,data)} fnProgress function to call when job status is updated
+     * @param {any} data object to give pass to fnCallback
+     * @return {boolean} - true if a print was started (otherwise an error will be thrown)
+     * @private
+     */
+    function printPdfAtServer(document, pdfPrintSettings, fnDone, fnProgress, data) {
+        MeadCo.log("started MeadCo.ScriptX.Print.print.printPdfAtServer() document: " + document + ", printerName: " + printerName);
+
+        var devInfo;
+
+        if (document === null || typeof document === "undefined" || (typeof document === "string" && document.length === 0)) {
+            MeadCo.ScriptX.Print.reportError("The document to print must be given.");
+            if (typeof fnDone === "function") {
+                fnDone("Request to print no content");
+            }
+            return false;
+        }
+
+        if (printerName === "") {
+            devInfo = {};
+        } else {
+            devInfo = deviceSettings[printerName];
+        }
+
+        var requestData = {
+            Document: document,
+            Settings: pdfPrintSettings,
+            Device: devInfo,
+            OnProgress: fnProgress,
+            UserData: data
+        };
+
+        var serverApi = MeadCo.makeApiEndPoint(server, pdfApiLocation);
+
+        return printAtServer(serverApi,requestData,
+            {
+                fail: function (jqXhr, textStatus, errorThrown) {
+                    progress(requestData, enumPrintStatus.ERROR, errorThrown);
+                    MeadCo.ScriptX.Print.reportError(errorThrown);
+                    if (typeof fnDone === "function") {
+                        fnDone(parseError("MeadCo.ScriptX.Print.printPdfAtServer", jqXhr, textStatus, errorThrown));
+                    }
+                },
+
+                queuedToFile: function (data) {
+                    MeadCo.log("default handler on queued to file response");
+                    progress(requestData, enumPrintStatus.QUEUED);
+                    monitorJob(serverApi,requestData, data.jobIdentifier,
+                        -1,
+                        function (data) {
+                            if (data !== null) {
+                                MeadCo.log("Will download printed file");
+                                progress(requestData, enumPrintStatus.COMPLETED);
+                                window.open(server + "/download/" + data.jobIdentifier, "_self");
+                            }
+
+                            if (typeof fnDone === "function") {
+                                fnDone(data === null ? "Server error" : null);
+                            }
+                        });
+                },
+
+                queuedToDevice: function (data) {
+                    MeadCo.log("print was queued to device");
+                    progress(requestData, enumPrintStatus.QUEUED);
+                    monitorJob(serverApi,requestData, data.jobIdentifier,
+                        -1,
+                        function (data) {
+                            if (data !== null) {
+                                progress(requestData, enumPrintStatus.COMPLETED);
+                            }
+
+                            if (typeof fnDone === "function") {
+                                fnDone(data === null ? "Server error" : null);
+                            }
+                        });
+                },
+
+                softError: function (data) {
+                    progress(requestData, enumPrintStatus.ERROR);
+                    MeadCo.log("print has soft error");
+                    if (typeof fnDone === "function") {
+                        fnDone(data.message);
+                    }
+                },
+
+                ok: function (data) {
+                    progress(requestData, enumPrintStatus.COMPLETED);
+                    MeadCo.log("printed ok, no further information");
+                    if (typeof fnDone === "function") {
+                        fnDone(null);
+                    }
+                }
+            });
+    };
+
     function setServer(serverUrl, clientLicenseGuid) {
         if (serverUrl.length > 0) {
-            MeadCo.log("Print server requested: " + serverUrl + " => " + MeadCo.makeApiEndPoint(serverUrl, apiLocation) + " with license: " + clientLicenseGuid);
-            server = MeadCo.makeApiEndPoint(serverUrl, apiLocation);
+            MeadCo.log("Print server requested: " + serverUrl + " => " + MeadCo.makeApiEndPoint(serverUrl, htmlApiLocation) + " with license: " + clientLicenseGuid);
+            server = MeadCo.makeApiEndPoint(serverUrl, htmlApiLocation);
             licenseGuid = clientLicenseGuid;
             printerName = "";
             deviceSettings = {};
@@ -490,7 +598,15 @@
         }
     }
 
-    function printAtServer(requestData, responseInterface) {
+    /**
+     * Post a request to print
+     * 
+     * @param {string} serverAndApi The full server url api endpoint (e.g. http://localhost:3000/api/printhtml). The method '/print' will be added. 
+     * @param {object} requestData The data to be posted
+     * @param {functionList} responseInterface Callbacks to process responses
+     * @returns {bool} true if request sent
+     */
+    function printAtServer(serverAndApi, requestData, responseInterface) {
 
         if (server.length <= 0) {
             throw new Error("MeadCo.ScriptX.Print : print server URL is not set or is invalid");
@@ -504,11 +620,11 @@
 
 
         if (module.jQuery) {
-            MeadCo.log(".ajax() post to: " + server);
+            MeadCo.log(".ajax() post to: " + serverAndApi);
             // MeadCo.log(JSON.stringify(requestData));
 
             queueJob(fakeJob); // essentially a lock on the queue to stop it looking empty while we await the result
-            module.jQuery.ajax(server + "/print",
+            module.jQuery.ajax(serverAndApi + "/print",
                 {
                     data: JSON.stringify(requestData),
                     dataType: "json",
@@ -578,7 +694,7 @@
         }
     }
 
-    /*
+    /**
      * Call an API on the server with GET
      * 
      * @function getFromServer
@@ -587,6 +703,7 @@
      * @param {bool} async true for asynchronous call, false for synchronous 
      * @param {function} onSuccess function to call on success
      * @param {function(errorText)} onFail function to call on failure
+     * @private
      */
     function getFromServer(sApi, async, onSuccess, onFail) {
         if (module.jQuery) {
@@ -635,7 +752,20 @@
 
     }
 
-    function monitorJob(requestData, jobId, timeOut, functionComplete) {
+    /**
+     * Monitor a job that has been known to start  on the server. Get job status from the server and record in the job queue 
+     * and process status appropriately. Progress callbacks will occur.
+     * 
+     * @function monitorJob
+     * @memberof MeadCoScriptXPrint
+     * @param {string} serverAndApi The full server url api endpoint (e.g. http://localhost:3000/api/printhtml). The method '/status/' will be added.
+     * @param {string} requestData The original data sent with the print request
+     * @param {string} jobId The id return from the server for the job (to be monitored)
+     * @param {number} timeOut Time give the job to complete or assume has got stuck, -1 means no timeout.
+     * @param {function({object})} functionComplete function to call when job is complete. Argument is null on error, the data returned from the status call on success,.
+     * @private
+     */
+    function monitorJob(serverAndApi,requestData, jobId, timeOut, functionComplete) {
         MeadCo.log("monitorJob: " + jobId);
         var counter = 0;
         var interval = 1000;
@@ -644,7 +774,7 @@
             if (!bWaiting) {
                 MeadCo.log("Going to request status with .ajax");
                 bWaiting = true;
-                $.ajax(server + "/status/" + jobId,
+                $.ajax(serverAndApi + "/status/" + jobId,
                     {
                         dataType: "json",
                         method: "GET",
@@ -1178,7 +1308,7 @@
         },
 
         /**
-         * Call an API on the server with GET
+         * Call a /printHtml API on the server with GET
          * 
          * @function getFromServer
          * @memberof MeadCoScriptXPrint
@@ -1190,21 +1320,37 @@
         getFromServer: getFromServer,
 
         /**
-         * Post a request to the server api/v1/print to print some html and monitor the print job 
+         * Post a request to the server to print some html and monitor the print job 
          * to completion. If the server prints to file then the file is opened for the user (in a new window)
          * 
-         * @function printHtmlAtServer
+         * @function printHtml
          * @memberof MeadCoScriptXPrint
 
          * @param {ContentType} contentType enum type of content given (html snippet, url)
          * @param {string} content the content - a url, html snippet or complete html
-         * @param {object} htmlPrintSettings the settings to use - device annd html such as headers and footers
+         * @param {object} htmlPrintSettings the html settings to use such as headers and footers, device settings (printer to use, copies etc) are taken from this static 
          * @param {function({string})} fnDone function to call when printing complete (and output returned), arg is null on no error, else error message.
          * @param {function(status,sInformation,data)} fnProgress function to call when job status is updated
          * @param {any} data object to give pass to fnCallback
          * @return {boolean} - true if a print was started (otherwise an error will be thrown)
          */
         printHtml: printHtmlAtServer,
+
+        /**
+         * Post a request to the server to print some html and monitor the print job 
+         * to completion. If the server prints to file then the file is opened for the user (in a new window)
+         * 
+         * @function printPdf
+         * @memberof MeadCoScriptXPrint
+
+         * @param {string} document full url to the pdf document to be printed
+         * @param {object} pdfPrintSettings the settings to use such as rotation, scaling. device settings (printer to use, copies etc) are taken from this static
+         * @param {function({string})} fnDone function to call when printing complete (and output returned), arg is null on no error, else error message.
+         * @param {function(status,sInformation,data)} fnProgress function to call when job status is updated
+         * @param {any} data object to give pass to fnCallback
+         * @return {boolean} - true if a print was started (otherwise an error will be thrown)
+         */
+        printPdf: printPdfAtServer,
 
         /**
          * 'derived' classes call this function to report errors, will either throw or report depending on 
