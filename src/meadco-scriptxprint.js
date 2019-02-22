@@ -245,12 +245,13 @@
         var i;
         for (i = 0; i < activePrintQueue.length; i++) {
             if (activePrintQueue[i].jobIdentifier === data.jobIdentifier) {
-                activePrintQueue[i] = data;
+                Object.keys(data).forEach(function (key) {
+                    activePrintQueue[i][key] = data[key];
+                });
                 return;
             }
         }
         console.warn("Unable to find job: " + data.jobIdentifier + " to update it");
-
     }
 
     function removeJob(id) {

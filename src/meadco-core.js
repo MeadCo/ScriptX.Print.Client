@@ -49,7 +49,7 @@
         //
         var oldscope = null;
         if (typeof scope[name] !== 'undefined') {
-            console.log(name + " already exists");
+            // console.log(name + " already exists");
             oldscope = scope[name];
         }
 
@@ -58,10 +58,10 @@
         if (oldscope != null) {
             var newscope = scope[name];
 
-            console.log("preserving old scope ... ");
+            // console.log("preserving old scope ... ");
             for (var prop in oldscope) {
                 if (oldscope.hasOwnProperty(prop)) {
-                    console.log("will preserve: " + prop);
+                    // console.log("will preserve: " + prop);
                     newscope[prop] = oldscope[prop];
                 }
             }
@@ -78,10 +78,13 @@
 
     // protected API
     var module = this;
-    var version = "1.5.2.0";
+    var version = "1.5.2.1";
+    var bLog = false;
 
     var log = function (str) {
-        console.log("MeadCo :: " + str);
+        if (bLog) {
+            console.log("MeadCo :: " + str);
+        }
     };
 
     var warn = function (str) {
@@ -120,10 +123,10 @@
 
                         var newscope = scope[packageName];
 
-                        console.log("preserving old scope ... ");
+                        log("preserving old scope ... ");
                         for (var prop in oldscope) {
                             if (oldscope.hasOwnProperty(prop)) {
-                                console.log("will preserve: " + prop);
+                                log("will preserve: " + prop);
                                 newscope[prop] = oldscope[prop];
                             }
                         }
@@ -173,6 +176,16 @@
          * @memberof MeadCo
          */
         get version() { return version; },
+
+        /**
+         * Get/set state of logging to console of informational messages
+         * @property {boolean} logEnable
+         * @memberof MeadCo
+         */
+        get logEnable() { return bLog; },
+        set logEnabled(bEnable) {
+            bLog = bEnable;
+        },
 
         /**
          * Create a namespace

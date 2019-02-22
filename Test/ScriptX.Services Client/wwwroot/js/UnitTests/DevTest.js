@@ -1,47 +1,70 @@
-﻿QUnit.test("Printing single piece of pdf content", function (assert) {
+﻿QUnit.test("factory.printPDF - do printing with *no* UI and batch print testing", function (assert) {
 
-    var done = assert.async(4);
+    var api = window.factory.printing;
+    var api2 = MeadCo.ScriptX.Print.HTML;
 
-    var api = MeadCo.ScriptX.Print;
+    var done = assert.async(7);
 
-    api.connectLite(serverUrl, licenseGuid);
+    var url = serverUrl;
 
-    api.deviceSettings = {
-        printerName: "My printer",
-        isDefault: true,
-        paperSize: "A4"
-    };
+    var docUrl0 = "http://flipflip.com/?f=pdf0"; // immediate complete
+    var docUrl2 = "http://flipflip.com/?f=pdf2"; // a few loops till complete
 
-    // immediate completion
-    api.printPdf("http://flipflip.com/?f=pdf0", {}, function (errorText) {
-        assert.equal(errorText, null, "Correct done call in immediate completion");
+    api2.connectAsync(url, licenseGuid, function (data) {
+        assert.ok(true, "Connected to server");
         done();
-    }, function (status, sInformation, data) {
-        assert.equal(data, "ProgressData0", "On progress0 function receives data: " + status);
-    },
-        "ProgressData0");
 
-    // error in job from server
-    api.printPdf("http://flipflip.com/?f=pdf1", {}, function (errorText) {
-        assert.equal(errorText, "Server error", "Correct done call (mocked abandoned)");
-        assert.equal($("#qunit-fixture").text(), "The print failed with the error: Mocked abandon", "Correct error dialog raised");
+        api.PrintPDF({ url: docUrl0 }, true, true, -1, -1, (bStarted) => {
+            assert.ok(bStarted, "Prompted print did start");
+            assert.strictEqual(api.GetJobsCount(api.printer), 1, "There is a job for the printer");
+            done();
+
+            api.WaitForSpoolingComplete(2000, (bAllComplete) => {
+                assert.ok(bAllComplete, "All jobs are complete");
+                assert.strictEqual(api.GetJobsCount(api.printer), 0, "There are no jobs for the printer");
+                done();
+
+                api.BatchPrintPDF(docUrl0, (bStarted) => {
+                    assert.ok(bStarted, "BatchPrintPDF did start");
+                    assert.strictEqual(api.GetJobsCount(api.printer), 1, "There is a job for the printer");
+                    done();
+
+                    api.WaitForSpoolingComplete(5000, (bAllComplete) => {
+                        assert.ok(bAllComplete, "All jobs are complete");
+                        assert.strictEqual(api.GetJobsCount(api.printer), 0, "There are no jobs for the printer");
+                        done();
+
+                        api.BatchPrintPDFEx(docUrl2, (status, sInformation, data) => {
+                            assert.equal(data, "t2", "BatchPrintPDFEx On progress function receives data: " + status + " => " + sInformation);
+                        }, "t2", (bStarted) => {
+                            assert.ok(bStarted, "Prompted BatchPrintPDFEx did start");
+                            assert.strictEqual(api.GetJobsCount(api.printer), 1, "There is a job for the printer");
+                            done();
+
+                            api.WaitForSpoolingComplete(5000, (bAllComplete) => {
+                                assert.ok(bAllComplete, "All jobs are complete");
+                                assert.strictEqual(api.GetJobsCount(api.printer), 0, "There are no jobs for the printer");
+                                done();
+                            })
+                        });
+                    });
+                });
+            });
+        });
+    }, function (errorText) {
+        assert.ok(false, "Should have connected to: " + url + " error: " + errorText);
         done();
-    }, function (status, sInformation, data) {
-        assert.equal(data, "ProgressData1", "On progress1 function receives data: " + status);
-    },
-        "ProgressData1");
-
-    // requires monitor to run a few loops
-    api.printPdf("http://flipflip.com/?f=pdf2", {}, function (errorText) {
-        assert.equal(errorText, null, "Correct done call on long running job");
         done();
-    }, function (status, sInformation, data) {
-        assert.equal(data, "ProgressData2", "On progress2 function receives data: " + status);
-    },
-        "ProgressData2");
-
-    api.waitForSpoolingComplete(10000, function (bComplete) {
-        assert.ok(bComplete, "WaitForSpoolingComplete ok - all jobs done.");
+        done();
+        done();
+        done();
+        done();
+        done();
+        done();
+        done();
+        done();
         done();
     });
+
 });
+

@@ -49,14 +49,40 @@
      * @property {number} TRUE 1 
      * @property {number} FALSE 2 
      */
-    var BooleanOption = {
+    var mBooleanOption = {
         DEFAULT: 0,
         TRUE: 1,
         FALSE: 2
     };
 
+    /**
+     * Enum to describe the page scaling to perfor, 
+     *
+     * @memberof MeadCoScriptXPrintPDF
+     * @typedef {number} PdfPageScaling
+     * @enum {PdfPageScaling}
+     * @readonly
+     * @property {number} UNDEFINED Not specified (ShrinkToFit is used instead)
+     * @property {number} NONE No scaling 
+     * @property {number} FITTOPAPER Scale to fit to paper
+     * @property {number} SHRINKLARGEPAGESOnly scale oversized pages 
+     */
+    var mPdfPageScaling = {
+        UNDEFINED: -1,
+        NONE: 0,
+        FITTOPAPER: 1,
+        SHRINKLARGEPAGES: 2
+    };
+
     var PdfPrintSettings =
     {
+        pageRage: "",
+        ShrinkToFit: true,
+        PageScaling: mPdfPageScaling.UNDEFINED,
+        autoRotateCenter: mBooleanOption.DEFAULT,
+        orientation: mPageOrientation.DEFAULT,
+        monochrome: false,
+        normalise: false
     };
 
     function printPdfAtServer(document, fnDone, fnCallback, data) {
@@ -72,13 +98,22 @@
     // public API
     return {
         PageOrientation: mPageOrientation,
- 
+        BooleanOption: mBooleanOption,
+        PdfPageScaling: mPdfPageScaling,
+
         /**
          * The soft settings to use when printing html content - headers, footers and margins
          * (Device settings such as papersize, printer are described with MeadCo.ScriptX.Print.deviceSettings)
          *  
          * @memberof MeadCoScriptXPrintPDF
          * @typedef Settings
+         * @property {string} pageRange The rage of pages to print. Empty means all, or from-to or comma delimited sets of from-to
+         * @property {BooleanOption} shrinkToFit Shrink the PDF page to fit the paper, optional true by default
+         * @property {PdfPageScaling} pageScaling If given then shrinkToFit is ignored and this scaling is used.
+         * @property {BooleanOption} autoRotateCenter Indicates whether pages should be rotated to fit on the paper and centered. If this parameter is not given then it will be set to true if shrinkToFit is true or pageScaling is FITTOPAPER.
+         * @property {PageOrientation} orientation Required oritentation on the printed paper
+         * @property {boolean} monochrome Specifies if monochrome printing should be used. This option is known not to work with some HP printers due to issues in HP print drivers. 
+         * @property {boolean} normalise  Indicates whether or not the pages should be processed to ensure drawing operations are at the expected positions. This option may assist if documents do not print as required.
          */
         settings: PdfPrintSettings,
 
