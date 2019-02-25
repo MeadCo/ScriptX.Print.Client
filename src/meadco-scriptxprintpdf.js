@@ -3,7 +3,9 @@
  *
  * A static class providing printing of PDF files.
  * 
- * Requires: meadco-core.js, meadco-scriptxprint.js
+ * Requires: 
+ * - meadco-core.js
+ * - meadco-scriptxprint.js
  *
  * The purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the code
  * intact when transitioning to using ScriptX.Services instead/as well.
@@ -12,7 +14,6 @@
  * file output.
  *
  * @namespace MeadCoScriptXPrintPDF
- *
  */
 
 ; (function (name, definition) {
