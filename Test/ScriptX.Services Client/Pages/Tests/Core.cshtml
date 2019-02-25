@@ -7,13 +7,13 @@
 
 @section Scripts {
     <environment include="Development">
-        <script src="/scripts?name=src/meadco-core.js"></script>
+        <script asp-append-version="true" src="/scripts?name=src/meadco-core.js"></script>
     </environment>
     <environment exclude="Development">
-        <script src="/scripts?name=dist/meadco-scriptxservicesprint.min.js"></script>
+        <script asp-append-version="true" src="/scripts?name=dist/meadco-scriptxservicesprint.min.js"></script>
     </environment>
 }
 
 @section TestScripts {
-    <script src="~/js/UnitTests/Core.js"></script>
+    <script asp-append-version="true" src="~/js/UnitTests/Core.js"></script>
 }

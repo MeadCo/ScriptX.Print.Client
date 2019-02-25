@@ -3,9 +3,10 @@
     assert.ok(MeadCo.ScriptX.Print.HTML, "MeadCo.ScriptX.Print.HTML namespace exists");
     var api = MeadCo.ScriptX.Print.HTML;
 
-    assert.equal(api.version, "1.5.3.0", "Correct version");
+    assert.equal(api.version, "1.5.3.1", "Correct version");
 
-    assert.equal(MeadCo.ScriptX.Print.MeasurementUnits.MM, 1, "MeasurementUnits enum is OK");
+    // Don't change this or there will be compatibility issues with the server 
+    assert.equal(MeadCo.ScriptX.Print.MeasurementUnits.MM, 2, "MeasurementUnits enum is OK");
     assert.equal(MeadCo.ScriptX.Print.MeasurementUnits.XX, undefined, "MeasuremmentUnits ContentType enum is OK");
 
     assert.strictEqual(api.settings.viewScale,0,"Settings object readable");

@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
 
-    var moduleversion = "1.5.3.0";
+    var moduleversion = "1.5.3.1";
 
     /**
      * Enum to describe the units used on measurements - please use MeadCo.ScriptX.Print.MeasurementUnits instead
@@ -35,8 +35,8 @@
      */
     var mPageMarginUnits = {
         DEFAULT: 0,
-        MM: 1,
-        INCHES: 2
+        INCHES: 1,
+        MM: 2
     };
 
     /**

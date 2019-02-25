@@ -83,7 +83,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.5.3.0";
+    var moduleversion = "1.5.3.1";
     var emulatedVersion = "8.0.0.0";
     var module = this;
 
@@ -1032,11 +1032,11 @@
         },
 
         GetMarginMeasure: function () {
-            return settings.page.units === printApi.MeasurementUnits.INCHES ? printApi.MeasurementUnits.INCHES : printApi.MeasurementUnits.MM;
+            return settings.page.units === printHtml.PageMarginUnits.INCHES ? 2 : 1;
         },
 
         SetMarginMeasure: function (enumUnits) {
-            settings.page.units = enumUnits === printApi.MeasurementUnits.INCHES ? printApi.MeasurementUnits.INCHES : printApi.MeasurementUnits.MM;
+            settings.page.units = enumUnits === 2 ? printHtml.PageMarginUnits.INCHES : printHtml.PageMarginUnits.MM;
         },
 
         SetPrintScale: function (value) {

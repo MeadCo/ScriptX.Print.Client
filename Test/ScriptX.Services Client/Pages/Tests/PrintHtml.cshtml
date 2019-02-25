@@ -8,17 +8,17 @@
 
 @section Scripts {
     <environment include="Development">
-        <script src="/scripts?name=src/meadco-core.js"></script>
-        <script src="/scripts?name=src/meadco-scriptxprint.js"></script>
-        <script src="/scripts?name=src/meadco-scriptxprinthtml.js"></script>
+        <script src="/scripts?name=src/meadco-core.js" asp-append-version="true"></script>
+        <script src="/scripts?name=src/meadco-scriptxprint.js" asp-append-version="true"></script>
+        <script src="/scripts?name=src/meadco-scriptxprinthtml.js" asp-append-version="true"></script>
     </environment>
     <environment exclude="Development">
-        <script src="/scripts?name=dist/meadco-scriptxservicesprint.min.js"></script>
+        <script asp-append-version="true" src="/scripts?name=dist/meadco-scriptxservicesprint.min.js"></script>
     </environment>
 }
 @section TestScripts {
     <script src="~/js/UnitTests/serverinfo.js" asp-append-version="true"></script>
-    <script src="~/js/UnitTests/PrintHtml.js"></script>
+    <script src="~/js/UnitTests/PrintHtml.js" asp-append-version="true"></script>
 }
 
 <iframe style="visibility: hidden; display: none" id="testFrame" src="@Url.Page("/Tests/Frame")"></iframe>
