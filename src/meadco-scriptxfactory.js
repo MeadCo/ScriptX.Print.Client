@@ -1,32 +1,35 @@
 /**
- * MeadCo ScriptX 'window.factory' shim (support for modern browsers and IE 11) JS client library. 
+ * MeadCo ScriptX 'window.factory' shim (support for modern browsers and IE 11) JS client library.<br/>
  * 
- * The ScriptX.Add-on Add-on for Internet Explorer is included on a html document with an <object id='factory' /> element with a de-facto standard id of 'factory'.
+ * The ScriptX Add-on for Internet Explorer is included on a html document with an &lt;object /&gt; element with a de-facto standard id of 'factory': &lt;object id='factory' /&gt;.
  * 
- * The object is referenced with the property window.factory which exposes properties and methods.
+ * The object is referenced with the property window.factory which exposes properties and methods to define print setting and perform operations such as printing a document or frame.
  * 
  * The object has two further properties:
- *  object (in turn has object.js)
- *  printing (in turn has printerControl, enhancedFormatting)
+ * - object
+ *   - js
+ * - printing
+ *   - printerControl
+ *   - enhancedFormatting
  *
- * This javascript provides partial emulation of window.factory, window.factory.object and window.factory.object.js
+ * This javascript 'module' provides partial emulation of window.factory, window.factory.object and window.factory.object.js
  * 
  * Full emulation (and almost complete implementation) is provided for window.factory.printing, window.factory.printing.printerControl, window.factory.printing.enhancedFormatting. The most notable absent implementation is an implementation of print preview.
  * 
- * ScriptX Add-on for Internet Explorer intercepts the browser UI for printing. For obvious reasons this is not possible with script, however ::
+ * ScriptX Add-on for Internet Explorer intercepts the browser UI for printing. For obvious reasons this is not possible with javascript, however ::
  * 
- * PLEASE NOTE: This library replaces window.print()
+ * <strong>PLEASE NOTE:</strong> This library replaces window.print()
  * 
- * Full documentation on the properties/methods is provided by the technical reference documentation for the ScriptX Add-on for Internet Explorer: https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn. That documentation is not reproduced here.
+ * Full documentation on the properties/methods is provided by the {@link https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn|technical reference documentation} for the ScriptX Add-on for Internet Explorer. That documentation is not reproduced here.
  * 
  * If the startup script determines that the ScriptX Add.on for IE is already active then it will quietly give priority to the object. In other words, the Add-on has precedence on Internet Explorer.
  * 
  * This enables the same experience (almost) to be delivered to any browser on any device with the same html/javascript code.
  * 
- * It is strongly recommended that the MeadCoScriptJS library (https://github.com/MeadCo/MeadCoScriptXJS) is used in conjunction with this library as it provides code (Promises) to assist
+ * It is strongly recommended that the [MeadCoScriptJS library]{@link https://github.com/MeadCo/MeadCoScriptXJS} is used in conjunction with this library as it provides code (Promises) to assist
  * with working with the significant difference between the synchronous nature of the functions of ScriptX.Add-on (which hide the underlying asynchrony) and the asynchronous nature of javascript AJAX processing.
  * 
- * Some APIs lead to system provided dialogs (e.g. printer and paper setup) - support for implementing the dialogs in javascript as simple plug-ins is provided, along with an example implementation using bootstrap/jQuery (see jQuery-MeadCo.ScriptX.Print.UI.js)
+ * Some Add-on APIs lead to system provided dialogs (e.g. printer and paper setup) - support for implementing the dialogs in javascript as simple plug-ins is provided, along with an example implementation using bootstrap/jQuery (see jQuery-MeadCo.ScriptX.Print.UI.js)
  * 
  * @example
  * MeadCo.ScriptX.Print.UI = {
@@ -34,6 +37,8 @@
  *    PrinterSettings: function(fnDialgCompleteCallBack) { ... dialog code ...}
  * }
  *
+ * @namespace factory
+ * 
  * Requires:
  *      MeadCo.Core
  *      MeadCo.ScriptX.Print
@@ -43,13 +48,12 @@
  *      
  * MeadCo.ScriptX.Print.HTML.connect[Async]() or MeadCo.ScriptX.Print.connect[Async]() *MUST* be called before using the apis in this library.
  * 
- * See https://scriptxprintsamples.meadroid.com for a lot of samples on using this code.
+ * See [ScriptX Samples]{@link https://scriptxprintsamples.meadroid.com} for a lot of samples on using this code.
  * 
- * @namespace factory
  * 
  */
 
-// we anti-polyfill <object id="factory" />
+// we anti-polyfill &lt;object id="factory" /&gt;
 // enabling old code to run in modern browsers
 //
 // static singleton instances.
@@ -1107,9 +1111,9 @@
     module.factory.log("factory.object loaded.");
 
     /*
-     * This completes the emulation of an <object /> element
+     * This completes the emulation of an &lt;object /&gt; element
      *
-     * Compatibility with Add-on to allow inspection of <object /> and this javascript
+     * Compatibility with Add-on to allow inspection of  &lt;object /&gt; and this javascript
      * for the underlying object implementing 'factory'.
      * 
      * @property {object} factory

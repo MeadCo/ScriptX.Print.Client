@@ -1,84 +1,60 @@
 ﻿/**
- * Static class for namespace creation and core utility functions for ScriptX.Services client libraries
+ * Static class for namespace creation and core utility functions for ScriptX.Services client libraries.
  * 
  * This must be included before any other files from this package.
  * 
+ * The implementation is for use in a browser only, not general runtime javascript environments.
+ * 
+ * This code is necessarily 'old-fashioned' as it may find itself running in old versions of IE.
+ *  
  * @namespace MeadCo
  */
 
-// Extensible UMD Plugins 
-// Ref: https://addyosmani.com/writing-modular-js/
-//
-// With fixes and changes : works with sparse namespaces
-// and root implements the namespace build code as inheritable
-// function 'extend()'
-//  
-// Note that true inheritance is not implemented, essentially
-// this creates singleton objects that are conveniently named
-// within the browser. 
-
-
-// Module/Plugin core
-// Note: the wrapper code you see around the module is what enables
-// us to support multiple module formats and specifications by 
-// mapping the arguments defined to what a specific format expects
-// to be present. Our actual module functionality is defined lower 
-// down. 
-
 ; (function (name, definition) {
-    var theModule = definition(),
-        // this is considered "safe":
-        hasDefine = typeof define === 'function' && define.amd,
-        // hasDefine = typeof define === 'function',
-        hasExports = typeof module !== 'undefined' && module.exports;
+    var theModule = definition();
 
-    if (hasDefine) { // AMD Module
-        define(theModule);
-    } else if (hasExports) { // Node.js Module
-        module.exports = theModule;
-    } else { // Assign to common namespaces or simply the global object (window)
-        // var scope = (this.jQuery || this.ender || this.$ || this);
-        // we always go for window
-        var scope = this;
+    // var scope = (this.jQuery || this.ender || this.$ || this);
+    // we always go for window
+    var scope = this;
 
-        // hack ...
-        //
-        // MeadCo.ScriptX and MeadCo.Licensing may already be defined
-        // when we run -- they would happily extend this implementation
-        // and we should extend theirs. This is a horible way to do it.
-        //
-        var oldscope = null;
-        if (typeof scope[name] !== 'undefined') {
-            // console.log(name + " already exists");
-            oldscope = scope[name];
-        }
+    // hack ...
+    //
+    // MeadCo.ScriptX and MeadCo.Licensing may already be defined
+    // when we run -- they would happily extend this implementation
+    // and we should extend theirs. This is a horible way to do it.
+    //
+    var oldscope = null;
+    if (typeof scope[name] !== 'undefined') {
+        // console.log(name + " already exists");
+        oldscope = scope[name];
+    }
 
-        scope[name] = theModule;
+    scope[name] = theModule;
 
-        if (oldscope != null) {
-            var newscope = scope[name];
+    if (oldscope !== null) {
+        var newscope = scope[name];
 
-            // console.log("preserving old scope ... ");
-            for (var prop in oldscope) {
-                if (oldscope.hasOwnProperty(prop)) {
-                    // console.log("will preserve: " + prop);
-                    newscope[prop] = oldscope[prop];
-                }
+        // console.log("preserving old scope ... ");
+        for (var prop in oldscope) {
+            if (oldscope.hasOwnProperty(prop)) {
+                // console.log("will preserve: " + prop);
+                newscope[prop] = oldscope[prop];
             }
         }
-
-        // this is moderately poor .. assuming this code is executing
-        // as the root of the name space, which it is and assumes
-        // it implements inheritable extendNamespace(), which it does.
-        // For all that, it means that the root gets to decide where this
-        // is (i.e. in a common namespace or the global object)
-        theModule.scope = scope;
     }
+
+    // this is moderately poor .. assuming this code is executing
+    // as the root of the name space, which it is and assumes
+    // it implements inheritable extendNamespace(), which it does.
+    // For all that, it means that the root gets to decide where this
+    // is (i.e. in a common namespace or the global object)
+    theModule.scope = scope;
+
 })('MeadCo', function () {
 
     // protected API
     var module = this;
-    var version = "1.5.2.1";
+    var version = "1.5.2.2";
     var bLog = false;
 
     var log = function (str) {
@@ -230,7 +206,8 @@
         set scope(s) { module.scope = s; },
 
         /**
-         * Get the url to a ScriptX.Services api endpoint
+         * Get the url to a ScriptX.Services api endpoint. If an enpoint is already present, it is replaced.
+         * 
          * @function makeApiEndPoint
          * @memberof MeadCo
          * @param {string} serverUrl url to the server

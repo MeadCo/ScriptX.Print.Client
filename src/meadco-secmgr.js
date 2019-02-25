@@ -32,7 +32,7 @@
  * 
  */
 
-// we anti-polyfill <object id="secmgr" /> 
+// we anti-polyfill &lt;object id="secmgr" /&gt;
 // enabling old code to run in modern browsers
 //
 ; (function (name, definition, undefined) {
@@ -175,9 +175,9 @@
     module.secmgr.log("secmgr.object loaded.");
 
     /*
-     * This completes the emulation of an <object /> element
+     * This completes the emulation of an  &lt;object /&gt; element
      *
-     * Compatibility with Add-on to allow inspection of <object /> and this javascript
+     * Compatibility with Add-on to allow inspection of  &lt;object /&gt; and this javascript
      * for the underlying object implementing 'secmgr'.
      * 
      * @property {object} secmgr
