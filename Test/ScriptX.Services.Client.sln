@@ -8,7 +8,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		..\.unused-.npmrc = ..\.unused-.npmrc
 		..\book.json = ..\book.json
 		..\bower.json = ..\bower.json
-		ScriptX.Print.Client\bundleconfig.json = ScriptX.Print.Client\bundleconfig.json
 		..\LICENSE = ..\LICENSE
 		..\package.json = ..\package.json
 		..\README.md = ..\README.md
@@ -20,8 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{6F1B6E72-B
 		..\docs\api.md = ..\docs\api.md
 		..\docs\readme.md = ..\docs\readme.md
 		..\docs\start.md = ..\docs\start.md
-		..\docs\styles\website.css = ..\docs\styles\website.css
 		..\docs\summary.md = ..\docs\summary.md
+		..\docs\styles\website.css = ..\docs\styles\website.css
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7C47A878-72F0-4EFE-B23F-EB6B67DE8594}"

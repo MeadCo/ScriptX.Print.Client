@@ -272,6 +272,15 @@
         }
     }
 
+    /*
+     * Extract the error text from jQuery AJAX response
+     * 
+     * @param {string} logText The lead-in text for a console.log entry
+     * @param {object} jqXhr jQuery ajax header
+     * @param {string} textStatus textStatus result determined by jQuery
+     * @param {string} errorThrown The server exception dewtermined by jQuery
+     * @returns {string} The error text to display
+     */
     function parseError(logText, jqXhr, textStatus, errorThrown) {
         MeadCo.log("**warning: AJAX call failure in " + logText + ": [" +
             textStatus +
@@ -279,6 +288,8 @@
             errorThrown +
             "], [" +
             jqXhr.responseText +
+            "], [" +
+            jqXhr.statusText +
             "]");
 
         //if (errorThrown === "") {
@@ -1352,6 +1363,22 @@
          * @return {boolean} - true if a print was started (otherwise an error will be thrown)
          */
         printPdf: printPdfAtServer,
+
+        /**
+         * Extract the error text from jQuery AJAX response
+         * 
+         * @function parseAjaxError
+         * @memberof MeadCoScriptXPrint
+         * 
+         * @param {string} logText The lead-in text for a console.log entry
+         * @param {object} jqXhr jQuery ajax header
+         * @param {string} textStatus textStatus result determined by jQuery
+         * @param {string} errorThrown The server exception dewtermined by jQuery
+         * @returns {string} The error text to display
+         */
+        parseAjaxError: function (logText, jqXhr, textStatus, errorThrown) {
+            return parseError(logText, jqXhr, textStatus, errorThrown);
+        },
 
         /**
          * 'derived' classes call this function to report errors, will either throw or report depending on 

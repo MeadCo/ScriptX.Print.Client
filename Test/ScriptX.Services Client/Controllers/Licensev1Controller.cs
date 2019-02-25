@@ -18,6 +18,25 @@ namespace ScriptX.Services_Client.Controllers
 
     public class Licensev1Controller : ControllerBase
     {
+        public class LicenseException : Exception
+        {
+            public LicenseException(string message) : base(message)
+            {
+            }
+
+            public override string Message => ToString();
+
+            public override string ToString()
+            {
+                return "MeadCo License Manager: " + base.Message;
+            }
+
+            public static LicenseException NotInstalled(Exception e) { return new LicenseException("Object could not be created. Is is installed correctly? " + e.Message); }
+            public static LicenseException BadLicense(Exception e) { return new LicenseException("Unable to use license. " + e.Message); }
+
+            public static LicenseException NotFound() { return new LicenseException("Unable to find a valid license"); }
+        }
+
         private const string MagicWarehouse = "warehouse";
         private const string WarehouseRootUrl = "http://licenses.meadroid.com";
 
@@ -66,19 +85,20 @@ namespace ScriptX.Services_Client.Controllers
         {
             _logger.LogInformation("POST {guid}, url: {url}, revision: {rev}", license.Guid.ToString(), license.Url, license.Revision);
 
-            License l = InstallAndGetClientLicenseDetail(license);
-
-            if (l == null)
+            switch (license.Url.ToUpper())
             {
-                return BadRequest();
+                case "BAD-WAREHOUSE":
+                    //throw LicenseException.BadLicense(new Exception("Unknown error from warehouse"));
+                    return NotFound("Unknown warehouse");
+              
+                default:
+                    License l = InstallAndGetClientLicenseDetail(license);
+                    if (license == null ) {
+                        return NotFound();
+                    }
+                    return l;
             }
 
-            if ( license.Url == "Bad-Warehouse")
-            {
-                return NotFound();
-            }
-
-            return l;
         }
 
         [Route("ping")]

@@ -1,6 +1,6 @@
 ﻿"use strict";
 
-var gulp = require("gulp"),
+const gulp = require("gulp"),
     concat = require("gulp-concat"),
     cssmin = require("gulp-cssmin"),
     htmlmin = require("gulp-htmlmin"),
@@ -10,42 +10,17 @@ var gulp = require("gulp"),
     del = require("del"),
     bundleconfig = require("./distbundlesconfig.json");
 
-var gulpDocumentation = require('gulp-documentation');
+const jsdoc2md = require('jsdoc-to-markdown');
+const fs = require("fs");
 
-var regex = {
-    css: /\.css$/,
-    html: /\.(html|htm)$/,
-    js: /\.js$/,
-    scss: /\.scss$/
-};
-
-var docFiles = [
-    {
-        inputName : "./src/meadco-core.js",
-        outputFolder : "core"
-    },
-    {
-        inputName: "./src/meadco-scriptxprint.js",
-        outputFolder: "scriptxprint"
-    },
-    {
-        inputName: "./src/meadco-scriptxprinthtml.js",
-        outputFolder: "scriptxprinthtml"
-    },
-    {
-        inputName: "./src/meadco-scriptxprintlicensing.js",
-        outputFolder: "scriptxprintlicensing"
-    },
-    {
-        inputName: "./src/meadco-scriptxfactory.js",
-        outputFolder: "scriptxfactory"
-    },
-    {
-        inputName: "./src/meadco-secmgr.js",
-        outputFolder: "secmgr"
-    }
+// the md doc output is, e.g. MeadCoScriptXPrint for MeadCo.ScriptX.Print
+// this table drives back replacement
+const namespaces = [
+    "MeadCo.ScriptX.Print",
+    "MeadCo.ScriptX.Print.HTML",
+    "MeadCo.ScriptX.Print.PDF",
+    "MeadCo.ScriptX.Print.Licensing"
 ];
-
 
 function getBundles(regexPattern) {
     return bundleconfig.filter(function (bundle) {
@@ -54,7 +29,7 @@ function getBundles(regexPattern) {
 }
 
 function mintoDist() {
-    var tasks = getBundles(regex.js).map(function (bundle) {
+    var tasks = getBundles(/\.js$/).map(function (bundle) {
         return pipeline(
             gulp.src(bundle.inputFiles, { base: "." }),
             uglify({ 
@@ -69,45 +44,6 @@ function mintoDist() {
     return merge(tasks);
 }
 
-function docOutputLocation(fmt, doc) {
-    return './jsdoc/' + fmt + '/' + doc.outputFolder;
-}
-
-
-function buildDocs(fmt) {
-    return gulp.src('./src/*.js')
-        .pipe(gulpDocumentation(fmt, {},
-            {
-                name: 'ScriptX.Services Client',
-                version: '1.5.0'
-            }))
-        .pipe(gulp.dest('./jsDoc/' + fmt));
-}
-
-function buildDocFiles(fmt) {
-    var tasks = docFiles.map(function (doc) {
-        return gulp.src(doc.inputName)
-            .pipe(
-            gulpDocumentation(
-                fmt, {
-                    shallow: true,
-                    hljs:
-                    {
-                        highlightAuto: true
-                    }
-                },
-                {
-                    name: 'ScriptX.Services Client',
-                    version: '1.5.0'
-                }
-            )
-        )
-        .pipe(gulp.dest(docOutputLocation(fmt,doc)));
-        
-    });
-    return merge(tasks);
-}
-
 function cleanDist() {
     var files = bundleconfig.map(function (bundle) {
         return bundle.outputFileName;
@@ -116,28 +52,34 @@ function cleanDist() {
     return del(files, { force: true });
 }
 
-function cleanDocs() {
-    return del(['./jsDoc/**', '!./jsDoc'], { force: true }).then(paths => { console.log('Deleted:\n', paths.join('\n')); });
-}
+exports.makeApiDocs = (done) => {
+    var output = jsdoc2md.renderSync(
+        {
+            "configure": "tooling/docs/jsdoc.json",
+            "files": "src/*.js",
+            "global-index-format": "none",
+            "partial": [
+                "tooling/docs/header.hbs",
+                "tooling/docs/link.hbs",
+                "tooling/docs/body.hbs"
+            ]
+        }); // .then(output => fs.writeFileSync("docs/api.md"));
 
-exports.buildDist = gulp.series(cleanDist, mintoDist);
+    namespaces.forEach((nsname) => {
 
-// Build docs using documentation(js)
-//
-// Deprecated in favour of using jsdoc2md and gitbook workflow.
-//
-// That could be incorporated in here but for the moment remains as npm scripts.
-//
-exports.cleanDocs = cleanDocs;
+        var badName = nsname.replace(/\./g, "");
 
-exports.buildHtmlDocs =  gulp.series(cleanDocs,() => { return buildDocs('html'); });
-exports.buildHtmlDocFiles = gulp.series(cleanDocs, () => { return buildDocFiles('html'); });
+        console.log("Replace: " + badName + " with: " + nsname);
 
-exports.buildMdDocs = gulp.series(cleanDocs,() => { buildDocs('md'); });
-exports.buildMdDocFiles = gulp.series(cleanDocs, () => { return buildDocFiles('md'); });
+        output = output.replace(new RegExp(badName, "g"), nsname);
 
-exports.buildJsonDocs = gulp.series(cleanDocs,() => { buildDocs('json'); });
-exports.buildJSonDocFiles = gulp.series(cleanDocs, () => { return buildDocFiles('json'); });
+    });
 
-exports.buildDocs = gulp.series(cleanDocs, gulp.parallel(exports.buildHtmlDocFiles, exports.buildMdDocFiles));
+    output = output.replace(/MeadCoScriptXPrint/g, "MeadCo.ScriptX.Print");
+
+    fs.writeFileSync("docs/api.md", output);
+    done();
+ };
+
+exports.buildDist = gulp.series(cleanDist, gulp.parallel(mintoDist, exports.makeApiDocs));
 

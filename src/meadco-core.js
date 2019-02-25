@@ -147,7 +147,7 @@
     // public API.
     return {
         /**
-         * Sends the content to the console 
+         * Sends the content to the console (if informational logging is enabled)
          * @function log
          * @memberof MeadCo
          * @param {string} text to send to console
@@ -178,11 +178,11 @@
         get version() { return version; },
 
         /**
-         * Get/set state of logging to console of informational messages
-         * @property {boolean} logEnable
+         * Get/set state of logging to console of informational messages. Default is off
+         * @property {boolean} logEnabled
          * @memberof MeadCo
          */
-        get logEnable() { return bLog; },
+        get logEnabled() { return bLog; },
         set logEnabled(bEnable) {
             bLog = bEnable;
         },

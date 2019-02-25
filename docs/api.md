@@ -6,6 +6,7 @@
 
 * [MeadCo](#MeadCo) : object
     * [.version](#MeadCo.version)
+    * [.logEnabled](#MeadCo.logEnabled)
     * [.log(text)](#MeadCo.log)
     * [.warn(text)](#MeadCo.warn)
     * [.error(text)](#MeadCo.error)
@@ -24,9 +25,20 @@
 | version | string | 
 
 <br/>
+<a id="MeadCo.logEnabled"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.logEnabled</h3>Get/set state of logging to console of informational messages. Default is off
+
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| logEnabled | boolean | 
+
+<br/>
 <a id="MeadCo.log"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.log(text)</h3>Sends the content to the console
+    MeadCo.log(text)</h3>Sends the content to the console (if informational logging is enabled)
 
 
 | Param | Type | Description |
@@ -90,49 +102,52 @@ var ui = MeadCo.createNS("MeadCo.ScriptX.Print.UI");ui.Show = function() { aler
 MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ... dialog code ...},   PrinterSettings: function(fnDialgCompleteCallBack) { ... dialog code ...}}Requires:     MeadCo.Core     MeadCo.ScriptX.Print     MeadCo.ScriptX.Print.HTML     MeadCo.ScriptX.Print.Licensing when using ScritpX.Services for Windows PC     MeadCo.ScriptX.Print.HTML.connect[Async]() or MeadCo.ScriptX.Print.connect[Async]() *MUST* be called before using the apis in this library.See https://scriptxprintsamples.meadroid.com for a lot of samples on using this code.
 ```
 <br/>
-<a id="MeadCoScriptXPrint"></a>
+<a id="MeadCo.ScriptX.Print"></a>
 <h2 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint : object</h2>MeadCo.ScriptX.PrintA static class wrapping calls to the server API. Requires: meadco-core.jsIncludes processing of calls to the print api that return "printing to file" including collecting the file output. Provides attribute based connection to the server.Synchronous AJAX calls are deprecated in all browsers but may be useful to "quick start" use of older code. It is recommended that code is movedto using asynchronous calls as soon as practical. The MeadCoScriptXJS library can assist with this as it delivers promise rather than callback based code.
+    MeadCo.ScriptX.Print : object</h2>MeadCo.ScriptX.PrintA static class wrapping calls to the server API. Requires: meadco-core.jsIncludes processing of calls to the print api that return "printing to file" including collecting the file output. Provides attribute based connection to the server.Synchronous AJAX calls are deprecated in all browsers but may be useful to "quick start" use of older code. It is recommended that code is movedto using asynchronous calls as soon as practical. The MeadCoScriptXJS library can assist with this as it delivers promise rather than callback based code.
 
 
-* [MeadCoScriptXPrint](#MeadCoScriptXPrint) : object
-    * [.onErrorAction](#MeadCoScriptXPrint.onErrorAction)
-    * [.printerName](#MeadCoScriptXPrint.printerName)
-    * [.version](#MeadCoScriptXPrint.version)
-    * [.deviceSettings](#MeadCoScriptXPrint.deviceSettings)
-    * [.isConnected](#MeadCoScriptXPrint.isConnected)
-    * [.availablePrinterNames](#MeadCoScriptXPrint.availablePrinterNames)
-    * [.queue](#MeadCoScriptXPrint.queue)
-    * [.activeJobs](#MeadCoScriptXPrint.activeJobs)
-    * [.isSpooling](#MeadCoScriptXPrint.isSpooling)
-    * [.ContentType](#MeadCoScriptXPrint.ContentType) : enum
-    * [.ErrorAction](#MeadCoScriptXPrint.ErrorAction) : enum
-    * [.PrintStatus](#MeadCoScriptXPrint.PrintStatus) : enum
-    * [.CollateOptions](#MeadCoScriptXPrint.CollateOptions) : enum
-    * [.DuplexOptions](#MeadCoScriptXPrint.DuplexOptions) : enum
-    * [.deviceSettingsFor(sPrinterName)](#MeadCoScriptXPrint.deviceSettingsFor) ⇒ DeviceSettingsObject
-    * [.useAttributes()](#MeadCoScriptXPrint.useAttributes)
-    * [.connect(serverUrl, licenseGuid)](#MeadCoScriptXPrint.connect)
-    * [.connectLite(serverUrl, licenseGuid)](#MeadCoScriptXPrint.connectLite)
-    * [.connectAsync(serverUrl, licenseGuid, resolve, reject)](#MeadCoScriptXPrint.connectAsync)
-    * [.connectTestAsync(serverUrl, resolve, reject)](#MeadCoScriptXPrint.connectTestAsync)
-    * [.connectDeviceAndPrinters(deviceInfo, arPrinters)](#MeadCoScriptXPrint.connectDeviceAndPrinters)
-    * [.getFromServer(sApi, async, onSuccess, onFail)](#MeadCoScriptXPrint.getFromServer)
-    * [.printHtmlAtServer(contentType, content, htmlPrintSettings, fnDone, fnProgress, data)](#MeadCoScriptXPrint.printHtmlAtServer) ⇒ boolean
-    * [.reportError(errorTxt)](#MeadCoScriptXPrint.reportError)
-    * [.reportServerError(errorTxt)](#MeadCoScriptXPrint.reportServerError)
-    * [.reportFeatureNotImplemented(featureDescription)](#MeadCoScriptXPrint.reportFeatureNotImplemented)
-    * [.ensureSpoolingStatus()](#MeadCoScriptXPrint.ensureSpoolingStatus) ⇒ object
-    * [.freeSpoolStatus(lock)](#MeadCoScriptXPrint.freeSpoolStatus)
-    * [.waitForSpoolingComplete(iTimeout, fnComplete)](#MeadCoScriptXPrint.waitForSpoolingComplete)
-    * [.PageSize](#MeadCoScriptXPrint.PageSize)
-    * [.Margins](#MeadCoScriptXPrint.Margins)
-    * [.DeviceSettingsObject](#MeadCoScriptXPrint.DeviceSettingsObject)
+* [MeadCo.ScriptX.Print](#MeadCo.ScriptX.Print) : object
+    * [.onErrorAction](#MeadCo.ScriptX.Print.onErrorAction)
+    * [.printerName](#MeadCo.ScriptX.Print.printerName)
+    * [.version](#MeadCo.ScriptX.Print.version)
+    * [.deviceSettings](#MeadCo.ScriptX.Print.deviceSettings)
+    * [.isConnected](#MeadCo.ScriptX.Print.isConnected)
+    * [.availablePrinterNames](#MeadCo.ScriptX.Print.availablePrinterNames)
+    * [.queue](#MeadCo.ScriptX.Print.queue)
+    * [.activeJobs](#MeadCo.ScriptX.Print.activeJobs)
+    * [.isSpooling](#MeadCo.ScriptX.Print.isSpooling)
+    * [.MeasurementUnits](#MeadCo.ScriptX.Print.MeasurementUnits) : enum
+    * [.ContentType](#MeadCo.ScriptX.Print.ContentType) : enum
+    * [.ErrorAction](#MeadCo.ScriptX.Print.ErrorAction) : enum
+    * [.PrintStatus](#MeadCo.ScriptX.Print.PrintStatus) : enum
+    * [.CollateOptions](#MeadCo.ScriptX.Print.CollateOptions) : enum
+    * [.DuplexOptions](#MeadCo.ScriptX.Print.DuplexOptions) : enum
+    * [.deviceSettingsFor(sPrinterName)](#MeadCo.ScriptX.Print.deviceSettingsFor) ⇒ DeviceSettingsObject
+    * [.useAttributes()](#MeadCo.ScriptX.Print.useAttributes)
+    * [.connect(serverUrl, licenseGuid)](#MeadCo.ScriptX.Print.connect)
+    * [.connectLite(serverUrl, licenseGuid)](#MeadCo.ScriptX.Print.connectLite)
+    * [.connectAsync(serverUrl, licenseGuid, resolve, reject)](#MeadCo.ScriptX.Print.connectAsync)
+    * [.connectTestAsync(serverUrl, resolve, reject)](#MeadCo.ScriptX.Print.connectTestAsync)
+    * [.connectDeviceAndPrinters(deviceInfo, arPrinters)](#MeadCo.ScriptX.Print.connectDeviceAndPrinters)
+    * [.getFromServer(sApi, async, onSuccess, onFail)](#MeadCo.ScriptX.Print.getFromServer)
+    * [.printHtml(contentType, content, htmlPrintSettings, fnDone, fnProgress, data)](#MeadCo.ScriptX.Print.printHtml) ⇒ boolean
+    * [.printPdf(document, pdfPrintSettings, fnDone, fnProgress, data)](#MeadCo.ScriptX.Print.printPdf) ⇒ boolean
+    * [.parseAjaxError(logText, jqXhr, textStatus, errorThrown)](#MeadCo.ScriptX.Print.parseAjaxError) ⇒ string
+    * [.reportError(errorTxt)](#MeadCo.ScriptX.Print.reportError)
+    * [.reportServerError(errorTxt)](#MeadCo.ScriptX.Print.reportServerError)
+    * [.reportFeatureNotImplemented(featureDescription)](#MeadCo.ScriptX.Print.reportFeatureNotImplemented)
+    * [.ensureSpoolingStatus()](#MeadCo.ScriptX.Print.ensureSpoolingStatus) ⇒ object
+    * [.freeSpoolStatus(lock)](#MeadCo.ScriptX.Print.freeSpoolStatus)
+    * [.waitForSpoolingComplete(iTimeout, fnComplete)](#MeadCo.ScriptX.Print.waitForSpoolingComplete)
+    * [.PageSize](#MeadCo.ScriptX.Print.PageSize)
+    * [.Margins](#MeadCo.ScriptX.Print.Margins)
+    * [.DeviceSettingsObject](#MeadCo.ScriptX.Print.DeviceSettingsObject)
 
 <br/>
-<a id="MeadCoScriptXPrint.onErrorAction"></a>
+<a id="MeadCo.ScriptX.Print.onErrorAction"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.onErrorAction</h3>Get/set the action to take when an error occurs
+    MeadCo.ScriptX.Print.onErrorAction</h3>Get/set the action to take when an error occurs
 
 **Properties**
 
@@ -141,9 +156,9 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | onErrorAction | ErrorAction | the action |
 
 <br/>
-<a id="MeadCoScriptXPrint.printerName"></a>
+<a id="MeadCo.ScriptX.Print.printerName"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.printerName</h3>Get/set the currently active printer
+    MeadCo.ScriptX.Print.printerName</h3>Get/set the currently active printer
 
 **Properties**
 
@@ -152,9 +167,9 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | printerName | string | The name of the current printer in use. |
 
 <br/>
-<a id="MeadCoScriptXPrint.version"></a>
+<a id="MeadCo.ScriptX.Print.version"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.version</h3>Get the version of this module as a string major.minor.hotfix.build
+    MeadCo.ScriptX.Print.version</h3>Get the version of this module as a string major.minor.hotfix.build
 
 **Properties**
 
@@ -163,9 +178,9 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | version | string | 
 
 <br/>
-<a id="MeadCoScriptXPrint.deviceSettings"></a>
+<a id="MeadCo.ScriptX.Print.deviceSettings"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.deviceSettings</h3>Get/set the cached device settings (papersize etc) for the currently active printer
+    MeadCo.ScriptX.Print.deviceSettings</h3>Get/set the cached device settings (papersize etc) for the currently active printer
 
 **Properties**
 
@@ -174,9 +189,9 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | deviceSettings | DeviceSettingsObject | (see API /api/vi/printhtml/deviceInfo/ ) |
 
 <br/>
-<a id="MeadCoScriptXPrint.isConnected"></a>
+<a id="MeadCo.ScriptX.Print.isConnected"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.isConnected</h3>true if the library has succesfully connected to a server.
+    MeadCo.ScriptX.Print.isConnected</h3>true if the library has succesfully connected to a server.
 
 **Read only**: true  
 **Properties**
@@ -186,9 +201,9 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | isConnected | bool | true if the library has succesfully connected to a server. |
 
 <br/>
-<a id="MeadCoScriptXPrint.availablePrinterNames"></a>
+<a id="MeadCo.ScriptX.Print.availablePrinterNames"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.availablePrinterNames</h3>Get the list of printers availablefrom the server.
+    MeadCo.ScriptX.Print.availablePrinterNames</h3>Get the list of printers availablefrom the server.
 
 **Read only**: true  
 **Properties**
@@ -198,9 +213,9 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | availablePrinterNames | Array.&lt;string&gt; | an array of strings of the names of the available printers |
 
 <br/>
-<a id="MeadCoScriptXPrint.queue"></a>
+<a id="MeadCo.ScriptX.Print.queue"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.queue</h3>The list of jobs currently active at the server for this client
+    MeadCo.ScriptX.Print.queue</h3>The list of jobs currently active at the server for this client
 
 **Read only**: true  
 **Properties**
@@ -210,9 +225,9 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | queue | Array.&lt;object&gt; | array of jobs |
 
 <br/>
-<a id="MeadCoScriptXPrint.activeJobs"></a>
+<a id="MeadCo.ScriptX.Print.activeJobs"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.activeJobs</h3>The number of jobs there are actgive at the server for this client(same as MeadCo.ScriptX.Print.queue.length)
+    MeadCo.ScriptX.Print.activeJobs</h3>The number of jobs there are actgive at the server for this client(same as MeadCo.ScriptX.Print.queue.length)
 
 **Read only**: true  
 **Properties**
@@ -222,9 +237,9 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | activeJobs | int | the number of jobs |
 
 <br/>
-<a id="MeadCoScriptXPrint.isSpooling"></a>
+<a id="MeadCo.ScriptX.Print.isSpooling"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.isSpooling</h3>Get if print is still 'spooling'.still queued at the server
+    MeadCo.ScriptX.Print.isSpooling</h3>Get if print is still 'spooling'.still queued at the server
 
 **Read only**: true  
 **Properties**
@@ -234,9 +249,23 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | isSpooling | bool | 
 
 <br/>
-<a id="MeadCoScriptXPrint.ContentType"></a>
+<a id="MeadCo.ScriptX.Print.MeasurementUnits"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.ContentType : enum</h3>Enum for type of content being posted to printHtml API
+    MeadCo.ScriptX.Print.MeasurementUnits : enum</h3>Enum to describe the units used on measurements
+
+**Read only**: true  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| DEFAULT | number | 0 use the default at the print server |
+| MM | number | 1 millimeters |
+| INCHES | number | 2 |
+
+<br/>
+<a id="MeadCo.ScriptX.Print.ContentType"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.ScriptX.Print.ContentType : enum</h3>Enum for type of content being posted to printHtml API
 
 **Read only**: true  
 **Properties**
@@ -248,9 +277,9 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | INNERHTML | number | 4 the passed string is a complete html document but missing the html tags |
 
 <br/>
-<a id="MeadCoScriptXPrint.ErrorAction"></a>
+<a id="MeadCo.ScriptX.Print.ErrorAction"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.ErrorAction : enum</h3>Enum for type of content being posted to printHtml API
+    MeadCo.ScriptX.Print.ErrorAction : enum</h3>Enum for type of content being posted to printHtml API
 
 **Read only**: true  
 **Properties**
@@ -261,9 +290,9 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | THROW | number | 2 throw an error : throw errMsg |
 
 <br/>
-<a id="MeadCoScriptXPrint.PrintStatus"></a>
+<a id="MeadCo.ScriptX.Print.PrintStatus"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.PrintStatus : enum</h3>Enum for status code returned to print progress callbacks
+    MeadCo.ScriptX.Print.PrintStatus : enum</h3>Enum for status code returned to print progress callbacks
 
 **Read only**: true  
 **Properties**
@@ -283,9 +312,9 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | ABANDONED | number | 2 |
 
 <br/>
-<a id="MeadCoScriptXPrint.CollateOptions"></a>
+<a id="MeadCo.ScriptX.Print.CollateOptions"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.CollateOptions : enum</h3>Enum to describe the collation option when printing
+    MeadCo.ScriptX.Print.CollateOptions : enum</h3>Enum to describe the collation option when printing
 
 **Read only**: true  
 **Properties**
@@ -297,9 +326,9 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | FALSE | number | 2 do not collate pages |
 
 <br/>
-<a id="MeadCoScriptXPrint.DuplexOptions"></a>
+<a id="MeadCo.ScriptX.Print.DuplexOptions"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.DuplexOptions : enum</h3>Enum to describe the duplex print option to use when printing
+    MeadCo.ScriptX.Print.DuplexOptions : enum</h3>Enum to describe the duplex print option to use when printing
 
 **Read only**: true  
 **Properties**
@@ -312,9 +341,9 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | HORIZONTAL | number | 3 |
 
 <br/>
-<a id="MeadCoScriptXPrint.deviceSettingsFor"></a>
+<a id="MeadCo.ScriptX.Print.deviceSettingsFor"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.deviceSettingsFor(sPrinterName) ⇒ DeviceSettingsObject</h3>Get the device settings (papersize etc) for the named printer. This call is synchronous and not recommended.
+    MeadCo.ScriptX.Print.deviceSettingsFor(sPrinterName) ⇒ DeviceSettingsObject</h3>Get the device settings (papersize etc) for the named printer. This call is synchronous and not recommended.
 
 
 | Param | Type | Description |
@@ -323,18 +352,18 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 
 **Returns**: DeviceSettingsObject - object with properties  
 <br/>
-<a id="MeadCoScriptXPrint.useAttributes"></a>
+<a id="MeadCo.ScriptX.Print.useAttributes"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.useAttributes()</h3>search for processing attibutes for connection and subscription/license and processthem. The attibutes can be on any elementdata-meadco-server value is the root url, api/v1/printhtml, api/v1/licensing will be added by the librarydata-meadco-syncinit default is true for synchronous calls to the server, value 'false' to use asynchronous calls to the serverdata-meadco-subscription present => cloud/on premise service, value is the subscription GUIDdata-meadco-license present => for Windows PC service, value is the license GUIDIf data-meadco-license is present then the following additional attributes can be used:data-meadco-license-revision, value is the revision number of the licensedata-meadco-license-path,, value is the path to the license file (sxlic.mlf). A value of "warehouse" will cause the license to be downloaded from MeadCo's License WarehouseSynchronous AJAX calls are deprecated in all browsers but may be useful to "quick start" use of older code. It is recommended that code is movedto using asynchronous calls as soon as practical. The MeadCoScriptXJS library can assist with this as it delivers promise rather than callback based code.
+    MeadCo.ScriptX.Print.useAttributes()</h3>search for processing attibutes for connection and subscription/license and processthem. The attibutes can be on any elementdata-meadco-server value is the root url, api/v1/printhtml, api/v1/licensing will be added by the librarydata-meadco-syncinit default is true for synchronous calls to the server, value 'false' to use asynchronous calls to the serverdata-meadco-subscription present => cloud/on premise service, value is the subscription GUIDdata-meadco-license present => for Windows PC service, value is the license GUIDIf data-meadco-license is present then the following additional attributes can be used:data-meadco-license-revision, value is the revision number of the licensedata-meadco-license-path,, value is the path to the license file (sxlic.mlf). A value of "warehouse" will cause the license to be downloaded from MeadCo's License WarehouseSynchronous AJAX calls are deprecated in all browsers but may be useful to "quick start" use of older code. It is recommended that code is movedto using asynchronous calls as soon as practical. The MeadCoScriptXJS library can assist with this as it delivers promise rather than callback based code.
 
 **Example**  
 ```js
 <!-- an example connection to an On Premise server for ScriptX.Services --><script src="lib/meadco-scriptxservicesprintUI.min.js"      data-meadco-server="https://app.corpservices/"      data-meadco-subscription="" data-meadco-syncinit="false"></script>;<!-- an example connection to ScriptX.Services for Windows PC --><script src="lib/meadco-scriptxservicesUI.min.js"     data-meadco-server="http://127.0.0.1:41191"      data-meadco-license="{6BC6808B-D645-40B6-AE80-E9D0825797EF}"      data-meadco-syncinit="false"      data-meadco-license-path="warehouse"     data-meadco-license-revision="3"></script>
 ```
 <br/>
-<a id="MeadCoScriptXPrint.connect"></a>
+<a id="MeadCo.ScriptX.Print.connect"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.connect(serverUrl, licenseGuid)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtainthe device settings for the default printer. This call is synchronous and therefore not recommended. Use connectAsync()
+    MeadCo.ScriptX.Print.connect(serverUrl, licenseGuid)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtainthe device settings for the default printer. This call is synchronous and therefore not recommended. Use connectAsync()
 
 
 | Param | Type | Description |
@@ -343,9 +372,9 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | licenseGuid | string | the license/subscription identifier |
 
 <br/>
-<a id="MeadCoScriptXPrint.connectLite"></a>
+<a id="MeadCo.ScriptX.Print.connectLite"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.connectLite(serverUrl, licenseGuid)</h3>Specify the server and the subscription/license id to use on AJAX calls. No call is made in this function
+    MeadCo.ScriptX.Print.connectLite(serverUrl, licenseGuid)</h3>Specify the server and the subscription/license id to use on AJAX calls. No call is made in this function
 
 
 | Param | Type | Description |
@@ -354,9 +383,9 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | licenseGuid | string | the license/subscription identifier |
 
 <br/>
-<a id="MeadCoScriptXPrint.connectAsync"></a>
+<a id="MeadCo.ScriptX.Print.connectAsync"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.connectAsync(serverUrl, licenseGuid, resolve, reject)</h3>Specify the server to use and the subscription/license id.Attempt to connect to the defined ScriptX.Services server and obtainthe device settings for the default printer.
+    MeadCo.ScriptX.Print.connectAsync(serverUrl, licenseGuid, resolve, reject)</h3>Specify the server to use and the subscription/license id.Attempt to connect to the defined ScriptX.Services server and obtainthe device settings for the default printer.
 
 
 | Param | Type | Description |
@@ -367,9 +396,9 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | reject | function | function to call on failure |
 
 <br/>
-<a id="MeadCoScriptXPrint.connectTestAsync"></a>
+<a id="MeadCo.ScriptX.Print.connectTestAsync"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.connectTestAsync(serverUrl, resolve, reject)</h3>Test if there is a MeadCo PrintHtml API server at the url
+    MeadCo.ScriptX.Print.connectTestAsync(serverUrl, resolve, reject)</h3>Test if there is a MeadCo PrintHtml API server at the url
 
 
 | Param | Type | Description |
@@ -379,9 +408,9 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | reject | function | function to call on failure |
 
 <br/>
-<a id="MeadCoScriptXPrint.connectDeviceAndPrinters"></a>
+<a id="MeadCo.ScriptX.Print.connectDeviceAndPrinters"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.connectDeviceAndPrinters(deviceInfo, arPrinters)</h3>Cache the given device info and available printers in this static class instanceUsed by libraries that call api/v1/printHtml/htmlPrintDefaults
+    MeadCo.ScriptX.Print.connectDeviceAndPrinters(deviceInfo, arPrinters)</h3>Cache the given device info and available printers in this static class instanceUsed by libraries that call api/v1/printHtml/htmlPrintDefaults
 
 
 | Param | Type | Description |
@@ -390,9 +419,9 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | arPrinters | array | the names of the available printers |
 
 <br/>
-<a id="MeadCoScriptXPrint.getFromServer"></a>
+<a id="MeadCo.ScriptX.Print.getFromServer"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.getFromServer(sApi, async, onSuccess, onFail)</h3>Call an API on the server with GET
+    MeadCo.ScriptX.Print.getFromServer(sApi, async, onSuccess, onFail)</h3>Call a /printHtml API on the server with GET
 
 
 | Param | Type | Description |
@@ -403,25 +432,54 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | onFail | function | function to call on failure |
 
 <br/>
-<a id="MeadCoScriptXPrint.printHtmlAtServer"></a>
+<a id="MeadCo.ScriptX.Print.printHtml"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.printHtmlAtServer(contentType, content, htmlPrintSettings, fnDone, fnProgress, data) ⇒ boolean</h3>Post a request to the server api/v1/print to print some html and monitor the print job to completion. If the server prints to file then the file is opened for the user (in a new window)
+    MeadCo.ScriptX.Print.printHtml(contentType, content, htmlPrintSettings, fnDone, fnProgress, data) ⇒ boolean</h3>Post a request to the server to print some html and monitor the print job to completion. If the server prints to file then the file is opened for the user (in a new window)
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | contentType | ContentType | enum type of content given (html snippet, url) |
 | content | string | the content - a url, html snippet or complete html |
-| htmlPrintSettings | object | the settings to use - device annd html such as headers and footers |
+| htmlPrintSettings | object | the html settings to use such as headers and footers, device settings (printer to use, copies etc) are taken from this static |
 | fnDone | function | function to call when printing complete (and output returned), arg is null on no error, else error message. |
 | fnProgress | function | function to call when job status is updated |
 | data | any | object to give pass to fnCallback |
 
 **Returns**: boolean - - true if a print was started (otherwise an error will be thrown)  
 <br/>
-<a id="MeadCoScriptXPrint.reportError"></a>
+<a id="MeadCo.ScriptX.Print.printPdf"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.reportError(errorTxt)</h3>'derived' classes call this function to report errors, will either throw or report depending on value of onErrorAction.
+    MeadCo.ScriptX.Print.printPdf(document, pdfPrintSettings, fnDone, fnProgress, data) ⇒ boolean</h3>Post a request to the server to print some html and monitor the print job to completion. If the server prints to file then the file is opened for the user (in a new window)
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| document | string | full url to the pdf document to be printed |
+| pdfPrintSettings | object | the settings to use such as rotation, scaling. device settings (printer to use, copies etc) are taken from this static |
+| fnDone | function | function to call when printing complete (and output returned), arg is null on no error, else error message. |
+| fnProgress | function | function to call when job status is updated |
+| data | any | object to give pass to fnCallback |
+
+**Returns**: boolean - - true if a print was started (otherwise an error will be thrown)  
+<br/>
+<a id="MeadCo.ScriptX.Print.parseAjaxError"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.ScriptX.Print.parseAjaxError(logText, jqXhr, textStatus, errorThrown) ⇒ string</h3>Extract the error text from jQuery AJAX response
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| logText | string | The lead-in text for a console.log entry |
+| jqXhr | object | jQuery ajax header |
+| textStatus | string | textStatus result determined by jQuery |
+| errorThrown | string | The server exception dewtermined by jQuery |
+
+**Returns**: string - The error text to display  
+<br/>
+<a id="MeadCo.ScriptX.Print.reportError"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.ScriptX.Print.reportError(errorTxt)</h3>'derived' classes call this function to report errors, will either throw or report depending on value of onErrorAction.
 
 
 | Param | Type | Description |
@@ -429,9 +487,9 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | errorTxt | string | the error text to display |
 
 <br/>
-<a id="MeadCoScriptXPrint.reportServerError"></a>
+<a id="MeadCo.ScriptX.Print.reportServerError"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.reportServerError(errorTxt)</h3>overridable function for reporting an error. 'derived' classes call thisfunction to report errors.
+    MeadCo.ScriptX.Print.reportServerError(errorTxt)</h3>overridable function for reporting an error. 'derived' classes call thisfunction to report errors.
 
 
 | Param | Type | Description |
@@ -439,9 +497,9 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | errorTxt | string | the error text to display ```js // overload cloud print library report error MeadCo.ScriptX.Print.reportServerError = function (errorTxt) {    app.Messages.PrintErrorBox(errorTxt); } ``` |
 
 <br/>
-<a id="MeadCoScriptXPrint.reportFeatureNotImplemented"></a>
+<a id="MeadCo.ScriptX.Print.reportFeatureNotImplemented"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.reportFeatureNotImplemented(featureDescription)</h3>overridable function for reporting an implementation isnt available. 'derived' classes call thisfunction to report functions that are not yet implemented.
+    MeadCo.ScriptX.Print.reportFeatureNotImplemented(featureDescription)</h3>overridable function for reporting an implementation isnt available. 'derived' classes call thisfunction to report functions that are not yet implemented.
 
 
 | Param | Type | Description |
@@ -449,9 +507,9 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | featureDescription | string | descriptn of the feature that isnt available ```js // overload cloud print library report error MeadCo.ScriptX.Print.reportFeatureNotImplemented = function (featureDescription) {   app.Messages.PrintErrorBox(featureDescription + " is not available yet with the ScriptX.Services.\n\nThis feature will be implemented soon."); } ``` |
 
 <br/>
-<a id="MeadCoScriptXPrint.ensureSpoolingStatus"></a>
+<a id="MeadCo.ScriptX.Print.ensureSpoolingStatus"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.ensureSpoolingStatus() ⇒ object</h3>Make sure that spooling status is locked active while asynchronous UI that may startprinting is displayed by placing a lock on the queue.
+    MeadCo.ScriptX.Print.ensureSpoolingStatus() ⇒ object</h3>Make sure that spooling status is locked active while asynchronous UI that may startprinting is displayed by placing a lock on the queue.
 
 **Returns**: object - a fake job to lock the spooling status on  
 **Example**  
@@ -459,9 +517,9 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { MeadCo.ScriptX.Print.freeSpoolStatus(lock);});
 ```
 <br/>
-<a id="MeadCoScriptXPrint.freeSpoolStatus"></a>
+<a id="MeadCo.ScriptX.Print.freeSpoolStatus"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.freeSpoolStatus(lock)</h3>Remove a lock on the queue that was created by a call to ensureSpoolingStatus().
+    MeadCo.ScriptX.Print.freeSpoolStatus(lock)</h3>Remove a lock on the queue that was created by a call to ensureSpoolingStatus().
 
 
 | Param | Type | Description |
@@ -469,9 +527,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | lock | object | the lock object returned by ensureSpoolingStatus() |
 
 <br/>
-<a id="MeadCoScriptXPrint.waitForSpoolingComplete"></a>
+<a id="MeadCo.ScriptX.Print.waitForSpoolingComplete"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.waitForSpoolingComplete(iTimeout, fnComplete)</h3>Start (asynchronous) monitor to observe until no more job spooling/waiting at the serverthen call the given callback function
+    MeadCo.ScriptX.Print.waitForSpoolingComplete(iTimeout, fnComplete)</h3>Start (asynchronous) monitor to observe until no more job spooling/waiting at the serverthen call the given callback function
 
 
 | Param | Type | Description |
@@ -480,9 +538,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | fnComplete | function | callback function, arg is true if all jobs complete |
 
 <br/>
-<a id="MeadCoScriptXPrint.PageSize"></a>
+<a id="MeadCo.ScriptX.Print.PageSize"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.PageSize</h3>Describe the size of a page by its width and height.
+    MeadCo.ScriptX.Print.PageSize</h3>Describe the size of a page by its width and height.
 
 **Properties**
 
@@ -492,9 +550,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | height | number | height of paper in requested units |
 
 <br/>
-<a id="MeadCoScriptXPrint.Margins"></a>
+<a id="MeadCo.ScriptX.Print.Margins"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.Margins</h3>Describe the margins within which to print.
+    MeadCo.ScriptX.Print.Margins</h3>Describe the margins within which to print.
 
 **Properties**
 
@@ -506,9 +564,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | bottom | number | bottom margin in requested units |
 
 <br/>
-<a id="MeadCoScriptXPrint.DeviceSettingsObject"></a>
+<a id="MeadCo.ScriptX.Print.DeviceSettingsObject"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrint.DeviceSettingsObject</h3>Information about and the settings to use with an output printing deviceSee also: https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXServices/WebServiceAPIReference/PrintHtml/deviceinfoGET
+    MeadCo.ScriptX.Print.DeviceSettingsObject</h3>Information about and the settings to use with an output printing deviceSee also: https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXServices/WebServiceAPIReference/PrintHtml/deviceinfoGET
 
 **Properties**
 
@@ -520,6 +578,7 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | collate | CollateOptions | The collation to use when printing |
 | copies | number | The number of copies to print |
 | duplex | DuplexOptions | The dulex printing option |
+| units | MeasurementUnits | Measurement units for papersize and margins |
 | paperPageSize | PageSize | The size of the paper (in requested units) |
 | unprintableMargins | Margins | The margin that cannot be printed in (in requested units) |
 | status | number | Status code for the status of the device |
@@ -536,35 +595,36 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | forms | Array.&lt;string&gt; | Array of the names of the avbailable paper sizes |
 
 <br/>
-<a id="MeadCoScriptXPrintHTML"></a>
+<a id="MeadCo.ScriptX.PrintHTML"></a>
 <h2 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintHTML : object</h2>MeadCo.ScriptX.Print.HTMLA static class providing printing of HTML content.Requires: meadco-core.js, meadco-scriptxprint.jsThe purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the codeintact when transitioning to using ScriptX.Services instead/as well.Includes processing of calls to the print api that return "printing to file" including collecting thefile output.
+    MeadCo.ScriptX.PrintHTML : object</h2>MeadCo.ScriptX.Print.HTMLA static class providing printing of HTML content.Requires: meadco-core.js, meadco-scriptxprint.jsThe purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the codeintact when transitioning to using ScriptX.Services instead/as well.Includes processing of calls to the print api that return "printing to file" including collecting thefile output.
 
 
-* [MeadCoScriptXPrintHTML](#MeadCoScriptXPrintHTML) : object
-    * [.documentContentToPrint](#MeadCoScriptXPrintHTML.documentContentToPrint)
-    * [.version](#MeadCoScriptXPrintHTML.version)
-    * [.PageOrientation](#MeadCoScriptXPrintHTML.PageOrientation) : enum
-    * [.PageMarginUnits](#MeadCoScriptXPrintHTML.PageMarginUnits) : enum
-    * [.PrintingPass](#MeadCoScriptXPrintHTML.PrintingPass) : enum
-    * [.BooleanOption](#MeadCoScriptXPrintHTML.BooleanOption) : enum
-    * [.frameContentToPrint(sFrame)](#MeadCoScriptXPrintHTML.frameContentToPrint) ⇒ string
-    * [.printDocument(fnCallOnDone, fnCallback, data)](#MeadCoScriptXPrintHTML.printDocument) ⇒ boolean
-    * [.printFrame(sFrame, fnCallOnDone, fnCallback, data)](#MeadCoScriptXPrintHTML.printFrame) ⇒ boolean
-    * [.printFromUrl(sUrl, fnCallOnDone, fnCallback, data)](#MeadCoScriptXPrintHTML.printFromUrl) ⇒ boolean
-    * [.printHtml(sHtml, fnCallOnDone, fnCallback, data)](#MeadCoScriptXPrintHTML.printHtml) ⇒ boolean
-    * [.connectLite(serverUrl, licenseGuid)](#MeadCoScriptXPrintHTML.connectLite)
-    * [.connect(serverUrl, licenseGuid)](#MeadCoScriptXPrintHTML.connect)
-    * [.connectAsync(serverUrl, licenseGuid, resolve, reject)](#MeadCoScriptXPrintHTML.connectAsync)
-    * [.Margins](#MeadCoScriptXPrintHTML.Margins)
-    * [.PageSettings](#MeadCoScriptXPrintHTML.PageSettings)
-    * [.ExtraHeaderAndFooterSettings](#MeadCoScriptXPrintHTML.ExtraHeaderAndFooterSettings)
-    * [.Settings](#MeadCoScriptXPrintHTML.Settings)
+* [MeadCo.ScriptX.PrintHTML](#MeadCo.ScriptX.PrintHTML) : object
+    * [.documentContentToPrint](#MeadCo.ScriptX.PrintHTML.documentContentToPrint)
+    * [.version](#MeadCo.ScriptX.PrintHTML.version)
+    * [.version](#MeadCo.ScriptX.PrintHTML.version)
+    * [.PageOrientation](#MeadCo.ScriptX.PrintHTML.PageOrientation) : enum
+    * [.PrintingPass](#MeadCo.ScriptX.PrintHTML.PrintingPass) : enum
+    * [.BooleanOption](#MeadCo.ScriptX.PrintHTML.BooleanOption) : enum
+    * [.frameContentToPrint(sFrame)](#MeadCo.ScriptX.PrintHTML.frameContentToPrint) ⇒ string
+    * [.printDocument(fnCallOnDone, fnCallback, data)](#MeadCo.ScriptX.PrintHTML.printDocument) ⇒ boolean
+    * [.printFrame(sFrame, fnCallOnDone, fnCallback, data)](#MeadCo.ScriptX.PrintHTML.printFrame) ⇒ boolean
+    * [.printFromUrl(sUrl, fnCallOnDone, fnCallback, data)](#MeadCo.ScriptX.PrintHTML.printFromUrl) ⇒ boolean
+    * [.printHtml(sHtml, fnCallOnDone, fnCallback, data)](#MeadCo.ScriptX.PrintHTML.printHtml) ⇒ boolean
+    * [.connectLite(serverUrl, licenseGuid)](#MeadCo.ScriptX.PrintHTML.connectLite)
+    * [.connect(serverUrl, licenseGuid)](#MeadCo.ScriptX.PrintHTML.connect)
+    * [.connectAsync(serverUrl, licenseGuid, resolve, reject)](#MeadCo.ScriptX.PrintHTML.connectAsync)
+    * [.connectAsync(serverUrl, licenseGuid, resolve, reject)](#MeadCo.ScriptX.PrintHTML.connectAsync)
+    * [.Margins](#MeadCo.ScriptX.PrintHTML.Margins)
+    * [.PageSettings](#MeadCo.ScriptX.PrintHTML.PageSettings)
+    * [.ExtraHeaderAndFooterSettings](#MeadCo.ScriptX.PrintHTML.ExtraHeaderAndFooterSettings)
+    * [.Settings](#MeadCo.ScriptX.PrintHTML.Settings)
 
 <br/>
-<a id="MeadCoScriptXPrintHTML.documentContentToPrint"></a>
+<a id="MeadCo.ScriptX.PrintHTML.documentContentToPrint"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintHTML.documentContentToPrint</h3>Get the complete currently displayed document as string of HTML.Form values are preserved in the source document then the document cloned.A base element is created if required.style elements are included.script and object elements are not included.
+    MeadCo.ScriptX.PrintHTML.documentContentToPrint</h3>Get the complete currently displayed document as string of HTML.Form values are preserved in the source document then the document cloned.A base element is created if required.style elements are included.script and object elements are not included.
 
 **Properties**
 
@@ -573,9 +633,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | documentContentToPrint | string | the current content in the window document as html |
 
 <br/>
-<a id="MeadCoScriptXPrintHTML.version"></a>
+<a id="MeadCo.ScriptX.PrintHTML.version"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintHTML.version</h3>Get the version of this module as a string major.minor.hotfix.build
+    MeadCo.ScriptX.PrintHTML.version</h3>Get the version of this module as a string major.minor.hotfix.build
 
 **Properties**
 
@@ -584,9 +644,20 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | version | string | 
 
 <br/>
-<a id="MeadCoScriptXPrintHTML.PageOrientation"></a>
+<a id="MeadCo.ScriptX.PrintHTML.version"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintHTML.PageOrientation : enum</h3>Enum to describe the orientation of the paper
+    MeadCo.ScriptX.PrintHTML.version</h3>Get the version of this module as a string major.minor.hotfix.build
+
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| version | string | 
+
+<br/>
+<a id="MeadCo.ScriptX.PrintHTML.PageOrientation"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.ScriptX.PrintHTML.PageOrientation : enum</h3>Enum to describe the orientation of the paper
 
 **Read only**: true  
 **Properties**
@@ -598,23 +669,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | PORTRAIT | number | 2 |
 
 <br/>
-<a id="MeadCoScriptXPrintHTML.PageMarginUnits"></a>
+<a id="MeadCo.ScriptX.PrintHTML.PrintingPass"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintHTML.PageMarginUnits : enum</h3>Enum to describe the units used on measurements
-
-**Read only**: true  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| DEFAULT | number | 0 use the default at the print server |
-| MM | number | 1 millimeters |
-| INCHES | number | 2 |
-
-<br/>
-<a id="MeadCoScriptXPrintHTML.PrintingPass"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintHTML.PrintingPass : enum</h3>Enum to describe the pages to be printed
+    MeadCo.ScriptX.PrintHTML.PrintingPass : enum</h3>Enum to describe the pages to be printed
 
 **Read only**: true  
 **Properties**
@@ -626,9 +683,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | EVEN | number | 3 print even numbered pages only |
 
 <br/>
-<a id="MeadCoScriptXPrintHTML.BooleanOption"></a>
+<a id="MeadCo.ScriptX.PrintHTML.BooleanOption"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintHTML.BooleanOption : enum</h3>Enum to describe a boolean value or use the default
+    MeadCo.ScriptX.PrintHTML.BooleanOption : enum</h3>Enum to describe a boolean value or use the default
 
 **Read only**: true  
 **Properties**
@@ -640,9 +697,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | FALSE | number | 2 |
 
 <br/>
-<a id="MeadCoScriptXPrintHTML.frameContentToPrint"></a>
+<a id="MeadCo.ScriptX.PrintHTML.frameContentToPrint"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintHTML.frameContentToPrint(sFrame) ⇒ string</h3>Get the complete currently displayed document in a frame as string of HTML.Form values are preserved in the source document then the document cloned.A base element is created if required.style elements are included.script and object elements are not included.
+    MeadCo.ScriptX.PrintHTML.frameContentToPrint(sFrame) ⇒ string</h3>Get the complete currently displayed document in a frame as string of HTML.Form values are preserved in the source document then the document cloned.A base element is created if required.style elements are included.script and object elements are not included.
 
 
 | Param | Type | Description |
@@ -651,9 +708,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 
 **Returns**: string - the current content in the frame window document as html  
 <br/>
-<a id="MeadCoScriptXPrintHTML.printDocument"></a>
+<a id="MeadCo.ScriptX.PrintHTML.printDocument"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintHTML.printDocument(fnCallOnDone, fnCallback, data) ⇒ boolean</h3>Print the complete current document in the window using the settings made by property updates before this function is called.
+    MeadCo.ScriptX.PrintHTML.printDocument(fnCallOnDone, fnCallback, data) ⇒ boolean</h3>Print the complete current document in the window using the settings made by property updates before this function is called.
 
 
 | Param | Type | Description |
@@ -664,9 +721,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 
 **Returns**: boolean - - true if a print was started (otherwise an error will be thrown)  
 <br/>
-<a id="MeadCoScriptXPrintHTML.printFrame"></a>
+<a id="MeadCo.ScriptX.PrintHTML.printFrame"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintHTML.printFrame(sFrame, fnCallOnDone, fnCallback, data) ⇒ boolean</h3>Print the complete current document in the named iframe using the settings made by property updates before this function is called.
+    MeadCo.ScriptX.PrintHTML.printFrame(sFrame, fnCallOnDone, fnCallback, data) ⇒ boolean</h3>Print the complete current document in the named iframe using the settings made by property updates before this function is called.
 
 
 | Param | Type | Description |
@@ -678,9 +735,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 
 **Returns**: boolean - - true if a print was started (otherwise an error will be thrown)  
 <br/>
-<a id="MeadCoScriptXPrintHTML.printFromUrl"></a>
+<a id="MeadCo.ScriptX.PrintHTML.printFromUrl"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintHTML.printFromUrl(sUrl, fnCallOnDone, fnCallback, data) ⇒ boolean</h3>Print the document obtained by downloading the given url using the settings made by property updates before this function is called.
+    MeadCo.ScriptX.PrintHTML.printFromUrl(sUrl, fnCallOnDone, fnCallback, data) ⇒ boolean</h3>Print the document obtained by downloading the given url using the settings made by property updates before this function is called.
 
 
 | Param | Type | Description |
@@ -692,9 +749,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 
 **Returns**: boolean - - true if a print was started (otherwise an error will be thrown)  
 <br/>
-<a id="MeadCoScriptXPrintHTML.printHtml"></a>
+<a id="MeadCo.ScriptX.PrintHTML.printHtml"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintHTML.printHtml(sHtml, fnCallOnDone, fnCallback, data) ⇒ boolean</h3>Print the fragment of html using the settings made by property updates before this function is called.
+    MeadCo.ScriptX.PrintHTML.printHtml(sHtml, fnCallOnDone, fnCallback, data) ⇒ boolean</h3>Print the fragment of html using the settings made by property updates before this function is called.
 
 
 | Param | Type | Description |
@@ -706,9 +763,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 
 **Returns**: boolean - - true if a print was started (otherwise an error will be thrown)  
 <br/>
-<a id="MeadCoScriptXPrintHTML.connectLite"></a>
+<a id="MeadCo.ScriptX.PrintHTML.connectLite"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintHTML.connectLite(serverUrl, licenseGuid)</h3>Specify the server and the subscription/license id to use on AJAX calls. No call is made in this function
+    MeadCo.ScriptX.PrintHTML.connectLite(serverUrl, licenseGuid)</h3>Specify the server and the subscription/license id to use on AJAX calls. No call is made in this function
 
 
 | Param | Type | Description |
@@ -717,9 +774,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | licenseGuid | string | the license/subscription identifier |
 
 <br/>
-<a id="MeadCoScriptXPrintHTML.connect"></a>
+<a id="MeadCo.ScriptX.PrintHTML.connect"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintHTML.connect(serverUrl, licenseGuid)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtaindefault soft html and device settings for the default device as well as the listof available printers. This call is synchronous and therefore not recommended. Use connectAsync()
+    MeadCo.ScriptX.PrintHTML.connect(serverUrl, licenseGuid)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtaindefault soft html and device settings for the default device as well as the listof available printers. This call is synchronous and therefore not recommended. Use connectAsync()
 
 
 | Param | Type | Description |
@@ -728,9 +785,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | licenseGuid | string | the license/subscription identifier |
 
 <br/>
-<a id="MeadCoScriptXPrintHTML.connectAsync"></a>
+<a id="MeadCo.ScriptX.PrintHTML.connectAsync"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintHTML.connectAsync(serverUrl, licenseGuid, resolve, reject)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtaindefault soft html and device settings for the default device as wll as the listof available printers.
+    MeadCo.ScriptX.PrintHTML.connectAsync(serverUrl, licenseGuid, resolve, reject)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtaindefault soft html and device settings for the default device as wll as the listof available printers.
 
 
 | Param | Type | Description |
@@ -741,9 +798,22 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | reject | function | function to call on failure |
 
 <br/>
-<a id="MeadCoScriptXPrintHTML.Margins"></a>
+<a id="MeadCo.ScriptX.PrintHTML.connectAsync"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintHTML.Margins</h3>**Properties**
+    MeadCo.ScriptX.PrintHTML.connectAsync(serverUrl, licenseGuid, resolve, reject)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtaindefault soft html and device settings for the default device as wll as the listof available printers.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| serverUrl | string | the 'root' url to the server (the api path will be added by the library) |
+| licenseGuid | string | the license/subscription identifier |
+| resolve | function | function to call on success |
+| reject | function | function to call on failure |
+
+<br/>
+<a id="MeadCo.ScriptX.PrintHTML.Margins"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.ScriptX.PrintHTML.Margins</h3>**Properties**
 
 | Name | Type | Description |
 | --- | --- | --- |
@@ -753,20 +823,20 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | bottom | number | bottom margin in requested units |
 
 <br/>
-<a id="MeadCoScriptXPrintHTML.PageSettings"></a>
+<a id="MeadCo.ScriptX.PrintHTML.PageSettings"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintHTML.PageSettings</h3>**Properties**
+    MeadCo.ScriptX.PrintHTML.PageSettings</h3>**Properties**
 
 | Name | Type | Description |
 | --- | --- | --- |
 | orientation | PageOrientation | orientation of the paper (size and source is a device setting) |
-| units | PageMarginUnits | measurement units for margins |
+| units | MeasurementUnits | measurement units for margins |
 | margins | Margins | margins to use |
 
 <br/>
-<a id="MeadCoScriptXPrintHTML.ExtraHeaderAndFooterSettings"></a>
+<a id="MeadCo.ScriptX.PrintHTML.ExtraHeaderAndFooterSettings"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintHTML.ExtraHeaderAndFooterSettings</h3>**Properties**
+    MeadCo.ScriptX.PrintHTML.ExtraHeaderAndFooterSettings</h3>**Properties**
 
 | Name | Type |
 | --- | --- |
@@ -782,9 +852,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | extraFirstFooterHeight | number | 
 
 <br/>
-<a id="MeadCoScriptXPrintHTML.Settings"></a>
+<a id="MeadCo.ScriptX.PrintHTML.Settings"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintHTML.Settings</h3>The soft settings to use when printing html content - headers, footers and margins(Device settings such as papersize, printer are described with MeadCo.ScriptX.Print.deviceSettings)
+    MeadCo.ScriptX.PrintHTML.Settings</h3>The soft settings to use when printing html content - headers, footers and margins(Device settings such as papersize, printer are described with MeadCo.ScriptX.Print.deviceSettings)
 
 **Properties**
 
@@ -807,28 +877,28 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | documentUrl | string | the document url to use in headers and footers |
 
 <br/>
-<a id="MeadCoScriptXPrintLicensing"></a>
+<a id="MeadCo.ScriptX.PrintLicensing"></a>
 <h2 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintLicensing : object</h2>MeadCo.ScriptX.Print.LicensingA static class wrapping calls to the server API to install / manage a client license for ScriptX.Services for Windows PC. The purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the codeintact when transitioning to using ScriptX.Services instead/as well.This module is only required when working with ScriptX Services for Windows PC.A license must be 'applied' to the current html document/window before calls to printing APIs that use the license can be made.This module is NOT required when working with Cloud or On Premise services as the licenseinstallation and management occurs at the server. Requires: meadco-core.js
+    MeadCo.ScriptX.PrintLicensing : object</h2>MeadCo.ScriptX.Print.LicensingA static class wrapping calls to the server API to install / manage a client license for ScriptX.Services for Windows PC. The purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the codeintact when transitioning to using ScriptX.Services instead/as well.This module is only required when working with ScriptX Services for Windows PC.A license must be 'applied' to the current html document/window before calls to printing APIs that use the license can be made.This module is NOT required when working with Cloud or On Premise services as the licenseinstallation and management occurs at the server. Requires: meadco-core.js
 
 
-* [MeadCoScriptXPrintLicensing](#MeadCoScriptXPrintLicensing) : object
-    * [.version](#MeadCoScriptXPrintLicensing.version)
-    * [.result](#MeadCoScriptXPrintLicensing.result)
-    * [.validLicense](#MeadCoScriptXPrintLicensing.validLicense)
-    * [.License](#MeadCoScriptXPrintLicensing.License)
-    * [.connect(serverUrl, slicenseGuid)](#MeadCoScriptXPrintLicensing.connect)
-    * [.connectLite(serverUrl, slicenseGuid, revision, path)](#MeadCoScriptXPrintLicensing.connectLite)
-    * [.apply(licenseGuid, revision, path)](#MeadCoScriptXPrintLicensing.apply) ⇒ license
-    * [.applyAsync(licenseGuid, revision, path, resolve, reject)](#MeadCoScriptXPrintLicensing.applyAsync)
-    * [.GetLicenseAsync(resolve, reject)](#MeadCoScriptXPrintLicensing.GetLicenseAsync)
-    * [.LicenseOptions](#MeadCoScriptXPrintLicensing.LicenseOptions)
-    * [.license](#MeadCoScriptXPrintLicensing.license)
+* [MeadCo.ScriptX.PrintLicensing](#MeadCo.ScriptX.PrintLicensing) : object
+    * [.version](#MeadCo.ScriptX.PrintLicensing.version)
+    * [.result](#MeadCo.ScriptX.PrintLicensing.result)
+    * [.validLicense](#MeadCo.ScriptX.PrintLicensing.validLicense)
+    * [.License](#MeadCo.ScriptX.PrintLicensing.License)
+    * [.connect(serverUrl, slicenseGuid)](#MeadCo.ScriptX.PrintLicensing.connect)
+    * [.connectLite(serverUrl, slicenseGuid, revision, path)](#MeadCo.ScriptX.PrintLicensing.connectLite)
+    * [.apply(licenseGuid, revision, path)](#MeadCo.ScriptX.PrintLicensing.apply) ⇒ license
+    * [.applyAsync(licenseGuid, revision, path, resolve, reject)](#MeadCo.ScriptX.PrintLicensing.applyAsync)
+    * [.GetLicenseAsync(resolve, reject)](#MeadCo.ScriptX.PrintLicensing.GetLicenseAsync)
+    * [.LicenseOptions](#MeadCo.ScriptX.PrintLicensing.LicenseOptions)
+    * [.license](#MeadCo.ScriptX.PrintLicensing.license)
 
 <br/>
-<a id="MeadCoScriptXPrintLicensing.version"></a>
+<a id="MeadCo.ScriptX.PrintLicensing.version"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintLicensing.version</h3>Get the version of this module as a string major.minor.hotfix.build
+    MeadCo.ScriptX.PrintLicensing.version</h3>Get the version of this module as a string major.minor.hotfix.build
 
 **Properties**
 
@@ -837,9 +907,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | version | string | 
 
 <br/>
-<a id="MeadCoScriptXPrintLicensing.result"></a>
+<a id="MeadCo.ScriptX.PrintLicensing.result"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintLicensing.result</h3>Get the result code for the last attempt to apply a license.Basically faked for the benefit of code compatibility with the add-on
+    MeadCo.ScriptX.PrintLicensing.result</h3>Get the result code for the last attempt to apply a license.Basically faked for the benefit of code compatibility with the add-on
 
 **Properties**
 
@@ -848,9 +918,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | result | number | 
 
 <br/>
-<a id="MeadCoScriptXPrintLicensing.validLicense"></a>
+<a id="MeadCo.ScriptX.PrintLicensing.validLicense"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintLicensing.validLicense</h3>Get whether a license has been applied successfully
+    MeadCo.ScriptX.PrintLicensing.validLicense</h3>Get whether a license has been applied successfully
 
 **Properties**
 
@@ -859,9 +929,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | validLicense | boolean | 
 
 <br/>
-<a id="MeadCoScriptXPrintLicensing.License"></a>
+<a id="MeadCo.ScriptX.PrintLicensing.License"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintLicensing.License</h3>Get the details on the connected license. If it hasnt been applied yet, then queryfor the details (but dont apply it and connectLite() MUST have been called).Warning this function is synchronous, GetLicenseAsync() should be used.
+    MeadCo.ScriptX.PrintLicensing.License</h3>Get the details on the connected license. If it hasnt been applied yet, then queryfor the details (but dont apply it and connectLite() MUST have been called).Warning this function is synchronous, GetLicenseAsync() should be used.
 
 **Properties**
 
@@ -870,9 +940,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | License | license | 
 
 <br/>
-<a id="MeadCoScriptXPrintLicensing.connect"></a>
+<a id="MeadCo.ScriptX.PrintLicensing.connect"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintLicensing.connect(serverUrl, slicenseGuid)</h3>Specify the server to use and the license Guid.
+    MeadCo.ScriptX.PrintLicensing.connect(serverUrl, slicenseGuid)</h3>Specify the server to use and the license Guid.
 
 
 | Param | Type | Description |
@@ -881,9 +951,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | slicenseGuid | string | the license GUID as provided by MeadCo. Optional unless will call GetLicenseAsync() without calling apply |
 
 <br/>
-<a id="MeadCoScriptXPrintLicensing.connectLite"></a>
+<a id="MeadCo.ScriptX.PrintLicensing.connectLite"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintLicensing.connectLite(serverUrl, slicenseGuid, revision, path)</h3>Specify the server to use and the license Guid in order to get details on the license via the License propertyor function GetLicenseAsync()
+    MeadCo.ScriptX.PrintLicensing.connectLite(serverUrl, slicenseGuid, revision, path)</h3>Specify the server to use and the license Guid in order to get details on the license via the License propertyor function GetLicenseAsync()
 
 
 | Param | Type | Description |
@@ -894,9 +964,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | path | string | fully qualified path to the license file (.mlf file). Use the value 'warehouse' to download from the public MeadCo License warehouse |
 
 <br/>
-<a id="MeadCoScriptXPrintLicensing.apply"></a>
+<a id="MeadCo.ScriptX.PrintLicensing.apply"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintLicensing.apply(licenseGuid, revision, path) ⇒ license</h3>Apply (make usable) the MeadCo ScriptX Client license for use with this content. If the license is not already cached it will be downloaded and cached. It is strongly suggested you request that the silent option is enabled in the license (it is by default for ScriptX.Services for Windows PC licenses)The license must list the url of the content to which it is being applied.This call is synchronous and therefore not recommended. Use applyAsync()
+    MeadCo.ScriptX.PrintLicensing.apply(licenseGuid, revision, path) ⇒ license</h3>Apply (make usable) the MeadCo ScriptX Client license for use with this content. If the license is not already cached it will be downloaded and cached. It is strongly suggested you request that the silent option is enabled in the license (it is by default for ScriptX.Services for Windows PC licenses)The license must list the url of the content to which it is being applied.This call is synchronous and therefore not recommended. Use applyAsync()
 
 
 | Param | Type | Description |
@@ -907,9 +977,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 
 **Returns**: license - details the license that was sucessfully applied, null if none available  
 <br/>
-<a id="MeadCoScriptXPrintLicensing.applyAsync"></a>
+<a id="MeadCo.ScriptX.PrintLicensing.applyAsync"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintLicensing.applyAsync(licenseGuid, revision, path, resolve, reject)</h3>Apply (make usable) the MeadCo ScriptX Client license for use with this content. If the license is not already cached it will be downloaded and cached.It is strongly suggested you request that the silent option is enabled in the license (it is by default for ScriptX.Services for Windows PC licenses)The license must list the url of the content to which it is being applied.
+    MeadCo.ScriptX.PrintLicensing.applyAsync(licenseGuid, revision, path, resolve, reject)</h3>Apply (make usable) the MeadCo ScriptX Client license for use with this content. If the license is not already cached it will be downloaded and cached.It is strongly suggested you request that the silent option is enabled in the license (it is by default for ScriptX.Services for Windows PC licenses)The license must list the url of the content to which it is being applied.
 
 
 | Param | Type | Description |
@@ -921,9 +991,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | reject | function | function to call on failure with reason for failure |
 
 <br/>
-<a id="MeadCoScriptXPrintLicensing.GetLicenseAsync"></a>
+<a id="MeadCo.ScriptX.PrintLicensing.GetLicenseAsync"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintLicensing.GetLicenseAsync(resolve, reject)</h3>Get the details on the connected license. If it hasnt been applied yet, then queryfor the details (but dont apply it and connectLite() MUST have been called).
+    MeadCo.ScriptX.PrintLicensing.GetLicenseAsync(resolve, reject)</h3>Get the details on the connected license. If it hasnt been applied yet, then queryfor the details (but dont apply it and connectLite() MUST have been called).
 
 
 | Param | Type | Description |
@@ -932,9 +1002,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | reject | function | function to call on failure with reason for failure |
 
 <br/>
-<a id="MeadCoScriptXPrintLicensing.LicenseOptions"></a>
+<a id="MeadCo.ScriptX.PrintLicensing.LicenseOptions"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintLicensing.LicenseOptions</h3>The capabilities that can be licensed.
+    MeadCo.ScriptX.PrintLicensing.LicenseOptions</h3>The capabilities that can be licensed.
 
 **Properties**
 
@@ -947,9 +1017,9 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | printRaw | boolean | True if Raw printing is available |
 
 <br/>
-<a id="MeadCoScriptXPrintLicensing.license"></a>
+<a id="MeadCo.ScriptX.PrintLicensing.license"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCoScriptXPrintLicensing.license</h3>License details
+    MeadCo.ScriptX.PrintLicensing.license</h3>License details
 
 **Properties**
 
@@ -962,6 +1032,117 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | to | Date | Date license is vaid till |
 | options | LicenseOptions | The options enabled by the license |
 | domains | Array.string | the domains the license can be used from |
+
+<br/>
+<a id="MeadCo.ScriptX.PrintPDF"></a>
+<h2 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.ScriptX.PrintPDF : object</h2>MeadCo.ScriptX.Print.PDFA static class providing printing of PDF files.Requires: meadco-core.js, meadco-scriptxprint.jsThe purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the codeintact when transitioning to using ScriptX.Services instead/as well.Includes processing of calls to the print api that return "printing to file" including collecting thefile output.
+
+
+* [MeadCo.ScriptX.PrintPDF](#MeadCo.ScriptX.PrintPDF) : object
+    * [.PageOrientation](#MeadCo.ScriptX.PrintPDF.PageOrientation) : enum
+    * [.BooleanOption](#MeadCo.ScriptX.PrintPDF.BooleanOption) : enum
+    * [.PdfPageScaling](#MeadCo.ScriptX.PrintPDF.PdfPageScaling) : enum
+    * [.print(sUrl, fnCallOnDone, fnCallback, data)](#MeadCo.ScriptX.PrintPDF.print) ⇒ boolean
+    * [.connectLite(serverUrl, licenseGuid)](#MeadCo.ScriptX.PrintPDF.connectLite)
+    * [.connect(serverUrl, licenseGuid)](#MeadCo.ScriptX.PrintPDF.connect)
+    * [.Settings](#MeadCo.ScriptX.PrintPDF.Settings)
+
+<br/>
+<a id="MeadCo.ScriptX.PrintPDF.PageOrientation"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.ScriptX.PrintPDF.PageOrientation : enum</h3>Enum to describe the orientation of the paper
+
+**Read only**: true  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| DEFAULT | number | 0 use the default at the print server |
+| LANDSCAPE | number | 1 |
+| PORTRAIT | number | 2 |
+
+<br/>
+<a id="MeadCo.ScriptX.PrintPDF.BooleanOption"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.ScriptX.PrintPDF.BooleanOption : enum</h3>Enum to describe a boolean value or use the default
+
+**Read only**: true  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| DEFAULT | number | 0 use the default at the print server |
+| TRUE | number | 1 |
+| FALSE | number | 2 |
+
+<br/>
+<a id="MeadCo.ScriptX.PrintPDF.PdfPageScaling"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.ScriptX.PrintPDF.PdfPageScaling : enum</h3>Enum to describe the page scaling to perfor,
+
+**Read only**: true  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| UNDEFINED | number | Not specified (ShrinkToFit is used instead) |
+| NONE | number | No scaling |
+| FITTOPAPER | number | Scale to fit to paper |
+| SHRINKLARGEPAGESOnly | number | scale oversized pages |
+
+<br/>
+<a id="MeadCo.ScriptX.PrintPDF.print"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.ScriptX.PrintPDF.print(sUrl, fnCallOnDone, fnCallback, data) ⇒ boolean</h3>Print the document obtained by downloading the given url.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| sUrl | string | the fully qualified url to the PDF document to be printed. |
+| fnCallOnDone | function | function to call when printing complete (and output returned), arg is null on no error, else error message. |
+| fnCallback | function | function to call when job status is updated |
+| data | any | object to give pass to fnCallback |
+
+**Returns**: boolean - - true if a print was started (otherwise an error will be thrown)  
+<br/>
+<a id="MeadCo.ScriptX.PrintPDF.connectLite"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.ScriptX.PrintPDF.connectLite(serverUrl, licenseGuid)</h3>Specify the server and the subscription/license id to use on AJAX calls. No call is made in this function
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| serverUrl | string | the 'root' url to the server (the api path will be added by the library) |
+| licenseGuid | string | the license/subscription identifier |
+
+<br/>
+<a id="MeadCo.ScriptX.PrintPDF.connect"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.ScriptX.PrintPDF.connect(serverUrl, licenseGuid)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtaindefault soft html and device settings for the default device as well as the listof available printers. This call is synchronous and therefore not recommended. Use connectAsync()
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| serverUrl | string | the 'root' url to the server (the api path will be added by the library) |
+| licenseGuid | string | the license/subscription identifier |
+
+<br/>
+<a id="MeadCo.ScriptX.PrintPDF.Settings"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.ScriptX.PrintPDF.Settings</h3>The soft settings to use when printing html content - headers, footers and margins(Device settings such as papersize, printer are described with MeadCo.ScriptX.Print.deviceSettings)
+
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| pageRange | string | The rage of pages to print. Empty means all, or from-to or comma delimited sets of from-to |
+| shrinkToFit | BooleanOption | Shrink the PDF page to fit the paper, optional true by default |
+| pageScaling | PdfPageScaling | If given then shrinkToFit is ignored and this scaling is used. |
+| autoRotateCenter | BooleanOption | Indicates whether pages should be rotated to fit on the paper and centered. If this parameter is not given then it will be set to true if shrinkToFit is true or pageScaling is FITTOPAPER. |
+| orientation | PageOrientation | Required oritentation on the printed paper |
+| monochrome | boolean | Specifies if monochrome printing should be used. This option is known not to work with some HP printers due to issues in HP print drivers. |
+| normalise | boolean | Indicates whether or not the pages should be processed to ensure drawing operations are at the expected positions. This option may assist if documents do not print as required. |
 
 <br/>
 <a id="secmgr"></a>

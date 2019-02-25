@@ -5,6 +5,7 @@
       "./src/meadco-core.js",
       "./src/meadco-scriptxprint.js",
       "./src/meadco-scriptxprinthtml.js",
+      "./src/meadco-scriptxprintpdf.js",
       "./src/meadco-scriptxfactory.js"
     ]
   },
@@ -14,6 +15,7 @@
       "./src/meadco-core.js",
       "./src/meadco-scriptxprint.js",
       "./src/meadco-scriptxprinthtml.js",
+      "./src/meadco-scriptxprintpdf.js",
       "./src/meadco-scriptxfactory.js",
       "./src/jQuery-MeadCo.ScriptX.Print.UI.js"
     ]
@@ -32,6 +34,7 @@
       "./src/meadco-core.js",
       "./src/meadco-scriptxprint.js",
       "./src/meadco-scriptxprinthtml.js",
+      "./src/meadco-scriptxprintpdf.js",
       "./src/meadco-scriptxfactory.js",
       "./src/meadco-scriptxprintlicensing.js",
       "./src/meadco-secmgr.js"
@@ -43,6 +46,7 @@
       "./src/meadco-core.js",
       "./src/meadco-scriptxprint.js",
       "./src/meadco-scriptxprinthtml.js",
+      "./src/meadco-scriptxprintpdf.js",
       "./src/meadco-scriptxfactory.js",
       "./src/meadco-scriptxprintlicensing.js",
       "./src/meadco-secmgr.js",
