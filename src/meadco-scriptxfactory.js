@@ -29,28 +29,26 @@
  * It is strongly recommended that the [MeadCoScriptJS library]{@link https://github.com/MeadCo/MeadCoScriptXJS} is used in conjunction with this library as it provides code (Promises) to assist
  * with working with the significant difference between the synchronous nature of the functions of ScriptX.Add-on (which hide the underlying asynchrony) and the asynchronous nature of javascript AJAX processing.
  * 
- * Some Add-on APIs lead to system provided dialogs (e.g. printer and paper setup) - support for implementing the dialogs in javascript as simple plug-ins is provided, along with an example implementation using bootstrap/jQuery (see jQuery-MeadCo.ScriptX.Print.UI.js)
- * 
- * @example
- * MeadCo.ScriptX.Print.UI = {
- *    PageSetup: function(fnDialgCompleteCallBack) { ... dialog code ...},
- *    PrinterSettings: function(fnDialgCompleteCallBack) { ... dialog code ...}
- * }
- *
- * @namespace factory
- * 
  * Requires:
- *      MeadCo.Core
- *      MeadCo.ScriptX.Print
- *      MeadCo.ScriptX.Print.HTML
+ * - MeadCo.Core
+ * - MeadCo.ScriptX.Print
+ * - MeadCo.ScriptX.Print.HTML
  *
- *      MeadCo.ScriptX.Print.Licensing when using ScritpX.Services for Windows PC
+ * - MeadCo.ScriptX.Print.Licensing when using ScritpX.Services for Windows PC
  *      
  * MeadCo.ScriptX.Print.HTML.connect[Async]() or MeadCo.ScriptX.Print.connect[Async]() *MUST* be called before using the apis in this library.
  * 
  * See [ScriptX Samples]{@link https://scriptxprintsamples.meadroid.com} for a lot of samples on using this code.
  * 
+ * Some Add-on APIs lead to system provided dialogs (e.g. printer and paper setup) - support for implementing the dialogs in javascript as simple plug-ins is provided, along with an example implementation using bootstrap/jQuery (see jQuery-MeadCo.ScriptX.Print.UI.js)
+ *
+ * @example
+ * MeadCo.ScriptX.Print.UI = {
+ *    PageSetup: function(fnDialgCompleteCallBack) { ... dialog code ...},
+ *    PrinterSettings: function(fnDialgCompleteCallBack) { ... dialog code ...}
+ * }
  * 
+ * @namespace factory
  */
 
 // we anti-polyfill &lt;object id="factory" /&gt;
