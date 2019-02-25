@@ -22,6 +22,24 @@
     var moduleversion = "1.5.2.1";
 
     /**
+     * Enum to describe the units used on measurements - please use MeadCo.ScriptX.Print.MeasurementUnits instead
+     *
+     * @memberof MeadCoScriptXPrintHTML
+     * @typedef {number} PageMarginUnits
+     * @deprecated
+     * @enum {PageMarginUnits}
+     * @readonly
+     * @property {number} DEFAULT 0 use the default at the print server
+     * @property {number} MM 1 millimeters
+     * @property {number} INCHES 2 
+     */
+    var mPageMarginUnits = {
+        DEFAULT: 0,
+        MM: 1,
+        INCHES: 2
+    };
+
+    /**
      * Enum to describe the orientation of the paper
      *
      * @memberof MeadCoScriptXPrintHTML    
@@ -476,6 +494,7 @@
 
     // public API
     return {
+        PageMarginUnits: mPageMarginUnits,
         PageOrientation: mPageOrientation, 
         PrintingPasses: mPrintingPass,
 

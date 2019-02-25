@@ -604,6 +604,7 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
     * [.documentContentToPrint](#MeadCo.ScriptX.PrintHTML.documentContentToPrint)
     * [.version](#MeadCo.ScriptX.PrintHTML.version)
     * [.version](#MeadCo.ScriptX.PrintHTML.version)
+    * ~~[.PageMarginUnits](#MeadCo.ScriptX.PrintHTML.PageMarginUnits) : enum~~
     * [.PageOrientation](#MeadCo.ScriptX.PrintHTML.PageOrientation) : enum
     * [.PrintingPass](#MeadCo.ScriptX.PrintHTML.PrintingPass) : enum
     * [.BooleanOption](#MeadCo.ScriptX.PrintHTML.BooleanOption) : enum
@@ -653,6 +654,22 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | Name | Type |
 | --- | --- |
 | version | string | 
+
+<br/>
+<a id="MeadCo.ScriptX.PrintHTML.PageMarginUnits"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    ~~MeadCo.ScriptX.PrintHTML.PageMarginUnits : enum~~</h3>***Deprecated***
+
+Enum to describe the units used on measurements - please use MeadCo.ScriptX.Print.MeasurementUnits instead
+
+**Read only**: true  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| DEFAULT | number | 0 use the default at the print server |
+| MM | number | 1 millimeters |
+| INCHES | number | 2 |
 
 <br/>
 <a id="MeadCo.ScriptX.PrintHTML.PageOrientation"></a>
