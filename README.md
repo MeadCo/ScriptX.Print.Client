@@ -15,7 +15,7 @@ The library is used by our extensive set of [samples](https://scriptxprintsample
 
 ## Current Version
 
-1.5.2
+1.5.3
 
 ## Packages 
 
@@ -68,12 +68,12 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
 
 ```javascript
 <!-- MeadCoScriptXJS Library -->
-<script src="https://cdn.jsdelivr.net/npm/meadco-scriptxjs@1.5.2/src/meadco-scriptx.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/meadco-scriptxjs@1.5.3/src/meadco-scriptx.min.js"></script>
 
 <!-- ScriptX Services client emulation libraries - depend on jQuery -->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.1.1/dist/jquery.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.5.2/dist/meadco-scriptxservicesprint.min.js" 
+<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.5.3/dist/meadco-scriptxservicesprint.min.js" 
         data-meadco-server="https://scriptxservices.meadroid.com" 
         data-meadco-license="xxx-xxx-xxxxxxx-xxx"></script>
 

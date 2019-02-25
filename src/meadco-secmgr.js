@@ -61,7 +61,7 @@
 })('secmgr', function () {
 
     // protected API
-    var moduleversion = "1.5.2.0";
+    var moduleversion = "1.5.3.0";
     var emulatedVersion = "8.1.1.0";
     var module = this;
 

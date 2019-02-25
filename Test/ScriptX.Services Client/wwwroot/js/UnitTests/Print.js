@@ -5,7 +5,7 @@ QUnit.test("Namespace basics", function (assert) {
     assert.ok(MeadCo.ScriptX.Print, "MeadCo.ScriptX.Print namespace exists");
     var api = MeadCo.ScriptX.Print;
 
-    assert.equal(api.version, "1.5.2.3", "Correct version");
+    assert.equal(api.version, "1.5.3.0", "Correct version");
 
     assert.equal(api.ContentType.URL, 1, "ContentType enum is OK");
     assert.equal(api.ContentType.XX, undefined, "Unknown ContentType enum is OK");

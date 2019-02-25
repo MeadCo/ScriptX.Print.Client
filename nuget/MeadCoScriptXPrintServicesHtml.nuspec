@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>MeadScriptXPrintHtml</id>
-    <version>1.5.2-beta</version>
+    <version>1.5.3-beta1</version>
     <title>MeadCo ScriptX.Print Services Library</title>
     <authors>Pete Cole, MeadCo</authors>
     <owners>MeadCo</owners>
@@ -22,6 +22,7 @@
     <file src="..\src\meadco-scriptxfactory.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxfactory.js" />
     <file src="..\src\meadco-scriptxprint.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxprint.js" />
     <file src="..\src\meadco-scriptxprinthtml.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxprinthtml.js" />
+    <file src="..\src\meadco-scriptxprintpdf.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxprintpdf.js" />
     <file src="..\src\meadco-scriptxprintlicensing.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxprintlicensing.js" />
     <file src="..\src\meadco-secmgr.js" target="content\scripts\MeadCo.ScriptX\meadco-secmgr.js" />
 
