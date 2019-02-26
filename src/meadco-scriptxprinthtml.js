@@ -633,6 +633,10 @@
          * Attempt to connect to the defined ScriptX.Services server and obtain
          * default soft html and device settings for the default device as well as the list
          * of available printers. 
+         * 
+         * This call is not required if client side code doesnt need to know about available printers
+         * but can assume (at least .connectLite() is required).
+         *
          * This call is synchronous and therefore not recommended. Use connectAsync()
          * 
          * @function connect
@@ -657,8 +661,11 @@
          * Specify the server to use and the subscription/license id. 
          * 
          * Attempt to connect to the defined ScriptX.Services server and obtain
-         * default soft html and device settings for the default device as wll as the list
+         * default soft html and device settings for the default device as well as the list
          * of available printers. 
+         * 
+         * This call is not required if client side code doesnt need to know about available printers
+         * but can assume (at least .connectLite() is required).
          * 
          * @function connectAsync
          * @memberof MeadCoScriptXPrintHTML

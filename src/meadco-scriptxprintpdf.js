@@ -149,8 +149,12 @@
          * Specify the server to use and the subscription/license id. 
          * 
          * Attempt to connect to the defined ScriptX.Services server and obtain
-         * default soft html and device settings for the default device as well as the list
+         * device settings for the default device as well as the list
          * of available printers. 
+         * 
+         * This call is not required if client side code doesnt need to know about available printers
+         * but can assume. It also is not required if MeadCo.ScriptX.Print.HTML.connect[Async]() has been called.
+         * 
          * This call is synchronous and therefore not recommended. Use connectAsync()
          * 
          * @function connect
@@ -175,11 +179,14 @@
          * Specify the server to use and the subscription/license id. 
          * 
          * Attempt to connect to the defined ScriptX.Services server and obtain
-         * default soft html and device settings for the default device as wll as the list
+         * device settings for the default device as well as the list
          * of available printers. 
          * 
+         * This call is not required if client side code doesnt need to know about available printers
+         * but can assume. It also is not required if MeadCo.ScriptX.Print.HTML.connect[Async]() has been called.
+         *
          * @function connectAsync
-         * @memberof MeadCoScriptXPrintHTML
+         * @memberof MeadCoScriptXPrintPDF
          * @param {string} serverUrl the 'root' url to the server (the api path will be added by the library)
          * @param {string} licenseGuid the license/subscription identifier
          * @param {function} resolve function to call on success
