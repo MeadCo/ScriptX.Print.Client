@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.5.3.1";
+    var version = "1.5.3.4";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
 
@@ -429,7 +429,9 @@
             softError: function (data) {
                 progress(requestData, enumPrintStatus.ERROR);
                 MeadCo.log("print has soft error");
+                removeJob(data.jobIdentifier);
                 if (typeof fnDone === "function") {
+                    MeadCo.log("Call fnDone(" + e.message + ")");
                     fnDone(data.message);
                 }
             },
@@ -442,7 +444,7 @@
                 }
             }
         });
-    };
+    }
 
     /**
      * Post a request to the server api/v1/print to print some html and monitor the print job 
@@ -533,8 +535,10 @@
 
                 softError: function (data) {
                     progress(requestData, enumPrintStatus.ERROR);
-                    MeadCo.log("print has soft error");
+                    MeadCo.log("printpdf call has soft error, remove job: " + data.jobIdentifier);
+                    removeJob(data.jobIdentifier);
                     if (typeof fnDone === "function") {
+                        MeadCo.log("Call fnDone(" + data.message + ")");
                         fnDone(data.message);
                     }
                 },
@@ -547,7 +551,7 @@
                     }
                 }
             });
-    };
+    }
 
     function setServer(serverUrl, clientLicenseGuid) {
         if (serverUrl.length > 0) {
@@ -597,7 +601,7 @@
                         method: "GET",
                         dataType: "json",
                         cache: false,
-                        async: true,
+                        async: true
                     }).done(function (data) {
                         resolve(data);
                     })
@@ -811,6 +815,7 @@
                             case enumPrintStatus.QUEUED:
                             case enumPrintStatus.STARTING:
                             case enumPrintStatus.PAUSED:
+                            case enumPrintStatus.PRINTPDF:
                                 progress(requestData, data.status, data.message);
                                 updateJob(data);
                                 // keep going

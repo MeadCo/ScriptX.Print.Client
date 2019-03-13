@@ -20,7 +20,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.PDF', function () {
 
-    var moduleversion = "1.5.3.0";
+    var moduleversion = "1.5.3.1";
 
     /**
      * Enum to describe the orientation of the paper
@@ -65,8 +65,8 @@
      * @readonly
      * @property {number} UNDEFINED Not specified (ShrinkToFit is used instead)
      * @property {number} NONE No scaling 
-     * @property {number} FITTOPAPER Scale to fit to paper
-     * @property {number} SHRINKLARGEPAGESOnly scale oversized pages 
+     * @property {number} FITTOPAPER Scale up to fit to paper if document is smaller than the paper
+     * @property {number} SHRINKLARGEPAGES Only scale to fit oversized pages 
      */
     var mPdfPageScaling = {
         UNDEFINED: -1,
@@ -75,15 +75,32 @@
         SHRINKLARGEPAGES: 2
     };
 
+    /**
+     * Enum to describle the print quality of images
+     * 
+     * @memberof MeadCoScriptXPrintPDF
+     * @typedef {number} PdfPrintQuality
+     * @enum {PdfPrintQuality}
+     * @readonly
+     * @property {number} NORMAL Normal quality
+     * @property {number} HIGH High quality
+     * @property {number} LOSSLESS Highest quality
+     */
+    var mPdfPrintQuality = {
+        NORMAL: 0,
+        HIGH: 1,
+        LOSSLESS: 2
+    };
+
     var PdfPrintSettings =
     {
         pageRage: "",
-        ShrinkToFit: true,
-        PageScaling: mPdfPageScaling.UNDEFINED,
+        pageScaling: mPdfPageScaling.UNDEFINED,
         autoRotateCenter: mBooleanOption.DEFAULT,
         orientation: mPageOrientation.DEFAULT,
         monochrome: false,
-        normalise: false
+        normalise: false,
+        printQuality: mPdfPrintQuality.NORMAL
     };
 
     function printPdfAtServer(document, fnDone, fnCallback, data) {
@@ -101,6 +118,7 @@
         PageOrientation: mPageOrientation,
         BooleanOption: mBooleanOption,
         PdfPageScaling: mPdfPageScaling,
+        PdfPrintQuality: mPdfPrintQuality,
 
         /**
          * The soft settings to use when printing PDF content - options controlling the rendering of the content.

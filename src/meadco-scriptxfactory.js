@@ -83,7 +83,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.5.3.2";
+    var moduleversion = "1.5.3.3";
     var emulatedVersion = "8.0.0.0";
     var module = this;
 
@@ -665,59 +665,60 @@
                 fnNotifyStarted = function (bStarted) { };
             }
 
-            if (typeof printPdf !== "undefined") {
-
-                if (typeof options.pagescaling !== "undefined") {
-                    printPdf.settings.pageScaling = options.pagescaling;
-                    printPdf.settings.shrinkToFit = printPdf.BooleanOption.DEFAULT;
-                }
-                else {
-                    printPdf.settings.pageScaling = printPdf.PdfPageScaling.UNDEFINED;
-                    printPdf.settings.shrinkToFit = bShrinkToFit ? printPdf.BooleanOption.TRUE : printPdf.BooleanOption.FALSE;
-                }
-
-                if (typeof options.autorotatecenter !== "undefined") {
-                    printPdf.settings.autorotatecenter = options.autorotatecenter ? printPdf.BooleanOption.TRUE : printPdf.BooleanOption.FALSE;
-                }
-                else
-                    printPdf.settings.autorotatecenter = printPdf.PdfPageScaling.UNDEFINED;
-
-                if (typeof options.orientation !== "undefined") {
-                    printPdf.settings.orientation = options.orientation === 1 ? printPdf.PageOrientation.PORTRAIT : printPdf.PageOrientation.LANDSCAPE;
-                }
-                else
-                    printPdf.settings.orientation = this.portrait ? printPdf.PageOrientation.PORTRAIT : printPdf.PageOrientation.LANDSCAPE;
-
-                if (typeof options.pages !== "undefined") {
-                    printPdf.settings.pageRange = options.pages;
-                }
-                else {
-                    if (iPageFrom !== -1 && iPageTo !== -1) {
-                        printPdf.settings.pageRange = iPageFrom + "-" + iPageTo;
-                    }
-                    else {
-                        printPdf.settings.pageRange = "";
-                    }
-                }
-
-                if (typeof options.monochrome !== "undefined") {
-                    printPdf.settings.monochrome = options.monochrome ? printPdf.BooleanOption.TRUE : printPdf.BooleanOption.FALSE;
-                }
-                else
-                    printPdf.settings.monochrome = printPdf.BooleanOption.DEFAULT;
-
-                if (typeof options.normalise !== "undefined" || typeof options.normalize !== "undefined") {
-                    printPdf.settings.normalise = options.normalise || options.normalize ? printPdf.BooleanOption.TRUE : printPdf.BooleanOption.FALSE;
-                }
-                else
-                    printPdf.settings.normalise = printPdf.BooleanOption.DEFAULT;
-
-                printPdfContent(options.url, bPrompt, fnNotifyStarted);
+            if (typeof options.pagescaling !== "undefined") {
+                printPdf.settings.pageScaling = options.pagescaling;
             }
             else {
-                MeadCo.error("MeadCo.ScriptX.Print.PDF is not available to ScriptX.Services factory emulation.");
-                fnNotifyStarted(false);
+                printPdf.settings.pageScaling = bShrinkToFit ? printPdf.PdfPageScaling.SHRINKLARGEPAGES : printPdf.PdfPageScaling.UNDEFINED;
             }
+
+            if (typeof options.autorotatecenter !== "undefined") {
+                printPdf.settings.autorotatecenter = options.autorotatecenter ? printPdf.BooleanOption.TRUE : printPdf.BooleanOption.FALSE;
+            }
+            else
+                printPdf.settings.autorotatecenter = printPdf.BooleanOption.DEFAULT;
+
+            if (typeof options.orientation !== "undefined") {
+                printPdf.settings.orientation = options.orientation === 1 ? printPdf.PageOrientation.PORTRAIT : printPdf.PageOrientation.LANDSCAPE;
+            }
+            else
+                printPdf.settings.orientation = this.portrait ? printPdf.PageOrientation.PORTRAIT : printPdf.PageOrientation.LANDSCAPE;
+
+            if (typeof options.pages !== "undefined") {
+                printPdf.settings.pageRange = options.pages;
+            }
+            else {
+                if (iPageFrom !== -1 && iPageTo !== -1) {
+                    printPdf.settings.pageRange = iPageFrom + "-" + iPageTo;
+                }
+                else {
+                    printPdf.settings.pageRange = "";
+                }
+            }
+
+            if (typeof options.monochrome !== "undefined") {
+                printPdf.settings.monochrome = options.monochrome ? printPdf.BooleanOption.TRUE : printPdf.BooleanOption.FALSE;
+            }
+            else
+                printPdf.settings.monochrome = printPdf.BooleanOption.DEFAULT;
+
+            if (typeof options.normalise !== "undefined" || typeof options.normalize !== "undefined") {
+                printPdf.settings.normalise = options.normalise || options.normalize ? printPdf.BooleanOption.TRUE : printPdf.BooleanOption.FALSE;
+            }
+            else
+                printPdf.settings.normalise = printPdf.BooleanOption.DEFAULT;
+
+            if (typeof options.printMode !== "undefined") {
+                printPdf.settings.printQuality = options.printMode;
+            }
+            else {
+                if (typeof options.printQuality !== "undefined") {
+                    printPdf.settings.printQuality = options.printQuality;
+                }
+            }
+
+            printPdfContent(options.url, bPrompt, fnNotifyStarted);
+
         },
 
         BatchPrintPDF: function (sUrl, fnNotifyStarted) {
@@ -957,11 +958,6 @@
 
             sPrinterName = sPrinterName.toLowerCase();
             for (i = 0; i < jobs.length; i++) {
-                if (typeof jobs[i].printerName === "undefined") {
-                    var x = 1;
-                    debugger;
-                }
-
                 if (jobs[i].printerName.toLowerCase() === sPrinterName)
                     c++;
             }
