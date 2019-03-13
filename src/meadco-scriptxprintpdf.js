@@ -103,7 +103,7 @@
         PdfPageScaling: mPdfPageScaling,
 
         /**
-         * The soft settings to use when printing html content - headers, footers and margins
+         * The soft settings to use when printing PDF content - options controlling the rendering of the content.
          * (Device settings such as papersize, printer are described with MeadCo.ScriptX.Print.deviceSettings)
          *  
          * @memberof MeadCoScriptXPrintPDF
@@ -119,7 +119,7 @@
         settings: PdfPrintSettings,
 
         /**
-         * Print the document obtained by downloading the given url.
+         * Print the document obtained by downloading the given url, use the current settings to control the rendering.
          *
          * @memberof MeadCoScriptXPrintPDF
          * @function print
