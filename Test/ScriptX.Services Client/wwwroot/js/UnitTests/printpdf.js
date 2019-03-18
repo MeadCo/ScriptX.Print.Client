@@ -64,7 +64,7 @@ QUnit.test("Printing content", function (assert) {
         assert.equal(MeadCo.ScriptX.Print.printerName, "Test printer", "Default printer name has been set");
         done();
 
-        var done2 = assert.async(5);
+        var done2 = assert.async(8);
 
         // immediate completion
         api.print("",function (errorText) {
@@ -97,12 +97,39 @@ QUnit.test("Printing content", function (assert) {
             "ProgressData3");
 
         api.print("http://flipflip.com/?f=pdf2", function (errorText) {
-            assert.strictEqual(null, errorText,"Loger job correct done call (no error)");
+            assert.strictEqual(null, errorText,"Longer job correct done call (no error)");
             done2();
         }, function (status, sInformation, data) {
             assert.equal(data, "ProgressData4", "On progress4 function receives data: " + status);
         },
             "ProgressData4");
+
+        api.print("http://flipflip.com/?f=pdfA", function (errorText) {
+            assert.strictEqual(errorText, "Server error", "Correct itemError in status handling");
+            assert.equal($("#qunit-fixture").text(), "The print failed with the error: Bad type from jobToken: pdfA:job", "Correct error reported via dialog");
+            done2();
+        }, function (status, sInformation, data) {
+            assert.equal(data, "ProgressData5", "On progress4 function receives data: " + status);
+        },
+            "ProgressData5");
+
+        api.print("\\\\beaches\\delight", function (errorText) {
+            assert.strictEqual(errorText, "Server error", "Correct itemError with UNC doc");
+            assert.equal($("#qunit-fixture").text(), "Unsupported print content type: Unc", "Correct error reported via dialog");
+            done2();
+        }, function (status, sInformation, data) {
+            assert.equal(data, "ProgressData6", "On progress4 function receives data: " + status);
+        },
+            "ProgressData6");
+
+        api.print("delight.pdf", function (errorText) {
+            assert.strictEqual(errorText, "Server error", "Correct itemError with bad uri doc");
+            assert.equal($("#qunit-fixture").text(), "Internal Server Error", "Correct error reported via dialog");
+            done2();
+        }, function (status, sInformation, data) {
+            assert.equal(data, "ProgressData7", "On progress4 function receives data: " + status);
+        },
+            "ProgressData7");
 
         MeadCo.ScriptX.Print.waitForSpoolingComplete(10000, function (bComplete) {
             assert.ok(bComplete, "WaitForSpoolingComplete ok - all jobs done.");

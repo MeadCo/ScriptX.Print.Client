@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.5.3.4";
+    var version = "1.5.3.5";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
 
@@ -385,10 +385,11 @@
         return printAtServer(serverApi,requestData,
         {
             fail: function (jqXhr, textStatus, errorThrown) {
-                progress(requestData, enumPrintStatus.ERROR, errorThrown);
-                MeadCo.ScriptX.Print.reportError(errorThrown);
+                var err = parseError("MeadCo.ScriptX.Print.printHtmlAtServer", jqXhr, textStatus, errorThrown);
+                progress(requestData, enumPrintStatus.ERROR, err);
+                MeadCo.ScriptX.Print.reportError(err);
                 if (typeof fnDone === "function") {
-                    fnDone(parseError("MeadCo.ScriptX.Print.printHtmlAtServer", jqXhr, textStatus, errorThrown));
+                    fnDone("Server error");
                 }
             },
 
@@ -427,12 +428,13 @@
             },
 
             softError: function (data) {
-                progress(requestData, enumPrintStatus.ERROR);
+                progress(requestData, enumPrintStatus.ERROR, data.message);
+                MeadCo.ScriptX.Print.reportError(data.message);
                 MeadCo.log("print has soft error");
                 removeJob(data.jobIdentifier);
                 if (typeof fnDone === "function") {
-                    MeadCo.log("Call fnDone(" + e.message + ")");
-                    fnDone(data.message);
+                    MeadCo.log("Call fnDone");
+                    fnDone("Server error");
                 }
             },
 
@@ -492,10 +494,11 @@
         return printAtServer(serverApi,requestData,
             {
                 fail: function (jqXhr, textStatus, errorThrown) {
-                    progress(requestData, enumPrintStatus.ERROR, errorThrown);
-                    MeadCo.ScriptX.Print.reportError(errorThrown);
+                    var err = parseError("MeadCo.ScriptX.Print.printHtmlAtServer", jqXhr, textStatus, errorThrown);
+                    progress(requestData, enumPrintStatus.ERROR, err);
+                    MeadCo.ScriptX.Print.reportError(err);
                     if (typeof fnDone === "function") {
-                        fnDone(parseError("MeadCo.ScriptX.Print.printPdfAtServer", jqXhr, textStatus, errorThrown));
+                        fnDone("Server error");
                     }
                 },
 
@@ -534,12 +537,13 @@
                 },
 
                 softError: function (data) {
-                    progress(requestData, enumPrintStatus.ERROR);
+                    progress(requestData, enumPrintStatus.ERROR, data.message);
+                    MeadCo.ScriptX.Print.reportError(data.message);
                     MeadCo.log("printpdf call has soft error, remove job: " + data.jobIdentifier);
                     removeJob(data.jobIdentifier);
                     if (typeof fnDone === "function") {
-                        MeadCo.log("Call fnDone(" + data.message + ")");
-                        fnDone(data.message);
+                        MeadCo.log("Call fnDone");
+                        fnDone("Server error");
                     }
                 },
 
