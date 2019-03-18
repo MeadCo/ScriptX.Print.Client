@@ -1,6 +1,6 @@
 ﻿QUnit.test("Testing meadco-core.js", function (assert) {
     assert.ok(MeadCo, "MeadCo namespace exists");
-    assert.equal(MeadCo.version, "1.5.3.0", "Correct version");
+    assert.equal(MeadCo.version, "1.5.3.1", "Correct version");
 
     assert.ok(MeadCo.ScriptX, "MeadCo.ScriptX exists");
 

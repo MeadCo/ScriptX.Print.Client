@@ -54,7 +54,7 @@
 
     // protected API
     var module = this;
-    var version = "1.5.3.0";
+    var version = "1.5.3.1";
     var bLog = false;
 
     var log = function (str) {
@@ -73,50 +73,42 @@
 
     // extend the namespace
     module.extendMeadCoNamespace = function (name, definition) {
-        var theModule = definition(),
-            hasDefine = typeof define === 'function' && define.amd,
-            hasExports = typeof module !== 'undefined' && module.exports;
+        var theModule = definition()
 
-        if (hasDefine) { // AMD Module
-            define(theModule);
-        } else if (hasExports) { // Node.js Module
-            module.exports = theModule;
-        } else {
-            log("MeadCo root extending namespace: " + name);
-            // walk/build the namespace part by part and assign the module to the leaf
-            var namespaces = name.split(".");
-            var scope = (module.scope || this.jQuery || this.ender || this.$ || this);
-            for (var i = 0; i < namespaces.length; i++) {
-                var packageName = namespaces[i];
-                if (i === namespaces.length - 1) {
-                    if (typeof scope[packageName] === "undefined") {
-                        log("installing implementation at: " + packageName);
-                        scope[packageName] = theModule;
-                    } else {
-                        log("Warning - extending package: " + packageName);
-                        var oldscope = scope[packageName];
-                        scope[packageName] = theModule;
+        log("MeadCo root extending namespace: " + name);
+        // walk/build the namespace part by part and assign the module to the leaf
+        var namespaces = name.split(".");
+        var scope = (module.scope || this.jQuery || this.ender || this.$ || this);
+        for (var i = 0; i < namespaces.length; i++) {
+            var packageName = namespaces[i];
+            if (i === namespaces.length - 1) {
+                if (typeof scope[packageName] === "undefined") {
+                    log("installing implementation at: " + packageName);
+                    scope[packageName] = theModule;
+                } else {
+                    log("Warning - extending package: " + packageName);
+                    var oldscope = scope[packageName];
+                    scope[packageName] = theModule;
 
-                        var newscope = scope[packageName];
+                    var newscope = scope[packageName];
 
-                        log("preserving old scope ... ");
-                        for (var prop in oldscope) {
-                            if (oldscope.hasOwnProperty(prop)) {
-                                log("will preserve: " + prop);
-                                newscope[prop] = oldscope[prop];
-                            }
+                    log("preserving old scope ... ");
+                    for (var prop in oldscope) {
+                        if (oldscope.hasOwnProperty(prop)) {
+                            log("will preserve: " + prop);
+                            newscope[prop] = oldscope[prop];
                         }
                     }
-                } else if (typeof scope[packageName] === "undefined") {
-                    log("initialising new: " + packageName);
-                    scope[packageName] = {};
-                } else {
-                    log("using existing package: " + packageName);
                 }
-                scope = scope[packageName];
+            } else if (typeof scope[packageName] === "undefined") {
+                log("initialising new: " + packageName);
+                scope[packageName] = {};
+            } else {
+                log("using existing package: " + packageName);
             }
+            scope = scope[packageName];
         }
-    }
+    };
 
     log("MeadCo root namespace loaded.");
 
