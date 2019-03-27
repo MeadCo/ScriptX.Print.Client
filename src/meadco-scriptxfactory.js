@@ -83,7 +83,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.5.3.3";
+    var moduleversion = "1.5.3.4";
     var emulatedVersion = "8.0.0.0";
     var module = this;
 
@@ -688,7 +688,7 @@
                 printPdf.settings.pageRange = options.pages;
             }
             else {
-                if (iPageFrom !== -1 && iPageTo !== -1) {
+                if (typeof iPageFrom !== "undefined" && typeof iPageTo !== "undefined" && iPageFrom !== -1 && iPageTo !== -1) {
                     printPdf.settings.pageRange = iPageFrom + "-" + iPageTo;
                 }
                 else {

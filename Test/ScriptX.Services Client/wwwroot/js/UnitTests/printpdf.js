@@ -67,7 +67,7 @@ QUnit.test("Printing content", function (assert) {
         var done2 = assert.async(8);
 
         // immediate completion
-        api.print("",function (errorText) {
+        api.print("", function (errorText) {
             assert.equal(errorText, "Request to print no content", "Correct done call on immediate completion");
             done2();
         }, function (status, sInformation, data) {
@@ -78,14 +78,14 @@ QUnit.test("Printing content", function (assert) {
         // ok job at server 
         // error in job from server
         api.print("http://flipflip.com/?f=pdf0", function (errorText) {
-            assert.strictEqual(errorText,null,"Immediate print correct done call (no error)");
+            assert.strictEqual(errorText, null, "Immediate print correct done call (no error)");
             done2();
         }, function (status, sInformation, data) {
             assert.equal(data, "ProgressData2", "On progress2 function receives data: " + status);
         },
             "ProgressData2");
 
- 
+
         // error in job from server
         api.print("http://flipflip.com/?f=pdf1", function (errorText) {
             assert.equal(errorText, "Server error", "Correct done call (mocked abandoned)");
@@ -97,7 +97,7 @@ QUnit.test("Printing content", function (assert) {
             "ProgressData3");
 
         api.print("http://flipflip.com/?f=pdf2", function (errorText) {
-            assert.strictEqual(null, errorText,"Longer job correct done call (no error)");
+            assert.strictEqual(null, errorText, "Longer job correct done call (no error)");
             done2();
         }, function (status, sInformation, data) {
             assert.equal(data, "ProgressData4", "On progress4 function receives data: " + status);
@@ -115,7 +115,7 @@ QUnit.test("Printing content", function (assert) {
 
         api.print("\\\\beaches\\delight", function (errorText) {
             assert.strictEqual(errorText, "Server error", "Correct itemError with UNC doc");
-            assert.equal($("#qunit-fixture").text(), "Unsupported print content type: Unc", "Correct error reported via dialog");
+            assert.equal($("#qunit-fixture").text(), "Unsupported print content type: Unc", "Correct unc error reported via dialog");
             done2();
         }, function (status, sInformation, data) {
             assert.equal(data, "ProgressData6", "On progress4 function receives data: " + status);
@@ -131,7 +131,7 @@ QUnit.test("Printing content", function (assert) {
         },
             "ProgressData7");
 
-        MeadCo.ScriptX.Print.waitForSpoolingComplete(10000, function (bComplete) {
+        MeadCo.ScriptX.Print.waitForSpoolingComplete(30000, function (bComplete) {
             assert.ok(bComplete, "WaitForSpoolingComplete ok - all jobs done.");
             done2();
         });

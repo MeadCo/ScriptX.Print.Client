@@ -4,7 +4,7 @@ QUnit.test("Namespace basics", function (assert) {
 
     assert.ok(window.factory, "factory namespace exists");
     var api = window.factory;
-    var expectedVersion = "1.5.3.3";
+    var expectedVersion = "1.5.3.4";
 
     var a = new Object();
     var b = new Object();
