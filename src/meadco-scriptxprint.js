@@ -483,6 +483,7 @@
 
         var requestData = {
             Document: document,
+            Description: pdfPrintSettings.jobDescription,
             Settings: pdfPrintSettings,
             Device: devInfo,
             OnProgress: fnProgress,

@@ -83,7 +83,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.5.3.4";
+    var moduleversion = "1.5.3.5";
     var emulatedVersion = "8.0.0.0";
     var module = this;
 
@@ -715,6 +715,14 @@
                 if (typeof options.printQuality !== "undefined") {
                     printPdf.settings.printQuality = options.printQuality;
                 }
+            }
+
+            if (typeof options.jobname !== "undefined") {
+                printPdf.settings.jobDescription = options.jobname;
+            }
+
+            if (typeof options.jobName !== "undefined") {
+                printPdf.settings.jobDescription = options.jobName;
             }
 
             printPdfContent(options.url, bPrompt, fnNotifyStarted);

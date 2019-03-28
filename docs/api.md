@@ -1168,6 +1168,7 @@ Enum to describe the units used on measurements - please use MeadCo.ScriptX.Prin
 
 | Name | Type | Description |
 | --- | --- | --- |
+| jobDescription | string | Optional description for the print which will be used as the jobname in the printer queue |
 | pageRange | string | The rage of pages to print. Empty means all, or from-to or comma delimited sets of from-to |
 | shrinkToFit | BooleanOption | Shrink the PDF page to fit the paper, optional true by default |
 | pageScaling | PdfPageScaling | If given then shrinkToFit is ignored and this scaling is used. |
