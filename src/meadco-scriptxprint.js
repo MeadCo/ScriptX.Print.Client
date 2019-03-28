@@ -494,7 +494,7 @@
         return printAtServer(serverApi,requestData,
             {
                 fail: function (jqXhr, textStatus, errorThrown) {
-                    var err = parseError("MeadCo.ScriptX.Print.printHtmlAtServer", jqXhr, textStatus, errorThrown);
+                    var err = parseError("MeadCo.ScriptX.Print.printPdfAtServer", jqXhr, textStatus, errorThrown);
                     progress(requestData, enumPrintStatus.ERROR, err);
                     MeadCo.ScriptX.Print.reportError(err);
                     if (typeof fnDone === "function") {
