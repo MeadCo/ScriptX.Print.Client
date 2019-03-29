@@ -83,8 +83,8 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.5.3.5";
-    var emulatedVersion = "8.0.0.0";
+    var moduleversion = "1.5.3.6";
+    var emulatedVersion = "8.2.0.0";
     var module = this;
 
     function log(str) {
@@ -134,7 +134,7 @@
          */
         GetComponentVersion: function (sComponent, a, b, c, d) {
             log("factory.object.getcomponentversion: " + sComponent);
-            var v = emulatedVersion;
+            var v = moduleversion;
 
             switch (sComponent.toLowerCase()) {
                 case "scriptx.factory":
