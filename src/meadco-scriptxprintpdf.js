@@ -20,7 +20,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.PDF', function () {
 
-    var moduleversion = "1.5.3.1";
+    var moduleversion = "1.5.3.2";
 
     /**
      * Enum to describe the orientation of the paper
@@ -94,6 +94,7 @@
 
     var PdfPrintSettings =
     {
+        jobDescription: "",
         pageRage: "",
         pageScaling: mPdfPageScaling.UNDEFINED,
         autoRotateCenter: mBooleanOption.DEFAULT,
@@ -126,6 +127,7 @@
          *  
          * @memberof MeadCoScriptXPrintPDF
          * @typedef Settings
+         * @property {string} jobDescription Optional description for the print which will be used as the jobname in the printer queue
          * @property {string} pageRange The rage of pages to print. Empty means all, or from-to or comma delimited sets of from-to
          * @property {BooleanOption} shrinkToFit Shrink the PDF page to fit the paper, optional true by default
          * @property {PdfPageScaling} pageScaling If given then shrinkToFit is ignored and this scaling is used.

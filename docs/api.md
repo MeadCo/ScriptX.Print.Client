@@ -616,7 +616,6 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
     * [.connectLite(serverUrl, licenseGuid)](#MeadCo.ScriptX.PrintHTML.connectLite)
     * [.connect(serverUrl, licenseGuid)](#MeadCo.ScriptX.PrintHTML.connect)
     * [.connectAsync(serverUrl, licenseGuid, resolve, reject)](#MeadCo.ScriptX.PrintHTML.connectAsync)
-    * [.connectAsync(serverUrl, licenseGuid, resolve, reject)](#MeadCo.ScriptX.PrintHTML.connectAsync)
     * [.Margins](#MeadCo.ScriptX.PrintHTML.Margins)
     * [.PageSettings](#MeadCo.ScriptX.PrintHTML.PageSettings)
     * [.ExtraHeaderAndFooterSettings](#MeadCo.ScriptX.PrintHTML.ExtraHeaderAndFooterSettings)
@@ -793,7 +792,7 @@ Enum to describe the units used on measurements - please use MeadCo.ScriptX.Prin
 <br/>
 <a id="MeadCo.ScriptX.PrintHTML.connect"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintHTML.connect(serverUrl, licenseGuid)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtaindefault soft html and device settings for the default device as well as the listof available printers. This call is synchronous and therefore not recommended. Use connectAsync()
+    MeadCo.ScriptX.PrintHTML.connect(serverUrl, licenseGuid)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtaindefault soft html and device settings for the default device as well as the listof available printers. This call is not required if client side code doesnt need to know about available printersbut can assume (at least .connectLite() is required).This call is synchronous and therefore not recommended. Use connectAsync()
 
 
 | Param | Type | Description |
@@ -804,20 +803,7 @@ Enum to describe the units used on measurements - please use MeadCo.ScriptX.Prin
 <br/>
 <a id="MeadCo.ScriptX.PrintHTML.connectAsync"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintHTML.connectAsync(serverUrl, licenseGuid, resolve, reject)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtaindefault soft html and device settings for the default device as wll as the listof available printers.
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| serverUrl | string | the 'root' url to the server (the api path will be added by the library) |
-| licenseGuid | string | the license/subscription identifier |
-| resolve | function | function to call on success |
-| reject | function | function to call on failure |
-
-<br/>
-<a id="MeadCo.ScriptX.PrintHTML.connectAsync"></a>
-<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintHTML.connectAsync(serverUrl, licenseGuid, resolve, reject)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtaindefault soft html and device settings for the default device as wll as the listof available printers.
+    MeadCo.ScriptX.PrintHTML.connectAsync(serverUrl, licenseGuid, resolve, reject)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtaindefault soft html and device settings for the default device as well as the listof available printers. This call is not required if client side code doesnt need to know about available printersbut can assume (at least .connectLite() is required).
 
 
 | Param | Type | Description |
@@ -1053,16 +1039,18 @@ Enum to describe the units used on measurements - please use MeadCo.ScriptX.Prin
 <br/>
 <a id="MeadCo.ScriptX.PrintPDF"></a>
 <h2 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintPDF : object</h2>MeadCo.ScriptX.Print.PDFA static class providing printing of PDF files.Requires: meadco-core.js, meadco-scriptxprint.jsThe purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the codeintact when transitioning to using ScriptX.Services instead/as well.Includes processing of calls to the print api that return "printing to file" including collecting thefile output.
+    MeadCo.ScriptX.PrintPDF : object</h2>MeadCo.ScriptX.Print.PDFA static class providing printing of PDF files.Requires: - meadco-core.js- meadco-scriptxprint.jsThe purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the codeintact when transitioning to using ScriptX.Services instead/as well.Includes processing of calls to the print api that return "printing to file" including collecting thefile output.
 
 
 * [MeadCo.ScriptX.PrintPDF](#MeadCo.ScriptX.PrintPDF) : object
     * [.PageOrientation](#MeadCo.ScriptX.PrintPDF.PageOrientation) : enum
     * [.BooleanOption](#MeadCo.ScriptX.PrintPDF.BooleanOption) : enum
     * [.PdfPageScaling](#MeadCo.ScriptX.PrintPDF.PdfPageScaling) : enum
+    * [.PdfPrintQuality](#MeadCo.ScriptX.PrintPDF.PdfPrintQuality) : enum
     * [.print(sUrl, fnCallOnDone, fnCallback, data)](#MeadCo.ScriptX.PrintPDF.print) ⇒ boolean
     * [.connectLite(serverUrl, licenseGuid)](#MeadCo.ScriptX.PrintPDF.connectLite)
     * [.connect(serverUrl, licenseGuid)](#MeadCo.ScriptX.PrintPDF.connect)
+    * [.connectAsync(serverUrl, licenseGuid, resolve, reject)](#MeadCo.ScriptX.PrintPDF.connectAsync)
     * [.Settings](#MeadCo.ScriptX.PrintPDF.Settings)
 
 <br/>
@@ -1105,13 +1093,27 @@ Enum to describe the units used on measurements - please use MeadCo.ScriptX.Prin
 | --- | --- | --- |
 | UNDEFINED | number | Not specified (ShrinkToFit is used instead) |
 | NONE | number | No scaling |
-| FITTOPAPER | number | Scale to fit to paper |
-| SHRINKLARGEPAGESOnly | number | scale oversized pages |
+| FITTOPAPER | number | Scale up to fit to paper if document is smaller than the paper |
+| SHRINKLARGEPAGES | number | Only scale to fit oversized pages |
+
+<br/>
+<a id="MeadCo.ScriptX.PrintPDF.PdfPrintQuality"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.ScriptX.PrintPDF.PdfPrintQuality : enum</h3>Enum to describle the print quality of images
+
+**Read only**: true  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| NORMAL | number | Normal quality |
+| HIGH | number | High quality |
+| LOSSLESS | number | Highest quality |
 
 <br/>
 <a id="MeadCo.ScriptX.PrintPDF.print"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintPDF.print(sUrl, fnCallOnDone, fnCallback, data) ⇒ boolean</h3>Print the document obtained by downloading the given url.
+    MeadCo.ScriptX.PrintPDF.print(sUrl, fnCallOnDone, fnCallback, data) ⇒ boolean</h3>Print the document obtained by downloading the given url, use the current settings to control the rendering.
 
 
 | Param | Type | Description |
@@ -1136,7 +1138,7 @@ Enum to describe the units used on measurements - please use MeadCo.ScriptX.Prin
 <br/>
 <a id="MeadCo.ScriptX.PrintPDF.connect"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintPDF.connect(serverUrl, licenseGuid)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtaindefault soft html and device settings for the default device as well as the listof available printers. This call is synchronous and therefore not recommended. Use connectAsync()
+    MeadCo.ScriptX.PrintPDF.connect(serverUrl, licenseGuid)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtaindevice settings for the default device as well as the listof available printers. This call is not required if client side code doesnt need to know about available printersbut can assume. It also is not required if MeadCo.ScriptX.Print.HTML.connect[Async]() has been called.This call is synchronous and therefore not recommended. Use connectAsync()
 
 
 | Param | Type | Description |
@@ -1145,14 +1147,28 @@ Enum to describe the units used on measurements - please use MeadCo.ScriptX.Prin
 | licenseGuid | string | the license/subscription identifier |
 
 <br/>
+<a id="MeadCo.ScriptX.PrintPDF.connectAsync"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.ScriptX.PrintPDF.connectAsync(serverUrl, licenseGuid, resolve, reject)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtaindevice settings for the default device as well as the listof available printers. This call is not required if client side code doesnt need to know about available printersbut can assume. It also is not required if MeadCo.ScriptX.Print.HTML.connect[Async]() has been called.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| serverUrl | string | the 'root' url to the server (the api path will be added by the library) |
+| licenseGuid | string | the license/subscription identifier |
+| resolve | function | function to call on success |
+| reject | function | function to call on failure |
+
+<br/>
 <a id="MeadCo.ScriptX.PrintPDF.Settings"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintPDF.Settings</h3>The soft settings to use when printing html content - headers, footers and margins(Device settings such as papersize, printer are described with MeadCo.ScriptX.Print.deviceSettings)
+    MeadCo.ScriptX.PrintPDF.Settings</h3>The soft settings to use when printing PDF content - options controlling the rendering of the content.(Device settings such as papersize, printer are described with MeadCo.ScriptX.Print.deviceSettings)
 
 **Properties**
 
 | Name | Type | Description |
 | --- | --- | --- |
+| jobDescription | string | Optional description for the print which will be used as the jobname in the printer queue |
 | pageRange | string | The rage of pages to print. Empty means all, or from-to or comma delimited sets of from-to |
 | shrinkToFit | BooleanOption | Shrink the PDF page to fit the paper, optional true by default |
 | pageScaling | PdfPageScaling | If given then shrinkToFit is ignored and this scaling is used. |

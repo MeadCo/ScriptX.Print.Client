@@ -83,8 +83,8 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.5.3.3";
-    var emulatedVersion = "8.0.0.0";
+    var moduleversion = "1.5.3.6";
+    var emulatedVersion = "8.2.0.0";
     var module = this;
 
     function log(str) {
@@ -134,7 +134,7 @@
          */
         GetComponentVersion: function (sComponent, a, b, c, d) {
             log("factory.object.getcomponentversion: " + sComponent);
-            var v = emulatedVersion;
+            var v = moduleversion;
 
             switch (sComponent.toLowerCase()) {
                 case "scriptx.factory":
@@ -688,7 +688,7 @@
                 printPdf.settings.pageRange = options.pages;
             }
             else {
-                if (iPageFrom !== -1 && iPageTo !== -1) {
+                if (typeof iPageFrom !== "undefined" && typeof iPageTo !== "undefined" && iPageFrom !== -1 && iPageTo !== -1) {
                     printPdf.settings.pageRange = iPageFrom + "-" + iPageTo;
                 }
                 else {
@@ -715,6 +715,14 @@
                 if (typeof options.printQuality !== "undefined") {
                     printPdf.settings.printQuality = options.printQuality;
                 }
+            }
+
+            if (typeof options.jobname !== "undefined") {
+                printPdf.settings.jobDescription = options.jobname;
+            }
+
+            if (typeof options.jobName !== "undefined") {
+                printPdf.settings.jobDescription = options.jobName;
             }
 
             printPdfContent(options.url, bPrompt, fnNotifyStarted);

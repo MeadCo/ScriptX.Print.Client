@@ -25,7 +25,7 @@
 
     var ui = MeadCo.createNS("MeadCo.ScriptX.Print.UI");
 
-    ui.moduleversion = "1.5.3.0";
+    ui.moduleversion = "1.5.3.1";
 
     // MeadCo.ScriptX.Print.UI.AttachPrintAction(
     //  el - clickable html element
@@ -60,6 +60,8 @@
 
     // MeadCo.ScriptX.Print.UI.PageSetup()
     ui.PageSetup = function (fnCallBack) {
+        var bAccepted = false;
+
         // page setup modal to attach to the page
         if (!$('#dlg-printoptions').length) {
             var dlg = '<style>' +
@@ -251,17 +253,15 @@
             .on("click", function (ev) {
                 ev.preventDefault();
                 savePageSetup();
+                bAccepted = true;
                 $('#dlg-printoptions').modal('hide');
-                if (typeof fnCallBack === "function") {
-                    fnCallBack(true);
-                }
             });
 
         $("#dlg-printoptions")
             .off('hidden.bs.modal')
             .on('hidden.bs.modal', function () {
                 if (typeof fnCallBack === "function") {
-                    fnCallBack(false);
+                    fnCallBack(bAccepted);
                 }
             });
 
@@ -303,6 +303,7 @@
 
     // MeadCo.ScriptX.Print.UI.PrinterSettings()
     ui.PrinterSettings = function (fnCallBack) {
+        var bAccepted = false;
         // printer settings modal to attach to the page
         if (!$('#dlg-printersettings').length) {
             var dlg = '<style>' +
@@ -401,17 +402,15 @@
             .on("click", function (ev) {
                 ev.preventDefault();
                 savePrinterSettings();
+                bAccepted = true;
                 $('#dlg-printersettings').modal('hide');
-                if (typeof fnCallBack === "function") {
-                    fnCallBack(true);
-                }
             });
 
         $("#dlg-printersettings")
             .off('hidden.bs.modal')
             .on('hidden.bs.modal', function () {
                 if (typeof fnCallBack === "function") {
-                    fnCallBack(false);
+                    fnCallBack(bAccepted);
                 }
             });
 
