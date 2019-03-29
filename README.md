@@ -5,7 +5,7 @@ working with [MeadCo ScriptX Services](https://www.meadroid.com/Features/ScriptX
 
 * [in the cloud](https://scriptxservices.meadroid.com)
 * an on premise server
-* services on a Microsoft Windows PC
+* web service on a Microsoft Windows PC
 
 In combination with the [MeadCoScriptXJS library](https://github.com/MeadCo/MeadCoScriptXJS) the emulation provides 
 significant levels of compatibility with in-browser script written for the Add-on so allowing the same code to run with either the Add-on for Internet Explorer or ScriptX Services depending on the client device. 
@@ -30,13 +30,13 @@ npm install scriptxprint-html --save
 For the complete library supporting Cloud, On Premise and Windows PC services:
 
 ```javascript
-<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.5.0/dist/meadco-scriptxservices.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.5.3/dist/meadco-scriptxservices.min.js"></script>
 ```
 
 Or, for print only to cloud/on premise services,
 
 ```javascript
-<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.5.0/dist/meadco-scriptxservicesprint.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.5.3/dist/meadco-scriptxservicesprint.min.js"></script>
 ```
 
 #### Distribution packages
@@ -68,7 +68,7 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
 
 ```javascript
 <!-- MeadCoScriptXJS Library -->
-<script src="https://cdn.jsdelivr.net/npm/meadco-scriptxjs@1.5.3/src/meadco-scriptx.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/meadco-scriptxjs@1.5.1/src/meadco-scriptx.min.js"></script>
 
 <!-- ScriptX Services client emulation libraries - depend on jQuery -->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.1.1/dist/jquery.min.js"></script>
@@ -110,7 +110,7 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
 
 Released under the [MIT](http://opensource.org/licenses/MIT) license. 
 
-Copyright (c) 2017, Mead & Co Limited.
+Copyright (c) 2017-2019, Mead & Co Limited.
 
 
 
