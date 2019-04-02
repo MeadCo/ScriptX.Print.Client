@@ -1209,3 +1209,8 @@ Enum to describe the units used on measurements - please use MeadCo.ScriptX.Prin
 | resolve | function | function to call on successfulk completion |
 | reject | function | function to call on failure with reason for failure |
 
+<br/>
+<a id="resetSettings"></a>
+<h2 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    resetSettings() ⇒</h2>Reset the soft settings to use when printing PDF content to default.
+

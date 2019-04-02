@@ -83,7 +83,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.5.3.6";
+    var moduleversion = "1.5.4.3";
     var emulatedVersion = "8.2.0.0";
     var module = this;
 
@@ -315,7 +315,7 @@
             }, fnNotifyStarted);
     }
 
-    function printPdfContent(sUrl, bPrompt, fnNotifyStarted, fnCallback, data ) {
+    function printPdfContent(sUrl, bPrompt, fnNotifyStarted, fnCallback, data) {
         // if a relative URL supplied then add the base URL of this website
         if (typeof printPdf !== "undefined") {
             sUrl = module.factory.baseURL(sUrl);
@@ -343,7 +343,7 @@
                 function () {
                     return printHtml.printDocument();
                 },
-                function() {});
+                function () { });
         }
     }
 
@@ -438,49 +438,61 @@
         },
         set pageRange(v) {
             settings.pageRange = v;
+            if (typeof printPdf !== "undefined") {
+                printPdf.settings.pageRange = v;
+            }
         },
 
         get printingPass() {
             var v = "";
             switch (settings.printingPass) {
-            case printHtml.PrintingPasses.ALL:
-                v = "all";
-                break;
+                case printHtml.PrintingPasses.ALL:
+                    v = "all";
+                    break;
 
-            case printHtml.PrintingPasses.ODD:
-                v = "odd";
-                break;
+                case printHtml.PrintingPasses.ODD:
+                    v = "odd";
+                    break;
 
-            case printHtml.PrintingPasses.EVEN:
-                v = "even";
-                break;
+                case printHtml.PrintingPasses.EVEN:
+                    v = "even";
+                    break;
 
-            case printHtml.PrintingPasses.ODDANDEVEN:
-                v = "odd&even";
-                break;
+                case printHtml.PrintingPasses.ODDANDEVEN:
+                    v = "odd&even";
+                    break;
             }
             return v;
         },
-
         set printingPass(v) {
             var x = printHtml.PrintingPasses.ALL;
             if (typeof v === "string") {
                 switch (v.toLowerCase()) {
-                case "odd":
-                    x = printHtml.PrintingPasses.ODD;
-                    break;
+                    case "odd":
+                        x = printHtml.PrintingPasses.ODD;
+                        break;
 
-                case "even":
-                    x = printHtml.PrintingPasses.EVEN;
-                    break;
+                    case "even":
+                        x = printHtml.PrintingPasses.EVEN;
+                        break;
 
-                case "odd&even":
-                    x = printHtml.PrintingPasses.ODDANDEVEN;
-                    break;
+                    case "odd&even":
+                        x = printHtml.PrintingPasses.ODDANDEVEN;
+                        break;
                 }
             }
             settings.printingPass = x;
+        },
+
+        get pdfPrintMode() {
+            return typeof printPdf !== "undefined" ? printPdf.settings.printQuality : 0;
+        },
+        set pdfPrintMode(v) {
+            if (typeof printPdf !== "undefined") {
+                printPdf.settings.printQuality = v;
+            }
         }
+
     };
 
     if (typeof printApi !== "undefined") {
@@ -598,8 +610,8 @@
 
         PageSetup: function (fnNotify) {
             if (typeof fnNotify !== "function") {
-                console.warn("PageSeup API in ScriptX.Print Service is not synchronous, there is no return value.");
-                fnNotify = function (bDlgOK) { console.log("PageSetugDlg: " + bDlgOK); };
+                console.warn("PageSetup API in ScriptX.Print Service is not synchronous, there is no return value.");
+                fnNotify = function (bDlgOK) { console.log("PageSetupDlg: " + bDlgOK); };
             }
 
             if (MeadCo.ScriptX.Print.UI) {
@@ -613,7 +625,7 @@
         PrintSetup: function (fnNotify) {
             if (typeof fnNotify !== "function") {
                 console.warn("PrintSetup API in ScriptX.Print Service is not synchronous, there is no return value.");
-                fnNotify = function (bDlgOK) { console.log("PrintSetugDlg: " + bDlgOK); }
+                fnNotify = function (bDlgOK) { console.log("PrintSetupDlg: " + bDlgOK); }
             }
 
             if (MeadCo.ScriptX.Print.UI) {
@@ -625,7 +637,7 @@
         },
 
         Preview: function (sOrOFrame) {
-            printApi.reportFeatureNotImplemented("Preview",sOrOFrame);
+            printApi.reportFeatureNotImplemented("Preview", sOrOFrame);
         },
 
         Print: function (bPrompt, sOrOFrame, fnNotifyStarted) { // needs and wants update to ES2015 (for default values)
@@ -665,82 +677,113 @@
                 fnNotifyStarted = function (bStarted) { };
             }
 
-            if (typeof options.pagescaling !== "undefined") {
-                printPdf.settings.pageScaling = options.pagescaling;
-            }
-            else {
-                printPdf.settings.pageScaling = bShrinkToFit ? printPdf.PdfPageScaling.SHRINKLARGEPAGES : printPdf.PdfPageScaling.UNDEFINED;
-            }
+            if (typeof printPdf !== "undefined") {
 
-            if (typeof options.autorotatecenter !== "undefined") {
-                printPdf.settings.autorotatecenter = options.autorotatecenter ? printPdf.BooleanOption.TRUE : printPdf.BooleanOption.FALSE;
-            }
-            else
-                printPdf.settings.autorotatecenter = printPdf.BooleanOption.DEFAULT;
+                printPdf.resetSettings();
 
-            if (typeof options.orientation !== "undefined") {
-                printPdf.settings.orientation = options.orientation === 1 ? printPdf.PageOrientation.PORTRAIT : printPdf.PageOrientation.LANDSCAPE;
-            }
-            else
-                printPdf.settings.orientation = this.portrait ? printPdf.PageOrientation.PORTRAIT : printPdf.PageOrientation.LANDSCAPE;
-
-            if (typeof options.pages !== "undefined") {
-                printPdf.settings.pageRange = options.pages;
-            }
-            else {
-                if (typeof iPageFrom !== "undefined" && typeof iPageTo !== "undefined" && iPageFrom !== -1 && iPageTo !== -1) {
-                    printPdf.settings.pageRange = iPageFrom + "-" + iPageTo;
+                if (typeof options.pagescaling !== "undefined") {
+                    printPdf.settings.pageScaling = options.pagescaling;
+                } else {
+                    printPdf.settings.pageScaling = bShrinkToFit
+                        ? printPdf.PdfPageScaling.SHRINKLARGEPAGES
+                        : printPdf.PdfPageScaling.UNDEFINED;
                 }
-                else {
-                    printPdf.settings.pageRange = "";
+
+                if (typeof options.autorotatecenter !== "undefined") {
+                    printPdf.settings.autorotatecenter = options.autorotatecenter
+                        ? printPdf.BooleanOption.TRUE
+                        : printPdf.BooleanOption.FALSE;
+                } else
+                    printPdf.settings.autorotatecenter = printPdf.BooleanOption.DEFAULT;
+
+                if (typeof options.orientation !== "undefined") {
+                    printPdf.settings.orientation = options.orientation === 1
+                        ? printPdf.PageOrientation.PORTRAIT
+                        : printPdf.PageOrientation.LANDSCAPE;
+                } else
+                    printPdf.settings.orientation = this.portrait
+                        ? printPdf.PageOrientation.PORTRAIT
+                        : printPdf.PageOrientation.LANDSCAPE;
+
+                if (typeof options.pages !== "undefined") {
+                    printPdf.settings.pageRange = options.pages;
+                } else {
+                    if (typeof iPageFrom !== "undefined" &&
+                        typeof iPageTo !== "undefined" &&
+                        iPageFrom !== -1 &&
+                        iPageTo !== -1) {
+                        printPdf.settings.pageRange = iPageFrom + "-" + iPageTo;
+                    } else {
+                        printPdf.settings.pageRange = "";
+                    }
                 }
-            }
 
-            if (typeof options.monochrome !== "undefined") {
-                printPdf.settings.monochrome = options.monochrome ? printPdf.BooleanOption.TRUE : printPdf.BooleanOption.FALSE;
-            }
-            else
-                printPdf.settings.monochrome = printPdf.BooleanOption.DEFAULT;
+                if (typeof options.monochrome !== "undefined") {
+                    printPdf.settings.monochrome = options.monochrome
+                        ? printPdf.BooleanOption.TRUE
+                        : printPdf.BooleanOption.FALSE;
+                } else
+                    printPdf.settings.monochrome = printPdf.BooleanOption.DEFAULT;
 
-            if (typeof options.normalise !== "undefined" || typeof options.normalize !== "undefined") {
-                printPdf.settings.normalise = options.normalise || options.normalize ? printPdf.BooleanOption.TRUE : printPdf.BooleanOption.FALSE;
-            }
-            else
-                printPdf.settings.normalise = printPdf.BooleanOption.DEFAULT;
+                if (typeof options.normalise !== "undefined" || typeof options.normalize !== "undefined") {
+                    printPdf.settings.normalise = options.normalise || options.normalize
+                        ? printPdf.BooleanOption.TRUE
+                        : printPdf.BooleanOption.FALSE;
+                } else
+                    printPdf.settings.normalise = printPdf.BooleanOption.DEFAULT;
 
-            if (typeof options.printMode !== "undefined") {
-                printPdf.settings.printQuality = options.printMode;
-            }
-            else {
-                if (typeof options.printQuality !== "undefined") {
-                    printPdf.settings.printQuality = options.printQuality;
+                if (typeof options.printMode !== "undefined") {
+                    printPdf.settings.printQuality = options.printMode;
+                } else {
+                    if (typeof options.printQuality !== "undefined") {
+                        printPdf.settings.printQuality = options.printQuality;
+                    }
                 }
+
+                if (typeof options.jobname !== "undefined") {
+                    printPdf.settings.jobDescription = options.jobname;
+                }
+
+                if (typeof options.jobName !== "undefined") {
+                    printPdf.settings.jobDescription = options.jobName;
+                }
+
+                return printPdfContent(options.url, bPrompt, fnNotifyStarted);
             }
-
-            if (typeof options.jobname !== "undefined") {
-                printPdf.settings.jobDescription = options.jobname;
-            }
-
-            if (typeof options.jobName !== "undefined") {
-                printPdf.settings.jobDescription = options.jobName;
-            }
-
-            printPdfContent(options.url, bPrompt, fnNotifyStarted);
-
+            MeadCo.error("MeadCo.ScriptX.Print.PDF is not available to ScriptX.Services factory emulation.");
+            fnNotifyStarted(false);
+            return false;
         },
 
         BatchPrintPDF: function (sUrl, fnNotifyStarted) {
-            if (typeof fnNotifyStarted === "undefined") {
-                fnNotifyStarted = function (bStarted) { };
-            }
-            printPdfContent(sUrl, false, fnNotifyStarted);
+            this.BatchPrintPDFEx(sUrl, function () {
+
+            }, "BatchPrintPDF", fnNotifyStarted);
         },
 
         BatchPrintPDFEx: function (sUrl, fnCallback, data, fnNotifyStarted) {
             if (typeof fnNotifyStarted === "undefined") {
                 fnNotifyStarted = function (bStarted) { };
             }
-            printPdfContent(sUrl, false, fnNotifyStarted, fnCallback, data);
+
+            if (typeof printPdf !== "undefined") {
+                printPdf.resetSettings();
+
+                printPdf.settings.pageRange = iEnhancedFormatting.pageRange;
+                printPdf.settings.pageScaling = settings.viewScale == -1
+                    ? printPdf.PdfPageScaling.SHRINKLARGEPAGES
+                    : printPdf.PdfPageScaling.DEFAULT;
+                printPdf.settings.orientation = this.portrait
+                    ? printPdf.PageOrientation.PORTRAIT
+                    : printPdf.PageOrientation.LANDSCAPE;
+                printPdf.settings.printQuality = iEnhancedFormatting.pdfPrintMode;
+
+                printPdfContent(sUrl, false, fnNotifyStarted, fnCallback, data);
+                return;
+            }
+
+            MeadCo.error("MeadCo.ScriptX.Print.PDF is not available to ScriptX.Services factory emulation.");
+            fnNotifyStarted(false);
         },
 
         set units(enumUnits) {
@@ -816,15 +859,15 @@
         },
 
         set onbeforeprint(fn) {
-            printApi.reportFeatureNotImplemented("onbeforeprint",fn);
+            printApi.reportFeatureNotImplemented("onbeforeprint", fn);
         },
 
         set onafterprint(fn) {
-            printApi.reportFeatureNotImplemented("onafterprint",fn);
+            printApi.reportFeatureNotImplemented("onafterprint", fn);
         },
 
         set onuserprintpreview(fn) {
-            printApi.reportFeatureNotImplemented("onuserprintpreview",fn);
+            printApi.reportFeatureNotImplemented("onuserprintpreview", fn);
         },
 
         // duplicate to cope with COM objects were/are not case sensitive
@@ -847,6 +890,7 @@
 
             try {
                 printApi.printerName = sPrinterName;
+                printApi.onErrorAction = a;
             } catch (e) {
                 printApi.onErrorAction = a;
                 throw e;
@@ -862,15 +906,19 @@
 
             printApi.onErrorAction = printApi.ErrorAction.THROW;
 
+            // eat all and any errors. finally might be better but
+            // minifiers dont like empty blocks 
             try {
                 printApi.printerName = sPrinterName;
-            } catch (e) {
                 printApi.onErrorAction = a;
             }
+            catch (e) {
+                printApi.onErrorAction = a;
+            }           
         },
 
         set printToFileName(fn) {
-            printApi.reportFeatureNotImplemented("printToFileName",fn);
+            printApi.reportFeatureNotImplemented("printToFileName", fn);
         },
 
         get printBackground() {

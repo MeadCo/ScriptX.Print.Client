@@ -20,7 +20,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.PDF', function () {
 
-    var moduleversion = "1.5.3.2";
+    var moduleversion = "1.5.4.1";
 
     /**
      * Enum to describe the orientation of the paper
@@ -95,7 +95,7 @@
     var PdfPrintSettings =
     {
         jobDescription: "",
-        pageRage: "",
+        pageRange: "",
         pageScaling: mPdfPageScaling.UNDEFINED,
         autoRotateCenter: mBooleanOption.DEFAULT,
         orientation: mPageOrientation.DEFAULT,
@@ -139,6 +139,21 @@
         settings: PdfPrintSettings,
 
         /**
+         * Reset the soft settings to use when printing PDF content to default.
+         * @returns {} 
+         */
+        resetSettings: function () {
+            PdfPrintSettings.jobDescription = "";
+            PdfPrintSettings.pageRange = "";
+            PdfPrintSettings.pageScaling = mPdfPageScaling.UNDEFINED;
+            PdfPrintSettings.autoRotateCenter = mBooleanOption.DEFAULT;
+            PdfPrintSettings.orientation = mPageOrientation.DEFAULT;
+            PdfPrintSettings.monochrome = false;
+            PdfPrintSettings.normalise = false;
+            PdfPrintSettings.printQuality = mPdfPrintQuality.NORMAL;
+        },
+
+        /**
          * Print the document obtained by downloading the given url, use the current settings to control the rendering.
          *
          * @memberof MeadCoScriptXPrintPDF
@@ -149,7 +164,7 @@
          * @param {any} data object to give pass to fnCallback
          * @return {boolean} - true if a print was started (otherwise an error will be thrown)
          */
-        print: function (sUrl,fnCallOnDone, fnCallback, data) {
+        print: function (sUrl, fnCallOnDone, fnCallback, data) {
             return printPdfAtServer(sUrl, fnCallOnDone, fnCallback, data);
         },
 
