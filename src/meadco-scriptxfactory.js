@@ -83,7 +83,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.5.4.3";
+    var moduleversion = "1.5.5.1";
     var emulatedVersion = "8.2.0.0";
     var module = this;
 
@@ -770,7 +770,7 @@
                 printPdf.resetSettings();
 
                 printPdf.settings.pageRange = iEnhancedFormatting.pageRange;
-                printPdf.settings.pageScaling = settings.viewScale == -1
+                printPdf.settings.pageScaling = settings.viewScale === -1
                     ? printPdf.PdfPageScaling.SHRINKLARGEPAGES
                     : printPdf.PdfPageScaling.DEFAULT;
                 printPdf.settings.orientation = this.portrait
@@ -884,16 +884,18 @@
         },
 
         set currentPrinter(sPrinterName) {
-            var a = printApi.onErrorAction;
+            if (typeof sPrinterName === "string") {
+                var a = printApi.onErrorAction;
 
-            printApi.onErrorAction = printApi.ErrorAction.THROW;
+                printApi.onErrorAction = printApi.ErrorAction.THROW;
 
-            try {
-                printApi.printerName = sPrinterName;
-                printApi.onErrorAction = a;
-            } catch (e) {
-                printApi.onErrorAction = a;
-                throw e;
+                try {
+                    printApi.printerName = sPrinterName;
+                    printApi.onErrorAction = a;
+                } catch (e) {
+                    printApi.onErrorAction = a;
+                    throw e;
+                }
             }
         },
 
@@ -902,19 +904,22 @@
         },
 
         set printer(sPrinterName) {
-            var a = printApi.onErrorAction;
+            if (typeof sPrinterName === "string") {
 
-            printApi.onErrorAction = printApi.ErrorAction.THROW;
+                var a = printApi.onErrorAction;
 
-            // eat all and any errors. finally might be better but
-            // minifiers dont like empty blocks 
-            try {
-                printApi.printerName = sPrinterName;
-                printApi.onErrorAction = a;
+                printApi.onErrorAction = printApi.ErrorAction.THROW;
+
+                // eat all and any errors. finally might be better but
+                // minifiers dont like empty blocks 
+                try {
+                    printApi.printerName = sPrinterName;
+                    printApi.onErrorAction = a;
+                }
+                catch (e) {
+                    printApi.onErrorAction = a;
+                }
             }
-            catch (e) {
-                printApi.onErrorAction = a;
-            }           
         },
 
         set printToFileName(fn) {

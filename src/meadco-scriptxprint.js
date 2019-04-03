@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.5.4.0";
+    var version = "1.5.5.0";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
 
@@ -940,7 +940,7 @@
     }
 
     function getDeviceSettingsFor(sPrinterName) {
-        if (typeof sPrinterName === "string" && sPrinterName != "") {
+        if (typeof sPrinterName === "string" && sPrinterName !== "") {
             if (typeof deviceSettings[sPrinterName] === "undefined") {
                 getDeviceSettings({
                     name: sPrinterName,

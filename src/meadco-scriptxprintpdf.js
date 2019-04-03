@@ -20,7 +20,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.PDF', function () {
 
-    var moduleversion = "1.5.4.1";
+    var moduleversion = "1.5.5.0";
 
     /**
      * Enum to describe the orientation of the paper
@@ -140,7 +140,10 @@
 
         /**
          * Reset the soft settings to use when printing PDF content to default.
-         * @returns {} 
+         *
+         * @memberof MeadCoScriptXPrintPDF
+         * @function resetSettings
+         * 
          */
         resetSettings: function () {
             PdfPrintSettings.jobDescription = "";
