@@ -24,9 +24,13 @@
     "Test",
     "book",
     "docs",
+    "Libraries",
+    "nuget",
+    "tooling",
     "LICENSE",
-    "README.md",
-    "*.json"
+    "*.md",
+    "*.json",
+    "gulpfile.js"
   ],
   "dependencies": {
     "jquery": ">=3.0.0"
