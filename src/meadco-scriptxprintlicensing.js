@@ -76,9 +76,9 @@
     }
 
     function connectToServer(serverUrl, slicenseGuid) {
-        // a licensing call may be made first
+        // a licensing call may be made first, if the print module is available, inform it.
         var p = MeadCo.ScriptX.Print;
-        if (typeof p !== "undefined") {
+        if (typeof p !== "undefined" && typeof p.connectLite === "function" ) {
             p.connectLite(serverUrl, slicenseGuid);
         }
 

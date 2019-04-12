@@ -1047,7 +1047,7 @@ Enum to describe the units used on measurements - please use MeadCo.ScriptX.Prin
     * [.BooleanOption](#MeadCo.ScriptX.PrintPDF.BooleanOption) : enum
     * [.PdfPageScaling](#MeadCo.ScriptX.PrintPDF.PdfPageScaling) : enum
     * [.PdfPrintQuality](#MeadCo.ScriptX.PrintPDF.PdfPrintQuality) : enum
-    * [.resetSettings()](#MeadCo.ScriptX.PrintPDF.resetSettings) ⇒
+    * [.resetSettings()](#MeadCo.ScriptX.PrintPDF.resetSettings)
     * [.print(sUrl, fnCallOnDone, fnCallback, data)](#MeadCo.ScriptX.PrintPDF.print) ⇒ boolean
     * [.connectLite(serverUrl, licenseGuid)](#MeadCo.ScriptX.PrintPDF.connectLite)
     * [.connect(serverUrl, licenseGuid)](#MeadCo.ScriptX.PrintPDF.connect)
@@ -1114,7 +1114,7 @@ Enum to describe the units used on measurements - please use MeadCo.ScriptX.Prin
 <br/>
 <a id="MeadCo.ScriptX.PrintPDF.resetSettings"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintPDF.resetSettings() ⇒</h3>Reset the soft settings to use when printing PDF content to default.
+    MeadCo.ScriptX.PrintPDF.resetSettings()</h3>Reset the soft settings to use when printing PDF content to default.
 
 <br/>
 <a id="MeadCo.ScriptX.PrintPDF.print"></a>
