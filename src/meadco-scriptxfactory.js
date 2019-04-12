@@ -625,7 +625,7 @@
         PrintSetup: function (fnNotify) {
             if (typeof fnNotify !== "function") {
                 console.warn("PrintSetup API in ScriptX.Print Service is not synchronous, there is no return value.");
-                fnNotify = function (bDlgOK) { console.log("PrintSetupDlg: " + bDlgOK); }
+                fnNotify = function (bDlgOK) { MeadCo.log("PrintSetupDlg: " + bDlgOK); }
             }
 
             if (MeadCo.ScriptX.Print.UI) {
@@ -642,7 +642,7 @@
 
         Print: function (bPrompt, sOrOFrame, fnNotifyStarted) { // needs and wants update to ES2015 (for default values)
             if (typeof fnNotifyStarted === "undefined") {
-                fnNotifyStarted = function (bStarted) { MeadCo.warn("A print has started"); };
+                fnNotifyStarted = function (bStarted) { MeadCo.log("A print has started"); };
             }
             if (typeof (sOrOFrame) === 'undefined') sOrOFrame = null;
 

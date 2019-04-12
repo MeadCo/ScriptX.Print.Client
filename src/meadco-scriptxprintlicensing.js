@@ -75,7 +75,13 @@
         server = MeadCo.makeApiEndPoint(serverUrl, apiLocation);
     }
 
-    function connectToServer(serverUrl,slicenseGuid) {
+    function connectToServer(serverUrl, slicenseGuid) {
+        // a licensing call may be made first
+        var p = MeadCo.ScriptX.Print;
+        if (typeof p !== "undefined") {
+            p.connectLite(serverUrl, slicenseGuid);
+        }
+
         setServer(serverUrl);
         licenseGuid = slicenseGuid;
         license = {};
