@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.5.5.0";
+    var version = "1.5.6.2";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
 
@@ -292,43 +292,21 @@
             jqXhr.statusText +
             "]");
 
-        //if (errorThrown === "") {
-        //    if (typeof jqXhr.responseText !== "undefined" ) {
-        //        errorThrown = jqXhr.responseText;
-        //    }
-        //}
-        //else {
-        //    if (typeof errorThrown !== "undefined") {
-        //        errorThrown = errorThrown.toString();
-        //    }
-        //    else {
-        //        errorThrown = "";
-        //    }
-        //}
-
-        //if (typeof jqXhr.responseText !== "undefined") {
-        //    errorThrown = jqXhr.responseText;
-        //}
-
-        //if (errorThrown === "") {
-        //    if (textStatus !== "error") {
-        //        errorThrown = textStatus;
-        //    }
-        //    else {
-        //        errorThrown = "Unknown server or network error";
-        //    }
-        //}   
-
-        if (errorThrown === "") {
+        if (errorThrown === "" || errorThrown === "Internal Server Error") {
             if (textStatus !== "error") {
                 errorThrown = jqXhr.responseText || textStatus;
             }
             else {
-                if (typeof jqXhr.responseText === "string") {
-                    errorThrown = jqXhr.responseText;
+                if (typeof jqXhr.responseJSON === "object" && typeof jqXhr.responseJSON.Message === "string") {
+                    errorThrown = jqXhr.responseJSON.Message;
                 }
-                else 
-                    errorThrown = "Server or network error";
+                else {
+                    if (typeof jqXhr.responseText === "string") {
+                        errorThrown = jqXhr.responseText;
+                    }
+                    else
+                        errorThrown = "Server or network error";
+                }
             }
         }
 
@@ -681,25 +659,7 @@
                     }
                 })
                 .fail(function (jqXhr, textStatus, errorThrown) {
-                    //MeadCo.log("Fail response from server: [" +
-                    //    textStatus +
-                    //    "], [" +
-                    //    errorThrown +
-                    //    "], [" +
-                    //    jqXhr.responseText +
-                    //    "]");
-
                     removeJob(fakeJob.jobIdentifier);
-
-                    //if (typeof jqXhr.responseText !== "undefined") {
-                    //    errorThrown = jqXhr.responseText;
-                    //}
-
-                    //if (errorThrown === "") {
-                    //    errorThrown = "Unknown server or network error";
-                    //}
-                    errorThrown = parseError("MeadCo.ScriptX.Print.printAtServer:", jqXhr, textStatus, errorThrown);
-
                     if (typeof responseInterface.fail === "function") {
                         responseInterface.fail(jqXhr, textStatus, errorThrown);
                     }
@@ -744,21 +704,6 @@
                     onSuccess(data);
                 })
                 .fail(function (jqXhr, textStatus, errorThrown) {
-                    //MeadCo.log("**warning: failure in MeadCoScriptXPrint.getFromServer: [" +
-                    //    textStatus +
-                    //    "], [" +
-                    //    errorThrown +
-                    //    "], [" +
-                    //    jqXhr.responseText +
-                    //    "]");
-
-                    //if (typeof jqXhr.responseText !== "undefined") {
-                    //    errorThrown = jqXhr.responseText;
-                    //}
-
-                    //if (errorThrown === "") {
-                    //    errorThrown = "Unknown server or network error";
-                    //}
                     errorThrown = parseError("MeadCo.ScriptX.Print.getFromServer:", jqXhr, textStatus, errorThrown);
                     if (typeof onFail === "function")
                         onFail(errorThrown);

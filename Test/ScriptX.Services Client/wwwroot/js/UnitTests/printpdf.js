@@ -3,7 +3,7 @@
     assert.ok(MeadCo.ScriptX.Print.PDF, "MeadCo.ScriptX.Print.PDF namespace exists");
     var api = MeadCo.ScriptX.Print.PDF;
 
-    assert.equal(api.version, "1.5.5.0", "Correct version");
+    assert.equal(api.version, "1.5.6.0", "Correct version");
 
     assert.equal(MeadCo.ScriptX.Print.MeasurementUnits.MM, 2, "MeasurementUnits enum is OK");
     assert.equal(MeadCo.ScriptX.Print.MeasurementUnits.XX, undefined, "MeasuremmentUnits enum is OK");
@@ -124,7 +124,7 @@ QUnit.test("Printing content", function (assert) {
 
         api.print("delight.pdf", function (errorText) {
             assert.strictEqual(errorText, "Server error", "Correct itemError with bad uri doc");
-            assert.equal($("#qunit-fixture").text(), "Internal Server Error", "Correct error reported via dialog");
+            assert.equal($("#qunit-fixture").text(), "This operation is not supported for a relative URI.", "Correct error reported via dialog");
             done2();
         }, function (status, sInformation, data) {
             assert.equal(data, "ProgressData7", "On progress4 function receives data: " + status);

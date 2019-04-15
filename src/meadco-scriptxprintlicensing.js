@@ -24,7 +24,7 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.Licensing', function () {
-    var moduleversion = "1.5.5.0";
+    var moduleversion = "1.5.6.1";
     var apiLocation = "v1/licensing";
 
     var server = ""; // url to the server, server is CORS restricted
@@ -118,16 +118,21 @@
             jqXhr.statusText +
             "]");
 
-        if (errorThrown === "") {
+        if (errorThrown === "" || errorThrown === "Internal Server Error") {
             if (textStatus !== "error") {
                 errorThrown = jqXhr.responseText || textStatus;
             }
             else {
-                if (typeof jqXhr.responseText === "string") {
-                    errorThrown = jqXhr.responseText;
+                if (typeof jqXhr.responseJSON === "object" && typeof jqXhr.responseJSON.Message === "string") {
+                    errorThrown = jqXhr.responseJSON.Message;
                 }
-                else
-                    errorThrown = "Server or network error";
+                else {
+                    if (typeof jqXhr.responseText === "string") {
+                        errorThrown = jqXhr.responseText;
+                    }
+                    else
+                        errorThrown = "Server or network error";
+                }
             }
         }
 

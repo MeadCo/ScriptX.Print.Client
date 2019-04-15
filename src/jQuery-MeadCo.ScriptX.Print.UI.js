@@ -25,7 +25,7 @@
 
     var ui = MeadCo.createNS("MeadCo.ScriptX.Print.UI");
 
-    ui.moduleversion = "1.5.5.0";
+    ui.moduleversion = "1.5.6.0";
 
     // MeadCo.ScriptX.Print.UI.AttachPrintAction(
     //  el - clickable html element
