@@ -83,7 +83,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.5.6.0";
+    var moduleversion = "1.5.7.0";
     var emulatedVersion = "8.2.0.0";
     var module = this;
 
@@ -1046,6 +1046,10 @@
 
                 get name() {
                     return printerName;
+                },
+
+                get status() {
+                    return printApi.deviceSettingsFor(printerName).port;
                 },
 
                 get port() {

@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.5.6.2";
+    var version = "1.5.7.0";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
 
@@ -80,7 +80,7 @@
      * @property {MeasurementUnits} units Measurement units for papersize and margins
      * @property {PageSize} paperPageSize The size of the paper (in requested units)
      * @property {Margins} unprintableMargins The margin that cannot be printed in (in requested units)
-     * @property {number} status Status code for the status of the device 
+     * @property {number} status Status code for the status of the device. Note this is not reliable, it is the cached return from the first server enquiry only.
      * @property {string} port Printer connection port name/description
      * @property {number} attributes Printer attributes
      * @property {string} serverName Name of the server to which the printer is connected
