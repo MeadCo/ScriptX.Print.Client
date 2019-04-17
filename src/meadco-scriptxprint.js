@@ -594,6 +594,9 @@
                             reject(errorThrown);
                     });
             }
+            else {
+                MeadCo.error("jQuery is required by ScriptX.Services");
+            }
         }
     }
 

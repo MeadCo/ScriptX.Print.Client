@@ -182,6 +182,10 @@
                 });
             return license;
         }
+        else {
+            MeadCo.error("jQuery is required by ScriptX.Services");
+        }
+
     }
 
     function applyLicense(slicenseGuid, revision, path, resolve, reject) {
@@ -225,6 +229,9 @@
                         return;
                     }
                 });
+        }
+        else {
+            MeadCo.error("jQuery is required by ScriptX.Services");
         }
 
         if (typeof resolve !== "function") {
