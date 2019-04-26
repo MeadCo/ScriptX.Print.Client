@@ -273,48 +273,6 @@
     }
 
     /*
-     * Extract the error text from jQuery AJAX response
-     * 
-     * @param {string} logText The lead-in text for a console.log entry
-     * @param {object} jqXhr jQuery ajax header
-     * @param {string} textStatus textStatus result determined by jQuery
-     * @param {string} errorThrown The server exception dewtermined by jQuery
-     * @returns {string} The error text to display
-     */
-    function parseError(logText, jqXhr, textStatus, errorThrown) {
-        MeadCo.log("**warning: AJAX call failure in " + logText + ": [" +
-            textStatus +
-            "], [" +
-            errorThrown +
-            "], [" +
-            jqXhr.responseText +
-            "], [" +
-            jqXhr.statusText +
-            "]");
-
-        if (errorThrown === "" || errorThrown === "Internal Server Error") {
-            if (textStatus !== "error") {
-                errorThrown = jqXhr.responseText || textStatus;
-            }
-            else {
-                if (typeof jqXhr.responseJSON === "object" && typeof jqXhr.responseJSON.Message === "string") {
-                    errorThrown = jqXhr.responseJSON.Message;
-                }
-                else {
-                    if (typeof jqXhr.responseText === "string") {
-                        errorThrown = jqXhr.responseText;
-                    }
-                    else
-                        errorThrown = "Server or network error";
-                }
-            }
-        }
-
-        MeadCo.log(" error parsed to --> [" + errorThrown + "]");
-        return errorThrown;
-    }
-
-    /*
      * Post a request to the server api/v1/print to print some html and monitor the print job 
      * to completion. If the server prints to file then the file is opened for the user (in a new window)
      * 
@@ -363,7 +321,7 @@
         return printAtServer(serverApi,requestData,
         {
             fail: function (jqXhr, textStatus, errorThrown) {
-                var err = parseError("MeadCo.ScriptX.Print.printHtmlAtServer", jqXhr, textStatus, errorThrown);
+                var err = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.printHtmlAtServer", jqXhr, textStatus, errorThrown);
                 progress(requestData, enumPrintStatus.ERROR, err);
                 MeadCo.ScriptX.Print.reportError(err);
                 if (typeof fnDone === "function") {
@@ -473,7 +431,7 @@
         return printAtServer(serverApi,requestData,
             {
                 fail: function (jqXhr, textStatus, errorThrown) {
-                    var err = parseError("MeadCo.ScriptX.Print.printPdfAtServer", jqXhr, textStatus, errorThrown);
+                    var err = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.printPdfAtServer", jqXhr, textStatus, errorThrown);
                     progress(requestData, enumPrintStatus.ERROR, err);
                     MeadCo.ScriptX.Print.reportError(err);
                     if (typeof fnDone === "function") {
@@ -589,7 +547,7 @@
                         resolve(data);
                     })
                     .fail(function (jqXhr, textStatus, errorThrown) {
-                        errorThrown = parseError("MeadCo.ScriptX.Print.testServerConnection:",jqXhr, textStatus, errorThrown);
+                        errorThrown = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.testServerConnection:",jqXhr, textStatus, errorThrown);
                         if (typeof reject === "function")
                             reject(errorThrown);
                     });
@@ -707,7 +665,7 @@
                     onSuccess(data);
                 })
                 .fail(function (jqXhr, textStatus, errorThrown) {
-                    errorThrown = parseError("MeadCo.ScriptX.Print.getFromServer:", jqXhr, textStatus, errorThrown);
+                    errorThrown = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.getFromServer:", jqXhr, textStatus, errorThrown);
                     if (typeof onFail === "function")
                         onFail(errorThrown);
                 });
@@ -799,22 +757,8 @@
                         }
                     })
                     .fail(function (jqXhr, textStatus, errorThrown) {
-                        //MeadCo.log("**warning: failure in MeadCoScriptXPrint.monitorJob: [" +
-                        //    textStatus +
-                        //    "], [" +
-                        //    errorThrown +
-                        //    "], [" +
-                        //    jqXhr.responseText +
-                        //    "]");
 
-                        //if (typeof jqXhr.responseText !== "undefined") {
-                        //    errorThrown = jqXhr.responseText;
-                        //}
-
-                        //if (errorThrown === "") {
-                        //    errorThrown = "Unknown server or network error";
-                        //}
-                        errorThrown = parseError("MeadCo.ScriptX.Print.monitorJob:", jqXhr, textStatus, errorThrown);
+                        errorThrown = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.monitorJob:", jqXhr, textStatus, errorThrown);
 
                         MeadCo.log("error: " + errorThrown + " in monitorJob so clear interval: " + intervalId);
                         progress(requestData, enumPrintStatus.ERROR, errorThrown);
@@ -865,12 +809,8 @@
                     }
                 })
                 .fail(function (jqXhr, textStatus, errorThrown) {
-                    // TODO: Review
-                    // if (errorThrown !== "") {
-                    //    bConnected = true; // we connected but the server doesnt like us
-                    //}
 
-                    errorThrown = parseError("MeadCo.ScriptX.Print.getDeviceSettings:", jqXhr, textStatus, errorThrown);
+                    errorThrown = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.getDeviceSettings:", jqXhr, textStatus, errorThrown);
                     MeadCo.log("failed to getdevice: " + errorThrown);
 
                     if (typeof oRequest.fail === "function") {
@@ -1335,7 +1275,7 @@
          * @returns {string} The error text to display
          */
         parseAjaxError: function (logText, jqXhr, textStatus, errorThrown) {
-            return parseError(logText, jqXhr, textStatus, errorThrown);
+            return MeadCo.parseAjaxError(logText, jqXhr, textStatus, errorThrown);
         },
 
         /**

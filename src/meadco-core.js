@@ -110,6 +110,48 @@
         }
     };
 
+    /*
+     * Extract the error text from jQuery AJAX response
+     * 
+     * @param {string} logText The lead-in text for a console.log entry
+     * @param {object} jqXhr jQuery ajax header
+     * @param {string} textStatus textStatus result determined by jQuery
+     * @param {string} errorThrown The server exception dewtermined by jQuery
+     * @returns {string} The error text to display
+     */
+    function parseError(logText, jqXhr, textStatus, errorThrown) {
+        log("**warning: AJAX call failure in " + logText + ": [" +
+            textStatus +
+            "], [" +
+            errorThrown +
+            "], [" +
+            jqXhr.responseText +
+            "], [" +
+            jqXhr.statusText +
+            "]");
+
+        if (errorThrown === "" || errorThrown === "Internal Server Error") {
+            if (textStatus !== "error") {
+                errorThrown = jqXhr.responseText || textStatus;
+            }
+            else {
+                if (typeof jqXhr.responseJSON === "object" && typeof jqXhr.responseJSON.Message === "string") {
+                    errorThrown = jqXhr.responseJSON.Message;
+                }
+                else {
+                    if (typeof jqXhr.responseText === "string") {
+                        errorThrown = jqXhr.responseText;
+                    }
+                    else
+                        errorThrown = "Server or network error";
+                }
+            }
+        }
+
+        log(" error parsed to --> [" + errorThrown + "]");
+        return errorThrown;
+    }
+
     log("MeadCo root namespace loaded.");
 
     // public API.
@@ -220,7 +262,24 @@
                 serverUrl = serverUrl.substr(0, p) + "/api/" + apiLocation;
             }
             return serverUrl;
+        },
+
+        /**
+         * Extract the error text from jQuery AJAX response
+         * 
+         * @function parseAjaxError
+         * @memberof MeadCo
+         * 
+         * @param {string} logText The lead-in text for a console.log entry
+         * @param {object} jqXhr jQuery ajax header
+         * @param {string} textStatus textStatus result determined by jQuery
+         * @param {string} errorThrown The server exception dewtermined by jQuery
+         * @returns {string} The error text to display
+         */
+        parseAjaxError: function (logText, jqXhr, textStatus, errorThrown) {
+            return parseError(logText, jqXhr, textStatus, errorThrown);
         }
+
     };
 
 });

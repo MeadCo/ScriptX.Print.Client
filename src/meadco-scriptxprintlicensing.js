@@ -91,55 +91,6 @@
         licensePath = ""; 
     }
 
-    /*
-     * Extract the error text from jQuery AJAX response
-     * 
-     * @param {string} logText The lead-in text for a console.log entry
-     * @param {object} jqXhr jQuery ajax header
-     * @param {string} textStatus textStatus result determined by jQuery
-     * @param {string} errorThrown The server exception dewtermined by jQuery
-     * @returns {string} The error text to display
-     */
-    function parseError(logText, jqXhr, textStatus, errorThrown) {
-
-        if (typeof MeadCo.ScriptX.Print !== "undefined" && typeof MeadCo.ScriptX.Print.parseAjaxError !== "undefined" ) {
-            return MeadCo.ScriptX.Print.parseAjaxError(logText, jqXhr, textStatus, errorThrown);
-        }
-
-        // Repetition, MeadCo.ScriptX.Print.parseAjaxError is authoritative.
-        //
-        MeadCo.log("**warning: AJAX call failure in " + logText + ": [" +
-            textStatus +
-            "], [" +
-            errorThrown +
-            "], [" +
-            jqXhr.responseText +
-            "], [" +
-            jqXhr.statusText +
-            "]");
-
-        if (errorThrown === "" || errorThrown === "Internal Server Error") {
-            if (textStatus !== "error") {
-                errorThrown = jqXhr.responseText || textStatus;
-            }
-            else {
-                if (typeof jqXhr.responseJSON === "object" && typeof jqXhr.responseJSON.Message === "string") {
-                    errorThrown = jqXhr.responseJSON.Message;
-                }
-                else {
-                    if (typeof jqXhr.responseText === "string") {
-                        errorThrown = jqXhr.responseText;
-                    }
-                    else
-                        errorThrown = "Server or network error";
-                }
-            }
-        }
-
-        MeadCo.log(" error parsed to --> [" + errorThrown + "]");
-        return errorThrown;
-    }
-
     function getSubscriptionFromServer(resolve, reject) {
         if (server.length <= 0) {
             throw new Error("MeadCo.ScriptX.Licensing : License server API URL is not set or is invalid");
@@ -173,7 +124,7 @@
                     }
                 })
                 .fail(function (jqXHR, textStatus, errorThrown) {
-                    errorThrown = parseError("**warning: failure in MeadCo.ScriptX.Licensing.getSubscriptionFromServer: ", jqXHR, textStatus, errorThrown);
+                    errorThrown = MeadCo.parseAjaxError("**warning: failure in MeadCo.ScriptX.Licensing.getSubscriptionFromServer: ", jqXHR, textStatus, errorThrown);
                     lastError = errorThrown;
                     if (typeof reject === "function") {
                         reject(errorThrown);
@@ -222,7 +173,7 @@
                     }
                 })
                 .fail(function (jqXHR, textStatus, errorThrown) {
-                    errorThrown = parseError("**warning: failure in MeadCo.ScriptX.Print.Licensing.applyLicense: ", jqXHR, textStatus, errorThrown);
+                    errorThrown = MeadCo.parseAjaxError("**warning: failure in MeadCo.ScriptX.Print.Licensing.applyLicense: ", jqXHR, textStatus, errorThrown);
                     lastError = errorThrown;
                     if (typeof reject === "function") {
                         reject(errorThrown);

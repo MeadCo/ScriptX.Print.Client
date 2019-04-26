@@ -12,6 +12,7 @@
     * [.error(text)](#MeadCo.error)
     * [.createNS(namespace)](#MeadCo.createNS) ⇒ object
     * [.makeApiEndPoint(serverUrl, apiLocation)](#MeadCo.makeApiEndPoint) ⇒ string
+    * [.parseAjaxError(logText, jqXhr, textStatus, errorThrown)](#MeadCo.parseAjaxError) ⇒ string
 
 <br/>
 <a id="MeadCo.version"></a>
@@ -92,6 +93,20 @@ var ui = MeadCo.createNS("MeadCo.ScriptX.Print.UI");ui.Show = function() { aler
 | apiLocation | string | the api, e.g. v1/printhtml |
 
 **Returns**: string - url to the api  
+<br/>
+<a id="MeadCo.parseAjaxError"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.parseAjaxError(logText, jqXhr, textStatus, errorThrown) ⇒ string</h3>Extract the error text from jQuery AJAX response
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| logText | string | The lead-in text for a console.log entry |
+| jqXhr | object | jQuery ajax header |
+| textStatus | string | textStatus result determined by jQuery |
+| errorThrown | string | The server exception dewtermined by jQuery |
+
+**Returns**: string - The error text to display  
 <br/>
 <a id="factory"></a>
 <h2 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
@@ -581,7 +596,7 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | units | MeasurementUnits | Measurement units for papersize and margins |
 | paperPageSize | PageSize | The size of the paper (in requested units) |
 | unprintableMargins | Margins | The margin that cannot be printed in (in requested units) |
-| status | number | Status code for the status of the device |
+| status | number | Status code for the status of the device. Note this is not reliable, it is the cached return from the first server enquiry only. |
 | port | string | Printer connection port name/description |
 | attributes | number | Printer attributes |
 | serverName | string | Name of the server to which the printer is connected |
