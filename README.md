@@ -15,7 +15,7 @@ The library is used by our extensive set of [samples](https://scriptxprintsample
 
 ## Current Version
 
-1.5.7
+1.5.78
 
 ## Packages 
 
@@ -30,13 +30,13 @@ npm install scriptxprint-html --save
 For the complete library supporting Cloud, On Premise and Windows PC services:
 
 ```javascript
-<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.5.7/dist/meadco-scriptxservices.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.5.8/dist/meadco-scriptxservices.min.js"></script>
 ```
 
 Or, for print only to cloud/on premise services,
 
 ```javascript
-<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.5.7/dist/meadco-scriptxservicesprint.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.5.8/dist/meadco-scriptxservicesprint.min.js"></script>
 ```
 
 #### Distribution packages
