@@ -266,7 +266,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 <br/>
 <a id="MeadCo.ScriptX.Print.MeasurementUnits"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.Print.MeasurementUnits : enum</h3>Enum to describe the units used on measurements
+    MeadCo.ScriptX.Print.MeasurementUnits : enum</h3>Enum to describe the units used on measurements. Please be aware that (sadly) these enum values do *not* match  the values by the MeadCo ScriptX COM Servers. Please use MeadCo.ScriptX.MeasurementUnits (declared in MeadCoScriptJS) form compatibility
 
 **Read only**: true  
 **Properties**
@@ -274,8 +274,8 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | Name | Type | Description |
 | --- | --- | --- |
 | DEFAULT | number | 0 use the default at the print server |
-| MM | number | 1 millimeters |
-| INCHES | number | 2 |
+| INCHES | number | 1 |
+| MM | number | 2 millimeters |
 
 <br/>
 <a id="MeadCo.ScriptX.Print.ContentType"></a>
@@ -674,7 +674,7 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     ~~MeadCo.ScriptX.PrintHTML.PageMarginUnits : enum~~</h3>***Deprecated***
 
-Enum to describe the units used on measurements - please use MeadCo.ScriptX.Print.MeasurementUnits instead
+Enum to describe the units used on measurements - **NOTE** please use MeadCo.ScriptX.Print.MeasurementUnits instead
 
 **Read only**: true  
 **Properties**
@@ -682,8 +682,8 @@ Enum to describe the units used on measurements - please use MeadCo.ScriptX.Prin
 | Name | Type | Description |
 | --- | --- | --- |
 | DEFAULT | number | 0 use the default at the print server |
-| MM | number | 1 millimeters |
-| INCHES | number | 2 |
+| INCHES | number | 1 |
+| MM | number | 2 millimeters |
 
 <br/>
 <a id="MeadCo.ScriptX.PrintHTML.PageOrientation"></a>
