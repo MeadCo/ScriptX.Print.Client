@@ -55,7 +55,8 @@
     "babel-preset-stage-1": "^6.22.0",
     "gitbook-plugin-theme-api": "^1.1.2",
     "babel-register": "^6.24.0",
-    "gitbook-plugin-toolbar": "^0.6.0"
+    "gitbook-plugin-toolbar": "^0.6.0",
+    "handlebars": ">=4.1.2"
   },
   "dependencies": {
     "jquery": ">=3.4.0"
