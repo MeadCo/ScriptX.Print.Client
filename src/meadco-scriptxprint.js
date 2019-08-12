@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.5.9.0";
+    var version = "1.6.0.0";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
 
@@ -96,6 +96,20 @@
      * */
     var DeviceSettingsObject; // for doc generator
 
+    /**
+     * Description of a code version. Semver is used 
+     * 
+     * @typedef VersionObject
+     * @memberof MeadCoScriptXPrint
+     * @property {int} major The major version  
+     * @property {int} minor The minor version 
+     * @property {int} build The patch/hotfix version
+     * @property {int} revision Internal revisions of a build/patch/hotfix
+     * @property {int} majorRevision ignore
+     * @property {int} minorRevision ignore 
+     * */
+    var VersionObject; // for doc generator
+
     var deviceSettings = {};
     var module = this;
 
@@ -149,6 +163,40 @@
         THROW: 2
     };
     var errorAction = enumErrorAction.REPORT;
+
+    /**
+     * Enum for the class of service connected to.
+     * 
+     * @membnerof MeadCoScriptXPrint
+     * @typedef { number } ServiceClasses
+     * @enum { ServiceClasses }
+     * @readonly 
+     * @property { number } CLOUD 1 MeadCo Cloud Service 
+     * @property { number } ONPREMISE 2 ScriptX.Services for On Premise Devices
+     * @property { number } WINDOWSPC 3 ScriptX.Services for Windows PC
+     * */
+    var enumServiceClass = {
+        CLOUD: 1,
+        ONPREMISE: 2,
+        WINDOWSPC: 3
+    };
+
+    /**
+     * Information about the service that is connected to - version detail and facilities available
+     * 
+     * @typedef ServiceDescriptionObject
+     * @memberof MeadCoScriptXPrint
+     * @property {ServiceClasses} ServiceClass the class of the service; cloud, onpremise, pc
+     * @property {string} CurrentAPIVersion the latest version implemented (eg 'v1' or 'v2' etc)
+     * @property {VersionObject} ServiceVersion implementation version of the service
+     * @property {VersionObject} ServerVersion The version of ScriptX Server used by the service
+     * @property {VersionObject} ServiceUpgrade The latest version of the service that is available and later than ServiceVersion/me 
+     * @property {Array.<string>} AvailablePrinters Array of the names of the available printers
+     * @property {boolean} PrintHTML Printing of HTML is supported
+     * @property {boolean} PrintPDF Printing of PDF documents is supported
+     * @property {boolean} PrintDIRECT Direct printing to a print device is supported
+     * */
+    var ServiceDescriptionObject; // for Doc Generator
 
     /**
      * Enum for status code returned to print progress callbacks
@@ -650,7 +698,7 @@
      */
     function getFromServer(sApi, async, onSuccess, onFail) {
         if (module.jQuery) {
-            var serviceUrl = server + sApi;
+            var serviceUrl = MeadCo.makeApiEndPoint(server, sApi);
             MeadCo.log(".ajax() get: " + serviceUrl);
             module.jQuery.ajax(serviceUrl,
                 {
@@ -993,6 +1041,7 @@
         CollateOptions: enumCollateOptions,
         DuplexOptions: enumDuplexOptions,
         MeasurementUnits: enumMeasurementUnits,
+        ServiceClasses: enumServiceClass,
 
         /**
          * Get/set the action to take when an error occurs
@@ -1181,6 +1230,38 @@
         },
 
         /**
+         * Obtain the description of the service provided by the server
+         *
+         * @function serviceDescription
+         * @memberof MeadCoScriptXPrint
+         * @returns {ServiceDescriptionObject} serviceDescription
+         */
+        serviceDescription: function () {
+            var desc = null;
+
+            getFromServer("", false,
+                function (data) { desc = data; },
+                function (e) {
+                    MeadCo.ScriptX.Print.reportServerError(e.message);
+                });
+
+            return desc;
+        },
+
+
+        /**
+         * Obtain the description of the service provided by the server
+         *
+         * @function serviceDescriptionAsync
+         * @memberof MeadCoScriptXPrint
+         * @param {function(ServiceDescriptionObject)} resolve function to call on success
+         * @param {function(errorText)} reject function to call on failure
+         */
+        serviceDescriptionAsync(resolve, reject) {
+            getFromServer("",true,resolve,reject);
+        },
+
+        /**
          * Cache the given device info and available printers in this static class instance
          * 
          * Used by libraries that call api/v1/printHtml/htmlPrintDefaults
@@ -1223,12 +1304,14 @@
          * 
          * @function getFromServer
          * @memberof MeadCoScriptXPrint
-         * @param {string} sApi the api to call on the connected server
+         * @param {string} sPrintHtmlApi the api to call on the connected server
          * @param {bool} async true for asynchronous call, false for synchronous 
          * @param {function} onSuccess function to call on success
          * @param {function(errorText)} onFail function to call on failure
          */
-        getFromServer: getFromServer,
+        getFromServer: function (sPrintHtmlApi, async, onSuccess, onFail) {
+            getFromServer(htmlApiLocation + sPrintHtmlApi, async, onSuccess, onFail);
+        },
 
         /**
          * Post a request to the server to print some html and monitor the print job 
