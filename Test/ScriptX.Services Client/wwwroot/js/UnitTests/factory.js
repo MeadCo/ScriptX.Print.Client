@@ -4,8 +4,9 @@ QUnit.test("Namespace basics", function (assert) {
 
     assert.ok(window.factory, "factory namespace exists");
     var api = window.factory;
-    var expectedVersion = "1.5.9.0";
+    var expectedVersion = "1.6.0.0";
     var emulatedVersion = "8.2.0.0";
+    var servicesVersion = "11.12.13.14";
 
     var a = new Object();
     var b = new Object();
@@ -23,6 +24,9 @@ QUnit.test("Namespace basics", function (assert) {
     assert.equal(v, emulatedVersion, "Correct ScriptX emulation version via ScriptX.Factory");
     assert.equal(api.ScriptXVersion, emulatedVersion, "Correct ScriptX emulation version via API");
     assert.equal(api.ComponentVersionString("scriptx.factory.services"), expectedVersion, "Correct .services library version via ComponentVersionString");
+
+    MeadCo.ScriptX.Print.connectLite(serverUrl, " ");
+    assert.equal(api.ComponentVersionString("scriptx.services"), servicesVersion, "Correct .services server version via ComponentVersionString");
 
 });
 

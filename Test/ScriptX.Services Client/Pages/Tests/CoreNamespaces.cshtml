@@ -30,17 +30,17 @@
                 SERVICE: 2
             }
 
-            scriptx.LibVersion = "1.5.0";
+            scriptx.LibVersion = "1.6.0";
             scriptx.Connector = scriptx.Connection.NONE;
         }(window.MeadCo = window.MeadCo || {}));
     </script>
 
     <environment include="Development">
-        <script asp-append-version="true" src="/scripts?name=src/meadco-core.js"></script>
-        <script asp-append-version="true" src="/scripts?name=src/meadco-scriptxprint.js"></script>
+        <script asp-append-version="true" src="/scripts/src/meadco-core.js"></script>
+        <script asp-append-version="true" src="/scripts/src/meadco-scriptxprint.js"></script>
     </environment>
     <environment exclude="Development">
-        <script asp-append-version="true" src="/scripts?name=dist/meadco-scriptxservicesprint.min.js"></script>
+        <script asp-append-version="true" src="/scripts/dist/meadco-scriptxservicesprint.min.js"></script>
     </environment>
 
 }

@@ -19,9 +19,10 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.6.0.0";
+    var version = "1.6.0.2";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
+    var directApiLocation = "v1/printDirect";
 
     // default printer 
     var printerName = "";
@@ -123,6 +124,8 @@
 
     var availablePrinters = [];
 
+    var serviceDescription = null; // cached description of service server connected to 
+
     /**
      * Enum for type of content being posted to printHtml API
      *
@@ -135,9 +138,10 @@
      * @property {number} INNERHTML 4 the passed string is a complete html document but missing the html tags
      */
     var enumContentType = {
-        URL: 1, // the url will be downloaded and printed
+        URL: 1, // the url will be downloaded and printed (for html and direct printing)
         HTML: 2, // the passed string is assumed to be a complete html document .. <html>..</html>
-        INNERHTML: 4 // the passed string is a complete html document but missing the html tags
+        INNERHTML: 4, // the passed string is a complete html document but missing the html tags
+        STRING: 8 // the passed string is assumed to contain no html but may contain other language such as ZPL (for direct printing)
     };
 
     var enumResponseStatus = {
@@ -321,7 +325,7 @@
         }
     }
 
-    /*
+    /**
      * Post a request to the server api/v1/print to print some html and monitor the print job 
      * to completion. If the server prints to file then the file is opened for the user (in a new window)
      * 
@@ -333,8 +337,9 @@
      * @param {object} htmlPrintSettings the settings to use - device annd html such as headers and footers
      * @param {function({string})} fnDone function to call when printing complete (and output returned), arg is null on no error, else error message
      * @param {function(status,sInformation,data)} fnProgress function to call when job status is updated
-     * @param {any} data object to give pass to fnCallback
+     * @param {any} data object to give pass to fnProgress
      * @return {boolean} - true if a print was started (otherwise an error will be thrown)
+     * @private
      */
     function printHtmlAtServer(contentType, content, htmlPrintSettings, fnDone, fnProgress, data) {
         MeadCo.log("started MeadCo.ScriptX.Print.print.printHtmlAtServer() Type: " + contentType + ", printerName: " + printerName);
@@ -443,7 +448,7 @@
      * @param {object} pdfPrintSettings the settings to use such as rotation, scaling. device settings (printer to use, copies etc) are taken from this static
      * @param {function({string})} fnDone function to call when printing complete (and output returned), arg is null on no error, else error message.
      * @param {function(status,sInformation,data)} fnProgress function to call when job status is updated
-     * @param {any} data object to give pass to fnCallback
+     * @param {any} data object to give pass to fnProgress
      * @return {boolean} - true if a print was started (otherwise an error will be thrown)
      * @private
      */
@@ -543,6 +548,87 @@
             });
     }
 
+    /**
+      * Post a request to the server api/v1/printDirect to print a string directly to the current printer. The print is synchronous at the server
+      * and is completed (sent to the printer) when the api returns.
+      * 
+      * @function printDirectAtServer
+      * @memberof MeadCoScriptXPrint
+ 
+      * @param {ContentType} contentType enum type of content given (string or url)
+      * @param {string} content the content - a url, or string containing e.g. zpl.
+      * @param {function({string})} fnDone function to call when printing complete, arg is null on no error, else error message
+      * @return {boolean} - true if a print was started (otherwise an error will be thrown)
+      * @private
+      */
+    function printDirectAtServer(contentType, content, fnDone) {
+        MeadCo.log("started MeadCo.ScriptX.Print.print.printDirectAtServer() Type: " + contentType + ", printerName: " + printerName);
+        if (contentType === enumContentType.URL) {
+            MeadCo.log(".. request print url: " + content);
+        }
+        else {
+            if (contentType !== enumContentType.STRING) {
+                MeadCo.ScriptX.Print.reportError("Bad content type for direct printing");
+                if (typeof fnDone === "function") {
+                    fnDone("Bad content type for direct printing");
+                }
+                return false;
+            }
+        }
+
+        if (content === null || typeof content === "undefined" || (typeof content === "string" && content.length === 0)) {
+            MeadCo.ScriptX.Print.reportError("Request to print no content - access denied?");
+            if (typeof fnDone === "function") {
+                fnDone("Request to print no content");
+            }
+            return false;
+        }
+
+        if (printerName === "") {
+            MeadCo.ScriptX.Print.reportError("Request to print but no current printer defined.");
+            if (typeof fnDone === "function") {
+                fnDone("Request to print but no current printer defined.");
+            }
+            return false;
+        } 
+
+        var requestData = {
+            ContentType: contentType,
+            Content: content,
+            PrinterName: printerName,
+            Device: deviceSettings[printerName] // not required by the server .. used by printAtServer()
+        };
+
+        var serverApi = MeadCo.makeApiEndPoint(server, directApiLocation);
+        return printAtServer(serverApi, requestData,
+            {
+                fail: function (jqXhr, textStatus, errorThrown) {
+                    var err = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.printDirectAtServer", jqXhr, textStatus, errorThrown);
+                    MeadCo.ScriptX.Print.reportError(err);
+                    if (typeof fnDone === "function") {
+                        fnDone("Server error");
+                    }
+                },
+
+                softError: function (data) {
+                    MeadCo.ScriptX.Print.reportError(data.message);
+                    MeadCo.log("print has soft error");
+                    removeJob(data.jobIdentifier);
+                    if (typeof fnDone === "function") {
+                        MeadCo.log("Call fnDone");
+                        fnDone("Server error");
+                    }
+                },
+
+                ok: function (data) {
+                    MeadCo.log("printed ok, no further information");
+                    if (typeof fnDone === "function") {
+                        fnDone(null);
+                    }
+                }
+            });
+    }
+
     function setServer(serverUrl, clientLicenseGuid) {
         if (serverUrl.length > 0) {
             MeadCo.log("Print server requested: " + serverUrl + " => " + MeadCo.makeApiEndPoint(serverUrl, htmlApiLocation) + " with license: " + clientLicenseGuid);
@@ -560,6 +646,12 @@
         setServer(serverUrl, clientLicenseGuid);
         // note that this will silently fail if no advanced printing license
         getDeviceSettings({ name: "default", async: false });
+
+        // also (async) cache server description
+        getFromServer("", true,
+            function (data) {
+                serviceDescription = data;
+            });
     }
 
     function connectToServerAsync(serverUrl, clientLicenseGuid, resolve, reject) {
@@ -571,6 +663,12 @@
             async: true,
             fail: reject
         });
+
+        // also (async) cache server description
+        getFromServer("", true,
+            function (data) {
+                serviceDescription = data;
+            });
     }
 
     // testServerConnection
@@ -1237,17 +1335,16 @@
          * @returns {ServiceDescriptionObject} serviceDescription
          */
         serviceDescription: function () {
-            var desc = null;
 
-            getFromServer("", false,
-                function (data) { desc = data; },
-                function (e) {
-                    MeadCo.ScriptX.Print.reportServerError(e.message);
-                });
-
-            return desc;
+            if (serviceDescription === null) {
+                getFromServer("", false,
+                    function (data) { serviceDescription = data; },
+                    function (e) {
+                        MeadCo.ScriptX.Print.reportServerError(e.message);
+                    });
+            }
+            return serviceDescription;
         },
-
 
         /**
          * Obtain the description of the service provided by the server
@@ -1258,7 +1355,17 @@
          * @param {function(errorText)} reject function to call on failure
          */
         serviceDescriptionAsync(resolve, reject) {
-            getFromServer("",true,resolve,reject);
+
+            if (serviceDescription === null) {
+                getFromServer("", true,
+                    function (data) {
+                        serviceDescription = data;
+                        resolve(data);
+                    }, reject);
+            }
+            else {
+                resolve(serviceDescription);
+            }
         },
 
         /**
@@ -1325,7 +1432,7 @@
          * @param {object} htmlPrintSettings the html settings to use such as headers and footers, device settings (printer to use, copies etc) are taken from this static 
          * @param {function({string})} fnDone function to call when printing complete (and output returned), arg is null on no error, else error message.
          * @param {function(status,sInformation,data)} fnProgress function to call when job status is updated
-         * @param {any} data object to give pass to fnCallback
+         * @param {any} data object to give pass to fnProgress
          * @return {boolean} - true if a print was started (otherwise an error will be thrown)
          */
         printHtml: printHtmlAtServer,
@@ -1341,10 +1448,24 @@
          * @param {object} pdfPrintSettings the settings to use such as rotation, scaling. device settings (printer to use, copies etc) are taken from this static
          * @param {function({string})} fnDone function to call when printing complete (and output returned), arg is null on no error, else error message.
          * @param {function(status,sInformation,data)} fnProgress function to call when job status is updated
-         * @param {any} data object to give pass to fnCallback
+         * @param {any} data object to give pass to fnProgress
          * @return {boolean} - true if a print was started (otherwise an error will be thrown)
          */
         printPdf: printPdfAtServer,
+
+        /**
+         * Post a request to the server to print some html and monitor the print job 
+         * to completion. If the server prints to file then the file is opened for the user (in a new window)
+         * 
+         * @function printDirect
+         * @memberof MeadCoScriptXPrint
+         *
+         * @param {ContentType} contentType enum type of content given (string or url)
+         * @param {string} content the content - a url, or string containing e.g. zpl.
+         * @param {function({string})} fnDone function to call when printing complete, arg is null on no error, else error message
+         * @return {boolean} - true if a print was started (otherwise an error will be thrown)
+         */
+        printDirect: printDirectAtServer,
 
         /**
          * Extract the error text from jQuery AJAX response

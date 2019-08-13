@@ -5,7 +5,7 @@ QUnit.test("Namespace basics", function (assert) {
     assert.ok(MeadCo.ScriptX.Print, "MeadCo.ScriptX.Print namespace exists");
     var api = MeadCo.ScriptX.Print;
 
-    assert.equal(api.version, "1.5.9.0", "Correct version");
+    assert.equal(api.version, "1.6.0.2", "Correct version");
 
     assert.equal(api.ContentType.URL, 1, "ContentType enum is OK");
     assert.equal(api.ContentType.XX, undefined, "Unknown ContentType enum is OK");
@@ -392,4 +392,69 @@ QUnit.test("Printing single piece of pdf content", function (assert) {
         assert.ok(bComplete, "WaitForSpoolingComplete ok - all jobs done.");
         done();
     });
+});
+
+
+QUnit.test("Direct print basics", function (assert) {
+
+    var done = assert.async(4);
+
+    var api = MeadCo.ScriptX.Print;
+
+    api.connectLite(serverUrl, badLicenseGuid);
+
+    bPrinted = api.printDirect(api.ContentType.STRING, "", function (errorText) {
+        assert.equal(errorText, "Request to print no content", "Correct error on empty string for content");
+        done();
+    });
+    assert.notOk(bPrinted, "Correct fail to print result");
+
+    bPrinted = api.printDirect(225, "^XA", function (errorText) {
+        assert.equal(errorText, "Bad content type for direct printing", "Correct error on bad content type");
+        done();
+    });
+    assert.notOk(bPrinted, "Correct fail to print result");
+
+    bPrinted = api.printDirect(api.ContentType.STRING, "^XA", function (errorText) {
+        assert.equal(errorText, "Request to print but no current printer defined.", "Correct error when no printer selected.");
+        done();
+    });
+    assert.notOk(bPrinted, "Correct fail to print result");
+
+    api.deviceSettings = {
+        printerName: "My printer",
+        isDefault: true,
+        paperSize: "A4"
+    };
+    api.printerName = "My printer";
+
+    bPrinted = api.printDirect(api.ContentType.STRING, "OK", function (errorText) {
+        assert.equal($("#qunit-fixture").text(), "Unauthorized", "Bad license raised correct error dialog");
+        assert.ok(errorText, "Error message supplied to fnDone()");
+        assert.strictEqual(errorText, "Server error", "Correct error message supplied to fnDone()");
+        done();
+    });
+    assert.ok(bPrinted, "Correct print call result");
+
+});
+
+QUnit.test("Direct print string", function (assert) {
+
+    var done = assert.async(1);
+
+    var api = MeadCo.ScriptX.Print;
+
+    api.connectLite(serverUrl, badLicenseGuid);
+
+    bPrinted = api.printDirect(225, "", function (errorText) {
+        assert.equal(errorText, "flip", "Correct error on bad content type");
+        done();
+    });
+
+    assert.notOk(bPrinted, "Correct fail to print result");
+
+});
+
+QUnit.test("Direct print document", function (assert) {
+
 });

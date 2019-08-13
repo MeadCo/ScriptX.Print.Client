@@ -11,6 +11,7 @@
  * - printing
  *   - printerControl
  *   - enhancedFormatting
+ *   - rawPrinting
  *
  * This javascript 'module' provides partial emulation of window.factory, window.factory.object and window.factory.object.js
  * 
@@ -83,8 +84,11 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.5.9.0";
+    var moduleversion = "1.6.0.0";
     var emulatedVersion = "8.2.0.0";
+    var servicesVersion = "";
+    var printApi = MeadCo.ScriptX.Print;
+
     var module = this;
 
     function log(str) {
@@ -130,7 +134,7 @@
 
         /* GetComponentVersion is no longer documented . It is implemented as MeadCoScriptJS relies on it.
          * 
-         * Only ScriptX related ProgIds are supported.
+         * We support ScriptX ProgIds and progid style names for scriptx services.
          */
         GetComponentVersion: function (sComponent, a, b, c, d) {
             log("factory.object.getcomponentversion: " + sComponent);
@@ -143,6 +147,19 @@
 
                 case "scriptx.factory.services":
                     v = moduleversion;
+                    break;
+
+                case "scriptx.services":
+                    if (servicesVersion === "") {
+                        if (typeof printApi !== "undefined") {
+                            var sd = printApi.serviceDescription();
+                            if (sd !== null) {
+                                var sv = sd.serviceVersion;
+                                servicesVersion = sv.major + "." + sv.minor + "." + sv.build + "." + sv.revision;
+                            }
+                        }
+                    }
+                    v = servicesVersion;
                     break;
 
                 case "meadco.secmgr":
@@ -183,7 +200,7 @@
         get SecurityManagerVersion() { return emulatedVersion; },
 
         /*
-         * Unique IDs are not suported in servics
+         * Unique IDs are not suported in services
          */
         IsUniqueIDAvailable: function (bForMachine) { return false; },
         UniqueID: function (bForMachine) { return 0; },
@@ -233,7 +250,6 @@
     var printPdf = MeadCo.ScriptX.Print.PDF;
     var settings = printHtml.settings;
     var printApi = MeadCo.ScriptX.Print;
-    var licenseApi = MeadCo.ScriptX.Print.Licensing;
 
     var module = this;
 
@@ -333,6 +349,28 @@
         return false;
     }
 
+    function printDirect(sPrinterName, eContentType, sContent) {
+
+        var bPrinted = false;
+
+        if (typeof printApi !== "undefined") {
+
+            var p = factory.printer;
+
+            factory.printer = sPrinterName;
+
+            if (eContentType === printApi.ContentType.URL) {
+                sContent = module.factory.baseURL(sContent);
+            }
+
+            bPrinted = printApi.printDirect(eContentType, sContent);
+
+            factory.printer = p;
+        }
+
+        return bPrinted;
+    }
+
     if (typeof module.print === "function") {
         module.factory.log("overwriting module.print");
         module.print = function () {
@@ -344,7 +382,7 @@
                     return printHtml.printDocument();
                 },
                 function () { });
-        }
+        };
     }
 
     var iEnhancedFormatting = {
@@ -1158,6 +1196,23 @@
         },
 
         enhancedFormatting: iEnhancedFormatting,
+
+        get rawPrinting() {
+            return {
+                sPrinterName: "",
+
+                get printer() { return sPrinterName; },
+                set printer(printerName) { sPrinterName = printerName; },
+
+                printString: function (s) {
+                    return typeof printApi !== "undefined" ? printDirect(printApi.ContentType.STRING, s) : false;
+                },
+
+                printDocument: function (sUrl) {
+                    return typeof printApi !== "undefined" ? printDirect(printApi.ContentType.URL, s) : false;
+                }
+            };
+        },
 
         // helpers for wrapper MeadCoJS
         PolyfillInit: function () {

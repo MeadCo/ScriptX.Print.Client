@@ -54,7 +54,7 @@
 
     // protected API
     var module = this;
-    var version = "1.5.9.0";
+    var version = "1.6.0.0"; // matches the highest version number of sub-classes.
     var bLog = false;
 
     var log = function (str) {

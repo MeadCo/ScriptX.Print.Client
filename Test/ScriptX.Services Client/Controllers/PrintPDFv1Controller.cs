@@ -67,12 +67,22 @@ namespace ScriptX.Services_Client.Controllers
                 throw new ArgumentException("Printer not available", nameof(requestMessage.Device.PrinterName));
             }
 
-            string[] parsedQuery = requestMessage.Document.Query.Split('=');
+            string q = "";
+            try
+            {
+                q = requestMessage.Document.Query;
+            }
+            catch (Exception e) {
+                return new Print { Status = PrintRequestStatus.SoftError, Message = e.Message };
+            }
+
+            string[] parsedQuery =  q.Split('=');
+
             string jobId = parsedQuery.Length == 2 ? parsedQuery[1] : "pdf";
 
             Print printResponse = new Print { Status = PrintRequestStatus.QueuedToDevice, JobIdentifier = $"{jobId}:job", Message = "No message" };
 
-            if (requestMessage.Document.IsUnc)
+            if ( requestMessage.Document.IsUnc )
             {
                 printResponse.Status = PrintRequestStatus.SoftError;
                 printResponse.JobIdentifier = "";

@@ -108,6 +108,13 @@ namespace ScriptX.Services_Client
 
             app.UseStaticFiles();
 
+            env.WebRootFileProvider = new Extensions.CompositeWithScriptsFileProvider(env.WebRootFileProvider, 
+                new List<StaticFileOptions> {
+                    new StaticFileOptions() { FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(),@"../../src")), RequestPath = new PathString("/scripts/src") },
+                    new StaticFileOptions() { FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(),@"../../dist")), RequestPath = new PathString("/scripts/dist") },
+                }.ToArray()
+                );
+
             app.UseMvc();
         }
     }
