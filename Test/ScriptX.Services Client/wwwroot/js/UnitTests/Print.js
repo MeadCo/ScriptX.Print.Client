@@ -438,23 +438,94 @@ QUnit.test("Direct print basics", function (assert) {
 
 });
 
+
 QUnit.test("Direct print string", function (assert) {
 
-    var done = assert.async(1);
+    var done = assert.async(2);
 
     var api = MeadCo.ScriptX.Print;
 
-    api.connectLite(serverUrl, badLicenseGuid);
+    api.connectLite(serverUrl, licenseGuid);
 
-    bPrinted = api.printDirect(225, "", function (errorText) {
-        assert.equal(errorText, "flip", "Correct error on bad content type");
+    api.deviceSettings = {
+        printerName: "My printer",
+        isDefault: true,
+        paperSize: "A4"
+    };
+    api.printerName = "My printer";
+
+    bPrinted = api.printDirect(api.ContentType.STRING, "OK", function (errorText) {
+        assert.notOk(errorText, "No error message supplied to fnDone()");
+        done();
+    });
+    assert.ok(bPrinted, "Correct print call result");
+
+    MeadCo.ScriptX.Print.waitForSpoolingComplete(1000, function (bComplete) {
+        assert.ok(bComplete, "WaitForSpoolingComplete ok - no jobs in queue.");
         done();
     });
 
-    assert.notOk(bPrinted, "Correct fail to print result");
+});
+
+
+QUnit.test("Direct print string to unknown printer", function (assert) {
+
+    var done = assert.async(2);
+
+    var api = MeadCo.ScriptX.Print;
+
+    MeadCo.logEnabled = true;
+
+    api.connectLite(serverUrl, licenseGuid);
+
+    api.deviceSettings = {
+        printerName: "A printer",
+        isDefault: true,
+        paperSize: "A4"
+    };
+    api.printerName = "A printer";
+
+    bPrinted = api.printDirect(api.ContentType.STRING, "OK", function (errorText) {
+        assert.strictEqual(errorText, "Server error", "Bad printer name results in error");
+        assert.equal($("#qunit-fixture").text(), "Printer not available: A printer", "Correct error reported via dialog");
+        done();
+    });
+    assert.ok(bPrinted, "Correct print call result");
+
+    MeadCo.ScriptX.Print.waitForSpoolingComplete(1000, function (bComplete) {
+        assert.ok(bComplete, "WaitForSpoolingComplete ok - no jobs in queue.");
+        done();
+    });
 
 });
 
-QUnit.test("Direct print document", function (assert) {
+
+QUnit.test("Direct print content of url", function (assert) {
+
+    var done = assert.async(2);
+
+    var api = MeadCo.ScriptX.Print;
+
+    MeadCo.logEnabled = true;
+
+    api.connectLite(serverUrl, licenseGuid);
+
+    api.deviceSettings = {
+        printerName: "My printer",
+        isDefault: true,
+        paperSize: "A4"
+    };
+    api.printerName = "My printer";
+
+    bPrinted = api.printDirect(api.ContentType.URL, "http://scriptxsamples.meadroid.com/label", function (errorText) {
+        assert.notOk(errorText, "No error message supplied to fnDone()");
+        done();
+    });
+    assert.ok(bPrinted, "Correct print call result");
+
+    MeadCo.ScriptX.Print.waitForSpoolingComplete(1000, function (bComplete) {
+        assert.ok(bComplete, "WaitForSpoolingComplete ok - no jobs in queue.");
+        done();
+    });
 
 });

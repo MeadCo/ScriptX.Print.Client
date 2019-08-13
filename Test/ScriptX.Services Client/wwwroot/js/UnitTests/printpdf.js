@@ -3,7 +3,7 @@
     assert.ok(MeadCo.ScriptX.Print.PDF, "MeadCo.ScriptX.Print.PDF namespace exists");
     var api = MeadCo.ScriptX.Print.PDF;
 
-    assert.equal(api.version, "1.5.9.0", "Correct version");
+    assert.equal(api.version, "1.6.0.0", "Correct version");
 
     assert.equal(MeadCo.ScriptX.Print.MeasurementUnits.MM, 2, "MeasurementUnits enum is OK");
     assert.equal(MeadCo.ScriptX.Print.MeasurementUnits.XX, undefined, "MeasuremmentUnits enum is OK");

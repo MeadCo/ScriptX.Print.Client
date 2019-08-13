@@ -5,17 +5,19 @@
  * 
  * The object is referenced with the property window.factory which exposes properties and methods to define print setting and perform operations such as printing a document or frame.
  * 
- * The object has two further properties:
+ * The object has three further properties:
  * - object
  *   - js
+ * - rawPrinting  
  * - printing
  *   - printerControl
  *   - enhancedFormatting
- *   - rawPrinting
  *
  * This javascript 'module' provides partial emulation of window.factory, window.factory.object and window.factory.object.js
  * 
  * Full emulation (and almost complete implementation) is provided for window.factory.printing, window.factory.printing.printerControl, window.factory.printing.enhancedFormatting. The most notable absent implementation is an implementation of print preview.
+ * 
+ * Full emulation is provided for window.factory.rawPrinting. Please note that the implementation is synchronous and browsers will issue a warning to the console.
  * 
  * ScriptX Add-on for Internet Explorer intercepts the browser UI for printing. For obvious reasons this is not possible with javascript, however ::
  * 
@@ -230,6 +232,56 @@
             }
         },
 
+        get rawPrinting() {
+            var sPrinterName = "";
+            var printApi = MeadCo.ScriptX.Print;
+
+            function printDirect(eContentType, sContent) {
+
+                var bPrinted = false;
+
+                if (typeof printApi !== "undefined") {
+
+                    var p = factory.printing.printer;
+
+                    factory.printing.printer = sPrinterName;
+
+                    if (eContentType === printApi.ContentType.URL) {
+                        sContent = module.factory.baseURL(sContent);
+                    }
+
+                    bPrinted = printApi.printDirect(eContentType, sContent);
+
+                    factory.printing.printer = p;
+                }
+
+                return bPrinted;
+            }
+
+            return {
+
+                get printer() { return sPrinterName; },
+                set printer(printerName) {
+                    var p = factory.printing.printer;
+                    factory.printing.printer = printerName;
+                    if (factory.printing.printer !== printerName) {
+                        throw "Unknown printer";
+                    }
+                    factory.printing.printer = p;
+                    sPrinterName = printerName;
+                },
+
+                printString: function (s) {
+                    return typeof printApi !== "undefined" ? printDirect(printApi.ContentType.STRING, s) : false;
+                },
+
+                printDocument: function (sUrl) {
+                    return typeof printApi !== "undefined" ? printDirect(printApi.ContentType.URL, sUrl) : false;
+                }
+            };
+        },
+
+
         /*
          * A no op for services 
          */
@@ -347,28 +399,6 @@
         MeadCo.error("MeadCo.ScriptX.Print.PDF is not available to ScriptX.Services factory emulation.");
         fnNotifyStarted(false);
         return false;
-    }
-
-    function printDirect(sPrinterName, eContentType, sContent) {
-
-        var bPrinted = false;
-
-        if (typeof printApi !== "undefined") {
-
-            var p = factory.printer;
-
-            factory.printer = sPrinterName;
-
-            if (eContentType === printApi.ContentType.URL) {
-                sContent = module.factory.baseURL(sContent);
-            }
-
-            bPrinted = printApi.printDirect(eContentType, sContent);
-
-            factory.printer = p;
-        }
-
-        return bPrinted;
     }
 
     if (typeof module.print === "function") {
@@ -1196,23 +1226,6 @@
         },
 
         enhancedFormatting: iEnhancedFormatting,
-
-        get rawPrinting() {
-            return {
-                sPrinterName: "",
-
-                get printer() { return sPrinterName; },
-                set printer(printerName) { sPrinterName = printerName; },
-
-                printString: function (s) {
-                    return typeof printApi !== "undefined" ? printDirect(printApi.ContentType.STRING, s) : false;
-                },
-
-                printDocument: function (sUrl) {
-                    return typeof printApi !== "undefined" ? printDirect(printApi.ContentType.URL, s) : false;
-                }
-            };
-        },
 
         // helpers for wrapper MeadCoJS
         PolyfillInit: function () {

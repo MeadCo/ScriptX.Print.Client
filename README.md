@@ -15,7 +15,9 @@ The library is used by our extensive set of [samples](https://scriptxprintsample
 
 ## Current Version
 
-1.5.9
+1.6.0 Beta 1
+
+This is the first beta of support for the new Service Description and Direct Printing (Labels, ZPL) APIs. The support requires beta versions of the service implementations are installed.
 
 ## Packages 
 
@@ -30,13 +32,13 @@ npm install scriptxprint-html --save
 For the complete library supporting Cloud, On Premise and Windows PC services:
 
 ```javascript
-<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.5.9/dist/meadco-scriptxservices.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@beta/dist/meadco-scriptxservices.min.js"></script>
 ```
 
 Or, for print only to cloud/on premise services,
 
 ```javascript
-<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.5.9/dist/meadco-scriptxservicesprint.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@beta/dist/meadco-scriptxservicesprint.min.js"></script>
 ```
 
 #### Distribution packages

@@ -110,7 +110,7 @@ var ui = MeadCo.createNS("MeadCo.ScriptX.Print.UI");ui.Show = function() { aler
 <br/>
 <a id="factory"></a>
 <h2 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    factory : object</h2>MeadCo ScriptX 'window.factory' shim (support for modern browsers and IE 11) JS client library.<br/>The ScriptX Add-on for Internet Explorer is included on a html document with an &lt;object /&gt; element with a de-facto standard id of 'factory': &lt;object id='factory' /&gt;.The object is referenced with the property window.factory which exposes properties and methods to define print setting and perform operations such as printing a document or frame.The object has two further properties:- object  - js- printing  - printerControl  - enhancedFormattingThis javascript 'module' provides partial emulation of window.factory, window.factory.object and window.factory.object.jsFull emulation (and almost complete implementation) is provided for window.factory.printing, window.factory.printing.printerControl, window.factory.printing.enhancedFormatting. The most notable absent implementation is an implementation of print preview.ScriptX Add-on for Internet Explorer intercepts the browser UI for printing. For obvious reasons this is not possible with javascript, however ::<strong>PLEASE NOTE:</strong> This library replaces window.print()Full documentation on the properties/methods is provided by the [technical reference documentation](https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn) for the ScriptX Add-on for Internet Explorer. That documentation is not reproduced here.If the startup script determines that the ScriptX Add.on for IE is already active then it will quietly give priority to the object. In other words, the Add-on has precedence on Internet Explorer.This enables the same experience (almost) to be delivered to any browser on any device with the same html/javascript code.It is strongly recommended that the [MeadCoScriptJS library](https://github.com/MeadCo/MeadCoScriptXJS) is used in conjunction with this library as it provides code (Promises) to assistwith working with the significant difference between the synchronous nature of the functions of ScriptX.Add-on (which hide the underlying asynchrony) and the asynchronous nature of javascript AJAX processing.Requires:- MeadCo.Core- MeadCo.ScriptX.Print- MeadCo.ScriptX.Print.HTML- MeadCo.ScriptX.Print.Licensing when using ScritpX.Services for Windows PC     MeadCo.ScriptX.Print.HTML.connect[Async]() or MeadCo.ScriptX.Print.connect[Async]() *MUST* be called before using the apis in this library.See [ScriptX Samples](https://scriptxprintsamples.meadroid.com) for a lot of samples on using this code.Some Add-on APIs lead to system provided dialogs (e.g. printer and paper setup) - support for implementing the dialogs in javascript as simple plug-ins is provided, along with an example implementation using bootstrap/jQuery (see jQuery-MeadCo.ScriptX.Print.UI.js)
+    factory : object</h2>MeadCo ScriptX 'window.factory' shim (support for modern browsers and IE 11) JS client library.<br/>The ScriptX Add-on for Internet Explorer is included on a html document with an &lt;object /&gt; element with a de-facto standard id of 'factory': &lt;object id='factory' /&gt;.The object is referenced with the property window.factory which exposes properties and methods to define print setting and perform operations such as printing a document or frame.The object has three further properties:- object  - js- rawPrinting  - printing  - printerControl  - enhancedFormattingThis javascript 'module' provides partial emulation of window.factory, window.factory.object and window.factory.object.jsFull emulation (and almost complete implementation) is provided for window.factory.printing, window.factory.printing.printerControl, window.factory.printing.enhancedFormatting. The most notable absent implementation is an implementation of print preview.Full emulation is provided for window.factory.rawPrinting. Please note that the implementation is synchronous and browsers will issue a warning to the console.ScriptX Add-on for Internet Explorer intercepts the browser UI for printing. For obvious reasons this is not possible with javascript, however ::<strong>PLEASE NOTE:</strong> This library replaces window.print()Full documentation on the properties/methods is provided by the [technical reference documentation](https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn) for the ScriptX Add-on for Internet Explorer. That documentation is not reproduced here.If the startup script determines that the ScriptX Add.on for IE is already active then it will quietly give priority to the object. In other words, the Add-on has precedence on Internet Explorer.This enables the same experience (almost) to be delivered to any browser on any device with the same html/javascript code.It is strongly recommended that the [MeadCoScriptJS library](https://github.com/MeadCo/MeadCoScriptXJS) is used in conjunction with this library as it provides code (Promises) to assistwith working with the significant difference between the synchronous nature of the functions of ScriptX.Add-on (which hide the underlying asynchrony) and the asynchronous nature of javascript AJAX processing.Requires:- MeadCo.Core- MeadCo.ScriptX.Print- MeadCo.ScriptX.Print.HTML- MeadCo.ScriptX.Print.Licensing when using ScritpX.Services for Windows PC     MeadCo.ScriptX.Print.HTML.connect[Async]() or MeadCo.ScriptX.Print.connect[Async]() *MUST* be called before using the apis in this library.See [ScriptX Samples](https://scriptxprintsamples.meadroid.com) for a lot of samples on using this code.Some Add-on APIs lead to system provided dialogs (e.g. printer and paper setup) - support for implementing the dialogs in javascript as simple plug-ins is provided, along with an example implementation using bootstrap/jQuery (see jQuery-MeadCo.ScriptX.Print.UI.js)
 
 **Example**  
 ```js
@@ -135,19 +135,25 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
     * [.MeasurementUnits](#MeadCo.ScriptX.Print.MeasurementUnits) : enum
     * [.ContentType](#MeadCo.ScriptX.Print.ContentType) : enum
     * [.ErrorAction](#MeadCo.ScriptX.Print.ErrorAction) : enum
+    * [.ServiceClasses](#MeadCo.ScriptX.Print.ServiceClasses) : enum
     * [.PrintStatus](#MeadCo.ScriptX.Print.PrintStatus) : enum
     * [.CollateOptions](#MeadCo.ScriptX.Print.CollateOptions) : enum
     * [.DuplexOptions](#MeadCo.ScriptX.Print.DuplexOptions) : enum
+    * [.serviceVersion()](#MeadCo.ScriptX.Print.serviceVersion) ⇒ VersionObject
+    * [.serviceVersionAsync(resolve, reject)](#MeadCo.ScriptX.Print.serviceVersionAsync)
     * [.deviceSettingsFor(sPrinterName)](#MeadCo.ScriptX.Print.deviceSettingsFor) ⇒ DeviceSettingsObject
     * [.useAttributes()](#MeadCo.ScriptX.Print.useAttributes)
     * [.connect(serverUrl, licenseGuid)](#MeadCo.ScriptX.Print.connect)
     * [.connectLite(serverUrl, licenseGuid)](#MeadCo.ScriptX.Print.connectLite)
     * [.connectAsync(serverUrl, licenseGuid, resolve, reject)](#MeadCo.ScriptX.Print.connectAsync)
     * [.connectTestAsync(serverUrl, resolve, reject)](#MeadCo.ScriptX.Print.connectTestAsync)
+    * [.serviceDescription()](#MeadCo.ScriptX.Print.serviceDescription) ⇒ ServiceDescriptionObject
+    * [.serviceDescriptionAsync(resolve, reject)](#MeadCo.ScriptX.Print.serviceDescriptionAsync)
     * [.connectDeviceAndPrinters(deviceInfo, arPrinters)](#MeadCo.ScriptX.Print.connectDeviceAndPrinters)
-    * [.getFromServer(sApi, async, onSuccess, onFail)](#MeadCo.ScriptX.Print.getFromServer)
+    * [.getFromServer(sPrintHtmlApi, async, onSuccess, onFail)](#MeadCo.ScriptX.Print.getFromServer)
     * [.printHtml(contentType, content, htmlPrintSettings, fnDone, fnProgress, data)](#MeadCo.ScriptX.Print.printHtml) ⇒ boolean
     * [.printPdf(document, pdfPrintSettings, fnDone, fnProgress, data)](#MeadCo.ScriptX.Print.printPdf) ⇒ boolean
+    * [.printDirect(contentType, content, fnDone)](#MeadCo.ScriptX.Print.printDirect) ⇒ boolean
     * [.parseAjaxError(logText, jqXhr, textStatus, errorThrown)](#MeadCo.ScriptX.Print.parseAjaxError) ⇒ string
     * [.reportError(errorTxt)](#MeadCo.ScriptX.Print.reportError)
     * [.reportServerError(errorTxt)](#MeadCo.ScriptX.Print.reportServerError)
@@ -158,6 +164,8 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
     * [.PageSize](#MeadCo.ScriptX.Print.PageSize)
     * [.Margins](#MeadCo.ScriptX.Print.Margins)
     * [.DeviceSettingsObject](#MeadCo.ScriptX.Print.DeviceSettingsObject)
+    * [.VersionObject](#MeadCo.ScriptX.Print.VersionObject)
+    * [.ServiceDescriptionObject](#MeadCo.ScriptX.Print.ServiceDescriptionObject)
 
 <br/>
 <a id="MeadCo.ScriptX.Print.onErrorAction"></a>
@@ -290,6 +298,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | URL | number | 1 the url will be downloaded and printed |
 | HTML | number | 2 the passed string is assumed to be a complete html document .. <html>..</html> |
 | INNERHTML | number | 4 the passed string is a complete html document but missing the html tags |
+| STRING | number | 8 the passed string is assumed to contain no html but may contain other language such as ZPL (for direct printing) |
 
 <br/>
 <a id="MeadCo.ScriptX.Print.ErrorAction"></a>
@@ -303,6 +312,20 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | --- | --- | --- |
 | REPORT | number | 1 Call MeadCo.ScriptX.Print.reportServerError(errMsg) |
 | THROW | number | 2 throw an error : throw errMsg |
+
+<br/>
+<a id="MeadCo.ScriptX.Print.ServiceClasses"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.ScriptX.Print.ServiceClasses : enum</h3>Enum for the class of service connected to.
+
+**Read only**: true  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| CLOUD | number | 1 MeadCo Cloud Service |
+| ONPREMISE | number | 2 ScriptX.Services for On Premise Devices |
+| WINDOWSPC | number | 3 ScriptX.Services for Windows PC |
 
 <br/>
 <a id="MeadCo.ScriptX.Print.PrintStatus"></a>
@@ -354,6 +377,23 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | SIMPLEX | number | 1 |
 | VERTICAL | number | 2 |
 | HORIZONTAL | number | 3 |
+
+<br/>
+<a id="MeadCo.ScriptX.Print.serviceVersion"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.ScriptX.Print.serviceVersion() ⇒ VersionObject</h3>Get the version of the service connected to.
+
+**Returns**: VersionObject - the version  
+<br/>
+<a id="MeadCo.ScriptX.Print.serviceVersionAsync"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.ScriptX.Print.serviceVersionAsync(resolve, reject)</h3>Get the version of the service connected to.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| resolve | function | function to call on success |
+| reject | function | function to call on failure |
 
 <br/>
 <a id="MeadCo.ScriptX.Print.deviceSettingsFor"></a>
@@ -423,6 +463,23 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | reject | function | function to call on failure |
 
 <br/>
+<a id="MeadCo.ScriptX.Print.serviceDescription"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.ScriptX.Print.serviceDescription() ⇒ ServiceDescriptionObject</h3>Obtain the description of the service provided by the server
+
+**Returns**: ServiceDescriptionObject - serviceDescription  
+<br/>
+<a id="MeadCo.ScriptX.Print.serviceDescriptionAsync"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.ScriptX.Print.serviceDescriptionAsync(resolve, reject)</h3>Obtain the description of the service provided by the server
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| resolve | function | function to call on success |
+| reject | function | function to call on failure |
+
+<br/>
 <a id="MeadCo.ScriptX.Print.connectDeviceAndPrinters"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
     MeadCo.ScriptX.Print.connectDeviceAndPrinters(deviceInfo, arPrinters)</h3>Cache the given device info and available printers in this static class instanceUsed by libraries that call api/v1/printHtml/htmlPrintDefaults
@@ -436,12 +493,12 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 <br/>
 <a id="MeadCo.ScriptX.Print.getFromServer"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.Print.getFromServer(sApi, async, onSuccess, onFail)</h3>Call a /printHtml API on the server with GET
+    MeadCo.ScriptX.Print.getFromServer(sPrintHtmlApi, async, onSuccess, onFail)</h3>Call a /printHtml API on the server with GET
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| sApi | string | the api to call on the connected server |
+| sPrintHtmlApi | string | the api to call on the connected server |
 | async | bool | true for asynchronous call, false for synchronous |
 | onSuccess | function | function to call on success |
 | onFail | function | function to call on failure |
@@ -459,7 +516,7 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | htmlPrintSettings | object | the html settings to use such as headers and footers, device settings (printer to use, copies etc) are taken from this static |
 | fnDone | function | function to call when printing complete (and output returned), arg is null on no error, else error message. |
 | fnProgress | function | function to call when job status is updated |
-| data | any | object to give pass to fnCallback |
+| data | any | object to give pass to fnProgress |
 
 **Returns**: boolean - - true if a print was started (otherwise an error will be thrown)  
 <br/>
@@ -474,9 +531,22 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 | pdfPrintSettings | object | the settings to use such as rotation, scaling. device settings (printer to use, copies etc) are taken from this static |
 | fnDone | function | function to call when printing complete (and output returned), arg is null on no error, else error message. |
 | fnProgress | function | function to call when job status is updated |
-| data | any | object to give pass to fnCallback |
+| data | any | object to give pass to fnProgress |
 
 **Returns**: boolean - - true if a print was started (otherwise an error will be thrown)  
+<br/>
+<a id="MeadCo.ScriptX.Print.printDirect"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.ScriptX.Print.printDirect(contentType, content, fnDone) ⇒ boolean</h3>Post a request to the server to print a string directly to the current printer. The print is synchronous at the serverand is completed (sent to the printer) when the api returns.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| contentType | ContentType | enum type of content given (string or url) |
+| content | string | the content - a url, or string containing e.g. zpl. |
+| fnDone | function | function to call when printing complete, arg is null on no error, else error message |
+
+**Returns**: boolean - - true if a print was started (otherwise an error will be thrown)         *  
 <br/>
 <a id="MeadCo.ScriptX.Print.parseAjaxError"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
@@ -608,6 +678,41 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | isDefault | boolean | true if this is the default printer on the service |
 | bins | Array.&lt;string&gt; | Array of the names of the available paper sources |
 | forms | Array.&lt;string&gt; | Array of the names of the avbailable paper sizes |
+
+<br/>
+<a id="MeadCo.ScriptX.Print.VersionObject"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.ScriptX.Print.VersionObject</h3>Description of a code version. Semver is used
+
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| major | int | The major version |
+| minor | int | The minor version |
+| build | int | The patch/hotfix version |
+| revision | int | Internal revisions of a build/patch/hotfix |
+| majorRevision | int | ignore |
+| minorRevision | int | ignore |
+
+<br/>
+<a id="MeadCo.ScriptX.Print.ServiceDescriptionObject"></a>
+<h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
+    MeadCo.ScriptX.Print.ServiceDescriptionObject</h3>Information about the service that is connected to - version detail and facilities available
+
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| ServiceClass | ServiceClasses | the class of the service; cloud, onpremise, pc |
+| CurrentAPIVersion | string | the latest version implemented (eg 'v1' or 'v2' etc) |
+| ServiceVersion | VersionObject | implementation version of the service |
+| ServerVersion | VersionObject | The version of ScriptX Server used by the service |
+| ServiceUpgrade | VersionObject | The latest version of the service that is available and later than ServiceVersion/me |
+| AvailablePrinters | Array.&lt;string&gt; | Array of the names of the available printers |
+| PrintHTML | boolean | Printing of HTML is supported |
+| PrintPDF | boolean | Printing of PDF documents is supported |
+| PrintDIRECT | boolean | Direct printing to a print device is supported |
 
 <br/>
 <a id="MeadCo.ScriptX.PrintHTML"></a>

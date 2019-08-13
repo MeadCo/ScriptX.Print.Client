@@ -136,6 +136,7 @@
      * @property {number} URL 1 the url will be downloaded and printed
      * @property {number} HTML 2 the passed string is assumed to be a complete html document .. <html>..</html>
      * @property {number} INNERHTML 4 the passed string is a complete html document but missing the html tags
+     * @property {number} STRING 8 the passed string is assumed to contain no html but may contain other language such as ZPL (for direct printing)
      */
     var enumContentType = {
         URL: 1, // the url will be downloaded and printed (for html and direct printing)
@@ -171,7 +172,7 @@
     /**
      * Enum for the class of service connected to.
      * 
-     * @membnerof MeadCoScriptXPrint
+     * @memberof MeadCoScriptXPrint
      * @typedef { number } ServiceClasses
      * @enum { ServiceClasses }
      * @readonly 
@@ -431,6 +432,7 @@
                 ok: function (data) {
                     progress(requestData, enumPrintStatus.COMPLETED);
                     MeadCo.log("printed ok, no further information");
+                    removeJob(data.jobIdentifier);
                     if (typeof fnDone === "function") {
                         fnDone(null);
                     }
@@ -479,6 +481,9 @@
             OnProgress: fnProgress,
             UserData: data
         };
+
+        // used/required by printAtServer ...
+        requestData.Settings.jobTitle = pdfPrintSettings.jobDescription;
 
         var serverApi = MeadCo.makeApiEndPoint(server, pdfApiLocation);
 
@@ -541,7 +546,8 @@
                 ok: function (data) {
                     progress(requestData, enumPrintStatus.COMPLETED);
                     MeadCo.log("printed ok, no further information");
-                    if (typeof fnDone === "function") {
+                    removeJob(data.jobIdentifier);
+                   if (typeof fnDone === "function") {
                         fnDone(null);
                     }
                 }
@@ -596,6 +602,9 @@
             ContentType: contentType,
             Content: content,
             PrinterName: printerName,
+            Settings: {
+                jobTitle: "Direct print" // not required by the server .. used by printAtServer()
+            },
             Device: deviceSettings[printerName] // not required by the server .. used by printAtServer()
         };
 
@@ -622,6 +631,7 @@
 
                 ok: function (data) {
                     MeadCo.log("printed ok, no further information");
+                    removeJob(data.jobIdentifier); // for direct, by definition there is no queued response
                     if (typeof fnDone === "function") {
                         fnDone(null);
                     }
@@ -1198,6 +1208,30 @@
         },
 
         /**
+         * Get the version of the service connected to.
+         * 
+         * @function serviceVersion
+         * @memberof MeadCoScriptXPrint
+         * @returns {VersionObject} the version
+         */
+        serviceVersion : function() {
+            var sd = this.serviceDescription;
+            return sd.ServiceVersion;
+        },
+
+        /**
+         * Get the version of the service connected to.
+         * 
+         * @function serviceVersionAsync
+         * @memberof MeadCoScriptXPrint
+         * @param {function({VersionObject})} resolve function to call on success
+         * @param {function({errorText})} reject function to call on failure
+         */
+        serviceVersionAsync: function (resolve, reject) {
+            this.serviceDescriptionAsync(function (sd) { resolve(sd.ServiceVersion); }, reject);
+        },
+
+        /**
          * Get/set the cached device settings (papersize etc) for the currently active printer
          * @memberof MeadCoScriptXPrint
          * @property {DeviceSettingsObject} deviceSettings (see API /api/vi/printhtml/deviceInfo/ )
@@ -1354,7 +1388,7 @@
          * @param {function(ServiceDescriptionObject)} resolve function to call on success
          * @param {function(errorText)} reject function to call on failure
          */
-        serviceDescriptionAsync(resolve, reject) {
+        serviceDescriptionAsync: function(resolve, reject) {
 
             if (serviceDescription === null) {
                 getFromServer("", true,
@@ -1454,16 +1488,16 @@
         printPdf: printPdfAtServer,
 
         /**
-         * Post a request to the server to print some html and monitor the print job 
-         * to completion. If the server prints to file then the file is opened for the user (in a new window)
-         * 
+         * Post a request to the server to print a string directly to the current printer. The print is synchronous at the server
+         * and is completed (sent to the printer) when the api returns.
+         *
          * @function printDirect
          * @memberof MeadCoScriptXPrint
          *
          * @param {ContentType} contentType enum type of content given (string or url)
          * @param {string} content the content - a url, or string containing e.g. zpl.
          * @param {function({string})} fnDone function to call when printing complete, arg is null on no error, else error message
-         * @return {boolean} - true if a print was started (otherwise an error will be thrown)
+         * @return {boolean} - true if a print was started (otherwise an error will be thrown)         *
          */
         printDirect: printDirectAtServer,
 

@@ -431,7 +431,7 @@ QUnit.test("factory.printing - do printing with *no* UI", function (assert) {
 
     }, function (errorText) {
         assert.ok(false, "Should have connected to: " + url + " error: " + errorText);
-        done();
+        done(); done(); done(); done(); done(); done(); done(); done(); done();
     });
 
 });
@@ -483,7 +483,7 @@ QUnit.test("factory.printPDF - do printing with mock UI", function (assert) {
 
     }, function (errorText) {
         assert.ok(false, "Should have connected to: " + url + " error: " + errorText);
-        done();
+        done(); done(); done(); done();
     });
 
 });
@@ -554,6 +554,38 @@ QUnit.test("factory.printPDF - do printing with *no* UI and batch print testing"
         done();
         done();
         done();
+    });
+
+});
+
+QUnit.test("factory.rawPrinting", function (assert) {
+
+    var api2 = MeadCo.ScriptX.Print.HTML;
+
+    var done = assert.async(1);
+
+    var url = serverUrl;
+
+    api2.connectAsync(url, licenseGuid, function (data) {
+        assert.ok(true, "Connected to server");
+        done();
+
+        var api = window.factory.rawPrinting;
+
+        assert.ok(api, "Got api");
+
+        api.printer = factory.printing.printer;
+
+        bOk = api.printString("hello");
+        assert.ok(bOk, "printed a string");
+
+        bOk = api.printDocument("label.txt");
+        assert.ok(bOk, "printed a document");
+
+
+    }, function (errorText) {
+        assert.ok(false, "Should have connected to: " + url + " error: " + errorText);
+        done(); done(); done(); done();
     });
 
 });

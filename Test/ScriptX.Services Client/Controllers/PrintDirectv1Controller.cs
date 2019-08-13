@@ -57,16 +57,25 @@ namespace ScriptX.Services_Client.Controllers
 
             if (printer == null)
             {
-                throw new ArgumentException("Printer not available", nameof(requestMessage.PrinterName));
+                throw new ArgumentException("A printer name must be given");
             }
 
             Print printResponse = new Print { Status = PrintRequestStatus.Ok, JobIdentifier = requestMessage.ContentType.ToString(), Message = "No message" };
 
-            if (requestMessage.ContentType != ContentType.Html && requestMessage.ContentType != ContentType.InnerHtml && requestMessage.ContentType != ContentType.Url)
+            if (requestMessage.ContentType != ContentType.Html && requestMessage.ContentType != ContentType.InnerHtml && requestMessage.ContentType != ContentType.Url && requestMessage.ContentType != ContentType.String)
             {
                 printResponse.Status = PrintRequestStatus.SoftError;
                 printResponse.JobIdentifier = "";
                 printResponse.Message = $"Unsupported print content type: {requestMessage.ContentType}";
+            }
+            else
+            {
+                if (printer != "My printer" && printer != "Test printer" )
+                {
+                    printResponse.Status = PrintRequestStatus.SoftError;
+                    printResponse.JobIdentifier = "";
+                    printResponse.Message = $"Printer not available: {printer}";
+                }
             }
 
             counter = 0;
