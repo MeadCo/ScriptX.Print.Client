@@ -70,12 +70,12 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
 
 ```javascript
 <!-- MeadCoScriptXJS Library -->
-<script src="https://cdn.jsdelivr.net/npm/meadco-scriptxjs@1.7.0/src/meadco-scriptx.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/meadco-scriptxjs@1/src/meadco-scriptx.min.js"></script>
 
 <!-- ScriptX Services client emulation libraries - depend on jQuery -->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.1.1/dist/jquery.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.5.4/dist/meadco-scriptxservicesprint.min.js" 
+<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@beta/dist/meadco-scriptxservicesprint.min.js" 
         data-meadco-server="https://scriptxservices.meadroid.com" 
         data-meadco-license="xxx-xxx-xxxxxxx-xxx"></script>
 
