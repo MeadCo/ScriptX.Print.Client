@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.6.0.2";
+    var version = "1.6.0.3";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
     var directApiLocation = "v1/printDirect";
@@ -806,26 +806,34 @@
      */
     function getFromServer(sApi, async, onSuccess, onFail) {
         if (module.jQuery) {
-            var serviceUrl = MeadCo.makeApiEndPoint(server, sApi);
-            MeadCo.log(".ajax() get: " + serviceUrl);
-            module.jQuery.ajax(serviceUrl,
-                {
-                    method: "GET",
-                    dataType: "json",
-                    cache: false,
-                    async: async,
-                    headers: {
-                        "Authorization": "Basic " + btoa(licenseGuid + ":")
-                    }
-                }).done(function (data) {
-                    bConnected = true;
-                    onSuccess(data);
-                })
-                .fail(function (jqXhr, textStatus, errorThrown) {
-                    errorThrown = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.getFromServer:", jqXhr, textStatus, errorThrown);
-                    if (typeof onFail === "function")
-                        onFail(errorThrown);
-                });
+            if (server !== "") {
+                var serviceUrl = MeadCo.makeApiEndPoint(server, sApi);
+                MeadCo.log(".ajax() get: " + serviceUrl);
+                module.jQuery.ajax(serviceUrl,
+                    {
+                        method: "GET",
+                        dataType: "json",
+                        cache: false,
+                        async: async,
+                        headers: {
+                            "Authorization": "Basic " + btoa(licenseGuid + ":")
+                        }
+                    }).done(function (data) {
+                        bConnected = true;
+                        onSuccess(data);
+                    })
+                    .fail(function (jqXhr, textStatus, errorThrown) {
+                        errorThrown = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.getFromServer:", jqXhr, textStatus, errorThrown);
+                        if (typeof onFail === "function")
+                            onFail(errorThrown);
+                    });
+            } else {
+                if (typeof onFail === "function") {
+                    onFail("MeadCo.ScriptX.Print : server connection is not defined.");
+                }
+                else
+                    throw new Error("MeadCo.ScriptX.Print : server connection is not defined.");
+            }
         } else {
             if (typeof onFail === "function") {
                 onFail("MeadCo.ScriptX.Print : no known ajax helper available");
