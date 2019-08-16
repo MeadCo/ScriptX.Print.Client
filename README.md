@@ -15,7 +15,7 @@ The library is used by our extensive set of [samples](https://scriptxprintsample
 
 ## Current Version
 
-1.6.0 Beta 1
+1.6.0 Beta 2
 
 This is the first beta of support for the new Service Description and Direct Printing (Labels, ZPL) APIs. The support requires beta versions of the service implementations are installed.
 
