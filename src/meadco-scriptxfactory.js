@@ -86,7 +86,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.6.0.0";
+    var moduleversion = "1.6.0.3";
     var emulatedVersion = "8.2.0.0";
     var servicesVersion = "";
     var printApi = MeadCo.ScriptX.Print;
@@ -154,11 +154,19 @@
                 case "scriptx.services":
                     if (servicesVersion === "") {
                         if (typeof printApi !== "undefined") {
-                            var sd = printApi.serviceDescription();
-                            if (sd !== null) {
-                                var sv = sd.serviceVersion;
-                                servicesVersion = sv.major + "." + sv.minor + "." + sv.build + "." + sv.revision;
-                            }
+                            var ea = printApi.onErrorAction;
+
+                            printApi.onErrorAction = printApi.ErrorAction.THROW;
+
+                            try {
+                                var sd = printApi.serviceDescription();
+                                if (sd !== null) {
+                                    var sv = sd.serviceVersion;
+                                    servicesVersion = sv.major + "." + sv.minor + "." + sv.build + "." + sv.revision;
+                                }
+                            } catch (e) { servicesVersion = moduleversion; }
+
+                            printApi.onErrorAction = ea;
                         }
                     }
                     v = servicesVersion;

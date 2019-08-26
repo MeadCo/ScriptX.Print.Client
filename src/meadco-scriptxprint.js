@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.6.0.3";
+    var version = "1.6.0.4";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
     var directApiLocation = "v1/printDirect";
@@ -547,7 +547,7 @@
                     progress(requestData, enumPrintStatus.COMPLETED);
                     MeadCo.log("printed ok, no further information");
                     removeJob(data.jobIdentifier);
-                   if (typeof fnDone === "function") {
+                    if (typeof fnDone === "function") {
                         fnDone(null);
                     }
                 }
@@ -596,7 +596,7 @@
                 fnDone("Request to print but no current printer defined.");
             }
             return false;
-        } 
+        }
 
         var requestData = {
             ContentType: contentType,
@@ -1222,7 +1222,7 @@
          * @memberof MeadCoScriptXPrint
          * @returns {VersionObject} the version
          */
-        serviceVersion : function() {
+        serviceVersion: function () {
             var sd = this.serviceDescription;
             return sd.ServiceVersion;
         },
@@ -1382,7 +1382,7 @@
                 getFromServer("", false,
                     function (data) { serviceDescription = data; },
                     function (e) {
-                        MeadCo.ScriptX.Print.reportServerError(e.message);
+                        MeadCo.ScriptX.Print.reportError(e.message);
                     });
             }
             return serviceDescription;
@@ -1396,7 +1396,7 @@
          * @param {function(ServiceDescriptionObject)} resolve function to call on success
          * @param {function(errorText)} reject function to call on failure
          */
-        serviceDescriptionAsync: function(resolve, reject) {
+        serviceDescriptionAsync: function (resolve, reject) {
 
             if (serviceDescription === null) {
                 getFromServer("", true,
