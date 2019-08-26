@@ -6,7 +6,7 @@
 
     assert.equal(MeadCo.ScriptX.LibVersion, "1.6.0", "MeadCo.ScriptX.LibVersion OK");
 
-    assert.equal(MeadCo.ScriptX.Print.version, "1.6.0.2", "MeadCo.ScriptX.Print.version ok");
+    assert.equal(MeadCo.ScriptX.Print.version, "1.6.0.4", "MeadCo.ScriptX.Print.version ok");
  
 });
 
