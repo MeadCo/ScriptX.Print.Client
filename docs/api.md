@@ -734,7 +734,7 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
     * [.printFromUrl(sUrl, fnCallOnDone, fnCallback, data)](#MeadCo.ScriptX.PrintHTML.printFromUrl) ⇒ boolean
     * [.printHtml(sHtml, fnCallOnDone, fnCallback, data)](#MeadCo.ScriptX.PrintHTML.printHtml) ⇒ boolean
     * [.connectLite(serverUrl, licenseGuid)](#MeadCo.ScriptX.PrintHTML.connectLite)
-    * [.connect(serverUrl, licenseGuid)](#MeadCo.ScriptX.PrintHTML.connect)
+    * [.connect(serverUrl, licenseGuid, onFail)](#MeadCo.ScriptX.PrintHTML.connect)
     * [.connectAsync(serverUrl, licenseGuid, resolve, reject)](#MeadCo.ScriptX.PrintHTML.connectAsync)
     * [.Margins](#MeadCo.ScriptX.PrintHTML.Margins)
     * [.PageSettings](#MeadCo.ScriptX.PrintHTML.PageSettings)
@@ -912,13 +912,14 @@ Enum to describe the units used on measurements - **NOTE** please use MeadCo.Scr
 <br/>
 <a id="MeadCo.ScriptX.PrintHTML.connect"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintHTML.connect(serverUrl, licenseGuid)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtaindefault soft html and device settings for the default device as well as the listof available printers. This call is not required if client side code doesnt need to know about available printersbut can assume (at least .connectLite() is required).This call is synchronous and therefore not recommended. Use connectAsync()
+    MeadCo.ScriptX.PrintHTML.connect(serverUrl, licenseGuid, onFail)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtaindefault soft html and device settings for the default device as well as the listof available printers. This call is not required if client side code doesnt need to know about available printersbut can assume (at least .connectLite() is required).This call is synchronous and therefore not recommended. Use connectAsync()
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | serverUrl | string | the 'root' url to the server (the api path will be added by the library) |
 | licenseGuid | string | the license/subscription identifier |
+| onFail | function | the function to call if an error occurs when making the connection |
 
 <br/>
 <a id="MeadCo.ScriptX.PrintHTML.connectAsync"></a>
