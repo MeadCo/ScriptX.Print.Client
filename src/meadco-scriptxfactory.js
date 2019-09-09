@@ -86,7 +86,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.6.0.3";
+    var moduleversion = "1.6.0.4";
     var emulatedVersion = "8.2.0.0";
     var servicesVersion = "";
     var printApi = MeadCo.ScriptX.Print;
@@ -1238,7 +1238,9 @@
         // helpers for wrapper MeadCoJS
         PolyfillInit: function () {
             if (!MeadCo.ScriptX.Print.isConnected) {
-                printHtml.connect("", "");
+                printHtml.connect("", "", function (e) {
+                    MeadCo.warn("Services server connection failed: " + e);
+                });
             }
             return MeadCo.ScriptX.Print.isConnected;
         },

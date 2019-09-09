@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
 
-    var moduleversion = "1.6.0.0";
+    var moduleversion = "1.6.0.1";
 
     /**
      * Enum to describe the units used on measurements - **NOTE** please use MeadCo.ScriptX.Print.MeasurementUnits instead
@@ -643,8 +643,9 @@
          * @memberof MeadCoScriptXPrintHTML
          * @param {string} serverUrl the 'root' url to the server (the api path will be added by the library)
          * @param {string} licenseGuid the license/subscription identifier
+         * @param {function} onFail the function to call if an error occurs when making the connection
          */
-        connect: function (serverUrl, licenseGuid) {
+        connect: function (serverUrl, licenseGuid, onFail) {
             MeadCo.warn("Print.HTML SYNC connection request");
             MeadCo.ScriptX.Print.connectLite(serverUrl, licenseGuid);
             MeadCo.ScriptX.Print.getFromServer("/htmlPrintDefaults/?units=" + settingsCache.page.units, false,
@@ -654,7 +655,7 @@
                     if (data.device !== null) {
                         MeadCo.ScriptX.Print.connectDeviceAndPrinters(data.device, data.availablePrinters);
                     }
-                });
+                }, onFail);
         },
 
         /**
@@ -702,4 +703,3 @@
     };
 
 });
-
