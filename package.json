@@ -52,7 +52,7 @@
     "gulp-cssmin": "^0.2.0",
     "gulp-htmlmin": "^5.0.1",
     "gulp-uglify": "^3.0.1",
-    "handlebars": ">=4.1.2",
+    "handlebars": ">=4.3.0",
     "jsdoc-babel": "^0.3.0",
     "jsdoc-to-markdown": "^5.0.0",
     "merge-stream": "^1.0.1",
