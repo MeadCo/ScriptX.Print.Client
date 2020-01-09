@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>MeadScriptXPrintHtml</id>
-    <version>1.6.0</version>
+    <version>1.6.1</version>
     <title>MeadCo ScriptX.Print Services Library</title>
     <authors>Pete Cole, MeadCo</authors>
     <owners>MeadCo</owners>
@@ -13,20 +13,20 @@
     <description>This library implements an emulation in javascript of the MeadCo ScriptX Add-on for Internet Explorer to bring print services to all browsers. To write javascript code that will work with both the Add-on and ScriptX.Print Services we recommend installing the MeadScriptXJS package, that package has this as a dependency.</description>
     <summary>Javascript emulation of the MeadCo ScriptX Add-on for Internet Explorer to bring print services to all browsers.</summary>
     <releaseNotes>Fixes.</releaseNotes>
-    <copyright>Copyright (c) 2017-2019, Mead &amp; Co Ltd</copyright>
+    <copyright>Copyright (c) 2017-2020, Mead &amp; Co Ltd</copyright>
     <language>en-GB</language>
     <tags>MeadCo, ScriptX, Print, HTML, PDF</tags>
   </metadata>
   <files>
-    <file src="..\src\meadco-core.js" target="content\scripts\MeadCo.ScriptX\meadco-core-1.6.0.js" />
-    <file src="..\src\meadco-scriptxfactory.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxfactory-1.6.0.js" />
-    <file src="..\src\meadco-scriptxprint.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxprint-1.6.0.js" />
-    <file src="..\src\meadco-scriptxprinthtml.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxprinthtml-1.6.0.js" />
-    <file src="..\src\meadco-scriptxprintpdf.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxprintpdf-1.6.0.js" />
-    <file src="..\src\meadco-scriptxprintlicensing.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxprintlicensing-1.6.0.js" />
-    <file src="..\src\meadco-secmgr.js" target="content\scripts\MeadCo.ScriptX\meadco-secmgr-1.6.0.js" />
+    <file src="..\src\meadco-core.js" target="content\scripts\MeadCo.ScriptX\meadco-core-1.6.1.js" />
+    <file src="..\src\meadco-scriptxfactory.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxfactory-1.6.1.js" />
+    <file src="..\src\meadco-scriptxprint.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxprint-1.6.1.js" />
+    <file src="..\src\meadco-scriptxprinthtml.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxprinthtml-1.6.1.js" />
+    <file src="..\src\meadco-scriptxprintpdf.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxprintpdf-1.6.1.js" />
+    <file src="..\src\meadco-scriptxprintlicensing.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxprintlicensing-1.6.1.js" />
+    <file src="..\src\meadco-secmgr.js" target="content\scripts\MeadCo.ScriptX\meadco-secmgr-1.6.1.js" />
 
     <!-- this will shift out to its own package -->
-    <file src="..\src\jQuery-MeadCo.ScriptX.Print.UI.js" target="content\scripts\MeadCo.ScriptX\jQuery-MeadCo.ScriptX.Print.UI-1.6.0.js" />
+    <file src="..\src\jQuery-MeadCo.ScriptX.Print.UI.js" target="content\scripts\MeadCo.ScriptX\jQuery-MeadCo.ScriptX.Print.UI-1.6.1.js" />
   </files>
 </package>

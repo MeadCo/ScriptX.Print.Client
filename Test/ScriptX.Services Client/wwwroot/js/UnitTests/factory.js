@@ -4,7 +4,7 @@ QUnit.test("Namespace basics", function (assert) {
 
     assert.ok(window.factory, "factory namespace exists");
     var api = window.factory;
-    var expectedVersion = "1.6.0.4";
+    var expectedVersion = "1.6.1.4";
     var emulatedVersion = "8.2.0.0";
     var servicesVersion = "11.12.13.14";
 

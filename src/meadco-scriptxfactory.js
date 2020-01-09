@@ -86,7 +86,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.6.0.4";
+    var moduleversion = "1.6.1.4";
     var emulatedVersion = "8.2.0.0";
     var servicesVersion = "";
     var printApi = MeadCo.ScriptX.Print;
@@ -766,11 +766,11 @@
                 }
 
                 if (typeof options.autorotatecenter !== "undefined") {
-                    printPdf.settings.autorotatecenter = options.autorotatecenter
+                    printPdf.settings.autoRotateCenter = options.autorotatecenter
                         ? printPdf.BooleanOption.TRUE
                         : printPdf.BooleanOption.FALSE;
                 } else
-                    printPdf.settings.autorotatecenter = printPdf.BooleanOption.DEFAULT;
+                    printPdf.settings.autoRotateCenter = printPdf.BooleanOption.DEFAULT;
 
                 if (typeof options.orientation !== "undefined") {
                     printPdf.settings.orientation = options.orientation === 1
@@ -848,7 +848,7 @@
                 printPdf.settings.pageRange = iEnhancedFormatting.pageRange;
                 printPdf.settings.pageScaling = settings.viewScale === -1
                     ? printPdf.PdfPageScaling.SHRINKLARGEPAGES
-                    : printPdf.PdfPageScaling.DEFAULT;
+                    : printPdf.PdfPageScaling.UNDEFINED;
                 printPdf.settings.orientation = this.portrait
                     ? printPdf.PageOrientation.PORTRAIT
                     : printPdf.PageOrientation.LANDSCAPE;
