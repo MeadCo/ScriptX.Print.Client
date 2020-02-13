@@ -109,7 +109,7 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
 3. Initialise the MeadCoScriptXJS library
 4. Initilise print parameters
 
-Remove all references to ScriptX.Addon (i.e. the <object /> elements as ScriptX.Addon can only print to locally installed printers).
+Remove all references to ScriptX.Addon (i.e. the &lt;object /&gt; elements as ScriptX.Addon can only print to locally installed printers).
 
 A promise polyfill is required if the browser does not support promises (for example Internet Explorer). 
 We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/promise-polyfill)
@@ -153,7 +153,7 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
 4. Initialise the MeadCoScriptXJS library
 5. Initilise print parameters
 
-Remove all references to ScriptX.Addon (i.e. the <object /> elements as ScriptX.Addon can only print to locally installed printers).
+Remove all references to ScriptX.Addon (i.e. the &lt;object /&gt; elements as ScriptX.Addon can only print to locally installed printers).
 
 A promise polyfill is required if the browser does not support promises (for example Internet Explorer). 
 We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/promise-polyfill)
@@ -171,7 +171,7 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
 
 <!-- .Addon code emulation, connect to on premnie server, no subscription id is required as it is the srver that is licensed.
 <script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.6/dist/meadco-scriptxservicesprint.min.js" 
-        data-meadco-server="https://scriptxservices.meadroid.com" 
+        data-meadco-server="http://<yourlocalserver>/scriptxservices/" 
         data-meadco-subscription=""></script>
 
 <script type="text/javascript">
