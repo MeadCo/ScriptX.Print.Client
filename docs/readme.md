@@ -61,7 +61,9 @@ The extensive API of properties and methods is documented [here](https://www.mea
 #### MeadCoScriptXJS Library
 
 In addition to the ScriptX.Addon API a [javascript library](https://github.com/MeadCo/MeadCoScriptXJS) was developed to extend the API with convenience functions. Started in 2013, this library took the 
-approach of &quot;namespaces&quot; / static classes, which were popular(-ish) then as a means of ensuring no clashes of names etc. A significant amount of code has been written that relies upon this library. 
+approach of &quot;namespaces&quot; / static classes, which were popular(-ish) then as a means of ensuring no clashes of names etc. A significant amount of code has 
+been written that relies upon this library. By definition there is only ever one instance of ScriptX.Addon on a page and therefore a static singleton javascript 'class' instance
+is perfectly adequate.
 
 It is also known and acknowleged that much code utilising ScriptX.Addon predates React, Angular, Vue etc. etc. and exists in a world of relatively un-complex page operations; a "print button" and some code to 
 set print parameters and then print (though the back-end code generating HTML to be printed was likely complex and comprehensive).
@@ -99,20 +101,46 @@ MeadCo.ScriptX is an object providing for verified initialisation and a number o
 </script>
 ````
 
+The final &quot;trick&quot; is that if MeadCo.ScriptX.Printing is pointed to an implementation of the .Addon API in javascript and that implementation uses the ScriptX.Services API to perform printing then code using the MeadCoScriptXJS library will work 
+with .Addon and .Services with no changes in simple cases and few changes in more complex cases.
+
 ### Support for .Addon Emulation in ScriptX.Services
 
-The &quot;trick&quot; is that if MeadCo.ScriptX.Printing is pointed to an implementation of the .Addon API in javascript and that implementation uses the ScriptX.Services API to perform printing then code using the MeadCoScriptXJS library will work 
-with .Addon and .Services with no changes in simple cases and few changes in more complex cases.
+The MeadCo ScriptX.Service Client Library implements a heirarchy of static 'classes' at the bottom of which is an implementation of the .Addon API (factory, factory.printing et al) in javascript. The implementation
+is necessarily imperfect with some imperfections, in particular the support for asynchronous behaviour such as the ubiquitous WaitFortSpoolingComplete() API being impossible to emulate fully. Such imperfections are
+smoothed by use of the MeadCoScriptXJS library which provides a layer to hide the differences betweeen .Addon and .Services and so enable a single code base.
+
+#### User Interface
+
+The library does not implement any UI - Printer or Print Settings dialogs. This enables decoupling from any UI dependencies that may be problematic - for example, to Bootstrap, or to nopt Bootstrap?
+
+However, a few APIs do 'require' a UI, for example, prompted printing.
+
+A simple extension mechanism is implemented into which implementation of UI may be patched.
+
+All that is required is to implement the named functions.
+
+| function | Purpose |
+|--- | --- |
+| MeadCo.ScriptX.Print.UI.PageSetup(function (bAccepted) {} ) | |
+| MeadCo.ScriptX.Print.UI.PrinterSettings(function (bAccepted) {} ) | |
+
+An exemplar implemenation of UI is [provided](../src/jQuery-MeadCo.ScriptX.Print.UI.js) (implemented assuming Bootstrap and jQuery)
 
 ### Summary
 
 | File | Namespace | Purpose |
 |--- |--- |---|
 | meadco-core.js | MeadCo | Core functionality required for creating objects in the namespace and other general utilities |
-| meadco-scriptxprint.js | MeadCo.ScriptX.Print | Implements calls to the ScriptX.Services Web API including processing of responses with tracking of jobs at the server |
+| meadco-scriptxprint.js | MeadCo.ScriptX.Print | Implements calls to the ScriptX.Services Web print APIs including processing of responses with tracking of jobs at the server |
 | meadco-scriptxprinthtml.js | MeadCo.ScriptX.Print.HTML | Implements support for the structures required by the Web API for html printing and functions to gather the HTML to be printed from the current document |
 | meadco-scriptxprintpdf.js | MeadCo.ScriptX.Print.PDF | Implements support for the structures required by the Web API for printing PDF documents |
 | meadco-scriptxfactory.js | &quot;factory&quot; | Implements emulations of factory, factory.printing..., factory.rawPrinting, factory.js |
+
+| File | Namespace | Purpose |
+| meadco-scriptxprintlicensing.js | MeadCo.ScriptX.Print.Licensing | Implements calls to the ScriptX.Services Web licensing API |
+| meadco-secmgr.js | &quot;secmgr&quot; | Implements emulation of secmgr |
+
 
 
 Note that the [MeadCoScriptXJS](https://github.com/MeadCo/MeadCoScriptXJS) library does not have to be used. In its absense, meadco-scriptxfactory.js and its dependencies on the hierarchy implement a usable emulation of &quot;factory.printing&quot; though functionality such as WaitForSpoolingComplete is not a compatible emulation.
