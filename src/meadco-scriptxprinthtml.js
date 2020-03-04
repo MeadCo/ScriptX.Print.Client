@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
 
-    var moduleversion = "1.6.1.0";
+    var moduleversion = "1.6.2.1";
 
     /**
      * Enum to describe the units used on measurements - **NOTE** please use MeadCo.ScriptX.Print.MeasurementUnits instead
@@ -160,7 +160,7 @@
     {
         set header(str) {
             MeadCo.log("MeadCo.ScriptX.Print.HTML setting header: " + str);
-            if (str !== null && str.length === 0) {
+            if (str && str.length === 0) {
                 str = "%20";
             }
             settingsCache.header = str;
@@ -170,7 +170,7 @@
         },
 
         set footer(str) {
-            if (str !== null && str.length === 0) {
+            if (str && str.length === 0) {
                 str = "%20";
             }
             settingsCache.footer = str;
@@ -181,7 +181,7 @@
         },
 
         set headerFooterFont(str) {
-            if (str.length === 0) {
+            if (str && str.length === 0) {
                 str = "%20";
             }
             settingsCache.headerFooterFont = str;
