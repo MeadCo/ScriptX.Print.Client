@@ -96,7 +96,7 @@ namespace ScriptX.Services_Client.Controllers
                 IsLocal = true,
                 PaperSourceName = "Upper",
                 Status = 0,
-                Copies = 1
+                Copies = 1,
             };
         }
 
@@ -136,7 +136,11 @@ namespace ScriptX.Services_Client.Controllers
 
                 Settings = new HtmlPrintSettings
                 {
-                    Header = "Default header from server"
+                    Header = "Default header from server",
+                    Footer = "Default footer from server",
+                    Page = new PageSettings { Orientation = PageOrientation.Landscape, Margins= { Bottom = "1", Left="1", Right="2",Top="2" }, Units = MeasurementUnits.Inches},
+                    ViewScale = -1,
+                    PrintBackgroundColorsAndImages = BooleanOption.True
                 }
             }; 
         }

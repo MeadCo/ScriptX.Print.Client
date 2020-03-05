@@ -5,13 +5,13 @@
 // A lightweight plug-in not implemented as a plug-in as it will only be used once or twice on a document
 // so polluting jQuery is unneccessary.
 //
-// Trigger AttachPrintAction with attribute data-meado-ui = "print"
-//
 // Dependency: bootstrap-select.js : Bootstrap-select v1.10.0 (http://silviomoreto.github.io/bootstrap-select)
 // The above dependency is completely optional - the code looks for the enabling class.
 //
+// Dependency: input-spinner.js : Input Spinner v1.0 (https://github.com/vsn4ik/input-spinner)
+// The above dependency is optional - without it the spin buttons will not work.
+//
 // Dependency: meadco-scriptxfactory.js
-
 
 (function (topLevelNs, $, undefined) {
     "use strict";
@@ -25,46 +25,24 @@
 
     var ui = MeadCo.createNS("MeadCo.ScriptX.Print.UI");
 
-    ui.moduleversion = "1.6.1.0";
+    ui.version = "1.6.2.1";
 
-    // MeadCo.ScriptX.Print.UI.AttachPrintAction(
-    //  el - clickable html element
-    //
-    ui.AttachPrintAction = function (el) {
-        console.log("starting PrintUI.AttachPrintAction");
-
-        var $to = $(el);
-
-        $to.click(function () {
-            var $this = $(this);
-
-            switch ($this.data("action")) {
-                case "document":
-                    break;
-
-                case "remote":
-                    MeadCo.ScriptX.Print.HTML.printFromUrl($this.data("url"));
-                    break;
-
-                case "element":
-                    break;
-            }
-        });
+    if ( !$.fn.modal ) {
+        console.error("MeadCo.ScriptX.Print.UI requires bootstrap Modal");
+        return;
     }
-
-    console.log("Autostart meadco.PrintUI ...");
-
-    $("[data-meadco-ui='print']").each(function (i) {
-        ui.AttachPrintAction(this);
-    });
 
     // MeadCo.ScriptX.Print.UI.PageSetup()
     ui.PageSetup = function (fnCallBack) {
         var bAccepted = false;
 
         // page setup modal to attach to the page
+        //
+        // Simple override is to include the dialog in the page with id="dlg-printoptions"
+        //
         if (!$('#dlg-printoptions').length) {
-            var dlg = '<style>' +
+            console.log("UI.PageSetup bootstrap modal version: " + $.fn.modal.Constructor.VERSION);
+            var dlg3 = '<style>' +
                 '.modal-dialog legend { font-size: 1.2em; font-weight: bold; margin-bottom: 10px; } ' +
                 '.modal-dialog fieldset { padding-bottom: 0px; } ' +
                 '.modal-dialog .options-modal-body { padding-bottom: 0px !important; } ' +
@@ -224,9 +202,19 @@
                 '<!-- /.modal-dialog -->' +
                 '</div>' +
                 '<!-- /.modal -->';
+
+            var dlg = dlg3;
+
             $('body').append(dlg);
 
-            $('[name="fld-measure"]').on('change', function () {
+            if ($.fn.spinner) {
+                $('#dlg-printoptions [data-trigger="spinner"]').spinner();
+            }
+        }
+
+        $('[name="fld-measure"]')
+            .off('change')
+            .on('change', function () {
                 switch ($(this).val()) {
                     case '2': // mm from inches
                         $('#dlg-printoptions input[type=text][data-rule=currency]').each(function () {
@@ -242,12 +230,8 @@
                 }
             });
 
-            if ($.fn.spinner) {
-                $('#dlg-printoptions [data-trigger="spinner"]').spinner();
-            }
-        }
-
         // reattach click handler as callback function scoped variables may (probably will) have changed
+        var x = $('#btn-saveoptions');
         $('#btn-saveoptions')
             .off("click")
             .on("click", function (ev) {
@@ -281,7 +265,7 @@
 
         // grab the paper size options from printerControl
         var $paperselect = $('#fld-papersize');
-        var printerControl = MeadCo.ScriptX.Printing.printerControl(MeadCo.ScriptX.Printing.currentPrinter);
+        var printerControl = factory.printing.printerControl(factory.printing.currentPrinter);
         $('#fld-papersize > option').remove();
         for (var i in printerControl.Forms) {
             $paperselect.append("<option>" + printerControl.Forms[i] + "</option>");
@@ -291,7 +275,7 @@
             $paperselect.selectpicker('refresh');
         }
 
-        $paperselect.val(MeadCo.ScriptX.Printing.paperSize);
+        $paperselect.val(factory.printing.paperSize);
 
         $dlg.modal('show');
 
@@ -430,7 +414,7 @@
         fillAndSetBinsList();
 
         var $dlg = $('#dlg-printersettings');
-        var printer = MeadCo.ScriptX.Printing;
+        var printer = factory.printing;
         $dlg.find('#fld-collate').prop('checked', printer.collate);
         $dlg.find('#fld-copies').val(printer.copies);
 
@@ -452,14 +436,14 @@
             settings.header = $dlg.find('#fld-header').val();
             settings.footer = $dlg.find('#fld-footer').val();
 
-            MeadCo.ScriptX.Printing.paperSize = $('#fld-papersize').val();
+            factory.printing.paperSize = $('#fld-papersize').val();
         }
     }
 
     function savePrinterSettings() {
         var $dlg = $('#dlg-printersettings');
         var printHtml = MeadCo.ScriptX.Print.HTML;
-        var printer = MeadCo.ScriptX.Printing;
+        var printer = factory.printing;
         var settings = MeadCo.ScriptX.Print.HTML.settings;
 
         if ($dlg.length) {
@@ -478,7 +462,7 @@
 
     // fill printers dropdown with those available
     function fillPrintersList() {
-        var printer = MeadCo.ScriptX.Printing;
+        var printer = factory.printing;
         var $printers = $('#fld-printerselect');
 
         $('#fld-printerselect > option').remove();
@@ -495,7 +479,7 @@
     }
 
     function onSelectPrinter(printerName) {
-        var printer = MeadCo.ScriptX.Printing;
+        var printer = factory.printing;
         var currentPrinterName = printer.currentPrinter;
         var currentSource = printer.paperSource;
 
@@ -518,7 +502,7 @@
     }
 
     function fillAndSetBinsList() {
-        var printer = MeadCo.ScriptX.Printing;
+        var printer = factory.printing;
         var binsArray = printer.printerControl(printer.CurrentPrinter).Bins;
         var $bins = $('#fld-papersource');
 
