@@ -5,10 +5,9 @@
 // A lightweight plug-in not implemented as a plug-in as it will only be used once or twice on a document
 // so polluting jQuery is unneccessary.
 //
-// Dependency: bootstrap-select.js : Bootstrap-select v1.10.0 (http://silviomoreto.github.io/bootstrap-select)
+// Optional dependency: bootstrap-select.js : Bootstrap-select v1.10.0 (http://silviomoreto.github.io/bootstrap-select)
 // The above dependency is completely optional - the code looks for the enabling class.
 //
-// Dependency: meadco-scriptxfactory.js
 
 (function (topLevelNs, $, undefined) {
     "use strict";
@@ -249,19 +248,21 @@
         $dlg.find('#fld-header').val(settings.header);
         $dlg.find('#fld-footer').val(settings.footer);
 
-        // grab the paper size options from printerControl
+        // grab the paper size options 
+        var printApi = MeadCo.ScriptX.Print;
         var $paperselect = $('#fld-papersize');
-        var printerControl = factory.printing.printerControl(factory.printing.currentPrinter);
+        var forms = printApi.deviceSettingsFor(printApi.printerName).forms;
+
         $('#fld-papersize > option').remove();
-        for (var i in printerControl.Forms) {
-            $paperselect.append("<option>" + printerControl.Forms[i] + "</option>");
+        for (var i in forms) {
+            $paperselect.append("<option>" + forms[i] + "</option>");
         }
 
         if ($paperselect.hasClass("selectpicker")) {
             $paperselect.selectpicker('refresh');
         }
 
-        $paperselect.val(factory.printing.paperSize);
+        $paperselect.val(MeadCo.ScriptX.Print.deviceSettings.paperSizeName);
 
         $dlg.modal('show');
 
@@ -422,13 +423,14 @@
 
     // show available sources and options 
     function showPrinterSettings() {
+        var printApi = MeadCo.ScriptX.Print;
+        var settings = printApi.deviceSettings;
 
         fillAndSetBinsList();
 
         var $dlg = $('#dlg-printersettings');
-        var printer = factory.printing;
-        $dlg.find('#fld-collate').prop('checked', printer.collate);
-        $dlg.find('#fld-copies').val(printer.copies);
+        $dlg.find('#fld-collate').prop('checked', printApi.deviceSettings.collate === printApi.CollateOptions.TRUE);
+        $dlg.find('#fld-copies').val(settings.copies);
 
     }
 
@@ -448,56 +450,68 @@
             settings.header = $dlg.find('#fld-header').val();
             settings.footer = $dlg.find('#fld-footer').val();
 
-            factory.printing.paperSize = $('#fld-papersize').val();
+            MeadCo.ScriptX.Print.deviceSettings.paperSizeName = $('#fld-papersize').val();
         }
     }
 
     function savePrinterSettings() {
         var $dlg = $('#dlg-printersettings');
-        var printHtml = MeadCo.ScriptX.Print.HTML;
-        var printer = factory.printing;
-        var settings = MeadCo.ScriptX.Print.HTML.settings;
+        var printApi = MeadCo.ScriptX.Print;
 
         if ($dlg.length) {
-            // set printer first as this triggers a getDeviceSettings call to the server
-            // which would overwrite any settings previously assigned from the dialog
-            // printer.currentPrinter = $('#fld-printerselect').selectpicker('val');
-            // printer.paperSource = $('#fld-papersource').selectpicker('val');
+            // must set the printer first and note this might trigger a getDeviceSettings call to the server
+            var a = printApi.onErrorAction;
 
-            printer.currentPrinter = $('#fld-printerselect').val();
-            printer.paperSource = $('#fld-papersource').val();
+            printApi.onErrorAction = printApi.ErrorAction.THROW;
 
-            printer.collate = $dlg.find('#fld-collate').prop('checked');
-            printer.copies = $dlg.find('#fld-copies').val();
+            // eat all and any errors. finally might be better but
+            // minifiers dont like empty blocks 
+            try {
+                printApi.printerName = $('#fld-printerselect').val();
+                printApi.onErrorAction = a;
+            }
+            catch (e) {
+                printApi.onErrorAction = a;
+            }
+
+            // update settings for the active printer
+            var settings = printApi.deviceSettings;
+            settings.paperSourceName = $('#fld-papersource').val();
+            settings.collate = $dlg.find('#fld-collate').prop('checked') ? printApi.CollateOptions.TRUE : printApi.CollateOptions.FALSE
+            settings.copies = $dlg.find('#fld-copies').val();
         }
     }
 
     // fill printers dropdown with those available
     function fillPrintersList() {
-        var printer = factory.printing;
+        var printApi = MeadCo.ScriptX.Print;
         var $printers = $('#fld-printerselect');
+        var arrPrinters = printApi.availablePrinterNames;
 
         $('#fld-printerselect > option').remove();
 
-        var name;
-        for (var i = 0; (name = printer.EnumPrinters(i)).length > 0; i++) {
-            $printers.append("<option>" + name);
+        for (var i = 0; i < arrPrinters.length; i++) {
+            $printers.append("<option>" + arrPrinters[i]);
         }
 
-        $printers.val(printer.currentPrinter);
+        $printers.val(printApi.printerName);
         if ($printers.hasClass("selectpicker")) {
             $printers.selectpicker('refresh');
         }
     }
 
     function onSelectPrinter(printerName) {
-        var printer = factory.printing;
-        var currentPrinterName = printer.currentPrinter;
-        var currentSource = printer.paperSource;
+        var printApi = MeadCo.ScriptX.Print;
+        var currentPrinterName = printApi.printerName;
+        var currentSource = printApi.deviceSettings.paperSourceName;
+
+        var a = printApi.onErrorAction;
+
+        printApi.onErrorAction = printApi.ErrorAction.THROW;
 
         try {
             // select the printer to get its default source and size.
-            printer.currentPrinter = printerName;
+            printApi.printerName = printerName;
             fillAndSetBinsList();
         } catch (e) {
             alert("Sorry, an error has occurred:\n\n" + e.message);
@@ -505,17 +519,19 @@
 
         // revert the current printer in ScriptX
         try {
-            printer.currentPrinter = currentPrinterName;
-            printer.paperSource = currentSource;
+            printApi.printerName = currentPrinterName;
+            printApi.deviceSettings.paperSourceName = currentSource;
         } catch (e) {
             alert("Sorry, an error has occurred restoring current printer settings:\n\n" + e.message);
         }
 
+        printApi.onErrorAction = a;
+
     }
 
     function fillAndSetBinsList() {
-        var printer = factory.printing;
-        var binsArray = printer.printerControl(printer.CurrentPrinter).Bins;
+        var printApi = MeadCo.ScriptX.Print;
+        var binsArray = printApi.deviceSettingsFor(printApi.printerName).bins;
         var $bins = $('#fld-papersource');
 
         $('#fld-papersource > option').remove();
@@ -523,7 +539,7 @@
             $bins.append("<option>" + binsArray[i]);
         }
 
-        $bins.val(printer.paperSource);
+        $bins.val(printApi.deviceSettings.paperSourceName);
 
         if ($bins.hasClass("selectpicker")) {
             $bins.selectpicker('refresh');
