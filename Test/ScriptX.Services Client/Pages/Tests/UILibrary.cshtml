@@ -7,7 +7,6 @@
 <h1>@ViewData["Title"]</h1>
 
 @section Styles {
-    <link rel="stylesheet" href="~/vendor/css/input-spinner.css" />
 }
 
 @section Scripts {
@@ -16,11 +15,9 @@
         <script src="/scripts/src/meadco-scriptxprint.js" asp-append-version="true"></script>
         <script src="/scripts/src/meadco-scriptxprinthtml.js" asp-append-version="true"></script>
         <script src="/scripts/src/meadco-scriptxfactory.js" asp-append-version="true"></script>
-        <script src="~/vendor/js/input-spinner.js"></script>
         <script src="/scripts/src/jQuery-MeadCo.ScriptX.Print.UI.js" asp-append-version="true"></script>
     </environment>
     <environment exclude="Development">
-        <script src="~/vendor/js/input-spinner.min.js"></script>
         <script asp-append-version="true" src="/scripts/dist/meadco-scriptxservicesprintUI.min.js"></script>
     </environment>
 
@@ -102,21 +99,21 @@
                             <label class="col-md-4 col-form-label text-right col-form-label-sm">Left</label>
                             <div class="col-md-3">
                                 <div class="input-group spinner" data-trigger="spinner">
-                                    <input name="fld-marginL" id="fld-marginL" type="text" class="form-control text-right" data-rule="currency" value="1" />
-                                    <span class="input-group-addon">
+                                    <input name="fld-marginL" id="fld-marginL" type="text" class="form-control text-right" data-rule="measure" value="1" />
+                                    <div class="input-group-append input-group-addon">
                                         <a class="spin-up" href="javascript:;" data-spin="up">
-                                            <i class="fa fa-caret-up"></i>
+                                            <i class="fas fa-caret-up"></i>
                                         </a>
                                         <a class="spin-down" href="javascript:;" data-spin="down">
-                                            <i class="fa fa-caret-down"></i>
+                                            <i class="fas fa-caret-down"></i>
                                         </a>
-                                    </span>
+                                    </div>
                                 </div>
                             </div>
                             <label class="col-md-2 col-form-label text-right col-form-label-sm">Top</label>
                             <div class="col-md-3">
                                 <div class="input-group spinner" data-trigger="spinner">
-                                    <input name="fld-marginT" id="fld-marginT" type="text" class="form-control text-right" data-rule="currency" value="1" />
+                                    <input name="fld-marginT" id="fld-marginT" type="text" class="form-control text-right" data-rule="measure" value="1" />
                                     <span class="input-group-addon">
                                         <a class="spin-up" href="javascript:;" data-spin="up">
                                             <i class="fa fa-caret-up"></i>
@@ -133,7 +130,7 @@
                             <label class="col-md-4 col-form-label text-right col-form-label-sm">Right</label>
                             <div class="col-md-3">
                                 <div class="input-group spinner" data-trigger="spinner">
-                                    <input name="fld-marginR" id="fld-marginR" type="text" class="form-control text-right" data-rule="currency" value="1" />
+                                    <input name="fld-marginR" id="fld-marginR" type="text" class="form-control text-right" data-rule="measure" value="1" />
                                     <span class="input-group-addon">
                                         <a class="spin-up" href="javascript:;" data-spin="up">
                                             <i class="fa fa-caret-up"></i>
@@ -147,7 +144,7 @@
                             <label class="col-md-2 col-form-label text-right col-form-label-sm">Bottom</label>
                             <div class="col-md-3">
                                 <div class="input-group spinner" data-trigger="spinner">
-                                    <input name="fld-marginB" id="fld-marginB" type="text" class="form-control text-right" data-rule="currency" value="1" />
+                                    <input name="fld-marginB" id="fld-marginB" type="text" class="form-control text-right" data-rule="measure" value="1" />
                                     <span class="input-group-addon">
                                         <a class="spin-up" href="javascript:;" data-spin="up">
                                             <i class="fa fa-caret-up"></i>
@@ -187,8 +184,6 @@
         </div>
     </div>
 </div>
-
-<br/>
 
 @section TestScripts {
     <script src="~/js/UnitTests/serverinfo.js" asp-append-version="true"></script>

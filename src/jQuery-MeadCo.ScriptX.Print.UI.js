@@ -8,9 +8,6 @@
 // Dependency: bootstrap-select.js : Bootstrap-select v1.10.0 (http://silviomoreto.github.io/bootstrap-select)
 // The above dependency is completely optional - the code looks for the enabling class.
 //
-// Dependency: input-spinner.js : Input Spinner v1.0 (https://github.com/vsn4ik/input-spinner)
-// The above dependency is optional - without it the spin buttons will not work.
-//
 // Dependency: meadco-scriptxfactory.js
 
 (function (topLevelNs, $, undefined) {
@@ -118,61 +115,21 @@
                 '<div class="form-group">' +
                 '<label class="control-label col-md-4">Left</label>' +
                 '<div class="col-md-3">' +
-                '<div class="input-group spinner" data-trigger="spinner">' +
-                '<input name="fld-marginL" id="fld-marginL" type="text" class="form-control text-right" data-rule="currency" value="1" />' +
-                '<span class="input-group-addon">' +
-                '<a class="spin-up" href="javascript:;" data-spin="up">' +
-                '<i class="fa fa-caret-up"></i>' +
-                '</a>' +
-                '<a class="spin-down" href="javascript:;" data-spin="down">' +
-                '<i class="fa fa-caret-down"></i>' +
-                '</a>' +
-                '</span>' +
-                '</div>' +
+                '<input name="fld-marginL" id="fld-marginL" type="text" class="form-control text-right" data-rule="measure" value="1" />' +
                 '</div>' +
                 '<label class="control-label col-md-2">Top</label>' +
                 '<div class="col-md-3">' +
-                '<div class="input-group spinner" data-trigger="spinner">' +
-                '<input name="fld-marginT" id="fld-marginT" type="text" class="form-control text-right" data-rule="currency" value="1" />' +
-                '<span class="input-group-addon">' +
-                '<a class="spin-up" href="javascript:;" data-spin="up">' +
-                '<i class="fa fa-caret-up"></i>' +
-                '</a>' +
-                '<a class="spin-down" href="javascript:;" data-spin="down">' +
-                '<i class="fa fa-caret-down"></i>' +
-                '</a>' +
-                '</span>' +
-                '</div>' +
+                '<input name="fld-marginT" id="fld-marginT" type="text" class="form-control text-right" data-rule="measure" value="1" />' +
                 '</div>' +
                 '</div>' +
                 '<div class="form-group">' +
                 '<label class="control-label col-md-4">Right</label>' +
                 '<div class="col-md-3">' +
-                '<div class="input-group spinner" data-trigger="spinner">' +
-                '<input name="fld-marginR" id="fld-marginR" type="text" class="form-control text-right" data-rule="currency" value="1" />' +
-                '<span class="input-group-addon">' +
-                '<a class="spin-up" href="javascript:;" data-spin="up">' +
-                '<i class="fa fa-caret-up"></i>' +
-                '</a>' +
-                '<a class="spin-down" href="javascript:;" data-spin="down">' +
-                '<i class="fa fa-caret-down"></i>' +
-                '</a>' +
-                '</span>' +
-                '</div>' +
+                '<input name="fld-marginR" id="fld-marginR" type="text" class="form-control text-right" data-rule="measure" value="1" />' +
                 '</div>' +
                 '<label class="control-label col-md-2">Bottom</label>' +
                 '<div class="col-md-3">' +
-                '<div class="input-group spinner" data-trigger="spinner">' +
-                '<input name="fld-marginB" id="fld-marginB" type="text" class="form-control text-right" data-rule="currency" value="1" />' +
-                '<span class="input-group-addon">' +
-                '<a class="spin-up" href="javascript:;" data-spin="up">' +
-                '<i class="fa fa-caret-up"></i>' +
-                '</a>' +
-                '<a class="spin-down" href="javascript:;" data-spin="down">' +
-                '<i class="fa fa-caret-down"></i>' +
-                '</a>' +
-                '</span>' +
-                '</div>' +
+                '<input name="fld-marginB" id="fld-marginB" type="text" class="form-control text-right" data-rule="measure" value="1" />' +
                 '</div>' +
                 '</div>' +
                 '</fieldset>' +
@@ -206,10 +163,6 @@
             var dlg = dlg3;
 
             $('body').append(dlg);
-
-            if ($.fn.spinner) {
-                $('#dlg-printoptions [data-trigger="spinner"]').spinner();
-            }
         }
 
         $('[name="fld-measure"]')
@@ -217,13 +170,13 @@
             .on('change', function () {
                 switch ($(this).val()) {
                     case '2': // mm from inches
-                        $('#dlg-printoptions input[type=text][data-rule=currency]').each(function () {
+                        $('#dlg-printoptions input[type=text][data-rule=measure]').each(function () {
                             convertAndDisplayinchesToMM($(this));
                         });
                         break;
 
                     case '1': // inches from mm
-                        $('#dlg-printoptions input[type=text][data-rule=currency]').each(function () {
+                        $('#dlg-printoptions input[type=text][data-rule=measure]').each(function () {
                             convertAndDisplayMMtoInches($(this));
                         });
                         break;
@@ -231,7 +184,6 @@
             });
 
         // reattach click handler as callback function scoped variables may (probably will) have changed
-        var x = $('#btn-saveoptions');
         $('#btn-saveoptions')
             .off("click")
             .on("click", function (ev) {
@@ -320,17 +272,7 @@
                 '<div class="form-group">' +
                 '<label class="control-label col-md-4">Copies</label>' +
                 '<div class="col-md-3">' +
-                '<div class="input-group spinner" data-trigger="spinner">' +
                 '<input name="fld-copies" id="fld-copies" type="text" class="form-control text-right" data-rule="quantity" value="1" />' +
-                '<span class="input-group-addon">' +
-                '<a class="spin-up" href="javascript:;" data-spin="up">' +
-                '<i class="fa fa-caret-up"></i>' +
-                '</a>' +
-                '<a class="spin-down" href="javascript:;" data-spin="down">' +
-                '<i class="fa fa-caret-down"></i>' +
-                '</a>' +
-                '</span>' +
-                '</div>' +
                 '</div>' +
                 '<div class="col-md-5">' +
                 '<div class="checkbox2">' +
@@ -370,10 +312,6 @@
                         break;
                 }
             });
-
-            if ($.fn.spinner) {
-                $('#dlg-printersettings [data-trigger="spinner"]').spinner();
-            }
 
             $('#dlg-printersettings #fld-printerselect').change(function (ev) {
                 onSelectPrinter($(this).val());
