@@ -5,26 +5,32 @@
     ViewData["NoQunit"] = "true";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Choose a test</h1>
+    <div class="text-center">
+        <h1 class="display-4">Choose a test</h1>
 
-    <div class="list-group">
-        <a asp-page="/Tests/Core" asp-area="" class="list-group-item list-group-item-action">MeadCo.Core</a>
-        <a asp-page="/Tests/CoreNamespaces" asp-area="" class="list-group-item list-group-item-action">MeadCo.Core namespaces</a>
-        <a asp-page="/Tests/ServiceDescription" asp-area="" class="list-group-item list-group-item-action">Service description</a>
+        <div class="list-group">
+            <a asp-page="/Tests/Core" asp-area="" class="list-group-item list-group-item-action">MeadCo.Core</a>
+            <a asp-page="/Tests/CoreNamespaces" asp-area="" class="list-group-item list-group-item-action">MeadCo.Core namespaces</a>
+            <a asp-page="/Tests/ServiceDescription" asp-area="" class="list-group-item list-group-item-action">Service description</a>
 
-        <a asp-page="/Tests/Print" asp-area="" class="list-group-item list-group-item-action">MeadCo.ScriptX.Print</a>
-        <a asp-page="/Tests/PrintHtml" asp-area="" class="list-group-item list-group-item-action">MeadCo.ScriptX.Print.HTML</a>
-        <a asp-page="/Tests/PrintPdf" asp-area="" class="list-group-item list-group-item-action">MeadCo.ScriptX.Print.PDF</a>
-        <a asp-page="/Tests/Licensing" asp-area="" class="list-group-item list-group-item-action">MeadCo.ScriptX.Print.Licensing</a>
-        <a asp-page="/Tests/Factory" asp-area="" class="list-group-item list-group-item-action">window.factory</a>
-        <a asp-page="/Tests/secmgr" asp-area="" class="list-group-item list-group-item-action">window.secmgr</a>
+            <a asp-page="/Tests/Print" asp-area="" class="list-group-item list-group-item-action">MeadCo.ScriptX.Print</a>
+            <a asp-page="/Tests/PrintHtml" asp-area="" class="list-group-item list-group-item-action">MeadCo.ScriptX.Print.HTML</a>
+            <a asp-page="/Tests/PrintPdf" asp-area="" class="list-group-item list-group-item-action">MeadCo.ScriptX.Print.PDF</a>
+            <a asp-page="/Tests/Licensing" asp-area="" class="list-group-item list-group-item-action">MeadCo.ScriptX.Print.Licensing</a>
+            <a asp-page="/Tests/Factory" asp-area="" class="list-group-item list-group-item-action">window.factory</a>
+            <a asp-page="/Tests/secmgr" asp-area="" class="list-group-item list-group-item-action">window.secmgr</a>
+        </div>
+
+        <p>&nbsp;</p>
+
+        <div class="list-group">
+            <a asp-page="/Tests/UILibrary" asp-area="" class="list-group-item list-group-item-action">UI Library</a>
+        </div>
+
+        <p>&nbsp;</p>
+
+        <div class="list-group">
+            <a asp-page="/Tests/DevTest" asp-area="" class="list-group-item list-group-item-action">Scratchpad testing tests</a>
+            <a asp-page="/Tests/GetHtml" asp-area="" class="list-group-item list-group-item-action">Verify form data preservation</a>
+        </div>
     </div>
-
-    <p>&nbsp;</p>
-
-    <div class="list-group">
-        <a asp-page="/Tests/DevTest" asp-area="" class="list-group-item list-group-item-action">Scratchpad testing tests</a>
-        <a asp-page="/Tests/GetHtml" asp-area="" class="list-group-item list-group-item-action">Verify form data preservation</a>
-    </div>
-</div>
