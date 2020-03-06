@@ -1,6 +1,22 @@
-## MeadCo ScriptX Service Client Library
+## MeadCo ScriptX.Services Client Library
 
-The MeadCo ScriptX Service Client Library brings an emulation of MeadCo's ScriptX Add-on for Internet Explorer on (x86) Windows to any browser on any device by
+<p align="center">
+	<a href="https://github.com/MeadCo/ScriptX.Print.Client/releases/latest" target="_blank">
+        <img alt="GitHub release (latest SemVer)" src="https://img.shields.io/github/v/release/MeadCo/ScriptX.Print.Client">
+    </a>
+	<a href="https://www.npmjs.com/package/scriptxprint-html" target="_blank">
+		<img alt="npm" src="https://img.shields.io/npm/v/scriptxprint-html">
+	</a>
+	<a href="https://www.nuget.org/packages/MeadScriptXPrintHtml" target="_blank">
+        <img alt="Nuget" src="https://img.shields.io/nuget/v/MeadScriptXPrintHtml">
+    </a>
+	<br>
+	<a href="https://github.com/MeadCo/ScriptX.Print.Client/blob/master/LICENSE" target="_blank">
+		<img alt="MIT License" src="https://img.shields.io/github/license/MeadCo/ScriptX.Print.Client">
+	</a>
+</p>
+
+The MeadCo ScriptX.Services Client Library brings an emulation of MeadCo's ScriptX Add-on for Internet Explorer on (x86) Windows to any browser on any device by
 working with [MeadCo ScriptX.Services](https://www.meadroid.com/Features/ScriptXServices) where-ever the service may be:
 
 * in the cloud at [scriptxservices.meadroid.com](https://scriptxservices.meadroid.com)
@@ -12,12 +28,6 @@ significant levels of compatibility with in-browser script written for ScriptX.A
 It may also be used 'stand-alone' although the code is not very modern due to the requirement to support older versions of Internet Explorer.
 
 The library is used by our extensive set of [samples](https://scriptxprintsamples.meadroid.com). 
-
-## Current Version
-
-1.6.2
-
-Includes support for the new Service Description and Direct Printing (Labels, ZPL) service APIs.
 
 ## Packages 
 
@@ -41,16 +51,23 @@ Or, for print only to cloud/on premise services,
 <script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.6.2/dist/meadco-scriptxservicesprint.min.js"></script>
 ```
 
+<p>
+    <br/>
+	<a href="https://www.jsdelivr.com/package/npm/scriptxprint-html" target="_blank">
+		<img alt="jsDelivr hits (npm)" src="https://img.shields.io/jsdelivr/npm/hm/scriptxprint-html">
+	</a>
+</p>
+
 #### Distribution packages
 
 Some minimised collections are provided:
 
 | Name | Purpose |
 |---|---|
-| meadco-scriptxservicesprint.min.js | All core modules print including window.factory emulation. No UI modules are included nor support for licensing for ScriptX Services on Windows PC.  |
-| meadco-scriptxservicesprintUI.min.js | As above but includes Page and Print setup UI dialogs.  |
-| meadco-scriptxservices.min.js | All modules including window.factory and window.secmgr emulation to support licensing for ScriptX Services on Windows PC. No UI modules are included. |
-| meadco-scriptxservicesUI.min.js | As above but includes Page and Print setup UI dialogs.  |
+| meadco-scriptxservices.min.js | All modules including window.factory and window.secmgr emulation to fully support ScriptX Services on Windows PC. No UI modules are included. |
+| meadco-scriptxservicesUI.min.js | As above but includes Page and Print setup UI dialogs (require Bootstrap 3/4).  |
+| meadco-scriptxservicesprint.min.js | All core modules print including window.factory emulation. No UI modules are included nor support for licensing for ScriptX Services on Windows PC. Intended for working with ScriptX.Services on Cloud or On Premise. |
+| meadco-scriptxservicesprintUI.min.js | As above but includes Page and Print setup UI dialogs (require Bootstrap 3/4).  |
 | meadco-scriptxserviceslicensing.min.js | window.secmgr emulation support for licensing for ScriptX Services on Windows PC. |
 
 ### Nuget Gallery
@@ -192,6 +209,8 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
 
 
 ### Resources
+
+* [Getting Started with ScriptX.Services](https://www.meadroid.com/Developers/KnowledgeBank/HowToGuides/ScriptXServices/GettingStarted)
 
 * [API Reference](docs/readme.md)
 
