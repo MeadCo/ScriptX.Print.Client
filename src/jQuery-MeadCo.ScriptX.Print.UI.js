@@ -14,7 +14,7 @@
 
     var ui = MeadCo.createNS("MeadCo.ScriptX.Print.UI");
 
-    ui.version = "1.6.2.1";
+    ui.version = "1.6.3.1";
 
     // MeadCo.ScriptX.Print.UI.PageSetup()
     ui.PageSetup = function (fnCallBack) {
