@@ -1,0 +1,24 @@
+﻿@page
+@{
+    ViewData["Title"] = "-PrintToFile.js";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+
+@section Scripts {
+    <environment include="Development">
+        <script src="/scripts/src/meadco-core.js" asp-append-version="true"></script>
+        <script src="/scripts/src/meadco-scriptxprint.js" asp-append-version="true"></script>
+        <script src="/scripts/src/meadco-scriptxprinthtml.js" asp-append-version="true"></script>
+        <script src="/scripts/src/meadco-scriptxfactory.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script asp-append-version="true" src="/scripts/dist/meadco-scriptxservicesprint.min.js"></script>
+    </environment>
+}
+@section TestScripts {
+    <script src="~/js/UnitTests/serverinfo.js" asp-append-version="true"></script>
+    <script src="~/js/UnitTests/printtofile.js" asp-append-version="true"></script>
+}
+

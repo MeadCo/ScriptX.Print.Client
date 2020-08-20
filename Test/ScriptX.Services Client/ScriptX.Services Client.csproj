@@ -15,6 +15,9 @@
 
 
   <ItemGroup>
+    <Reference Include="MeadCo.ScriptX.Print.Licensing">
+      <HintPath>..\..\Libraries\MeadCo.ScriptX.Print.Licensing.dll</HintPath>
+    </Reference>
     <Reference Include="MeadCo.ScriptX.Print.Messaging">
       <HintPath>..\..\Libraries\MeadCo.ScriptX.Print.Messaging.dll</HintPath>
     </Reference>

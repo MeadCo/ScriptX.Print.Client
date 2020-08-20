@@ -8,7 +8,7 @@ QUnit.test("Namespace basics", function (assert) {
 
     var api = window.secmgr;
 
-    assert.strictEqual(api.version, "1.6.3.0", "Correct version");
+    assert.strictEqual(api.version, "1.7.0.0", "Correct version");
     assert.strictEqual(api.result, 0, "Default calue of result is 0");
     assert.notOk(api.validLicense, "Default validLicense is false");
 

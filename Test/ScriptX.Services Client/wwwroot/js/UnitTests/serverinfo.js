@@ -11,6 +11,7 @@ var badLicenseGuid = "123";
 MeadCo.logEnabled = true;
 
 MeadCo.ScriptX.Print.reportServerError = function (txt) {
+    console.log("ReportServerError: ", txt);
     $("#qunit-fixture").text(txt);
 };
 

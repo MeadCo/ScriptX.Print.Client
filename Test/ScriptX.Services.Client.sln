@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.168
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30406.217
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{F483EA25-6581-4C95-80F9-42E54B1866FD}"
 	ProjectSection(SolutionItems) = preProject
@@ -52,6 +52,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScriptX.Services Client", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{492456B7-42C2-42E0-9579-9775FA833DD1}"
 	ProjectSection(SolutionItems) = preProject
+		..\Libraries\MeadCo.ScriptX.Print.Licensing.dll = ..\Libraries\MeadCo.ScriptX.Print.Licensing.dll
 		..\Libraries\MeadCo.ScriptX.Print.Messaging.dll = ..\Libraries\MeadCo.ScriptX.Print.Messaging.dll
 	EndProjectSection
 EndProject
