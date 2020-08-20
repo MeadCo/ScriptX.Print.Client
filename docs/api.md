@@ -658,6 +658,7 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 | Name | Type | Description |
 | --- | --- | --- |
 | printerName | string | The name of the printer |
+| printToFileName | string | The name of a the file to send print output to (for Windows PC and ) |
 | paperSizeName | string | The descriptive name of the papersize, e.g. "A4" |
 | paperSourceName | string | The descriptive name of the paper source, e.g. "Upper tray" |
 | collate | CollateOptions | The collation to use when printing |
