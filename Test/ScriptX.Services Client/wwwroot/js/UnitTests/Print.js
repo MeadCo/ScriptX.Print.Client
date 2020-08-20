@@ -5,7 +5,7 @@ QUnit.test("Namespace basics", function (assert) {
     assert.ok(MeadCo.ScriptX.Print, "MeadCo.ScriptX.Print namespace exists");
     var api = MeadCo.ScriptX.Print;
 
-    assert.equal(api.version, "1.6.3.0", "Correct version");
+    assert.equal(api.version, "1.7.0.0", "Correct version");
 
     assert.equal(api.ContentType.URL, 1, "ContentType enum is OK");
     assert.equal(api.ContentType.XX, undefined, "Unknown ContentType enum is OK");
@@ -486,7 +486,7 @@ QUnit.test("Direct print string to unknown printer", function (assert) {
     api.printerName = "A printer";
 
     bPrinted = api.printDirect(api.ContentType.STRING, "OK", function (errorText) {
-        assert.strictEqual(errorText, "Server error", "Bad printer name results in error");
+        assert.strictEqual(errorText, "Printer not available: A printer", "Bad printer name results in correct error");
         assert.equal($("#qunit-fixture").text(), "Printer not available: A printer", "Correct error reported via dialog");
         done();
     });

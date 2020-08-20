@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using MeadCo.ScriptX.Print.Messaging.Requests;
 using MeadCo.ScriptX.Print.Messaging.Responses;
+using MeadCo.ScriptX.Print.Messaging.Models;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -17,8 +20,6 @@ namespace ScriptX.Services_Client.Controllers
     {
         private ILogger _logger;
         private IMockAuthentication _mockAuthentication;
-
-        private static int counter = 0;
 
         public PrintDirectv1Controller(ILogger<PrintDirectv1Controller> logger, IMockAuthentication mockAuthentication)
         {
@@ -78,7 +79,6 @@ namespace ScriptX.Services_Client.Controllers
                 }
             }
 
-            counter = 0;
             _logger.LogInformation("Returning {status} [{message}], jobToken: {token}", printResponse.Status, printResponse.Message, printResponse.JobIdentifier);
 
             return printResponse;

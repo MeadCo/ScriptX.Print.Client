@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.6.3.0";
+    var version = "1.7.0.0";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
     var directApiLocation = "v1/printDirect";
@@ -74,6 +74,7 @@
      * @typedef DeviceSettingsObject
      * @memberof MeadCoScriptXPrint
      * @property {string} printerName The name of the printer
+     * @property {string} printToFileName The name of a the file to send print output to (for Windows PC and )
      * @property {string} paperSizeName The descriptive name of the papersize, e.g. "A4"
      * @property {string} paperSourceName The descriptive name of the paper source, e.g. "Upper tray"
      * @property {CollateOptions} collate The collation to use when printing
@@ -425,7 +426,7 @@
                     removeJob(data.jobIdentifier);
                     if (typeof fnDone === "function") {
                         MeadCo.log("Call fnDone");
-                        fnDone("Server error");
+                        fnDone(data.message);
                     }
                 },
 
@@ -625,7 +626,7 @@
                     removeJob(data.jobIdentifier);
                     if (typeof fnDone === "function") {
                         MeadCo.log("Call fnDone");
-                        fnDone("Server error");
+                        fnDone(data.message);
                     }
                 },
 

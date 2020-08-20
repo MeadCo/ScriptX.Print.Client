@@ -68,9 +68,12 @@ namespace ScriptX.Services_Client.Controllers
             }
 
             string q = "";
+            Uri docUri;
+
             try
             {
-                q = requestMessage.Document.Query;
+                docUri = new Uri(requestMessage.Document);
+                q = docUri.Query;
             }
             catch (Exception e) {
                 return new Print { Status = PrintRequestStatus.SoftError, Message = e.Message };
@@ -82,7 +85,7 @@ namespace ScriptX.Services_Client.Controllers
 
             Print printResponse = new Print { Status = PrintRequestStatus.QueuedToDevice, JobIdentifier = $"{jobId}:job", Message = "No message" };
 
-            if ( requestMessage.Document.IsUnc )
+            if (docUri.IsUnc)
             {
                 printResponse.Status = PrintRequestStatus.SoftError;
                 printResponse.JobIdentifier = "";

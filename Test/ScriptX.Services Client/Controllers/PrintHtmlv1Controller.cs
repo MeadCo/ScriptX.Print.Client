@@ -193,12 +193,21 @@ namespace ScriptX.Services_Client.Controllers
 
             Print printResponse = new Print { Status = PrintRequestStatus.QueuedToDevice, JobIdentifier = requestMessage.ContentType.ToString(), Message="No message" };
 
-            if (requestMessage.ContentType != ContentType.Html && requestMessage.ContentType != ContentType.InnerHtml && requestMessage.ContentType != ContentType.Url )
+            if (requestMessage.ContentType == ContentType.String || !string.IsNullOrEmpty(requestMessage.Device.PrintToFileName) )
             {
                 printResponse.Status = PrintRequestStatus.SoftError;
                 printResponse.JobIdentifier = "";
-                printResponse.Message = $"Unsupported print content type: {requestMessage.ContentType}"; 
+                printResponse.Message = $"PrintToFileName: {requestMessage.Device.PrintToFileName}";
             }
+            else {
+                if (requestMessage.ContentType != ContentType.Html && requestMessage.ContentType != ContentType.InnerHtml && requestMessage.ContentType != ContentType.Url)
+                {
+                    printResponse.Status = PrintRequestStatus.SoftError;
+                    printResponse.JobIdentifier = "";
+                    printResponse.Message = $"Unsupported print content type: {requestMessage.ContentType}";
+                }
+            }
+
 
             counter = 0;
             _logger.LogInformation("Returning {status} [{message}], jobToken: {token}", printResponse.Status, printResponse.Message, printResponse.JobIdentifier);
@@ -245,6 +254,9 @@ namespace ScriptX.Services_Client.Controllers
 
                     case ContentType.Html:
                         js.Status = ++counter < 3 ? PrintHtmlStatus.Printing : PrintHtmlStatus.Completed;
+                        break;
+
+                    case ContentType.String:
                         break;
 
                     default:
