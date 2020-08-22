@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.7.0.0";
+    var version = "1.7.0.1";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
     var directApiLocation = "v1/printDirect";
@@ -119,7 +119,7 @@
 
     var server = ""; // url to the server, server is CORS restricted
     var licenseGuid = "";
-    var bConnected = false;
+    var bConnected = false; // true when default device settings have been obtained from a .services server
 
     var bDoneAuto = false;
 
@@ -820,7 +820,6 @@
                             "Authorization": "Basic " + btoa(licenseGuid + ":")
                         }
                     }).done(function (data) {
-                        bConnected = true;
                         onSuccess(data);
                     })
                     .fail(function (jqXhr, textStatus, errorThrown) {
@@ -1428,7 +1427,7 @@
         },
 
         /**
-         * true if the library has succesfully connected to a server.
+         * true if the library has succesfully connected to a server and the default device settings obtained.
          * 
          * @memberof MeadCoScriptXPrint
          * @property {bool} isConnected true if the library has succesfully connected to a server.
