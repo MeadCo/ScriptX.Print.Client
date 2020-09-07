@@ -55,7 +55,7 @@
     // protected API
     var module = this;
     var version = "1.7.0.1"; // matches the highest version number of sub-classes.
-    var bLog = false;
+    var bLog = ((typeof (MeadCo) !== "undefined" && typeof (MeadCo.logEnable) !== "undefined")) ? MeadCo.logEnable : false;
 
     var log = function (str) {
         if (bLog) {
@@ -120,7 +120,7 @@
      * @returns {string} The error text to display
      */
     function parseError(logText, jqXhr, textStatus, errorThrown) {
-        warn("**warning: AJAX call failure in " + logText + ": [" +
+        error("**warning: AJAX call failure in " + logText + ": [" +
             textStatus +
             "], [" +
             errorThrown +
@@ -147,8 +147,13 @@
                 }
             }
         }
+        else {
+            if (typeof jqXhr.responseJSON !== "object" && typeof jqXhr.responseText === "string" && jqXhr.responseText.length > 0 ) {
+                errorThrown = jqXhr.responseText;
+            }
+        }
 
-        log(" error parsed to --> [" + errorThrown + "]");
+        error(" error parsed to --> [" + errorThrown + "]");
         return errorThrown;
     }
 

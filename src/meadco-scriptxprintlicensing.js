@@ -24,14 +24,14 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.Licensing', function () {
-    var moduleversion = "1.7.0.1";
+    var moduleversion = "1.7.0.2";
     var apiLocation = "v1/licensing";
 
     var server = ""; // url to the server, server is CORS restricted
     var licenseGuid = "";
     var licenseRevision = 0;
     var licensePath = ""; // "" => subscription (cloud) not client for Workstation, => value for client license
-    var lastError = "";
+    var lastError = "No license applied";
 
     var module = this;
 
