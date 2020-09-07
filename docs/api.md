@@ -1,7 +1,13 @@
 <br/>
 <a id="MeadCo"></a>
 <h2 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo : object</h2>Static class for namespace creation and core utility functions for ScriptX.Services client libraries.This must be included before any other files from this package.The implementation is for use in a browser only, not general runtime javascript environments.This code is necessarily 'old-fashioned' as it may find itself running in old versions of IE.
+    MeadCo : object</h2>Static class for namespace creation and core utility functions for ScriptX.Services client libraries.
+
+This must be included before any other files from this package.
+
+The implementation is for use in a browser only, not general runtime javascript environments.
+
+This code is necessarily 'old-fashioned' as it may find itself running in old versions of IE.
 
 
 * [MeadCo](#MeadCo) : object
@@ -79,7 +85,8 @@
 **Returns**: object - static object for the namespace  
 **Example**  
 ```js
-var ui = MeadCo.createNS("MeadCo.ScriptX.Print.UI");ui.Show = function() { alert("hello"); }
+var ui = MeadCo.createNS("MeadCo.ScriptX.Print.UI");
+ui.Show = function() { alert("hello"); }
 ```
 <br/>
 <a id="MeadCo.makeApiEndPoint"></a>
@@ -110,16 +117,74 @@ var ui = MeadCo.createNS("MeadCo.ScriptX.Print.UI");ui.Show = function() { aler
 <br/>
 <a id="factory"></a>
 <h2 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    factory : object</h2>MeadCo ScriptX 'window.factory' shim (support for modern browsers and IE 11) JS client library.<br/>The ScriptX Add-on for Internet Explorer is included on a html document with an &lt;object /&gt; element with a de-facto standard id of 'factory': &lt;object id='factory' /&gt;.The object is referenced with the property window.factory which exposes properties and methods to define print setting and perform operations such as printing a document or frame.The object has three further properties:- object  - js- rawPrinting  - printing  - printerControl  - enhancedFormattingThis javascript 'module' provides partial emulation of window.factory, window.factory.object and window.factory.object.jsFull emulation (and almost complete implementation) is provided for window.factory.printing, window.factory.printing.printerControl, window.factory.printing.enhancedFormatting. The most notable absent implementation is an implementation of print preview.Full emulation is provided for window.factory.rawPrinting. Please note that the implementation is synchronous and browsers will issue a warning to the console.ScriptX Add-on for Internet Explorer intercepts the browser UI for printing. For obvious reasons this is not possible with javascript, however ::<strong>PLEASE NOTE:</strong> This library replaces window.print()Full documentation on the properties/methods is provided by the [technical reference documentation](https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn) for the ScriptX Add-on for Internet Explorer. That documentation is not reproduced here.If the startup script determines that the ScriptX Add.on for IE is already active then it will quietly give priority to the object. In other words, the Add-on has precedence on Internet Explorer.This enables the same experience (almost) to be delivered to any browser on any device with the same html/javascript code.It is strongly recommended that the [MeadCoScriptJS library](https://github.com/MeadCo/MeadCoScriptXJS) is used in conjunction with this library as it provides code (Promises) to assistwith working with the significant difference between the synchronous nature of the functions of ScriptX.Add-on (which hide the underlying asynchrony) and the asynchronous nature of javascript AJAX processing.Requires:- MeadCo.Core- MeadCo.ScriptX.Print- MeadCo.ScriptX.Print.HTML- MeadCo.ScriptX.Print.Licensing when using ScritpX.Services for Windows PC     MeadCo.ScriptX.Print.HTML.connect[Async]() or MeadCo.ScriptX.Print.connect[Async]() *MUST* be called before using the apis in this library.See [ScriptX Samples](https://scriptxprintsamples.meadroid.com) for a lot of samples on using this code.Some Add-on APIs lead to system provided dialogs (e.g. printer and paper setup) - support for implementing the dialogs in javascript as simple plug-ins is provided, along with an example implementation using bootstrap/jQuery (see jQuery-MeadCo.ScriptX.Print.UI.js)
+    factory : object</h2>MeadCo ScriptX 'window.factory' shim (support for modern browsers and IE 11) JS client library.<br/>
+
+The ScriptX Add-on for Internet Explorer is included on a html document with an &lt;object /&gt; element with a de-facto standard id of 'factory': &lt;object id='factory' /&gt;.
+
+The object is referenced with the property window.factory which exposes properties and methods to define print setting and perform operations such as printing a document or frame.
+
+The object has three further properties:
+- object
+  - js
+- rawPrinting  
+- printing
+  - printerControl
+  - enhancedFormatting
+
+This javascript 'module' provides partial emulation of window.factory, window.factory.object and window.factory.object.js
+
+Full emulation (and almost complete implementation) is provided for window.factory.printing, window.factory.printing.printerControl, window.factory.printing.enhancedFormatting. The most notable absent implementation is an implementation of print preview.
+
+Full emulation is provided for window.factory.rawPrinting. Please note that the implementation is synchronous and browsers will issue a warning to the console.
+
+ScriptX Add-on for Internet Explorer intercepts the browser UI for printing. For obvious reasons this is not possible with javascript, however ::
+
+<strong>PLEASE NOTE:</strong> This library replaces window.print()
+
+Full documentation on the properties/methods is provided by the [technical reference documentation](https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn) for the ScriptX Add-on for Internet Explorer. That documentation is not reproduced here.
+
+If the startup script determines that the ScriptX Add.on for IE is already active then it will quietly give priority to the object. In other words, the Add-on has precedence on Internet Explorer.
+
+This enables the same experience (almost) to be delivered to any browser on any device with the same html/javascript code.
+
+It is strongly recommended that the [MeadCoScriptJS library](https://github.com/MeadCo/MeadCoScriptXJS) is used in conjunction with this library as it provides code (Promises) to assist
+with working with the significant difference between the synchronous nature of the functions of ScriptX.Add-on (which hide the underlying asynchrony) and the asynchronous nature of javascript AJAX processing.
+
+Requires:
+- MeadCo.Core
+- MeadCo.ScriptX.Print
+- MeadCo.ScriptX.Print.HTML
+
+- MeadCo.ScriptX.Print.Licensing when using ScritpX.Services for Windows PC
+     
+MeadCo.ScriptX.Print.HTML.connect[Async]() or MeadCo.ScriptX.Print.connect[Async]() *MUST* be called before using the apis in this library.
+
+See [ScriptX Samples](https://scriptxprintsamples.meadroid.com) for a lot of samples on using this code.
+
+Some Add-on APIs lead to system provided dialogs (e.g. printer and paper setup) - support for implementing the dialogs in javascript as simple plug-ins is provided, along with an example implementation using bootstrap/jQuery (see jQuery-MeadCo.ScriptX.Print.UI.js)
 
 **Example**  
 ```js
-MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ... dialog code ...},   PrinterSettings: function(fnDialgCompleteCallBack) { ... dialog code ...}}
+MeadCo.ScriptX.Print.UI = {
+   PageSetup: function(fnDialgCompleteCallBack) { ... dialog code ...},
+   PrinterSettings: function(fnDialgCompleteCallBack) { ... dialog code ...}
+}
 ```
 <br/>
 <a id="MeadCo.ScriptX.Print"></a>
 <h2 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.Print : object</h2>MeadCo.ScriptX.PrintA static class wrapping calls to the server API. Requires: meadco-core.jsIncludes processing of calls to the print api that return "printing to file" including collecting the file output. Provides attribute based connection to the server.Synchronous AJAX calls are deprecated in all browsers but may be useful to "quick start" use of older code. It is recommended that code is movedto using asynchronous calls as soon as practical. The MeadCoScriptXJS library can assist with this as it delivers promise rather than callback based code.
+    MeadCo.ScriptX.Print : object</h2>MeadCo.ScriptX.Print
+
+A static class wrapping calls to the server API. 
+
+Requires: meadco-core.js
+
+Includes processing of calls to the print api that return "printing to file" including collecting the file output. 
+
+Provides attribute based connection to the server.
+
+Synchronous AJAX calls are deprecated in all browsers but may be useful to "quick start" use of older code. It is recommended that code is moved
+to using asynchronous calls as soon as practical. The MeadCoScriptXJS library can assist with this as it delivers promise rather than callback based code.
 
 
 * [MeadCo.ScriptX.Print](#MeadCo.ScriptX.Print) : object
@@ -250,7 +315,8 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 <br/>
 <a id="MeadCo.ScriptX.Print.activeJobs"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.Print.activeJobs</h3>The number of jobs there are actgive at the server for this client(same as MeadCo.ScriptX.Print.queue.length)
+    MeadCo.ScriptX.Print.activeJobs</h3>The number of jobs there are actgive at the server for this client
+(same as MeadCo.ScriptX.Print.queue.length)
 
 **Read only**: true  
 **Properties**
@@ -274,7 +340,8 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 <br/>
 <a id="MeadCo.ScriptX.Print.MeasurementUnits"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.Print.MeasurementUnits : enum</h3>Enum to describe the units used on measurements. Please be aware that (sadly) these enum values do *not* match  the values by the MeadCo ScriptX COM Servers. Please use MeadCo.ScriptX.MeasurementUnits (declared in MeadCoScriptJS) form compatibility
+    MeadCo.ScriptX.Print.MeasurementUnits : enum</h3>Enum to describe the units used on measurements. Please be aware that (sadly) these enum values do *not* match  
+the values by the MeadCo ScriptX COM Servers. Please use MeadCo.ScriptX.MeasurementUnits (declared in MeadCoScriptJS) form compatibility
 
 **Read only**: true  
 **Properties**
@@ -398,7 +465,8 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 <br/>
 <a id="MeadCo.ScriptX.Print.deviceSettingsFor"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.Print.deviceSettingsFor(sPrinterName) ⇒ DeviceSettingsObject</h3>Get the device settings (papersize etc) for the named printer. This call is synchronous and not recommended.
+    MeadCo.ScriptX.Print.deviceSettingsFor(sPrinterName) ⇒ DeviceSettingsObject</h3>Get the device settings (papersize etc) for the named printer. This call is synchronous 
+and not recommended.
 
 
 | Param | Type | Description |
@@ -409,16 +477,48 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 <br/>
 <a id="MeadCo.ScriptX.Print.useAttributes"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.Print.useAttributes()</h3>search for processing attibutes for connection and subscription/license and processthem. The attibutes can be on any elementdata-meadco-server value is the root url, api/v1/printhtml, api/v1/licensing will be added by the librarydata-meadco-syncinit default is true for synchronous calls to the server, value 'false' to use asynchronous calls to the serverdata-meadco-subscription present => cloud/on premise service, value is the subscription GUIDdata-meadco-license present => for Windows PC service, value is the license GUIDIf data-meadco-license is present then the following additional attributes can be used:data-meadco-license-revision, value is the revision number of the licensedata-meadco-license-path,, value is the path to the license file (sxlic.mlf). A value of "warehouse" will cause the license to be downloaded from MeadCo's License WarehouseSynchronous AJAX calls are deprecated in all browsers but may be useful to "quick start" use of older code. It is recommended that code is movedto using asynchronous calls as soon as practical. The MeadCoScriptXJS library can assist with this as it delivers promise rather than callback based code.
+    MeadCo.ScriptX.Print.useAttributes()</h3>search for processing attibutes for connection and subscription/license and process
+them. The attibutes can be on any element
+
+data-meadco-server value is the root url, api/v1/printhtml, api/v1/licensing will be added by the library
+data-meadco-syncinit default is true for synchronous calls to the server, value 'false' to use asynchronous calls to the server
+
+data-meadco-subscription present => cloud/on premise service, value is the subscription GUID
+data-meadco-license present => for Windows PC service, value is the license GUID
+
+If data-meadco-license is present then the following additional attributes can be used:
+
+data-meadco-license-revision, value is the revision number of the license
+data-meadco-license-path,, value is the path to the license file (sxlic.mlf). A value of "warehouse" will cause the license to be downloaded from MeadCo's License Warehouse
+
+Synchronous AJAX calls are deprecated in all browsers but may be useful to "quick start" use of older code. It is recommended that code is moved
+to using asynchronous calls as soon as practical. The MeadCoScriptXJS library can assist with this as it delivers promise rather than callback based code.
 
 **Example**  
 ```js
-<!-- an example connection to an On Premise server for ScriptX.Services --><script src="lib/meadco-scriptxservicesprintUI.min.js"      data-meadco-server="https://app.corpservices/"      data-meadco-subscription="" data-meadco-syncinit="false"></script>;<!-- an example connection to ScriptX.Services for Windows PC --><script src="lib/meadco-scriptxservicesUI.min.js"     data-meadco-server="http://127.0.0.1:41191"      data-meadco-license="{6BC6808B-D645-40B6-AE80-E9D0825797EF}"      data-meadco-syncinit="false"      data-meadco-license-path="warehouse"     data-meadco-license-revision="3"></script>
+<!-- an example connection to an On Premise server for ScriptX.Services -->
+<script src="lib/meadco-scriptxservicesprintUI.min.js" 
+     data-meadco-server="https://app.corpservices/" 
+     data-meadco-subscription="" data-meadco-syncinit="false">
+</script>;
+
+<!-- an example connection to ScriptX.Services for Windows PC -->
+<script src="lib/meadco-scriptxservicesUI.min.js"
+     data-meadco-server="http://127.0.0.1:41191" 
+     data-meadco-license="{6BC6808B-D645-40B6-AE80-E9D0825797EF}" 
+     data-meadco-syncinit="false" 
+     data-meadco-license-path="warehouse"
+     data-meadco-license-revision="3">
+</script>
 ```
 <br/>
 <a id="MeadCo.ScriptX.Print.connect"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.Print.connect(serverUrl, licenseGuid)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtainthe device settings for the default printer. This call is synchronous and therefore not recommended. Use connectAsync()
+    MeadCo.ScriptX.Print.connect(serverUrl, licenseGuid)</h3>Specify the server to use and the subscription/license id. 
+
+Attempt to connect to the defined ScriptX.Services server and obtain
+the device settings for the default printer. This call is synchronous 
+and therefore not recommended. Use connectAsync()
 
 
 | Param | Type | Description |
@@ -440,7 +540,10 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 <br/>
 <a id="MeadCo.ScriptX.Print.connectAsync"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.Print.connectAsync(serverUrl, licenseGuid, resolve, reject)</h3>Specify the server to use and the subscription/license id.Attempt to connect to the defined ScriptX.Services server and obtainthe device settings for the default printer.
+    MeadCo.ScriptX.Print.connectAsync(serverUrl, licenseGuid, resolve, reject)</h3>Specify the server to use and the subscription/license id.
+
+Attempt to connect to the defined ScriptX.Services server and obtain
+the device settings for the default printer.
 
 
 | Param | Type | Description |
@@ -482,7 +585,9 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 <br/>
 <a id="MeadCo.ScriptX.Print.connectDeviceAndPrinters"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.Print.connectDeviceAndPrinters(deviceInfo, arPrinters)</h3>Cache the given device info and available printers in this static class instanceUsed by libraries that call api/v1/printHtml/htmlPrintDefaults
+    MeadCo.ScriptX.Print.connectDeviceAndPrinters(deviceInfo, arPrinters)</h3>Cache the given device info and available printers in this static class instance
+
+Used by libraries that call api/v1/printHtml/htmlPrintDefaults
 
 
 | Param | Type | Description |
@@ -506,7 +611,8 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 <br/>
 <a id="MeadCo.ScriptX.Print.printHtml"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.Print.printHtml(contentType, content, htmlPrintSettings, fnDone, fnProgress, data) ⇒ boolean</h3>Post a request to the server to print some html and monitor the print job to completion. If the server prints to file then the file is opened for the user (in a new window)
+    MeadCo.ScriptX.Print.printHtml(contentType, content, htmlPrintSettings, fnDone, fnProgress, data) ⇒ boolean</h3>Post a request to the server to print some html and monitor the print job 
+to completion. If the server prints to file then the file is opened for the user (in a new window)
 
 
 | Param | Type | Description |
@@ -522,7 +628,8 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 <br/>
 <a id="MeadCo.ScriptX.Print.printPdf"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.Print.printPdf(document, pdfPrintSettings, fnDone, fnProgress, data) ⇒ boolean</h3>Post a request to the server to print some html and monitor the print job to completion. If the server prints to file then the file is opened for the user (in a new window)
+    MeadCo.ScriptX.Print.printPdf(document, pdfPrintSettings, fnDone, fnProgress, data) ⇒ boolean</h3>Post a request to the server to print some html and monitor the print job 
+to completion. If the server prints to file then the file is opened for the user (in a new window)
 
 
 | Param | Type | Description |
@@ -537,7 +644,8 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 <br/>
 <a id="MeadCo.ScriptX.Print.printDirect"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.Print.printDirect(contentType, content, fnDone) ⇒ boolean</h3>Post a request to the server to print a string directly to the current printer. The print is synchronous at the serverand is completed (sent to the printer) when the api returns.
+    MeadCo.ScriptX.Print.printDirect(contentType, content, fnDone) ⇒ boolean</h3>Post a request to the server to print a string directly to the current printer. The print is synchronous at the server
+and is completed (sent to the printer) when the api returns.
 
 
 | Param | Type | Description |
@@ -564,7 +672,8 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 <br/>
 <a id="MeadCo.ScriptX.Print.reportError"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.Print.reportError(errorTxt)</h3>'derived' classes call this function to report errors, will either throw or report depending on value of onErrorAction.
+    MeadCo.ScriptX.Print.reportError(errorTxt)</h3>'derived' classes call this function to report errors, will either throw or report depending on 
+value of onErrorAction.
 
 
 | Param | Type | Description |
@@ -574,7 +683,8 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 <br/>
 <a id="MeadCo.ScriptX.Print.reportServerError"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.Print.reportServerError(errorTxt)</h3>overridable function for reporting an error. 'derived' classes call thisfunction to report errors.
+    MeadCo.ScriptX.Print.reportServerError(errorTxt)</h3>overridable function for reporting an error. 'derived' classes call this
+function to report errors.
 
 
 | Param | Type | Description |
@@ -584,7 +694,8 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 <br/>
 <a id="MeadCo.ScriptX.Print.reportFeatureNotImplemented"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.Print.reportFeatureNotImplemented(featureDescription)</h3>overridable function for reporting an implementation isnt available. 'derived' classes call thisfunction to report functions that are not yet implemented.
+    MeadCo.ScriptX.Print.reportFeatureNotImplemented(featureDescription)</h3>overridable function for reporting an implementation isnt available. 'derived' classes call this
+function to report functions that are not yet implemented.
 
 
 | Param | Type | Description |
@@ -594,12 +705,16 @@ MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ..
 <br/>
 <a id="MeadCo.ScriptX.Print.ensureSpoolingStatus"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.Print.ensureSpoolingStatus() ⇒ object</h3>Make sure that spooling status is locked active while asynchronous UI that may startprinting is displayed by placing a lock on the queue.
+    MeadCo.ScriptX.Print.ensureSpoolingStatus() ⇒ object</h3>Make sure that spooling status is locked active while asynchronous UI that may start
+printing is displayed by placing a lock on the queue.
 
 **Returns**: object - a fake job to lock the spooling status on  
 **Example**  
 ```js
-var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { MeadCo.ScriptX.Print.freeSpoolStatus(lock);});
+var lock = MeadCo.ScriptX.Print.ensureSpoolingStatus
+ShowAsyncUI(function() {
+ MeadCo.ScriptX.Print.freeSpoolStatus(lock);
+});
 ```
 <br/>
 <a id="MeadCo.ScriptX.Print.freeSpoolStatus"></a>
@@ -614,7 +729,8 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 <br/>
 <a id="MeadCo.ScriptX.Print.waitForSpoolingComplete"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.Print.waitForSpoolingComplete(iTimeout, fnComplete)</h3>Start (asynchronous) monitor to observe until no more job spooling/waiting at the serverthen call the given callback function
+    MeadCo.ScriptX.Print.waitForSpoolingComplete(iTimeout, fnComplete)</h3>Start (asynchronous) monitor to observe until no more job spooling/waiting at the server
+then call the given callback function
 
 
 | Param | Type | Description |
@@ -651,7 +767,8 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 <br/>
 <a id="MeadCo.ScriptX.Print.DeviceSettingsObject"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.Print.DeviceSettingsObject</h3>Information about and the settings to use with an output printing deviceSee also: https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXServices/WebServiceAPIReference/PrintHtml/deviceinfoGET
+    MeadCo.ScriptX.Print.DeviceSettingsObject</h3>Information about and the settings to use with an output printing device
+See also: https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXServices/WebServiceAPIReference/PrintHtml/deviceinfoGET
 
 **Properties**
 
@@ -718,7 +835,17 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 <br/>
 <a id="MeadCo.ScriptX.PrintHTML"></a>
 <h2 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintHTML : object</h2>MeadCo.ScriptX.Print.HTMLA static class providing printing of HTML content.Requires: meadco-core.js, meadco-scriptxprint.jsThe purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the codeintact when transitioning to using ScriptX.Services instead/as well.Includes processing of calls to the print api that return "printing to file" including collecting thefile output.
+    MeadCo.ScriptX.PrintHTML : object</h2>MeadCo.ScriptX.Print.HTML
+
+A static class providing printing of HTML content.
+
+Requires: meadco-core.js, meadco-scriptxprint.js
+
+The purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the code
+intact when transitioning to using ScriptX.Services instead/as well.
+
+Includes processing of calls to the print api that return "printing to file" including collecting the
+file output.
 
 
 * [MeadCo.ScriptX.PrintHTML](#MeadCo.ScriptX.PrintHTML) : object
@@ -745,7 +872,13 @@ var lock = MeadCo.ScriptX.Print.ensureSpoolingStatusShowAsyncUI(function() { M
 <br/>
 <a id="MeadCo.ScriptX.PrintHTML.documentContentToPrint"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintHTML.documentContentToPrint</h3>Get the complete currently displayed document as string of HTML.Form values are preserved in the source document then the document cloned.A base element is created if required.style elements are included.script and object elements are not included.
+    MeadCo.ScriptX.PrintHTML.documentContentToPrint</h3>Get the complete currently displayed document as string of HTML.
+
+Form values are preserved in the source document then the document cloned.
+
+A base element is created if required.
+style elements are included.
+script and object elements are not included.
 
 **Properties**
 
@@ -836,7 +969,13 @@ Enum to describe the units used on measurements - **NOTE** please use MeadCo.Scr
 <br/>
 <a id="MeadCo.ScriptX.PrintHTML.frameContentToPrint"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintHTML.frameContentToPrint(sFrame) ⇒ string</h3>Get the complete currently displayed document in a frame as string of HTML.Form values are preserved in the source document then the document cloned.A base element is created if required.style elements are included.script and object elements are not included.
+    MeadCo.ScriptX.PrintHTML.frameContentToPrint(sFrame) ⇒ string</h3>Get the complete currently displayed document in a frame as string of HTML.
+
+Form values are preserved in the source document then the document cloned.
+
+A base element is created if required.
+style elements are included.
+script and object elements are not included.
 
 
 | Param | Type | Description |
@@ -913,7 +1052,16 @@ Enum to describe the units used on measurements - **NOTE** please use MeadCo.Scr
 <br/>
 <a id="MeadCo.ScriptX.PrintHTML.connect"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintHTML.connect(serverUrl, licenseGuid, onFail)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtaindefault soft html and device settings for the default device as well as the listof available printers. This call is not required if client side code doesnt need to know about available printersbut can assume (at least .connectLite() is required).This call is synchronous and therefore not recommended. Use connectAsync()
+    MeadCo.ScriptX.PrintHTML.connect(serverUrl, licenseGuid, onFail)</h3>Specify the server to use and the subscription/license id. 
+
+Attempt to connect to the defined ScriptX.Services server and obtain
+default soft html and device settings for the default device as well as the list
+of available printers. 
+
+This call is not required if client side code doesnt need to know about available printers
+but can assume (at least .connectLite() is required).
+
+This call is synchronous and therefore not recommended. Use connectAsync()
 
 
 | Param | Type | Description |
@@ -925,7 +1073,14 @@ Enum to describe the units used on measurements - **NOTE** please use MeadCo.Scr
 <br/>
 <a id="MeadCo.ScriptX.PrintHTML.connectAsync"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintHTML.connectAsync(serverUrl, licenseGuid, resolve, reject)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtaindefault soft html and device settings for the default device as well as the listof available printers. This call is not required if client side code doesnt need to know about available printersbut can assume (at least .connectLite() is required).
+    MeadCo.ScriptX.PrintHTML.connectAsync(serverUrl, licenseGuid, resolve, reject)</h3>Specify the server to use and the subscription/license id. 
+
+Attempt to connect to the defined ScriptX.Services server and obtain
+default soft html and device settings for the default device as well as the list
+of available printers. 
+
+This call is not required if client side code doesnt need to know about available printers
+but can assume (at least .connectLite() is required).
 
 
 | Param | Type | Description |
@@ -979,7 +1134,8 @@ Enum to describe the units used on measurements - **NOTE** please use MeadCo.Scr
 <br/>
 <a id="MeadCo.ScriptX.PrintHTML.Settings"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintHTML.Settings</h3>The soft settings to use when printing html content - headers, footers and margins(Device settings such as papersize, printer are described with MeadCo.ScriptX.Print.deviceSettings)
+    MeadCo.ScriptX.PrintHTML.Settings</h3>The soft settings to use when printing html content - headers, footers and margins
+(Device settings such as papersize, printer are described with MeadCo.ScriptX.Print.deviceSettings)
 
 **Properties**
 
@@ -1004,7 +1160,23 @@ Enum to describe the units used on measurements - **NOTE** please use MeadCo.Scr
 <br/>
 <a id="MeadCo.ScriptX.PrintLicensing"></a>
 <h2 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintLicensing : object</h2>MeadCo.ScriptX.Print.LicensingA static class wrapping calls to the server API to install / manage a client license for ScriptX.Services for Windows PC. The purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the codeintact when transitioning to using ScriptX.Services instead/as well.This module is only required when working with ScriptX Services for Windows PC.A license must be 'applied' to the current html document/window before calls to printing APIs that use the license can be made.This module is NOT required when working with Cloud or On Premise services as the licenseinstallation and management occurs at the server. Requires: meadco-core.js
+    MeadCo.ScriptX.PrintLicensing : object</h2>MeadCo.ScriptX.Print.Licensing
+
+A static class wrapping calls to the server API to install / manage a client 
+license for ScriptX.Services for Windows PC. 
+
+The purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the code
+intact when transitioning to using ScriptX.Services instead/as well.
+
+This module is only required when working with ScriptX Services for Windows PC.
+
+A license must be 'applied' to the current html document/window before calls to printing APIs that 
+use the license can be made.
+
+This module is NOT required when working with Cloud or On Premise services as the license
+installation and management occurs at the server. 
+
+Requires: meadco-core.js
 
 
 * [MeadCo.ScriptX.PrintLicensing](#MeadCo.ScriptX.PrintLicensing) : object
@@ -1034,7 +1206,9 @@ Enum to describe the units used on measurements - **NOTE** please use MeadCo.Scr
 <br/>
 <a id="MeadCo.ScriptX.PrintLicensing.result"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintLicensing.result</h3>Get the result code for the last attempt to apply a license.Basically faked for the benefit of code compatibility with the add-on
+    MeadCo.ScriptX.PrintLicensing.result</h3>Get the result code for the last attempt to apply a license.
+
+Basically faked for the benefit of code compatibility with the add-on
 
 **Properties**
 
@@ -1056,7 +1230,10 @@ Enum to describe the units used on measurements - **NOTE** please use MeadCo.Scr
 <br/>
 <a id="MeadCo.ScriptX.PrintLicensing.License"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintLicensing.License</h3>Get the details on the connected license. If it hasnt been applied yet, then queryfor the details (but dont apply it and connectLite() MUST have been called).Warning this function is synchronous, GetLicenseAsync() should be used.
+    MeadCo.ScriptX.PrintLicensing.License</h3>Get the details on the connected license. If it hasnt been applied yet, then query
+for the details (but dont apply it and connectLite() MUST have been called).
+
+Warning this function is synchronous, GetLicenseAsync() should be used.
 
 **Properties**
 
@@ -1078,7 +1255,8 @@ Enum to describe the units used on measurements - **NOTE** please use MeadCo.Scr
 <br/>
 <a id="MeadCo.ScriptX.PrintLicensing.connectLite"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintLicensing.connectLite(serverUrl, slicenseGuid, revision, path)</h3>Specify the server to use and the license Guid in order to get details on the license via the License propertyor function GetLicenseAsync()
+    MeadCo.ScriptX.PrintLicensing.connectLite(serverUrl, slicenseGuid, revision, path)</h3>Specify the server to use and the license Guid in order to get details on the license via the License property
+or function GetLicenseAsync()
 
 
 | Param | Type | Description |
@@ -1091,7 +1269,12 @@ Enum to describe the units used on measurements - **NOTE** please use MeadCo.Scr
 <br/>
 <a id="MeadCo.ScriptX.PrintLicensing.apply"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintLicensing.apply(licenseGuid, revision, path) ⇒ license</h3>Apply (make usable) the MeadCo ScriptX Client license for use with this content. If the license is not already cached it will be downloaded and cached. It is strongly suggested you request that the silent option is enabled in the license (it is by default for ScriptX.Services for Windows PC licenses)The license must list the url of the content to which it is being applied.This call is synchronous and therefore not recommended. Use applyAsync()
+    MeadCo.ScriptX.PrintLicensing.apply(licenseGuid, revision, path) ⇒ license</h3>Apply (make usable) the MeadCo ScriptX Client license for use with this content. If the license is not already cached it will be downloaded and cached. 
+It is strongly suggested you request that the silent option is enabled in the license (it is by default for ScriptX.Services for Windows PC licenses)
+
+The license must list the url of the content to which it is being applied.
+
+This call is synchronous and therefore not recommended. Use applyAsync()
 
 
 | Param | Type | Description |
@@ -1104,7 +1287,10 @@ Enum to describe the units used on measurements - **NOTE** please use MeadCo.Scr
 <br/>
 <a id="MeadCo.ScriptX.PrintLicensing.applyAsync"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintLicensing.applyAsync(licenseGuid, revision, path, resolve, reject)</h3>Apply (make usable) the MeadCo ScriptX Client license for use with this content. If the license is not already cached it will be downloaded and cached.It is strongly suggested you request that the silent option is enabled in the license (it is by default for ScriptX.Services for Windows PC licenses)The license must list the url of the content to which it is being applied.
+    MeadCo.ScriptX.PrintLicensing.applyAsync(licenseGuid, revision, path, resolve, reject)</h3>Apply (make usable) the MeadCo ScriptX Client license for use with this content. If the license is not already cached it will be downloaded and cached.
+It is strongly suggested you request that the silent option is enabled in the license (it is by default for ScriptX.Services for Windows PC licenses)
+
+The license must list the url of the content to which it is being applied.
 
 
 | Param | Type | Description |
@@ -1118,7 +1304,8 @@ Enum to describe the units used on measurements - **NOTE** please use MeadCo.Scr
 <br/>
 <a id="MeadCo.ScriptX.PrintLicensing.GetLicenseAsync"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintLicensing.GetLicenseAsync(resolve, reject)</h3>Get the details on the connected license. If it hasnt been applied yet, then queryfor the details (but dont apply it and connectLite() MUST have been called).
+    MeadCo.ScriptX.PrintLicensing.GetLicenseAsync(resolve, reject)</h3>Get the details on the connected license. If it hasnt been applied yet, then query
+for the details (but dont apply it and connectLite() MUST have been called).
 
 
 | Param | Type | Description |
@@ -1161,7 +1348,19 @@ Enum to describe the units used on measurements - **NOTE** please use MeadCo.Scr
 <br/>
 <a id="MeadCo.ScriptX.PrintPDF"></a>
 <h2 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintPDF : object</h2>MeadCo.ScriptX.Print.PDFA static class providing printing of PDF files.Requires: - meadco-core.js- meadco-scriptxprint.jsThe purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the codeintact when transitioning to using ScriptX.Services instead/as well.Includes processing of calls to the print api that return "printing to file" including collecting thefile output.
+    MeadCo.ScriptX.PrintPDF : object</h2>MeadCo.ScriptX.Print.PDF
+
+A static class providing printing of PDF files.
+
+Requires: 
+- meadco-core.js
+- meadco-scriptxprint.js
+
+The purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the code
+intact when transitioning to using ScriptX.Services instead/as well.
+
+Includes processing of calls to the print api that return "printing to file" including collecting the
+file output.
 
 
 * [MeadCo.ScriptX.PrintPDF](#MeadCo.ScriptX.PrintPDF) : object
@@ -1266,7 +1465,16 @@ Enum to describe the units used on measurements - **NOTE** please use MeadCo.Scr
 <br/>
 <a id="MeadCo.ScriptX.PrintPDF.connect"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintPDF.connect(serverUrl, licenseGuid)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtaindevice settings for the default device as well as the listof available printers. This call is not required if client side code doesnt need to know about available printersbut can assume. It also is not required if MeadCo.ScriptX.Print.HTML.connect[Async]() has been called.This call is synchronous and therefore not recommended. Use connectAsync()
+    MeadCo.ScriptX.PrintPDF.connect(serverUrl, licenseGuid)</h3>Specify the server to use and the subscription/license id. 
+
+Attempt to connect to the defined ScriptX.Services server and obtain
+device settings for the default device as well as the list
+of available printers. 
+
+This call is not required if client side code doesnt need to know about available printers
+but can assume. It also is not required if MeadCo.ScriptX.Print.HTML.connect[Async]() has been called.
+
+This call is synchronous and therefore not recommended. Use connectAsync()
 
 
 | Param | Type | Description |
@@ -1277,7 +1485,14 @@ Enum to describe the units used on measurements - **NOTE** please use MeadCo.Scr
 <br/>
 <a id="MeadCo.ScriptX.PrintPDF.connectAsync"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintPDF.connectAsync(serverUrl, licenseGuid, resolve, reject)</h3>Specify the server to use and the subscription/license id. Attempt to connect to the defined ScriptX.Services server and obtaindevice settings for the default device as well as the listof available printers. This call is not required if client side code doesnt need to know about available printersbut can assume. It also is not required if MeadCo.ScriptX.Print.HTML.connect[Async]() has been called.
+    MeadCo.ScriptX.PrintPDF.connectAsync(serverUrl, licenseGuid, resolve, reject)</h3>Specify the server to use and the subscription/license id. 
+
+Attempt to connect to the defined ScriptX.Services server and obtain
+device settings for the default device as well as the list
+of available printers. 
+
+This call is not required if client side code doesnt need to know about available printers
+but can assume. It also is not required if MeadCo.ScriptX.Print.HTML.connect[Async]() has been called.
 
 
 | Param | Type | Description |
@@ -1290,7 +1505,8 @@ Enum to describe the units used on measurements - **NOTE** please use MeadCo.Scr
 <br/>
 <a id="MeadCo.ScriptX.PrintPDF.Settings"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    MeadCo.ScriptX.PrintPDF.Settings</h3>The soft settings to use when printing PDF content - options controlling the rendering of the content.(Device settings such as papersize, printer are described with MeadCo.ScriptX.Print.deviceSettings)
+    MeadCo.ScriptX.PrintPDF.Settings</h3>The soft settings to use when printing PDF content - options controlling the rendering of the content.
+(Device settings such as papersize, printer are described with MeadCo.ScriptX.Print.deviceSettings)
 
 **Properties**
 
@@ -1308,7 +1524,34 @@ Enum to describe the units used on measurements - **NOTE** please use MeadCo.Scr
 <br/>
 <a id="secmgr"></a>
 <h2 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    secmgr : object</h2>MeadCo ScriptX 'window.secmgr' shim (support for modern browsers and IE 11) JS client libraryThe MeadCo Security Manager Add-on for Internet Explorer is included on a html document with an &lt;object id='secmgr' /&gt; element with a de-facto standard id of 'secmgr'.The object is referenced with the property window.secmgr which exposes properties and methods.The MeadCo Security Manager Add-on for Internet Explorer provided for prompting the user to accept use of the license that enabled advanced features of ScriptX.Add-on. Frequentlythere was then no further reference to Security Manager and in such cases this shim is not required.This use case can be emulated by using appropriate attributes on an element (for example a &lt;script&gt;&lt;/script&gt;) on the page and including meadco-scriptxprint.js to process the attributes. This shim is then *not* required.Please note that when working with ScriptX.Services for Windows PC meadco-scriptxprintlicensing.js is required even with the use of attributes.This shim is required if you have code that relies upon being able to inspect the availability of a license.Full documentation on the properties/methods is provided by the technical reference documentation for the ScriptX Add-on for Internet Explorer: https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn/secmgr. That documentation is not reproduced here.If the startup script determines that the MeadCo Security Manager Add-on for IE is already active then it will quietly give priority to the object. In other words, the Add-on has precedence on Internet Explorer.This enables the same experience (almost) to be delivered to any browser on any device with the same html/javascript code.It is strongly recommended that the MeadCoScriptJS library (https://github.com/MeadCo/MeadCoScriptXJS) is used in conjunction with this library as it provides code (Promises) to assistwith working with the significant difference between the synchronous nature of the functions of ScriptX.Add-on (which hide the underlying asynchrony) and the asynchronous nature of javascript AJAX processing. Requires:  meadco-core.js meadco-scriptxprint.js meadco-scriptxprintlicensing.js
+    secmgr : object</h2>MeadCo ScriptX 'window.secmgr' shim (support for modern browsers and IE 11) JS client library
+
+The MeadCo Security Manager Add-on for Internet Explorer is included on a html document with an &lt;object id='secmgr' /&gt; element with a de-facto standard id of 'secmgr'.
+
+The object is referenced with the property window.secmgr which exposes properties and methods.
+
+The MeadCo Security Manager Add-on for Internet Explorer provided for prompting the user to accept use of the license that enabled advanced features of ScriptX.Add-on. Frequently
+there was then no further reference to Security Manager and in such cases this shim is not required.
+
+This use case can be emulated by using appropriate attributes on an element (for example a &lt;script&gt;&lt;/script&gt;) on the page and including meadco-scriptxprint.js to process the attributes. This shim is then *not* required.
+
+Please note that when working with ScriptX.Services for Windows PC meadco-scriptxprintlicensing.js is required even with the use of attributes.
+
+This shim is required if you have code that relies upon being able to inspect the availability of a license.
+
+Full documentation on the properties/methods is provided by the technical reference documentation for the ScriptX Add-on for Internet Explorer: https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn/secmgr. That documentation is not reproduced here.
+
+If the startup script determines that the MeadCo Security Manager Add-on for IE is already active then it will quietly give priority to the object. In other words, the Add-on has precedence on Internet Explorer.
+
+This enables the same experience (almost) to be delivered to any browser on any device with the same html/javascript code.
+
+It is strongly recommended that the MeadCoScriptJS library (https://github.com/MeadCo/MeadCoScriptXJS) is used in conjunction with this library as it provides code (Promises) to assist
+with working with the significant difference between the synchronous nature of the functions of ScriptX.Add-on (which hide the underlying asynchrony) and the asynchronous nature of javascript AJAX processing.
+
+ Requires: 
+ meadco-core.js
+ meadco-scriptxprint.js
+ meadco-scriptxprintlicensing.js
 
 
 * [secmgr](#secmgr) : object
@@ -1329,7 +1572,8 @@ Enum to describe the units used on measurements - **NOTE** please use MeadCo.Scr
 <br/>
 <a id="secmgr.GetLicenseAsync"></a>
 <h3 style="margin: 10px 0px; border-width: 0 0 2px 0; border-style: solid; border-color: #ede9e9">
-    secmgr.GetLicenseAsync(resolve, reject)</h3>Get the details of the license using Asynchronous calls to the server.See meadco-scriptxprintlicensing.js for more detail
+    secmgr.GetLicenseAsync(resolve, reject)</h3>Get the details of the license using Asynchronous calls to the server.
+See meadco-scriptxprintlicensing.js for more detail
 
 
 | Param | Type | Description |

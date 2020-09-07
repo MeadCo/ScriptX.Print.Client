@@ -1,6 +1,6 @@
 {
   "name": "scriptxprint-html",
-  "version": "1.7.0-beta04",
+  "version": "1.7.0-beta05",
   "description": "Emulation of ScriptX.Add-on for use with ScriptX.Services",
   "main": "meadco-scriptxprinthtml.js",
   "repository": {

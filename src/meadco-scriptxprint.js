@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.7.0.1";
+    var version = "1.7.0.2";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
     var directApiLocation = "v1/printDirect";
@@ -125,7 +125,7 @@
 
     var availablePrinters = [];
 
-    var serviceDescription = null; // cached description of service server connected to 
+    var cachedServiceDescription = null; // cached description of service server connected to 
 
     /**
      * Enum for type of content being posted to printHtml API
@@ -350,7 +350,7 @@
         }
         var devInfo;
 
-        if (content === null || typeof content === "undefined" || (typeof content === "string" && content.length === 0)) {
+        if ( !content || (typeof content === "string" && content.length === 0)) {
             MeadCo.ScriptX.Print.reportError("Request to print no content - access denied?");
             if (typeof fnDone === "function") {
                 fnDone("Request to print no content");
@@ -460,7 +460,7 @@
 
         var devInfo;
 
-        if (document === null || typeof document === "undefined" || (typeof document === "string" && document.length === 0)) {
+        if ( !document || (typeof document === "string" && document.length === 0)) {
             MeadCo.ScriptX.Print.reportError("The document to print must be given.");
             if (typeof fnDone === "function") {
                 fnDone("Request to print no content");
@@ -583,7 +583,7 @@
             }
         }
 
-        if (content === null || typeof content === "undefined" || (typeof content === "string" && content.length === 0)) {
+        if ( !content || (typeof content === "string" && content.length === 0)) {
             MeadCo.ScriptX.Print.reportError("Request to print no content - access denied?");
             if (typeof fnDone === "function") {
                 fnDone("Request to print no content");
@@ -661,7 +661,7 @@
         // also (async) cache server description
         getFromServer("", true,
             function (data) {
-                serviceDescription = data;
+                cachedServiceDescription = data;
             });
     }
 
@@ -678,7 +678,7 @@
         // also (async) cache server description
         getFromServer("", true,
             function (data) {
-                serviceDescription = data;
+                cachedServiceDescription = data;
             });
     }
 
@@ -1223,7 +1223,7 @@
          * @returns {VersionObject} the version
          */
         serviceVersion: function () {
-            var sd = this.serviceDescription;
+            var sd = this.cachedServiceDescription;
             return sd.ServiceVersion;
         },
 
@@ -1378,14 +1378,14 @@
          */
         serviceDescription: function () {
 
-            if (serviceDescription === null) {
+            if ( !cachedServiceDescription ) {
                 getFromServer("", false,
-                    function (data) { serviceDescription = data; },
+                    function (data) { cachedServiceDescription = data; },
                     function (e) {
                         MeadCo.ScriptX.Print.reportError(e.message);
                     });
             }
-            return serviceDescription;
+            return cachedServiceDescription;
         },
 
         /**
@@ -1398,15 +1398,15 @@
          */
         serviceDescriptionAsync: function (resolve, reject) {
 
-            if (serviceDescription === null) {
+            if ( !cachedServiceDescription ) {
                 getFromServer("", true,
                     function (data) {
-                        serviceDescription = data;
+                        cachedServiceDescription = data;
                         resolve(data);
                     }, reject);
             }
             else {
-                resolve(serviceDescription);
+                resolve(cachedServiceDescription);
             }
         },
 

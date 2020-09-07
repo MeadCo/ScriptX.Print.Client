@@ -166,7 +166,7 @@
             settingsCache.header = str;
         },
         get header() {
-            return (settingsCache.header === null || settingsCache.header === "%20") ? "" : settingsCache.header;
+            return ( !settingsCache.header || settingsCache.header === "%20") ? "" : settingsCache.header;
         },
 
         set footer(str) {
@@ -177,7 +177,7 @@
         },
 
         get footer() {
-            return (settingsCache.footer === null || settingsCache.footer === "%20") ? "" : settingsCache.footer;
+            return ( !settingsCache.footer || settingsCache.footer === "%20") ? "" : settingsCache.footer;
         },
 
         set headerFooterFont(str) {
@@ -188,7 +188,7 @@
         },
 
         get headerFooterFont() {
-            return (settingsCache.headerFooterFont === null || settingsCache.headerFooterFont === "%20") ? "" : settingsCache.headerFooterFont;
+            return ( !settingsCache.headerFooterFont || settingsCache.headerFooterFont === "%20") ? "" : settingsCache.headerFooterFont;
         },
 
         get locale() {

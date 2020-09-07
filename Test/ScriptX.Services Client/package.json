@@ -9,6 +9,8 @@
     "qunit": "^2.9.0"
   },
   "devDependencies": {
-    "gulp": "4.0.2"
+    "gulp": "4.0.2",
+    "minimist": "^1.2.5",
+    "yargs-parser": "18.1.3"
   }
 }
