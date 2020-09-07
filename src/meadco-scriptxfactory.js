@@ -86,7 +86,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.7.0.0";
+    var moduleversion = "1.7.0.1";
     var emulatedVersion = "8.2.0.0";
     var servicesVersion = "";
     var printApi = MeadCo.ScriptX.Print;
@@ -717,10 +717,18 @@
         },
 
         Print: function (bPrompt, sOrOFrame, fnNotifyStarted) { // needs and wants update to ES2015 (for default values)
-            if (typeof fnNotifyStarted === "undefined") {
+            if ( !fnNotifyStarted ) {
                 fnNotifyStarted = function (bStarted) { MeadCo.log("A print has started"); };
             }
-            if (typeof (sOrOFrame) === 'undefined') sOrOFrame = null;
+            if (!sOrOFrame) {
+                sOrOFrame = null;
+            }
+            else {
+                // passing in window, or window.self etc will not have an id .. don't barf on that code
+                if (typeof (sOrOFrame) === 'object' && !sOrOFrame.id) {
+                    sOrOFrame = null;
+                }
+            }
 
             return promptAndPrint(bPrompt,
                 function () {

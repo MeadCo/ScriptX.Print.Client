@@ -4,7 +4,7 @@ QUnit.test("Namespace basics", function (assert) {
 
     assert.ok(window.factory, "factory namespace exists");
     var api = window.factory;
-    var expectedVersion = "1.7.0.0";
+    var expectedVersion = "1.7.0.1";
     var emulatedVersion = "8.2.0.0";
     var servicesVersion = "11.12.13.14";
 
@@ -243,7 +243,7 @@ QUnit.test("factory.printing - do printing with mock UI", function (assert) {
     var api = window.factory.printing;
     var api2 = MeadCo.ScriptX.Print.HTML;
 
-    var done = assert.async(13);
+    var done = assert.async(14);
 
     var url = serverUrl;
 
@@ -299,44 +299,50 @@ QUnit.test("factory.printing - do printing with mock UI", function (assert) {
                 },
                 "Raised error on prompted print on nonexisting frame is correct");
 
-                assert.ok(api.Print(true, "testFrame", (bStarted) => {
-                    assert.ok(bStarted, "Prompted print frame did start");
-                    assert.strictEqual(api.GetJobsCount(api.printer), 1, "There is a printframe job for the printer");
+                assert.ok(api.Print(true, window.self, (bStarted) => {
+                    assert.ok(bStarted, "Prompted print frame self did start");
+                    assert.strictEqual(api.GetJobsCount(api.printer), 1, "There is a job for the printer");
                     done();
 
-                    api.WaitForSpoolingComplete(3000, (bAllComplete) => {
-                        assert.ok(bAllComplete, "All jobs are complete");
-                        assert.strictEqual(api.GetJobsCount(api.printer), 0, "There are no jobs for the printer");
+                    assert.ok(api.Print(true, "testFrame", (bStarted) => {
+                        assert.ok(bStarted, "Prompted print frame did start");
+                        assert.strictEqual(api.GetJobsCount(api.printer), 2, "There is a printframe job for the printer");
                         done();
 
-                        assert.ok(api.PrintHTML("http://www.meadroid.com", true, (bStarted) => {
-                            assert.ok(bStarted, "Prompted PrintHTML did start");
-                            assert.strictEqual(api.GetJobsCount(api.printer), 1, "There is a job for the printer");
+                        api.WaitForSpoolingComplete(3000, (bAllComplete) => {
+                            assert.ok(bAllComplete, "All jobs are complete");
+                            assert.strictEqual(api.GetJobsCount(api.printer), 0, "There are no jobs for the printer");
                             done();
 
-                            api.WaitForSpoolingComplete(5000, (bAllComplete) => {
-                                assert.ok(bAllComplete, "All jobs are complete");
-                                assert.strictEqual(api.GetJobsCount(api.printer), 0, "There are no jobs for the printer");
+                            assert.ok(api.PrintHTML("http://www.meadroid.com", true, (bStarted) => {
+                                assert.ok(bStarted, "Prompted PrintHTML did start");
+                                assert.strictEqual(api.GetJobsCount(api.printer), 1, "There is a job for the printer");
                                 done();
 
-                                assert.ok(api.PrintHTMLEx("html://<p>hello world</p>", true, (status, sInformation, data) => {
-                                    assert.equal(data, "t2", "PrintHTMLEx On progress function receives data: " + status + " => " + sInformation);
-                                    }, "t2", (bStarted) => {
-                                    assert.ok(bStarted, "Prompted PrintHTMLEx did start");
-                                    assert.strictEqual(api.GetJobsCount(api.printer), 1, "There is a job for the printer");
+                                api.WaitForSpoolingComplete(5000, (bAllComplete) => {
+                                    assert.ok(bAllComplete, "All jobs are complete");
+                                    assert.strictEqual(api.GetJobsCount(api.printer), 0, "There are no jobs for the printer");
                                     done();
 
-                                    api.WaitForSpoolingComplete(5000, (bAllComplete) => {
-                                        assert.ok(bAllComplete, "All jobs are complete");
-                                        assert.strictEqual(api.GetJobsCount(api.printer), 0, "There are no jobs for the printer");
+                                    assert.ok(api.PrintHTMLEx("html://<p>hello world</p>", true, (status, sInformation, data) => {
+                                        assert.equal(data, "t2", "PrintHTMLEx On progress function receives data: " + status + " => " + sInformation);
+                                        }, "t2", (bStarted) => {
+                                        assert.ok(bStarted, "Prompted PrintHTMLEx did start");
+                                        assert.strictEqual(api.GetJobsCount(api.printer), 1, "There is a job for the printer");
                                         done();
-                                    });
 
-                                }), "Print api returned true");
-                            });
+                                        api.WaitForSpoolingComplete(5000, (bAllComplete) => {
+                                            assert.ok(bAllComplete, "All jobs are complete");
+                                            assert.strictEqual(api.GetJobsCount(api.printer), 0, "There are no jobs for the printer");
+                                            done();
+                                        });
 
-                        }), "Print api returned true");
-                    });
+                                    }), "Print api returned true");
+                                });
+
+                            }), "Print api returned true");
+                        });
+                    }), "Print api returned true");
                 }), "Print api returned true");
 
             });
