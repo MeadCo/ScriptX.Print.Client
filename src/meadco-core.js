@@ -54,7 +54,7 @@
 
     // protected API
     var module = this;
-    var version = "1.7.0.0"; // matches the highest version number of sub-classes.
+    var version = "1.7.0.1"; // matches the highest version number of sub-classes.
     var bLog = false;
 
     var log = function (str) {
@@ -120,7 +120,7 @@
      * @returns {string} The error text to display
      */
     function parseError(logText, jqXhr, textStatus, errorThrown) {
-        log("**warning: AJAX call failure in " + logText + ": [" +
+        warn("**warning: AJAX call failure in " + logText + ": [" +
             textStatus +
             "], [" +
             errorThrown +

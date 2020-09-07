@@ -24,7 +24,7 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.Licensing', function () {
-    var moduleversion = "1.7.0.0";
+    var moduleversion = "1.7.0.1";
     var apiLocation = "v1/licensing";
 
     var server = ""; // url to the server, server is CORS restricted
@@ -129,7 +129,7 @@
                     }
                 })
                 .fail(function (jqXHR, textStatus, errorThrown) {
-                    errorThrown = MeadCo.parseAjaxError("**warning: failure in MeadCo.ScriptX.Licensing.getSubscriptionFromServer: ", jqXHR, textStatus, errorThrown);
+                    errorThrown = MeadCo.parseAjaxError("MeadCo.ScriptX.Licensing.getSubscriptionFromServer: ", jqXHR, textStatus, errorThrown);
                     lastError = errorThrown;
                     if (typeof reject === "function") {
                         reject(errorThrown);
@@ -178,7 +178,7 @@
                     }
                 })
                 .fail(function (jqXHR, textStatus, errorThrown) {
-                    errorThrown = MeadCo.parseAjaxError("**warning: failure in MeadCo.ScriptX.Print.Licensing.applyLicense: ", jqXHR, textStatus, errorThrown);
+                    errorThrown = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.Licensing.applyLicense: ", jqXHR, textStatus, errorThrown);
                     lastError = errorThrown;
                     if (typeof reject === "function") {
                         reject(errorThrown);
