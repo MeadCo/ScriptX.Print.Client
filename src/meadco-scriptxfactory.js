@@ -86,7 +86,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.7.0.3";
+    var moduleversion = "1.7.0.4";
     var emulatedVersion = "8.2.0.0";
     var servicesVersion = "";
     var printApi = MeadCo.ScriptX.Print;
@@ -348,7 +348,7 @@
                 MeadCo.log("promptAndPrint exits ...");
                 return bStarted;
             }
-            MeadCo.warn("prompted print requested but no UI library loaded");
+            MeadCo.warn("prompted print requested but no UI library loaded. See: https://www.meadroid.com/Developers/KnowledgeBank/Articles/Dialogs");
         }
 
         try {
@@ -694,7 +694,7 @@
             if (MeadCo.ScriptX.Print.UI) {
                 MeadCo.ScriptX.Print.UI.PageSetup(fnNotify);
             } else {
-                printApi.reportFeatureNotImplemented("Page setup dialog");
+                MeadCo.error("PageSetup dialog in ScriptX.Services needs a dialog implementation. See: https://www.meadroid.com/Developers/KnowledgeBank/Articles/Dialogs");
                 fnNotify(false);
             }
         },
@@ -708,7 +708,7 @@
             if (MeadCo.ScriptX.Print.UI) {
                 MeadCo.ScriptX.Print.UI.PrinterSettings(fnNotify);
             } else {
-                printApi.reportFeatureNotImplemented("Print settings dialog");
+                MeadCo.error("PrintSettings dialog in ScriptX.Services needs a dialog implementation. See: https://www.meadroid.com/Developers/KnowledgeBank/Articles/Dialogs");
                 fnNotify(false);
             }
         },
