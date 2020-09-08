@@ -62,22 +62,22 @@
 ; (function (name, definition, undefined) {
 
     if (this[name] !== undefined || document.getElementById(name) !== null) {
-        console.log("ScriptX factory anti-polyfill believes it may not be requred.");
+        MeadCo.log("ScriptX.Services ScriptX.factory emulation believes it may not be requred.");
         if (this[name] !== undefined) {
-            console.log("this[" + name + "] is defined");
+            MeadCo.log("this[" + name + "] is defined");
         }
         if (document.getElementById(name) !== null) {
-            console.log("document.getElementById(" + name + ") is defined");
+            MeadCo.log("document.getElementById(" + name + ") is defined");
         }
         if (this[name].object !== undefined) {
-            console.log("this[" + name + "].object is defined -- not required!!!");
+            MeadCo.log("this[" + name + "].object is defined -- not required!!!");
             return;
         } else {
-            console.log("this[" + name + "].object is *not* defined");
+            MeadCo.log("this[" + name + "].object is *not* defined");
         }
     }
 
-    console.log("ScriptX factory anti-polyfill believes it is requred.");
+    MeadCo.log("ScriptX.Services ScriptX.factory emulation believes it is requred.");
     var theModule = definition();
 
     // Assign to the global object (window)
@@ -86,15 +86,16 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.7.0.1";
+    var moduleversion = "1.7.0.3";
     var emulatedVersion = "8.2.0.0";
     var servicesVersion = "";
     var printApi = MeadCo.ScriptX.Print;
+    var logApi = MeadCo; // could be console
 
     var module = this;
 
     function log(str) {
-        console.log("factory anti-polyfill :: " + str);
+        logApi.log("factory emulation :: " + str);
     }
 
     // extend the namespace
@@ -347,7 +348,7 @@
                 MeadCo.log("promptAndPrint exits ...");
                 return bStarted;
             }
-            console.warn("prompted print requested but no UI library loaded");
+            MeadCo.warn("prompted print requested but no UI library loaded");
         }
 
         try {
@@ -686,8 +687,8 @@
 
         PageSetup: function (fnNotify) {
             if (typeof fnNotify !== "function") {
-                console.warn("PageSetup API in ScriptX.Print Service is not synchronous, there is no return value.");
-                fnNotify = function (bDlgOK) { console.log("PageSetupDlg: " + bDlgOK); };
+                MeadCo.warn("PageSetup API in ScriptX.Print Service is not synchronous, there is no return value.");
+                fnNotify = function (bDlgOK) { MeadCo.log("PageSetupDlg: " + bDlgOK); };
             }
 
             if (MeadCo.ScriptX.Print.UI) {
@@ -700,7 +701,7 @@
 
         PrintSetup: function (fnNotify) {
             if (typeof fnNotify !== "function") {
-                console.warn("PrintSetup API in ScriptX.Print Service is not synchronous, there is no return value.");
+                MeadCo.warn("PrintSetup API in ScriptX.Print Service is not synchronous, there is no return value.");
                 fnNotify = function (bDlgOK) { MeadCo.log("PrintSetupDlg: " + bDlgOK); }
             }
 
