@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.7.0.2";
+    var version = "1.7.0.3";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
     var directApiLocation = "v1/printDirect";
@@ -1092,6 +1092,10 @@
                         var syncInit = ("" + data.meadcoSyncinit)
                             .toLowerCase() !==
                             "false"; // defaults to true if not specified
+                        var reportError = ("" + data.meadcoReporterror)
+                            .toLowerCase() !==
+                            "false"; // defaults to true if not specified
+
                         var server = data.meadcoServer;
 
                         if (!syncInit) {
@@ -1111,6 +1115,10 @@
                                 licenseApi.apply(data.meadcoLicense,
                                     data.meadcoLicenseRevision,
                                     data.meadcoLicensePath);
+
+                                if (licenseApi.result != 0 && reportError ) {
+                                    MeadCo.ScriptX.Print.reportError(licenseApi.errorMessage);
+                                }
                             }
                             printHtml.connect(server, data.meadcoLicense);
                         }
