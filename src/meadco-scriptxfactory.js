@@ -86,7 +86,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.7.0.4";
+    var moduleversion = "1.7.0.5";
     var emulatedVersion = "8.2.0.0";
     var servicesVersion = "";
     var printApi = MeadCo.ScriptX.Print;
@@ -125,7 +125,6 @@
         }
 
     };
-
 
     log("'factory' loaded " + moduleversion);
 
@@ -574,6 +573,15 @@
 
     if (typeof printApi !== "undefined") {
         printApi.useAttributes();
+
+        // ScriptX.Addon printing intercepts Ctrl-p ...
+        // listen for Ctrl-P and override ...
+        document.addEventListener("keydown", function (e) {
+            if (e.ctrlKey && e.keyCode == 80 && !e.shiftKey) {
+                e.preventDefault();
+                module.factory.printing.Print(true);
+            }
+        });
     }
     else {
         MeadCo.error("MeadCo.ScriptX.Print is not available to ScriptX.Services factory emulation.");

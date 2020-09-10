@@ -4,7 +4,7 @@ QUnit.test("Namespace basics", function (assert) {
 
     assert.ok(window.factory, "factory namespace exists");
     var api = window.factory;
-    var expectedVersion = "1.7.0.1";
+    var expectedVersion = "1.7.0.5";
     var emulatedVersion = "8.2.0.0";
     var servicesVersion = "11.12.13.14";
 
@@ -155,13 +155,14 @@ QUnit.test("factory.printing dialogs", function (assert) {
 
     var api = window.factory.printing;
 
-    api.PageSetup();
-    assert.equal($("#qunit-fixture").text(), "Page setup dialog", "Correct pageSetup dlg message");
+    api.PageSetup((bResult) => {
+        assert.notOk(bResult, "Correct pageSetup dlg result")
+    });
 
-    $("#qunit-fixture").text("");
 
-    api.PrintSetup();
-    assert.equal($("#qunit-fixture").text(), "Print settings dialog", "Correct settings dlg message");
+    api.PrintSetup((bResult) => {
+        assert.notOk(bResult, "Correct settings dlg result")
+    });
 
 });
 
