@@ -86,7 +86,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.7.0.5";
+    var moduleversion = "1.7.0.7";
     var emulatedVersion = "8.2.0.0";
     var servicesVersion = "";
     var printApi = MeadCo.ScriptX.Print;
@@ -413,7 +413,6 @@
         module.factory.log("overwriting module.print");
         module.print = function () {
             module.factory.log("window.print() called and being handled.");
-            // printHtml.printDocument(true);
             promptAndPrint(
                 true,
                 function () {
@@ -579,7 +578,13 @@
         document.addEventListener("keydown", function (e) {
             if (e.ctrlKey && e.keyCode == 80 && !e.shiftKey) {
                 e.preventDefault();
-                module.factory.printing.Print(true);
+                module.factory.log("ctrl-p being handled.");
+                promptAndPrint(
+                    true,
+                    function () {
+                        return printHtml.printDocument();
+                    },
+                    function () { });
             }
         });
     }
