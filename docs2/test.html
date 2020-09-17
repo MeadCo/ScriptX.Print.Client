@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<h1>Test</h1>
+
+<script type="text/javascript">
+
+window.addEventListener("load",function() {
+
+	console.log("code ...");
+	
+	var sContent = "blah MeadCoScriptXPrint blah MeadCoScriptXPrint  bal <a href=\"MeadCoScriptXPrint.html\">MeadCoScriptXPrint</a> MeadCoScriptXPrintblah blah blah MeadCoScriptXPrint blah MeadCoScriptXPrint  bal <a href=\"MeadCoScriptXPrintHTML.html\">MeadCoScriptXPrint</a> MeadCoScriptXPrintblah blah";
+	//var sContent = "MeadCoScriptXPrint blah <a href=\"MeadCoScriptXPrintHTML.html\">MeadCoScriptXPrintHTML</a>";
+	var replace = "xxxxxxxxx";
+    var regx = new RegExp("MeadCoScriptXPrint(?![a-zA-Z]*\.html)","gi")
+
+	console.log("Replaced: " + sContent.replace(regx,replace));
+	
+	
+});
+
+</script>
+
+</body>
+</html>

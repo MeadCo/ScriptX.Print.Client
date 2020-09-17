@@ -5,21 +5,16 @@ VisualStudioVersion = 16.0.30406.217
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{F483EA25-6581-4C95-80F9-42E54B1866FD}"
 	ProjectSection(SolutionItems) = preProject
-		..\book.json = ..\book.json
-		..\bower.json = ..\bower.json
 		..\LICENSE = ..\LICENSE
 		..\package.json = ..\package.json
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{6F1B6E72-BADC-427F-B43B-24A2CFC326A2}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs-src", "docs-src", "{6F1B6E72-BADC-427F-B43B-24A2CFC326A2}"
 	ProjectSection(SolutionItems) = preProject
-		..\docs\_config.yml = ..\docs\_config.yml
-		..\docs\api.md = ..\docs\api.md
-		..\docs\readme.md = ..\docs\readme.md
-		..\docs\start.md = ..\docs\start.md
-		..\docs\summary.md = ..\docs\summary.md
-		..\docs\styles\website.css = ..\docs\styles\website.css
+		..\docs-src\readme.md = ..\docs-src\readme.md
+		..\docs-src\start.md = ..\docs-src\start.md
+		..\docs-src\summary.md = ..\docs-src\summary.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7C47A878-72F0-4EFE-B23F-EB6B67DE8594}"
@@ -69,10 +64,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tooling", "tooling", "{C916
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{6FD10DBB-3406-4F8D-837D-BB17B3B5FB6C}"
 	ProjectSection(SolutionItems) = preProject
-		..\tooling\docs\body.hbs = ..\tooling\docs\body.hbs
-		..\tooling\docs\header.hbs = ..\tooling\docs\header.hbs
 		..\tooling\docs\jsdoc.json = ..\tooling\docs\jsdoc.json
-		..\tooling\docs\link.hbs = ..\tooling\docs\link.hbs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "styles", "styles", "{A76C4C16-D266-4FD1-B95A-0E8523EFA628}"
+	ProjectSection(SolutionItems) = preProject
+		..\docs-src\styles\style.css = ..\docs-src\styles\style.css
 	EndProjectSection
 EndProject
 Global
@@ -93,6 +90,7 @@ Global
 		{6F1B6E72-BADC-427F-B43B-24A2CFC326A2} = {F483EA25-6581-4C95-80F9-42E54B1866FD}
 		{C916B2C2-9774-4ECC-9840-2DAD44ADD9F3} = {F483EA25-6581-4C95-80F9-42E54B1866FD}
 		{6FD10DBB-3406-4F8D-837D-BB17B3B5FB6C} = {C916B2C2-9774-4ECC-9840-2DAD44ADD9F3}
+		{A76C4C16-D266-4FD1-B95A-0E8523EFA628} = {6F1B6E72-BADC-427F-B43B-24A2CFC326A2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C379D40C-85D3-4629-97D1-696E28711D63}

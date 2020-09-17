@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ScriptX.Services Client Library Home</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="style.css">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">ScriptX.Services Client Library</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                 
+                    
+                        <a
+                            class="link user-link "
+                            href="https://github.com/MeadCo/ScriptX.Print.Client"
+                        >
+                            Github
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="https://www.meadroid.com/Developers/KnowledgeBank/HowToGuides/ScriptXServices/ThenToNow"
+                        >
+                            Then to now walk through
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="https://scriptxprintsamples.meadroid.com"
+                        >
+                            Samples
+                        </a>
+                    
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Namespaces</h3><ul><li><a href="factory.html">factory</a></li><li><a href="MeadCo.html">MeadCo</a></li><li><a href="MeadCoScriptXPrint.html">MeadCoScriptXPrint</a></li><li><a href="MeadCoScriptXPrintHTML.html">MeadCoScriptXPrintHTML</a></li><li><a href="MeadCoScriptXPrintLicensing.html">MeadCoScriptXPrintLicensing</a></li><li><a href="MeadCoScriptXPrintPDF.html">MeadCoScriptXPrintPDF</a></li><li><a href="secmgr.html">secmgr</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p></p>
+                    <h1>Home</h1>
+                </header>
+                
+
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h1>MeadCo ScriptX.Services Client Library</h1>
+<h2>Current Version</h2>
+<p>1.7.0-beta05</p>
+<p>The MeadCo ScriptX.Services project brings control of printing to browser based content in all browsers on all devices with
+out needing a binary add-on.</p>
+<p>The MeadCo ScriptX.Services Client Library delivers an emulation of MeadCo's ScriptX.Add-on for Internet Explorer on Windows to
+<a href="https://www.meadroid.com/Features/ScriptXServices">MeadCo ScriptX Services</a>. In the binary free environment ScriptX.Services Client Library is the javascript libraries for interfacing between the client devices
+and the server system that provides printing services where-ever that server may be:</p>
+<ul>
+<li>in the cloud at <a href="https://scriptxservices.meadroid.com">scriptxservices.meadroid.com</a></li>
+<li>an on premise Microsoft Windows (x64) Server</li>
+<li>a Microsoft Windows x64 PC</li>
+</ul>
+<p>The purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On
+for Internet Explorer. These libraries assist with continuing with a large part of the code intact when transitioning to
+using ScriptX.Services instead/as well.</p>
+<p>In combination with the <a href="https://github.com/MeadCo/MeadCoScriptXJS">MeadCoScriptXJS library</a> the emulation provides
+significant levels of compatibility with in-browser script written for the Add-on so allowing the same code to run with either the Add-on for Internet Explorer or ScriptX Services depending on the client device.
+It may also be used 'stand-alone' although the code is not very modern due to the requirement to support older versions of Internet Explorer.</p>
+<h4>A note on browsers and devices</h4>
+<p>The libraries are developed for 'evergreen' browsers on common devices and Internet Explorer 11. These libraries are likely not compatible with
+ancient versions of Internet Explorer.</p>
+<p>However, MeadCo ScriptX.Add-on continues to be available and supports old versions of Internet Explorer. Javascript code in this scenario will be utilising the <em>'window.factory'</em> object.</p>
+<p>By use of a compatibility layer written in javascript that same code can be bought to more modern browsers. With the proviso of course that the HTML that renders successfully in the older browser
+renders correctly in modern browsers.</p>
+<p>The ScriptX.Services Client libraries depend on little other than themselves (and jQuery). Our clients are many and varied and will no doubt be
+taking dependencies on many libraries, we don't want to work against those choices but work with them.</p>
+<p>However, in the current version there is a dependency upon jQuery for:</p>
+<ul>
+<li>Implementation of AJAX calls</li>
+<li>Extraction of document content for printing</li>
+<li>Simple discovery of elements with given attributes</li>
+</ul>
+<p>These dependencies will be removed over time.</p>
+<h2>Architectural Overview</h2>
+<h3>Background</h3>
+<p>ScriptX.Addon (a COM/ActiveX object) appears to script code in the browser (Internet Explorer) as the object &quot;window.factory&quot; (assuming that the de-facto standard id of &quot;factory&quot; has been used on the ScriptX &lt;object /&gt; element). From this object, the object &quot;printing&quot; is available, leading to code such as this:</p>
+<pre class="prettyprint source lang-javascript"><code>factory.printing.header = &quot;&quot;;
+factory.printing.footer = &quot;&quot;;
+factory.printing.Print(false);
+</code></pre>
+<p>The extensive API of properties and methods is documented <a href="https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn">here</a>.</p>
+<h4>MeadCoScriptXJS Library</h4>
+<p>In addition to the ScriptX.Addon API a <a href="https://github.com/MeadCo/MeadCoScriptXJS">javascript library</a> was developed to extend the API with convenience functions. Started in 2013, this library took the
+approach of &quot;namespaces&quot; / static classes, which were popular(-ish) then as a means of ensuring no clashes of names etc. A significant amount of code has
+been written that relies upon this library. By definition there is only ever one instance of ScriptX.Addon on a page and therefore a static singleton javascript 'class' instance
+is perfectly adequate.</p>
+<p>It is also known and acknowleged that much code utilising ScriptX.Addon predates React, Angular, Vue etc. etc. and exists in a world of relatively un-complex page operations; a &quot;print button&quot; and some code to
+set print parameters and then print (though the back-end code generating HTML to be printed was likely complex and comprehensive).</p>
+<p>This library implemented the following static objects/classes:</p>
+<ul>
+<li>MeadCo</li>
+<li>MeadCo.ScriptX</li>
+<li>MeadCo.ScriptX.Utils</li>
+<li>MeadCo.ScriptX.Printing</li>
+<li>MeadCo.Licensing</li>
+<li>MeadCo.Licensing.LicMgr</li>
+</ul>
+<p>The &quot;trick&quot; here was that MeadCo.ScriptX.Utils was pointed to &quot;factory&quot;, MeadCo.ScriptX.Printing was pointed to &quot;factory.printing&quot; and MeadCo.Licensing.LicMgr pointed to &quot;secmgr&quot;.</p>
+<p>MeadCo.ScriptX.Printing therefore exposed the entire <a href="https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn/printing">printing API</a>.</p>
+<p>MeadCo.ScriptX is an object providing for verified initialisation and a number of functions that wrapped common operations into a simpler API. So, for example:</p>
+<pre class="prettyprint source lang-javascript"><code>&lt;script type=&quot;text/javascript&quot;>
+   $(window).on('load', function () {
+     if ( MeadCo.ScriptX.Init() (
+     {
+        $(&quot;#info&quot;).text(&quot;ScriptX version: &quot; + MeadCo.ScriptX.GetComponentVersion(&quot;scriptx.factory&quot;));
+        MeadCo.ScriptX.Printing.header = 
+          &quot;MeadCo's ScriptX&b:&p of &P:&bBasic Printing Sample&quot;;
+        MeadCo.ScriptX.Printing.footer = 
+          &quot;The de facto standard for advanced web-based printing&quot;;
+        MeadCo.ScriptX.Printing.orientation = &quot;landscape&quot;;
+        $(&quot;#btnprint&quot;).click(function() { 
+            MeadCo.ScriptX.PrintPage(false);
+     }      
+   });
+&lt;/script>
+</code></pre>
+<p>The final &quot;trick&quot; is that if MeadCo.ScriptX.Printing is pointed to an implementation of the .Addon API in javascript and that implementation uses the ScriptX.Services API to perform printing then code using the MeadCoScriptXJS library will work
+with .Addon and .Services with no changes in simple cases and few changes in more complex cases.</p>
+<h3>Support for .Addon Emulation in ScriptX.Services</h3>
+<p>The MeadCo ScriptX.Service Client Library implements a heirarchy of static 'classes' (or singleton object instances!) at the bottom of which is an implementation of the .Addon API (factory, factory.printing et al) in javascript. The implementation
+is necessarily imperfect with some imperfections, in particular the support for asynchronous behaviour such as the ubiquitous WaitFortSpoolingComplete() API being impossible to emulate fully. Such imperfections are
+smoothed by use of the MeadCoScriptXJS library which provides a layer to hide the differences betweeen .Addon and .Services and so enable a single code base.</p>
+<h4>User Interface</h4>
+<p>The library does not implement any UI - Printer or Print Settings dialogs. This enables decoupling from any UI dependencies that may be problematic - for example, to Bootstrap, or to nopt Bootstrap?</p>
+<p>However, a few APIs do 'require' a UI, for example, prompted printing.</p>
+<p>A simple extension mechanism is implemented into which implementation of UI may be patched.</p>
+<p>All that is required is to implement the named functions.</p>
+<table>
+<thead>
+<tr>
+<th>function</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MeadCo.ScriptX.Print.UI.PageSetup(function (bAccepted) {} )</td>
+<td></td>
+</tr>
+<tr>
+<td>MeadCo.ScriptX.Print.UI.PrinterSettings(function (bAccepted) {} )</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>An exemplar implemenation of UI is <a href="../src/jQuery-MeadCo.ScriptX.Print.UI.js">provided</a> (implemented assuming Bootstrap and jQuery)</p>
+<h3>Summary</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Namespace</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>meadco-core.js</td>
+<td>MeadCo</td>
+<td>Core functionality required for creating objects in the namespace and other general utilities</td>
+</tr>
+<tr>
+<td>meadco-scriptxprint.js</td>
+<td>MeadCo.ScriptX.Print</td>
+<td>Implements calls to the ScriptX.Services Web print APIs including processing of responses with tracking of jobs at the server</td>
+</tr>
+<tr>
+<td>meadco-scriptxprinthtml.js</td>
+<td>MeadCo.ScriptX.Print.HTML</td>
+<td>Implements support for the structures required by the Web API for html printing and functions to gather the HTML to be printed from the current document</td>
+</tr>
+<tr>
+<td>meadco-scriptxprintpdf.js</td>
+<td>MeadCo.ScriptX.Print.PDF</td>
+<td>Implements support for the structures required by the Web API for printing PDF documents</td>
+</tr>
+<tr>
+<td>meadco-scriptxfactory.js</td>
+<td>&quot;factory&quot;</td>
+<td>Implements emulations of factory, factory.printing..., factory.rawPrinting, factory.js</td>
+</tr>
+</tbody>
+</table>
+<p>| File | Namespace | Purpose |
+| meadco-scriptxprintlicensing.js | MeadCo.ScriptX.Print.Licensing | Implements calls to the ScriptX.Services Web licensing API |
+| meadco-secmgr.js | &quot;secmgr&quot; | Implements emulation of secmgr |</p>
+<p>Note that the <a href="https://github.com/MeadCo/MeadCoScriptXJS">MeadCoScriptXJS</a> library does not have to be used. In its absense, meadco-scriptxfactory.js and its dependencies on the hierarchy implement a usable emulation of &quot;factory.printing&quot; though functionality such as WaitForSpoolingComplete is not a compatible emulation.</p>
+<p>See also:</p>
+<ul>
+<li><a href="start.md">Getting Started</a> for an introduction to using the libraries</li>
+<li><a href="api.md">API Reference</a> for details on the APIs available</li>
+<li><a href="https://github.com/MeadCo/MeadCoScriptXJS">MeadCoScriptXJS</a> project for a higher level abstraction which provides a number of conventient functions for the use of ScriptX in any of its forms, Add-on or Services.</li>
+<li><a href="https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn">ScriptX Add-on for Internet Explorer API reference</a>.</li>
+<li><a href="https://scriptxservices.meadroid.com/">ScriptX.Services on Cloud</a></li>
+<li><a href="https://scriptxprintsamples.meadroid.com/">ScriptX Services Samples - Cloud, On Premise, for Windows PC</a> the samples make use of MeadCoScriptXJS and ScriptX.Services.Client to deliver samples that work in any scenario with the same code.</li>
+</ul></article>
+    </section>
+
+
+
+
+
+
+            </div>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+</body>
+</html>

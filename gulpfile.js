@@ -10,8 +10,8 @@ const gulp = require("gulp"),
     del = require("del"),
     bundleconfig = require("./distbundlesconfig.json");
 
-const jsdoc2md = require('jsdoc-to-markdown');
-const fs = require("fs");
+const replace = require('gulp-replace');
+const jsdoc = require('gulp-jsdoc3');
 
 // the md doc output is, e.g. MeadCoScriptXPrint for MeadCo.ScriptX.Print
 // this table drives back replacement
@@ -52,34 +52,58 @@ function cleanDist() {
     return del(files, { force: true });
 }
 
-exports.makeApiDocs = (done) => {
-    var output = jsdoc2md.renderSync(
-        {
-            "configure": "tooling/docs/jsdoc.json",
-            "files": "src/*.js",
-            "global-index-format": "none",
-            "partial": [
-                "tooling/docs/header.hbs",
-                "tooling/docs/link.hbs",
-                "tooling/docs/body.hbs"
-            ]
-        }); // .then(output => fs.writeFileSync("docs/api.md"));
+exports.buildDocs = (done) => {
 
-    namespaces.forEach((nsname) => {
+    console.log("start builddocs");
+    const config = require('./tooling/docs/jsdoc.json');
+
+    console.log("loaded config");
+
+    var p = pipeline(gulp.src(['readme.md', '.src/**/*.js'], { read: false }),jsdoc(config));
+
+    console.log("Created pipeline");
+
+    return p;
+}
+
+exports.postProcessDocs2 = (done) => {
+
+    console.log("Start postProcessDocs");
+
+    var tasks = namespaces.map((nsname) => {
 
         var badName = nsname.replace(/\./g, "");
 
         console.log("Replace: " + badName + " with: " + nsname);
 
-        output = output.replace(new RegExp(badName, "g"), nsname);
+        var regx = new RegExp(badName + "(?![a-zA-Z]*\.html)", "gi")
+
+        return gulp.src("./docs/*.html").pipe(replace(regx, nsname)).pipe(gulp.dest("./docs2"));
 
     });
 
-    output = output.replace(/MeadCoScriptXPrint/g, "MeadCo.ScriptX.Print");
+    console.log("Done postProcessDocs");
 
-    fs.writeFileSync("docs/api.md", output);
-    done();
- };
+    return merge(tasks);
+} 
+
+exports.postProcessDocs = (done) => {
+
+    console.log("Start postProcessDocs");
+
+    var nsname = "MeadCo.ScriptX.Print";
+    var badName = nsname.replace(/\./g, "");
+
+    console.log("Replace: " + badName + " with: " + nsname);
+
+    var regx = new RegExp(badName + "(?![a-zA-Z]*\.html)", "gi")
+    return gulp.src("./docs/*.html").pipe(replace(regx, nsname)).pipe(gulp.dest("./docs2"));
+ 
+} 
+
+exports.makeApiDocs = (done) => {
+    return gulp.series(exports.buildDocs(done), exports.postProcessDocs(done));
+}
 
 exports.buildDist = gulp.series(cleanDist, gulp.parallel(mintoDist, exports.makeApiDocs));
 

@@ -1,4 +1,5 @@
-# ScriptX.Print.Client
+# MeadCo ScriptX.Services Client Library
+
 
 ## Current Version
 
@@ -7,8 +8,8 @@
 The MeadCo ScriptX.Services project brings control of printing to browser based content in all browsers on all devices with
 out needing a binary add-on.
 
-The MeadCo ScriptX.Service Client Library brings an emulation of MeadCo's ScriptX.Add-on for Internet Explorer on Windows to 
-working with [MeadCo ScriptX Services](https://www.meadroid.com/Features/ScriptXServices). In the binary free environment ScriptX.Print.Client are the javascript libraries for interfacing between the client devices 
+The MeadCo ScriptX.Services Client Library delivers an emulation of MeadCo's ScriptX.Add-on for Internet Explorer on Windows to 
+ [MeadCo ScriptX Services](https://www.meadroid.com/Features/ScriptXServices). In the binary free environment ScriptX.Services Client Library is the javascript libraries for interfacing between the client devices 
 and the server system that provides printing services where-ever that server may be:
 
 * in the cloud at [scriptxservices.meadroid.com](https://scriptxservices.meadroid.com)
@@ -33,7 +34,7 @@ However, MeadCo ScriptX.Add-on continues to be available and supports old versio
 By use of a compatibility layer written in javascript that same code can be bought to more modern browsers. With the proviso of course that the HTML that renders successfully in the older browser
 renders correctly in modern browsers.
 
-The ScriptX.Print.Client libraries depend on little other than themselves. Our clients are many and varied and will no doubt be 
+The ScriptX.Services Client libraries depend on little other than themselves (and jQuery). Our clients are many and varied and will no doubt be 
 taking dependencies on many libraries, we don't want to work against those choices but work with them.  
 
 However, in the current version there is a dependency upon jQuery for:

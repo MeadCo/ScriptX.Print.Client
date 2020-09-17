@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ScriptX.Services Client Library factory</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="style.css">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">ScriptX.Services Client Library</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                 
+                    
+                        <a
+                            class="link user-link "
+                            href="https://github.com/MeadCo/ScriptX.Print.Client"
+                        >
+                            Github
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="https://www.meadroid.com/Developers/KnowledgeBank/HowToGuides/ScriptXServices/ThenToNow"
+                        >
+                            Then to now walk through
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="https://scriptxprintsamples.meadroid.com"
+                        >
+                            Samples
+                        </a>
+                    
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Namespaces</h3><ul><li><a href="factory.html">factory</a></li><li><a href="MeadCo.html">MeadCo</a></li><li><a href="MeadCoScriptXPrint.html">MeadCo.ScriptX.Print</a></li><li><a href="MeadCoScriptXPrintHTML.html">MeadCo.ScriptX.PrintHTML</a></li><li><a href="MeadCoScriptXPrintLicensing.html">MeadCo.ScriptX.PrintLicensing</a></li><li><a href="MeadCoScriptXPrintPDF.html">MeadCo.ScriptX.PrintPDF</a></li><li><a href="secmgr.html">secmgr</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Namespace</p>
+                    <h1>factory</h1>
+                </header>
+                
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>factory</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>MeadCo ScriptX 'window.factory' shim (support for modern browsers and IE 11) JS client library.<br/></p>
+<p>The ScriptX Add-on for Internet Explorer is included on a html document with an &lt;object /&gt; element with a de-facto standard id of 'factory': &lt;object id='factory' /&gt;.</p>
+<p>The object is referenced with the property window.factory which exposes properties and methods to define print setting and perform operations such as printing a document or frame.</p>
+<p>The object has three further properties:</p>
+<ul>
+<li>object
+<ul>
+<li>js</li>
+</ul>
+</li>
+<li>rawPrinting</li>
+<li>printing
+<ul>
+<li>printerControl</li>
+<li>enhancedFormatting</li>
+</ul>
+</li>
+</ul>
+<p>This javascript 'module' provides partial emulation of window.factory, window.factory.object and window.factory.object.js</p>
+<p>Full emulation (and almost complete implementation) is provided for window.factory.printing, window.factory.printing.printerControl, window.factory.printing.enhancedFormatting. The most notable absent implementation is an implementation of print preview.</p>
+<p>Full emulation is provided for window.factory.rawPrinting. Please note that the implementation is synchronous and browsers will issue a warning to the console.</p>
+<p>ScriptX Add-on for Internet Explorer intercepts the browser UI for printing. For obvious reasons this is not possible with javascript, however ::</p>
+<p><strong>PLEASE NOTE:</strong> This library replaces window.print()</p>
+<p>Full documentation on the properties/methods is provided by the <a href="https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn">technical reference documentation</a> for the ScriptX Add-on for Internet Explorer. That documentation is not reproduced here.</p>
+<p>If the startup script determines that the ScriptX Add.on for IE is already active then it will quietly give priority to the object. In other words, the Add-on has precedence on Internet Explorer.</p>
+<p>This enables the same experience (almost) to be delivered to any browser on any device with the same html/javascript code.</p>
+<p>It is strongly recommended that the <a href="https://github.com/MeadCo/MeadCoScriptXJS">MeadCoScriptJS library</a> is used in conjunction with this library as it provides code (Promises) to assist
+with working with the significant difference between the synchronous nature of the functions of ScriptX.Add-on (which hide the underlying asynchrony) and the asynchronous nature of javascript AJAX processing.</p>
+<p>Requires:</p>
+<ul>
+<li>
+<p>MeadCo.Core</p>
+</li>
+<li>
+<p>MeadCo.ScriptX.Print</p>
+</li>
+<li>
+<p>MeadCo.ScriptX.Print.HTML</p>
+</li>
+<li>
+<p>MeadCo.ScriptX.Print.Licensing when using ScritpX.Services for Windows PC</p>
+</li>
+</ul>
+<p>MeadCo.ScriptX.Print.HTML.connect<a href="">Async</a> or MeadCo.ScriptX.Print.connect<a href="">Async</a> <em>MUST</em> be called before using the apis in this library.</p>
+<p>See <a href="https://scriptxprintsamples.meadroid.com">ScriptX Samples</a> for a lot of samples on using this code.</p>
+<p>Some Add-on APIs lead to system provided dialogs (e.g. printer and paper setup) - support for implementing the dialogs in javascript as simple plug-ins is provided, along with an example implementation using bootstrap/jQuery (see jQuery-MeadCo.ScriptX.Print.UI.js)</p></div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="meadco-scriptxfactory.js.html" class="button">View Source</a>
+            <span>
+                <a href="meadco-scriptxfactory.js.html">meadco-scriptxfactory.js</a>, <a href="meadco-scriptxfactory.js.html#line1">line 1</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+        
+            <h3>Example</h3>
+            
+    
+        <pre class="prettyprint"><code>MeadCo.ScriptX.Print.UI = {   PageSetup: function(fnDialgCompleteCallBack) { ... dialog code ...},   PrinterSettings: function(fnDialgCompleteCallBack) { ... dialog code ...}}</code></pre>
+    
+
+        
+    
+    </div>
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+            </div>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+</body>
+</html>

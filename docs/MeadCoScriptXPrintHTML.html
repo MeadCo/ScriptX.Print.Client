@@ -1,0 +1,4233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ScriptX.Services Client Library MeadCoScriptXPrintHTML</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="style.css">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">ScriptX.Services Client Library</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                 
+                    
+                        <a
+                            class="link user-link "
+                            href="https://github.com/MeadCo/ScriptX.Print.Client"
+                        >
+                            Github
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="https://www.meadroid.com/Developers/KnowledgeBank/HowToGuides/ScriptXServices/ThenToNow"
+                        >
+                            Then to now walk through
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="https://scriptxprintsamples.meadroid.com"
+                        >
+                            Samples
+                        </a>
+                    
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Namespaces</h3><ul><li><a href="factory.html">factory</a></li><li><a href="MeadCo.html">MeadCo</a></li><li><a href="MeadCoScriptXPrint.html">MeadCoScriptXPrint</a></li><li><a href="MeadCoScriptXPrintHTML.html">MeadCoScriptXPrintHTML</a></li><li><a href="MeadCoScriptXPrintLicensing.html">MeadCoScriptXPrintLicensing</a></li><li><a href="MeadCoScriptXPrintPDF.html">MeadCoScriptXPrintPDF</a></li><li><a href="secmgr.html">secmgr</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Namespace</p>
+                    <h1>MeadCoScriptXPrintHTML</h1>
+                </header>
+                
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>MeadCoScriptXPrintHTML</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>MeadCo.ScriptX.Print.HTML</p>
+<p>A static class providing printing of HTML content.</p>
+<p>Requires: meadco-core.js, meadco-scriptxprint.js</p>
+<p>The purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the code
+intact when transitioning to using ScriptX.Services instead/as well.</p>
+<p>Includes processing of calls to the print api that return &quot;printing to file&quot; including collecting the
+file output.</p></div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="meadco-scriptxprinthtml.js.html" class="button">View Source</a>
+            <span>
+                <a href="meadco-scriptxprinthtml.js.html">meadco-scriptxprinthtml.js</a>, <a href="meadco-scriptxprinthtml.js.html#line1">line 1</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+        
+    
+    </div>
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h1>Members</h1>
+            <div class="members">
+            
+                <div class="member">
+
+<h4 class="name" id=".documentContentToPrint">
+    <a class="href-link" href="#.documentContentToPrint">#</a>
+    
+        
+            <span class='tag'>static</span>
+        
+    
+    <span class="code-name">
+        documentContentToPrint
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Get the complete currently displayed document as string of HTML.</p>
+<p>Form values are preserved in the source document then the document cloned.</p>
+<p>A base element is created if required.
+style elements are included.
+script and object elements are not included.</p>
+</div>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>documentContentToPrint</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">string</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>the current content in the window document as html</p></td>
+</tr>
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="meadco-scriptxprinthtml.js.html" class="button">View Source</a>
+            <span>
+                <a href="meadco-scriptxprinthtml.js.html">meadco-scriptxprinthtml.js</a>, <a href="meadco-scriptxprinthtml.js.html#line537">line 537</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id=".version">
+    <a class="href-link" href="#.version">#</a>
+    
+        
+            <span class='tag'>static</span>
+        
+    
+    <span class="code-name">
+        version
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Get the version of this module as a string major.minor.hotfix.build</p>
+</div>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>version</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">string</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="meadco-scriptxprinthtml.js.html" class="button">View Source</a>
+            <span>
+                <a href="meadco-scriptxprinthtml.js.html">meadco-scriptxprinthtml.js</a>, <a href="meadco-scriptxprinthtml.js.html#line701">line 701</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id=".version">
+    <a class="href-link" href="#.version">#</a>
+    
+        
+            <span class='tag'>static</span>
+        
+    
+    <span class="code-name">
+        version
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Get the version of this module as a string major.minor.hotfix.build</p>
+</div>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>version</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">string</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="meadco-scriptxprintpdf.js.html" class="button">View Source</a>
+            <span>
+                <a href="meadco-scriptxprintpdf.js.html">meadco-scriptxprintpdf.js</a>, <a href="meadco-scriptxprintpdf.js.html#line254">line 254</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+        <div class='vertical-section'>
+            <h1>Methods</h1>
+            <div class="members">
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".connect">
+        <a class="href-link" href="#.connect">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name">
+            
+                connect<span class="signature">(serverUrl, licenseGuid, onFail)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Specify the server to use and the subscription/license id.</p>
+<p>Attempt to connect to the defined ScriptX.Services server and obtain
+default soft html and device settings for the default device as well as the list
+of available printers.</p>
+<p>This call is not required if client side code doesnt need to know about available printers
+but can assume (at least .connectLite() is required).</p>
+<p>This call is synchronous and therefore not recommended. Use connectAsync()</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>serverUrl</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">string</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>the 'root' url to the server (the api path will be added by the library)</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>licenseGuid</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">string</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>the license/subscription identifier</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>onFail</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>the function to call if an error occurs when making the connection</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="meadco-scriptxprinthtml.js.html" class="button">View Source</a>
+            <span>
+                <a href="meadco-scriptxprinthtml.js.html">meadco-scriptxprinthtml.js</a>, <a href="meadco-scriptxprinthtml.js.html#line630">line 630</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".connectAsync">
+        <a class="href-link" href="#.connectAsync">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name">
+            
+                connectAsync<span class="signature">(serverUrl, licenseGuid, resolve, reject)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Specify the server to use and the subscription/license id.</p>
+<p>Attempt to connect to the defined ScriptX.Services server and obtain
+default soft html and device settings for the default device as well as the list
+of available printers.</p>
+<p>This call is not required if client side code doesnt need to know about available printers
+but can assume (at least .connectLite() is required).</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>serverUrl</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">string</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>the 'root' url to the server (the api path will be added by the library)</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>licenseGuid</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">string</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>the license/subscription identifier</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>resolve</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>function to call on success</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>reject</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>function to call on failure</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="meadco-scriptxprinthtml.js.html" class="button">View Source</a>
+            <span>
+                <a href="meadco-scriptxprinthtml.js.html">meadco-scriptxprinthtml.js</a>, <a href="meadco-scriptxprinthtml.js.html#line661">line 661</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".connectLite">
+        <a class="href-link" href="#.connectLite">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name">
+            
+                connectLite<span class="signature">(serverUrl, licenseGuid)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Specify the server and the subscription/license id to use on AJAX calls. No call is made in this function</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>serverUrl</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">string</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>the 'root' url to the server (the api path will be added by the library)</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>licenseGuid</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">string</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>the license/subscription identifier</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="meadco-scriptxprinthtml.js.html" class="button">View Source</a>
+            <span>
+                <a href="meadco-scriptxprinthtml.js.html">meadco-scriptxprinthtml.js</a>, <a href="meadco-scriptxprinthtml.js.html#line618">line 618</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".frameContentToPrint">
+        <a class="href-link" href="#.frameContentToPrint">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name">
+            
+                frameContentToPrint<span class="signature">(sFrame)</span><span class="type-signature"> &rarr; {string}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Get the complete currently displayed document in a frame as string of HTML.</p>
+<p>Form values are preserved in the source document then the document cloned.</p>
+<p>A base element is created if required.
+style elements are included.
+script and object elements are not included.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>sFrame</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">string</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>the name of the frame</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="meadco-scriptxprinthtml.js.html" class="button">View Source</a>
+            <span>
+                <a href="meadco-scriptxprinthtml.js.html">meadco-scriptxprinthtml.js</a>, <a href="meadco-scriptxprinthtml.js.html#line541">line 541</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>the current content in the frame window document as html</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">string</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".printDocument">
+        <a class="href-link" href="#.printDocument">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name">
+            
+                printDocument<span class="signature">(fnCallOnDone, fnCallback, data)</span><span class="type-signature"> &rarr; {boolean}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Print the complete current document in the window using the settings made by property updates before this function is called.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>fnCallOnDone</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>function to call when printing complete (and output returned), arg is null on no error, else error message.</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>fnCallback</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>function to call when job status is updated</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>data</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">any</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>object to give pass to fnCallback</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="meadco-scriptxprinthtml.js.html" class="button">View Source</a>
+            <span>
+                <a href="meadco-scriptxprinthtml.js.html">meadco-scriptxprinthtml.js</a>, <a href="meadco-scriptxprinthtml.js.html#line559">line 559</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><ul>
+<li>true if a print was started (otherwise an error will be thrown)</li>
+</ul></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">boolean</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".printFrame">
+        <a class="href-link" href="#.printFrame">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name">
+            
+                printFrame<span class="signature">(sFrame, fnCallOnDone, fnCallback, data)</span><span class="type-signature"> &rarr; {boolean}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Print the complete current document in the named iframe using the settings made by property updates before this function is called.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>sFrame</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">string</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>the name of the iframe whose content is to be printed.</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>fnCallOnDone</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>function to call when printing complete (and output returned), arg is null on no error, else error message.</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>fnCallback</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>function to call when job status is updated</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>data</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">any</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>object to give pass to fnCallback</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="meadco-scriptxprinthtml.js.html" class="button">View Source</a>
+            <span>
+                <a href="meadco-scriptxprinthtml.js.html">meadco-scriptxprinthtml.js</a>, <a href="meadco-scriptxprinthtml.js.html#line573">line 573</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><ul>
+<li>true if a print was started (otherwise an error will be thrown)</li>
+</ul></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">boolean</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".printFromUrl">
+        <a class="href-link" href="#.printFromUrl">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name">
+            
+                printFromUrl<span class="signature">(sUrl, fnCallOnDone, fnCallback, data)</span><span class="type-signature"> &rarr; {boolean}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Print the document obtained by downloading the given url using the settings made by property updates before this function is called.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>sUrl</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">string</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>the fully qualified url to the document to be printed.</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>fnCallOnDone</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>function to call when printing complete (and output returned), arg is null on no error, else error message.</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>fnCallback</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>function to call when job status is updated</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>data</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">any</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>object to give pass to fnCallback</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="meadco-scriptxprinthtml.js.html" class="button">View Source</a>
+            <span>
+                <a href="meadco-scriptxprinthtml.js.html">meadco-scriptxprinthtml.js</a>, <a href="meadco-scriptxprinthtml.js.html#line588">line 588</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><ul>
+<li>true if a print was started (otherwise an error will be thrown)</li>
+</ul></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">boolean</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id=".printHtml">
+        <a class="href-link" href="#.printHtml">#</a>
+        
+            
+                <span class='tag'>static</span>
+            
+        
+        <span class="code-name">
+            
+                printHtml<span class="signature">(sHtml, fnCallOnDone, fnCallback, data)</span><span class="type-signature"> &rarr; {boolean}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Print the fragment of html using the settings made by property updates before this function is called.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>sHtml</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">string</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>fragment/snippet of html to print, must be complete HTML document.</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>fnCallOnDone</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>function to call when printing complete (and output returned), arg is null on no error, else error message.</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>fnCallback</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>function to call when job status is updated</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>data</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">any</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>object to give pass to fnCallback</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="meadco-scriptxprinthtml.js.html" class="button">View Source</a>
+            <span>
+                <a href="meadco-scriptxprinthtml.js.html">meadco-scriptxprinthtml.js</a>, <a href="meadco-scriptxprinthtml.js.html#line603">line 603</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><ul>
+<li>true if a print was started (otherwise an error will be thrown)</li>
+</ul></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">boolean</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+        <div class='vertical-section'>
+            <h1>Type Definitions</h1>
+            <div class="members">
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">number</span>
+
+
+    </span>
+
+<h4 class="name" id=".BooleanOption">
+    <a class="href-link" href="#.BooleanOption">#</a>
+    
+    <span class="code-name">
+        BooleanOption
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Enum to describe a boolean value or use the default</p>
+</div>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>DEFAULT</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>0 use the default at the print server</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>TRUE</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>1</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>FALSE</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>2</p></td>
+</tr>
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="meadco-scriptxprinthtml.js.html" class="button">View Source</a>
+            <span>
+                <a href="meadco-scriptxprinthtml.js.html">meadco-scriptxprinthtml.js</a>, <a href="meadco-scriptxprinthtml.js.html#line76">line 76</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id=".ExtraHeaderAndFooterSettings">
+    <a class="href-link" href="#.ExtraHeaderAndFooterSettings">#</a>
+    
+    <span class="code-name">
+        ExtraHeaderAndFooterSettings
+    </span>
+    
+</h4>
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>allPagesHeader</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">string</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>allPagesFooter</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">string</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>firstPageHeader</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">string</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>firstPageFooter</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">string</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>extraFirstPageFooter</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">string</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>allHeaderHeight</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>allFooterHeight</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>firstHeaderHeight</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>firstFooterHeight</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>extraFirstFooterHeight</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="meadco-scriptxprinthtml.js.html" class="button">View Source</a>
+            <span>
+                <a href="meadco-scriptxprinthtml.js.html">meadco-scriptxprinthtml.js</a>, <a href="meadco-scriptxprinthtml.js.html#line112">line 112</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id=".Margins">
+    <a class="href-link" href="#.Margins">#</a>
+    
+    <span class="code-name">
+        Margins
+    </span>
+    
+</h4>
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>left</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>left margin in requested units</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>top</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>top margin in requested units</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>right</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>right margin in requested units</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>bottom</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>bottom margin in requested units</p></td>
+</tr>
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="meadco-scriptxprinthtml.js.html" class="button">View Source</a>
+            <span>
+                <a href="meadco-scriptxprinthtml.js.html">meadco-scriptxprinthtml.js</a>, <a href="meadco-scriptxprinthtml.js.html#line93">line 93</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">number</span>
+
+
+    </span>
+
+<h4 class="name" id=".PageMarginUnits">
+    <a class="href-link" href="#.PageMarginUnits">#</a>
+    
+    <span class="code-name">
+        PageMarginUnits
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Enum to describe the units used on measurements - <strong>NOTE</strong> please use MeadCo.ScriptX.Print.MeasurementUnits instead</p>
+</div>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>DEFAULT</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>0 use the default at the print server</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>INCHES</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>1</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>MM</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>2 millimeters</p></td>
+</tr>
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="important tag-deprecated">Deprecated:</dt><dd class="yes-def tag-deprecated"><ul class="dummy"><li>Yes</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="meadco-scriptxprinthtml.js.html" class="button">View Source</a>
+            <span>
+                <a href="meadco-scriptxprinthtml.js.html">meadco-scriptxprinthtml.js</a>, <a href="meadco-scriptxprinthtml.js.html#line24">line 24</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">number</span>
+
+
+    </span>
+
+<h4 class="name" id=".PageOrientation">
+    <a class="href-link" href="#.PageOrientation">#</a>
+    
+    <span class="code-name">
+        PageOrientation
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Enum to describe the orientation of the paper</p>
+</div>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>DEFAULT</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>0 use the default at the print server</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>LANDSCAPE</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>1</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>PORTRAIT</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>2</p></td>
+</tr>
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="meadco-scriptxprinthtml.js.html" class="button">View Source</a>
+            <span>
+                <a href="meadco-scriptxprinthtml.js.html">meadco-scriptxprinthtml.js</a>, <a href="meadco-scriptxprinthtml.js.html#line42">line 42</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id=".PageSettings">
+    <a class="href-link" href="#.PageSettings">#</a>
+    
+    <span class="code-name">
+        PageSettings
+    </span>
+    
+</h4>
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>orientation</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">PageOrientation</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>orientation of the paper (size and source is a device setting)</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>units</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">MeasurementUnits</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>measurement units for margins</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>margins</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">Margins</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>margins to use</p></td>
+</tr>
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="meadco-scriptxprinthtml.js.html" class="button">View Source</a>
+            <span>
+                <a href="meadco-scriptxprinthtml.js.html">meadco-scriptxprinthtml.js</a>, <a href="meadco-scriptxprinthtml.js.html#line103">line 103</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">number</span>
+
+
+    </span>
+
+<h4 class="name" id=".PrintingPass">
+    <a class="href-link" href="#.PrintingPass">#</a>
+    
+    <span class="code-name">
+        PrintingPass
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Enum to describe the pages to be printed</p>
+</div>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>ALL</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>1 print all pages</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>ODD</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>2 print odd numbered pages only</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>EVEN</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>3 print even numbered pages only</p></td>
+</tr>
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="meadco-scriptxprinthtml.js.html" class="button">View Source</a>
+            <span>
+                <a href="meadco-scriptxprinthtml.js.html">meadco-scriptxprinthtml.js</a>, <a href="meadco-scriptxprinthtml.js.html#line59">line 59</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id=".Settings">
+    <a class="href-link" href="#.Settings">#</a>
+    
+    <span class="code-name">
+        Settings
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>The soft settings to use when printing html content - headers, footers and margins
+(Device settings such as papersize, printer are described with MeadCo.ScriptX.Print.deviceSettings)</p>
+</div>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>header</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">string</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>Page header for all pages.</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>footer</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">string</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>Page footer for all pages.</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>headerFooterFont</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">string</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>description of font to use for header/footer</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>viewScale</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>the scaling to use when printing expressed as a percentage. -1 =&gt; scale to fit</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>locale</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">string</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>language/locale - used for formatting date/time values in header/footer. defaults to client browser setting</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>timezoneOffset</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>client browser timezone offset so server will print correct time</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>shortDateFormat</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">string</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>formating string for short dates, if not provided then uses the locale default, or the server default</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>longDateFormat</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">string</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>formating string for long dates, if not provided then uses the locale default, or the server default</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>printBackgroundColorsAndImages</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">BooleanOption</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>True if background colours and images are to be printed.</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>page</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">PageSettings</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>orientation and margins to use on the paper</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>extraHeadersAndFooters</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">ExtraHeaderAndFooterSettings</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>enhanced headers and footers</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>pageRange</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">string</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>the (set of) page ranges to print, if empty, print all.</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>printingPass</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">PrintingPass</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>print all, or odd or even only?</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>jobTitle</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">string</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>description to use on the job in the print queue</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>documentUrl</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">string</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>the document url to use in headers and footers</p></td>
+</tr>
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="meadco-scriptxprinthtml.js.html" class="button">View Source</a>
+            <span>
+                <a href="meadco-scriptxprinthtml.js.html">meadco-scriptxprinthtml.js</a>, <a href="meadco-scriptxprinthtml.js.html#line501">line 501</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+            </div>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+</body>
+</html>
