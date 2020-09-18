@@ -62,11 +62,10 @@ gulp.task('CompileDocs', function (done) {
 });
 
 function ProcessName(nsname) {
-    console.log("Start ProcessName: " + nsname);
 
     var badName = nsname.replace(/\./g, "");
 
-    console.log("Replace: " + badName + " with: " + nsname);
+    // console.log("Replace: " + badName + " with: " + nsname);
 
     var regx = new RegExp(badName + "(?![a-zA-Z]*\.html)", "gi")
     return gulp.src("./docs/*.html").pipe(replace(regx, nsname)).pipe(gulp.dest("./docs"));
@@ -88,6 +87,8 @@ gulp.task('ProcessDocs4', function () {
     return ProcessName("MeadCo.ScriptX.Print");
 });
 
-gulp.task('MakeDocs', gulp.series('CompileDocs', 'ProcessDocs1', 'ProcessDocs2','ProcessDocs3', 'ProcessDocs4'));
+gulp.task('MakeDocs', gulp.series('CompileDocs', 'ProcessDocs1', 'ProcessDocs2', 'ProcessDocs3', 'ProcessDocs4'));
 
-exports.buildDist = gulp.series(gulp.parallel(cleanDist,cleanDocs), gulp.parallel(mintoDist, 'MakeDocs'));
+gulp.task('BuildDocs', gulp.series(cleanDocs,'MakeDocs'));
+
+gulp.task('BuildDist', gulp.series(gulp.parallel(cleanDist,cleanDocs), gulp.parallel(mintoDist, 'MakeDocs')));
