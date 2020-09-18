@@ -17,9 +17,9 @@ const jsdoc = require('gulp-jsdoc3');
 // this table drives back replacement
 const namespaces = [
     "MeadCo.ScriptX.Print",
-    "MeadCo.ScriptX.Print.HTML",
-    "MeadCo.ScriptX.Print.PDF",
-    "MeadCo.ScriptX.Print.Licensing"
+    "Print.Licensing",
+    "Print.PDF",
+    "Print.HTML",
 ];
 
 function getBundles(regexPattern) {
@@ -52,58 +52,42 @@ function cleanDist() {
     return del(files, { force: true });
 }
 
-exports.buildDocs = (done) => {
-
-    console.log("start builddocs");
-    const config = require('./tooling/docs/jsdoc.json');
-
-    console.log("loaded config");
-
-    var p = pipeline(gulp.src(['readme.md', '.src/**/*.js'], { read: false }),jsdoc(config));
-
-    console.log("Created pipeline");
-
-    return p;
+function cleanDocs() {
+    return del('./docs');
 }
 
-exports.postProcessDocs2 = (done) => {
+gulp.task('CompileDocs', function (done) {
+    const config = require('./tooling/docs/jsdoc.json');
+    gulp.src(['readme.md', '.src/**/*.js'], { read: false }).pipe(jsdoc(config,done));
+});
 
-    console.log("Start postProcessDocs");
+function ProcessName(nsname) {
+    console.log("Start ProcessName: " + nsname);
 
-    var tasks = namespaces.map((nsname) => {
-
-        var badName = nsname.replace(/\./g, "");
-
-        console.log("Replace: " + badName + " with: " + nsname);
-
-        var regx = new RegExp(badName + "(?![a-zA-Z]*\.html)", "gi")
-
-        return gulp.src("./docs/*.html").pipe(replace(regx, nsname)).pipe(gulp.dest("./docs2"));
-
-    });
-
-    console.log("Done postProcessDocs");
-
-    return merge(tasks);
-} 
-
-exports.postProcessDocs = (done) => {
-
-    console.log("Start postProcessDocs");
-
-    var nsname = "MeadCo.ScriptX.Print";
     var badName = nsname.replace(/\./g, "");
 
     console.log("Replace: " + badName + " with: " + nsname);
 
     var regx = new RegExp(badName + "(?![a-zA-Z]*\.html)", "gi")
-    return gulp.src("./docs/*.html").pipe(replace(regx, nsname)).pipe(gulp.dest("./docs2"));
- 
-} 
-
-exports.makeApiDocs = (done) => {
-    return gulp.series(exports.buildDocs(done), exports.postProcessDocs(done));
+    return gulp.src("./docs/*.html").pipe(replace(regx, nsname)).pipe(gulp.dest("./docs"));
 }
 
-exports.buildDist = gulp.series(cleanDist, gulp.parallel(mintoDist, exports.makeApiDocs));
+gulp.task('ProcessDocs1', function () {
+    return ProcessName("MeadCo.ScriptX.Print.Licensing");
+});
 
+gulp.task('ProcessDocs2', function () {
+    return ProcessName("MeadCo.ScriptX.Print.HTML");
+});
+
+gulp.task('ProcessDocs3', function () {
+    return ProcessName("MeadCo.ScriptX.Print.PDF");
+});
+
+gulp.task('ProcessDocs4', function () {
+    return ProcessName("MeadCo.ScriptX.Print");
+});
+
+gulp.task('MakeDocs', gulp.series('CompileDocs', 'ProcessDocs1', 'ProcessDocs2','ProcessDocs3', 'ProcessDocs4'));
+
+exports.buildDist = gulp.series(gulp.parallel(cleanDist,cleanDocs), gulp.parallel(mintoDist, 'MakeDocs'));

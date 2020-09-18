@@ -99,7 +99,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Namespaces</h3><ul><li><a href="factory.html">factory</a></li><li><a href="MeadCo.html">MeadCo</a></li><li><a href="MeadCoScriptXPrint.html">MeadCoScriptXPrint</a></li><li><a href="MeadCoScriptXPrintHTML.html">MeadCoScriptXPrintHTML</a></li><li><a href="MeadCoScriptXPrintLicensing.html">MeadCoScriptXPrintLicensing</a></li><li><a href="MeadCoScriptXPrintPDF.html">MeadCoScriptXPrintPDF</a></li><li><a href="secmgr.html">secmgr</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Namespaces</h3><ul><li><a href="factory.html">factory</a></li><li><a href="MeadCo.html">MeadCo</a></li><li><a href="MeadCoScriptXPrint.html">MeadCo.ScriptX.Print</a></li><li><a href="MeadCoScriptXPrintHTML.html">MeadCo.ScriptX.Print.HTML</a></li><li><a href="MeadCoScriptXPrintLicensing.html">MeadCo.ScriptX.Print.Licensing</a></li><li><a href="MeadCoScriptXPrintPDF.html">MeadCo.ScriptX.Print.PDF</a></li><li><a href="secmgr.html">secmgr</a></li></ul></div>
                 
             </nav>
         </div>
@@ -135,7 +135,7 @@
  *
  * Requires: meadco-core.js
  * 
- * @namespace MeadCoScriptXPrintLicensing
+ * @namespace MeadCo.ScriptX.Print.Licensing
  * 
  */
 
@@ -156,7 +156,7 @@
     /**
      * The capabilities that can be licensed.
      * 
-     * @memberof MeadCoScriptXPrintLicensing
+     * @memberof MeadCo.ScriptX.Print.Licensing
      * @typedef LicenseOptions 
      * 
      * @property {boolean} basicHtmlPrinting True if Add-on compatible basic html printing is available (always true)
@@ -169,7 +169,7 @@
 
     /**
      * License details 
-     * @memberof MeadCoScriptXPrintLicensing
+     * @memberof MeadCo.ScriptX.Print.Licensing
      * @typedef license
      * 
      * @property {string} guid The unique id of the license
@@ -320,7 +320,7 @@
         /**
          * Get the version of this module as a string major.minor.hotfix.build
          * @property {string} version
-         * @memberof MeadCoScriptXPrintLicensing
+         * @memberof MeadCo.ScriptX.Print.Licensing
          */
         get version() {
             return moduleversion;
@@ -330,7 +330,7 @@
          * Specify the server to use and the license Guid. 
          * 
          * @function connect
-         * @memberof MeadCoScriptXPrintLicensing
+         * @memberof MeadCo.ScriptX.Print.Licensing
          * @param {string} serverUrl the 'root' url to the server (the api path will be added by the library)
          * @param {string} slicenseGuid the license GUID as provided by MeadCo. Optional unless will call GetLicenseAsync() without calling apply
          */
@@ -342,9 +342,9 @@
          * Specify the server to use and the license Guid in order to get details on the license via the License property
          * or function GetLicenseAsync() 
          *
-         * @memberof MeadCoScriptXPrintLicensing
+         * @memberof MeadCo.ScriptX.Print.Licensing
          * @function connectLite
-         * @memberof MeadCoScriptXPrintLicensing
+         * @memberof MeadCo.ScriptX.Print.Licensing
          * @param {string} serverUrl the 'root' url to the server (the api path will be added by the library)
          * @param {string} slicenseGuid the license GUID as provided by MeadCo. Optional unless will call GetLicenseAsync() without calling apply
          * @param {number} revision the revision number of the licsnse as provided by MeadCo.
@@ -365,7 +365,7 @@
          * 
          * This call is synchronous and therefore not recommended. Use applyAsync()         
          * 
-         * @memberof MeadCoScriptXPrintLicensing
+         * @memberof MeadCo.ScriptX.Print.Licensing
          * @function apply
          * @param {string} licenseGuid the license GUID as provided by MeadCo.
          * @param {number} revision the revision number of the licsnse as provided by MeadCo.
@@ -382,7 +382,7 @@
          *
          * The license must list the url of the content to which it is being applied.
          *
-         * @memberof MeadCoScriptXPrintLicensing
+         * @memberof MeadCo.ScriptX.Print.Licensing
          * @function applyAsync
          * @param {string} licenseGuid the license GUID as provided by MeadCo.
          * @param {number} revision the revision number of the licsnse as provided by MeadCo.
@@ -401,7 +401,7 @@
          * Basically faked for the benefit of code compatibility with the add-on
          * 
          * @property {number} result
-         * @memberof MeadCoScriptXPrintLicensing         
+         * @memberof MeadCo.ScriptX.Print.Licensing         
          * 
          */
         get result() {
@@ -412,7 +412,7 @@
          * Get whether a license has been applied successfully
          * 
          * @property {boolean} validLicense
-         * @memberof MeadCoScriptXPrintLicensing
+         * @memberof MeadCo.ScriptX.Print.Licensing
          *
          */
         get validLicense() {
@@ -423,7 +423,7 @@
          * Get the text of the last error.
          * 
          * @property {string} errorMessage
-         * @memberof MeadCoScriptXPrintLicensing
+         * @memberof MeadCo.ScriptX.Print.Licensing
          * 
          */
         get errorMessage() {
@@ -437,7 +437,7 @@
          * Warning this function is synchronous, GetLicenseAsync() should be used.
          *
          * @property {license} License
-         * @memberof MeadCoScriptXPrintLicensing
+         * @memberof MeadCo.ScriptX.Print.Licensing
          * 
          */
         get License() {
@@ -449,7 +449,7 @@
          * Get the details on the connected license. If it hasnt been applied yet, then query
          * for the details (but dont apply it and connectLite() MUST have been called).
          *
-         * @memberof MeadCoScriptXPrintLicensing
+         * @memberof MeadCo.ScriptX.Print.Licensing
          * @function GetLicenseAsync
          * @param {function({license})} resolve function to call on success
          * @param {function({string})} reject function to call on failure with reason for failure
