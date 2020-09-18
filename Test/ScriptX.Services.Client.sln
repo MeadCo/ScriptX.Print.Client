@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs-src", "docs-src", "{6F1B6E72-BADC-427F-B43B-24A2CFC326A2}"
 	ProjectSection(SolutionItems) = preProject
+		..\docs-src\archive-readme.md = ..\docs-src\archive-readme.md
 		..\docs-src\readme.md = ..\docs-src\readme.md
 		..\docs-src\start.md = ..\docs-src\start.md
 		..\docs-src\summary.md = ..\docs-src\summary.md
@@ -53,14 +54,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{06478A30-2FFD-4672-85A3-1A9857A1C9EF}"
 	ProjectSection(SolutionItems) = preProject
-		..\distbundlesconfig.json = ..\distbundlesconfig.json
+		..\tooling\distbundlesconfig.json = ..\tooling\distbundlesconfig.json
 		..\gulpfile.js = ..\gulpfile.js
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tooling", "tooling", "{C916B2C2-9774-4ECC-9840-2DAD44ADD9F3}"
-	ProjectSection(SolutionItems) = preProject
-		..\tooling\archive-readme.md = ..\tooling\archive-readme.md
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{6FD10DBB-3406-4F8D-837D-BB17B3B5FB6C}"
 	ProjectSection(SolutionItems) = preProject

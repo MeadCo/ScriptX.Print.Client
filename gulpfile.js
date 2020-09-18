@@ -8,7 +8,7 @@ const gulp = require("gulp"),
     merge = require("merge-stream"),
     pipeline = require('readable-stream').pipeline,
     del = require("del"),
-    bundleconfig = require("./distbundlesconfig.json"),
+    bundleconfig = require("./tooling/distbundlesconfig.json"),
     replace = require('gulp-replace'),
     jsdoc = require('gulp-jsdoc3');
 
