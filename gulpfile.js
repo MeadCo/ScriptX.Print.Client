@@ -8,26 +8,21 @@ const gulp = require("gulp"),
     merge = require("merge-stream"),
     pipeline = require('readable-stream').pipeline,
     del = require("del"),
-    bundleconfig = require("./distbundlesconfig.json");
+    bundleconfig = require("./distbundlesconfig.json"),
+    replace = require('gulp-replace'),
+    jsdoc = require('gulp-jsdoc3');
 
-const replace = require('gulp-replace');
-const jsdoc = require('gulp-jsdoc3');
+//////////////////////////////
+// build minimised distribution packages
 
-// the md doc output is, e.g. MeadCoScriptXPrint for MeadCo.ScriptX.Print
-// this table drives back replacement
-const namespaces = [
-    "MeadCo.ScriptX.Print",
-    "Print.Licensing",
-    "Print.PDF",
-    "Print.HTML",
-];
-
+// get the package bundle definitions 
 function getBundles(regexPattern) {
     return bundleconfig.filter(function (bundle) {
         return regexPattern.test(bundle.outputFileName);
     });
 }
 
+// minimse and bundle
 function mintoDist() {
     var tasks = getBundles(/\.js$/).map(function (bundle) {
         return pipeline(
@@ -44,6 +39,7 @@ function mintoDist() {
     return merge(tasks);
 }
 
+// clean any previous bundle packages 
 function cleanDist() {
     var files = bundleconfig.map(function (bundle) {
         return bundle.outputFileName;
@@ -52,15 +48,22 @@ function cleanDist() {
     return del(files, { force: true });
 }
 
+////////////////////////////////////
+// Build documentation site from js content using jsdoc
+
+// remove previous output
 function cleanDocs() {
     return del('./docs');
 }
 
+// extract docs and compile to html, adds in readme.md from docs-src
 gulp.task('CompileDocs', function (done) {
     const config = require('./tooling/docs/jsdoc.json');
     gulp.src(['readme.md', '.src/**/*.js'], { read: false }).pipe(jsdoc(config,done));
 });
 
+// post processing to put dot delimeters back into names
+//
 function ProcessName(nsname) {
 
     var badName = nsname.replace(/\./g, "");
@@ -71,6 +74,7 @@ function ProcessName(nsname) {
     return gulp.src("./docs/*.html").pipe(replace(regx, nsname)).pipe(gulp.dest("./docs"));
 }
 
+// call dot processing for each update required so can chain one after the other .. crude but works
 gulp.task('ProcessDocs1', function () {
     return ProcessName("MeadCo.ScriptX.Print.Licensing");
 });
@@ -86,6 +90,10 @@ gulp.task('ProcessDocs3', function () {
 gulp.task('ProcessDocs4', function () {
     return ProcessName("MeadCo.ScriptX.Print");
 });
+
+///////////////////////////////////////////
+// callable processes to build outputs.
+//
 
 gulp.task('MakeDocs', gulp.series('CompileDocs', 'ProcessDocs1', 'ProcessDocs2', 'ProcessDocs3', 'ProcessDocs4'));
 
