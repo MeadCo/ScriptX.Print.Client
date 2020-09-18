@@ -14,8 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs-src", "docs-src", "{6F
 	ProjectSection(SolutionItems) = preProject
 		..\docs-src\archive-readme.md = ..\docs-src\archive-readme.md
 		..\docs-src\readme.md = ..\docs-src\readme.md
-		..\docs-src\start.md = ..\docs-src\start.md
-		..\docs-src\summary.md = ..\docs-src\summary.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7C47A878-72F0-4EFE-B23F-EB6B67DE8594}"
@@ -70,6 +68,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "styles", "styles", "{A76C4C
 		..\docs-src\styles\style.css = ..\docs-src\styles\style.css
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tutorials", "Tutorials", "{5EC6FC76-6AAF-4D08-86D9-77A5EDD44669}"
+	ProjectSection(SolutionItems) = preProject
+		..\docs-src\tutorials\start.md = ..\docs-src\tutorials\start.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -89,6 +92,7 @@ Global
 		{C916B2C2-9774-4ECC-9840-2DAD44ADD9F3} = {F483EA25-6581-4C95-80F9-42E54B1866FD}
 		{6FD10DBB-3406-4F8D-837D-BB17B3B5FB6C} = {C916B2C2-9774-4ECC-9840-2DAD44ADD9F3}
 		{A76C4C16-D266-4FD1-B95A-0E8523EFA628} = {6F1B6E72-BADC-427F-B43B-24A2CFC326A2}
+		{5EC6FC76-6AAF-4D08-86D9-77A5EDD44669} = {6F1B6E72-BADC-427F-B43B-24A2CFC326A2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C379D40C-85D3-4629-97D1-696E28711D63}

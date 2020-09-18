@@ -5,7 +5,8 @@
     "destination": "./docs/",
     "readme": "./docs-src/readme.md",
     "recurse": true,
-    "verbose": true
+    "verbose": true,
+    "tutorials":  "./docs-src/tutorials"
   },
   "source": {
     "include": [ "./src" ],
@@ -23,8 +24,7 @@
     "default": {
       "staticFiles": {
         "include": [
-          "./docs-src/styles",
-          "./docs-src/summary.md"
+          "./docs-src/styles"
         ]
       }
     },

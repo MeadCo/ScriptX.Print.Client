@@ -148,8 +148,7 @@ Note that the [MeadCoScriptXJS](https://github.com/MeadCo/MeadCoScriptXJS) libra
 
 
 See also:
- * [Getting Started](start.md) for an introduction to using the libraries
- * [API Reference](api.md) for details on the APIs available
+ * [Getting Started](tutorial-start.html) for an introduction to using the libraries
  * [MeadCoScriptXJS](https://github.com/MeadCo/MeadCoScriptXJS) project for a higher level abstraction which provides a number of conventient functions for the use of ScriptX in any of its forms, Add-on or Services.
  * [ScriptX Add-on for Internet Explorer API reference](https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn).
  * [ScriptX.Services on Cloud](https://scriptxservices.meadroid.com/)
