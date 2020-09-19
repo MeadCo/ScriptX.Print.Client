@@ -1,5 +1,3 @@
-# Getting started
-
 ## Packages 
 
 ### NPM Use
@@ -90,7 +88,7 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
 3. Initialise the MeadCoScriptXJS library
 4. Initilise print parameters
 
-Remove all references to ScriptX.Addon (i.e. the <object /> elements as ScriptX.Addon can only print to locally installed printers).
+Remove all references to ScriptX.Addon (i.e. the &lt;object /&gt; elements as ScriptX.Addon can only print to locally installed printers).
 
 A promise polyfill is required if the browser does not support promises (for example Internet Explorer). 
 We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/promise-polyfill)
@@ -134,7 +132,7 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
 4. Initialise the MeadCoScriptXJS library
 5. Initilise print parameters
 
-Remove all references to ScriptX.Addon (i.e. the <object /> elements as ScriptX.Addon can only print to locally installed printers).
+Remove all references to ScriptX.Addon (i.e. the &lt;object /&gt; elements as ScriptX.Addon can only print to locally installed printers).
 
 A promise polyfill is required if the browser does not support promises (for example Internet Explorer). 
 We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/promise-polyfill)

@@ -1,6 +1,3 @@
-# MeadCo ScriptX.Services Client Library
-
-
 ## Current Version
 
 1.7.0-beta05

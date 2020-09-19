@@ -91,11 +91,16 @@ gulp.task('ProcessDocs4', function () {
     return ProcessName("MeadCo.ScriptX.Print");
 });
 
+// static docs files that jsdocs won't put where we want
+gulp.task('DocStatics', function () {
+    return gulp.src('./docs-src/build/**').pipe(gulp.dest('./docs/build/'));
+});
+
 ///////////////////////////////////////////
 // callable processes to build outputs.
 //
 
-gulp.task('MakeDocs', gulp.series('CompileDocs', 'ProcessDocs1', 'ProcessDocs2', 'ProcessDocs3', 'ProcessDocs4'));
+gulp.task('MakeDocs', gulp.series('CompileDocs', 'ProcessDocs1', 'ProcessDocs2', 'ProcessDocs3', 'ProcessDocs4','DocStatics'));
 
 gulp.task('BuildDocs', gulp.series(cleanDocs,'MakeDocs'));
 

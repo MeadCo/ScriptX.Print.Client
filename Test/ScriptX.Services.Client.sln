@@ -71,6 +71,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tutorials", "Tutorials", "{5EC6FC76-6AAF-4D08-86D9-77A5EDD44669}"
 	ProjectSection(SolutionItems) = preProject
 		..\docs-src\tutorials\start.md = ..\docs-src\tutorials\start.md
+		..\docs-src\tutorials\tutorials.json = ..\docs-src\tutorials\tutorials.json
 	EndProjectSection
 EndProject
 Global
