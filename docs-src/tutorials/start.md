@@ -1,6 +1,3 @@
-## Packages 
-
-
 ## Quick start - ScriptX.Services for Microsoft Windows PC
 
 1. [Download and install ScriptX.Services for Microsoft Windows (x64) PC](https://www.meadroid.com/Downloads/ScriptXServices/Download)

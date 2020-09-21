@@ -155,8 +155,7 @@
 
 
     <section>
-        <article><h2>Current Version</h2>
-<p>1.7.0-beta05</p>
+        <article><h3>Current Version : 1.7.0-beta05</h3>
 <p>The MeadCo ScriptX.Services project brings control of printing to browser based content in all browsers on all devices with
 out needing a binary add-on.</p>
 <p>The MeadCo ScriptX.Services Client Library delivers an emulation of MeadCo's ScriptX.Add-on for Internet Explorer on Windows to
@@ -237,8 +236,9 @@ with .Addon and .Services with no changes in simple cases and few changes in mor
 <p>The MeadCo ScriptX.Service Client Library implements a heirarchy of static 'classes' (or singleton object instances!) at the bottom of which is an implementation of the .Addon API (factory, factory.printing et al) in javascript. The implementation
 is necessarily imperfect with some imperfections, in particular the support for asynchronous behaviour such as the ubiquitous WaitFortSpoolingComplete() API being impossible to emulate fully. Such imperfections are
 smoothed by use of the MeadCoScriptXJS library which provides a layer to hide the differences betweeen .Addon and .Services and so enable a single code base.</p>
+<p>Note that the <a href="https://github.com/MeadCo/MeadCoScriptXJS">MeadCoScriptXJS</a> library does <strong>not have to be used</strong>. In its absense, meadco-scriptxfactory.js and its dependencies on the hierarchy implement a reasonable and usable emulation of &quot;factory.printing&quot; though functionality such as WaitForSpoolingComplete is not a compatible emulation.</p>
 <h4>User Interface</h4>
-<p>The library does not implement any UI - Printer or Print Settings dialogs. This enables decoupling from any UI dependencies that may be problematic - for example, to Bootstrap, or to nopt Bootstrap?</p>
+<p>The library does not implement any UI - Printer or Print Settings dialogs. This enables decoupling from any UI dependencies that may be problematic - for example, to Bootstrap, or to not Bootstrap?</p>
 <p>However, a few APIs do 'require' a UI, for example, prompted printing.</p>
 <p>A simple extension mechanism is implemented into which implementation of UI may be patched.</p>
 <p>All that is required is to implement the named functions.</p>
@@ -261,49 +261,6 @@ smoothed by use of the MeadCoScriptXJS library which provides a layer to hide th
 </tbody>
 </table>
 <p>An exemplar implemenation of UI is <a href="../src/jQuery-MeadCo.ScriptX.Print.UI.js">provided</a> (implemented assuming Bootstrap and jQuery)</p>
-<h3>Summary</h3>
-<table>
-<thead>
-<tr>
-<th>File</th>
-<th>Namespace</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>meadco-core.js</td>
-<td>MeadCo</td>
-<td>Core functionality required for creating objects in the namespace and other general utilities</td>
-</tr>
-<tr>
-<td>meadco-scriptxprint.js</td>
-<td>MeadCo.ScriptX.Print</td>
-<td>Implements calls to the ScriptX.Services Web print APIs including processing of responses with tracking of jobs at the server</td>
-</tr>
-<tr>
-<td>meadco-scriptxprinthtml.js</td>
-<td>MeadCo.ScriptX.Print.HTML</td>
-<td>Implements support for the structures required by the Web API for html printing and functions to gather the HTML to be printed from the current document</td>
-</tr>
-<tr>
-<td>meadco-scriptxprintpdf.js</td>
-<td>MeadCo.ScriptX.Print.PDF</td>
-<td>Implements support for the structures required by the Web API for printing PDF documents</td>
-</tr>
-<tr>
-<td>meadco-scriptxfactory.js</td>
-<td>&quot;factory&quot;</td>
-<td>Implements emulations of factory, factory.printing..., factory.rawPrinting, factory.js</td>
-</tr>
-</tbody>
-</table>
-<p>| File | Namespace | Purpose |
-| meadco-scriptxprintlicensing.js | MeadCo.ScriptX.Print.Licensing | Implements calls to the ScriptX.Services Web licensing API |
-| meadco-secmgr.js | &quot;secmgr&quot; | Implements emulation of secmgr |</p>
-<p>| File | Namespace | Purpose |
-| jQuery-MeadCo.ScriptX.Print.UI.js | MeadCo.ScriptX.Print.UI | Implements the dialogs PageSetup and PrinterSettings with Bootstrap 3/4 and jQuery  |</p>
-<p>Note that the <a href="https://github.com/MeadCo/MeadCoScriptXJS">MeadCoScriptXJS</a> library does not have to be used. In its absense, meadco-scriptxfactory.js and its dependencies on the hierarchy implement a usable emulation of &quot;factory.printing&quot; though functionality such as WaitForSpoolingComplete is not a compatible emulation.</p>
 <p>See also:</p>
 <ul>
 <li><a href="https://meadco.github.io/MeadCoScriptXJS">MeadCoScriptXJS</a> project for a higher level abstraction which provides a number of convenient functions for the use of ScriptX in any of its forms, Add-on or Services.</li>

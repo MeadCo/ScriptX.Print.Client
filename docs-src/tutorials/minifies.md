@@ -1,4 +1,4 @@
-The library is constructed as follows:
+The library contains the following source files :
 
 ### Core
 
@@ -28,7 +28,7 @@ The library is constructed as follows:
 The following minimised collections are provided/available from each repository:
 
 | Name | Includes | Purpose |
-|---|---|
+|---|--- |---|
 | meadco-scriptxservices.min.js | All core modules for printing including window.factory and window.secmgr emulation but no support for UI prompts. | Full support for ScriptX Services on Windows PC. But, **no** UI dialog modules are included. |
 | meadco-scriptxservicesUI.min.js | As above but includes UI prompt Page and Print setup UI dialogs (require Bootstrap 3/4).  | Full support for ScriptX Services on Windows PC where print promopt dialogs are required. |
 | meadco-scriptxservicesprint.min.js | All core modules for printing print including window.factory emulation. No UI modules or support licensing for ScriptX Services on Windows PC. | Intended for working with ScriptX.Services on Cloud or On Premise. |
