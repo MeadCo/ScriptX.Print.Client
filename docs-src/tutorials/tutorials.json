@@ -1,5 +1,12 @@
 {
   "start": {
-    "title" : "Getting started"
+    "title": "Getting started"
+  },
+  "repositories": {
+    "title": "Package repositories"
+  },
+  "minifies": {
+    "title":  "Minified collections"
   }
+
 }

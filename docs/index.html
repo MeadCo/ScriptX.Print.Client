@@ -68,6 +68,14 @@
                                 Getting started
                             </a>
                         
+                            <a class="dropdown-item" href="tutorial-repositories.html">
+                                Package repositories
+                            </a>
+                        
+                            <a class="dropdown-item" href="tutorial-minifies.html">
+                                Minified collections
+                            </a>
+                        
                         </div>
                     </div>
                 </div>
@@ -293,11 +301,12 @@ smoothed by use of the MeadCoScriptXJS library which provides a layer to hide th
 <p>| File | Namespace | Purpose |
 | meadco-scriptxprintlicensing.js | MeadCo.ScriptX.Print.Licensing | Implements calls to the ScriptX.Services Web licensing API |
 | meadco-secmgr.js | &quot;secmgr&quot; | Implements emulation of secmgr |</p>
+<p>| File | Namespace | Purpose |
+| jQuery-MeadCo.ScriptX.Print.UI.js | MeadCo.ScriptX.Print.UI | Implements the dialogs PageSetup and PrinterSettings with Bootstrap 3/4 and jQuery  |</p>
 <p>Note that the <a href="https://github.com/MeadCo/MeadCoScriptXJS">MeadCoScriptXJS</a> library does not have to be used. In its absense, meadco-scriptxfactory.js and its dependencies on the hierarchy implement a usable emulation of &quot;factory.printing&quot; though functionality such as WaitForSpoolingComplete is not a compatible emulation.</p>
 <p>See also:</p>
 <ul>
-<li><a href="tutorial-start.html">Getting Started</a> for an introduction to using the libraries</li>
-<li><a href="https://github.com/MeadCo/MeadCoScriptXJS">MeadCoScriptXJS</a> project for a higher level abstraction which provides a number of conventient functions for the use of ScriptX in any of its forms, Add-on or Services.</li>
+<li><a href="https://meadco.github.io/MeadCoScriptXJS">MeadCoScriptXJS</a> project for a higher level abstraction which provides a number of convenient functions for the use of ScriptX in any of its forms, Add-on or Services.</li>
 <li><a href="https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn">ScriptX Add-on for Internet Explorer API reference</a>.</li>
 <li><a href="https://scriptxservices.meadroid.com/">ScriptX.Services on Cloud</a></li>
 <li><a href="https://scriptxprintsamples.meadroid.com/">ScriptX Services Samples - Cloud, On Premise, for Windows PC</a> the samples make use of MeadCoScriptXJS and ScriptX.Services.Client to deliver samples that work in any scenario with the same code.</li>

@@ -1,46 +1,11 @@
 ## Packages 
 
-### NPM Use
-
-```
-npm install scriptxprint-html --save
-```
-
-### CDN Use
-
-For the complete library supporting Cloud, On Premise and Windows PC services:
-
-```javascript
-<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.7.0/dist/meadco-scriptxservices.min.js"></script>
-```
-
-Or, for print only to cloud/on premise services,
-
-```javascript
-<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.7.0/dist/meadco-scriptxservicesprint.min.js"></script>
-```
-
-#### Distribution packages
-
-Some minimised collections are provided:
-
-| Name | Purpose |
-|---|---|
-| meadco-scriptxservicesprint.min.js | All core modules print including window.factory emulation. No UI modules are included nor support for licensing for ScriptX Services on Windows PC.  |
-| meadco-scriptxservicesprintUI.min.js | As above but includes Page and Print setup UI dialogs.  |
-| meadco-scriptxservices.min.js | All modules including window.factory and window.secmgr emulation to support licensing for ScriptX Services on Windows PC. No UI modules are included. |
-| meadco-scriptxservicesUI.min.js | As above but includes Page and Print setup UI dialogs.  |
-| meadco-scriptxserviceslicensing.min.js | window.secmgr emulation support for licensing for ScriptX Services on Windows PC. |
-
-### Nuget Gallery
-
-[MeadCo ScriptX.Print Services Library](https://www.nuget.org/packages/MeadScriptXPrintHtml/)
 
 ## Quick start - ScriptX.Services for Microsoft Windows PC
 
 1. [Download and install ScriptX.Services for Microsoft Windows (x64) PC](https://www.meadroid.com/Downloads/ScriptXServices/Download)
 2. Link to the required libraries with service connection details
-3. Initialise the MeadCoScriptXJS library
+3. Initialise the [MeadCoScriptXJS](https://meadco.github.io/MeadCoScriptXJS) library
 4. Initilise print parameters
 
 The same code will work when the Add-on is present, but the add-on will be used in preference.
@@ -85,7 +50,7 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
 
 1. [Sign up for a subscription identifier](https://scriptxservices.meadroid.com/CloudService/Signup)
 2. Link to the required libraries with service connection details
-3. Initialise the MeadCoScriptXJS library
+3. Initialise the [MeadCoScriptXJS](https://meadco.github.io/MeadCoScriptXJS) library
 4. Initilise print parameters
 
 Remove all references to ScriptX.Addon (i.e. the &lt;object /&gt; elements as ScriptX.Addon can only print to locally installed printers).
@@ -129,7 +94,7 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
 1. [Download and install ScriptX.Services for On Premise Devices](https://www.meadroid.com/Downloads/ScriptXServices/Download)
 2. Request and install an evaluation license
 3. Link to the required libraries with service connection details
-4. Initialise the MeadCoScriptXJS library
+4. Initialise the [MeadCoScriptXJS](https://meadco.github.io/MeadCoScriptXJS) library
 5. Initilise print parameters
 
 Remove all references to ScriptX.Addon (i.e. the &lt;object /&gt; elements as ScriptX.Addon can only print to locally installed printers).
@@ -168,4 +133,3 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
    });
 </script>
 ```
-
