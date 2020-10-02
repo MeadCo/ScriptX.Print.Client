@@ -102,9 +102,13 @@ with .Addon and .Services with no changes in simple cases and few changes in mor
 
 ### Support for .Addon Emulation in ScriptX.Services
 
-The MeadCo ScriptX.Service Client Library implements a heirarchy of static 'classes' (or singleton object instances!) at the bottom of which is an implementation of the .Addon API (factory, factory.printing et al) in javascript. The implementation
-is necessarily imperfect with some imperfections, in particular the support for asynchronous behaviour such as the ubiquitous WaitFortSpoolingComplete() API being impossible to emulate fully. Such imperfections are
-smoothed by use of the MeadCoScriptXJS library which provides a layer to hide the differences betweeen .Addon and .Services and so enable a single code base.
+The MeadCo ScriptX.Service Client Library implements a heirarchy of static 'classes' (or singleton object instances!) at the bottom of which is an implementation of
+the .Addon API (factory, factory.printing et al) in javascript. The implementation
+is necessarily imperfect. In particular the support for synchronous coding with the ubiquitous WaitFortSpoolingComplete() API is impossible to emulate 
+fully in javascript (the only possible way to attempt an eumulation causes blocking in the browser via 
+synchronous AJAX which is deeply unsatisfactory and so is not implemented). 
+
+Such imperfections are **smoothed** by use of the MeadCoScriptXJS library which provides a layer to hide the differences betweeen .Addon and .Services and so enable a single code base.
 
 Note that the [MeadCoScriptXJS](https://github.com/MeadCo/MeadCoScriptXJS) library does **not have to be used**. In its absense, meadco-scriptxfactory.js and its dependencies on the hierarchy implement a reasonable and usable emulation of &quot;factory.printing&quot; though functionality such as WaitForSpoolingComplete is not a compatible emulation.
 

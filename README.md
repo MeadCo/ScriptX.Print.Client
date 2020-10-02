@@ -24,7 +24,7 @@ working with [MeadCo ScriptX.Services](https://www.meadroid.com/Features/ScriptX
 * a Microsoft Windows x64 PC 
 
 In combination with the [MeadCoScriptXJS library](https://github.com/MeadCo/MeadCoScriptXJS) the emulation provides 
-significant levels of compatibility with in-browser script written for ScriptX.Add-on so allowing the same code to run with either ScriptX.Add-on for Internet Explorer or ScriptX Services depending on the client device/browser. 
+significant levels of compatibility with in-browser script written for ScriptX.Add-on and allows the same code to run with either ScriptX.Add-on for Internet Explorer or ScriptX Services depending on the client device/browser. 
 
 It may also be used 'stand-alone' although the code is not very modern due to the requirement to support older versions of Internet Explorer.
 
@@ -87,7 +87,7 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
 
 <!-- .Addon emulation, connect to server with publishing license id. -->
 <!-- Use an evaluation license id for the value of data-meadco-license -->
-<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.6/dist/meadco-scriptxservicesprint.min.js" 
+<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1/dist/meadco-scriptxservicesprint.min.js" 
         data-meadco-server="http://127.0.0.1:41991" 
         data-meadco-license="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"></script>
 
@@ -130,7 +130,7 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
 <script src="https://cdn.jsdelivr.net/npm/meadco-scriptxjs@1/src/meadco-scriptx.min.js"></script>
 
 <!-- .Addon emulation, connect to cloud server with registered use id. -->
-<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.6/dist/meadco-scriptxservicesprint.min.js" 
+<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1/dist/meadco-scriptxservicesprint.min.js" 
         data-meadco-server="https://scriptxservices.meadroid.com" 
         data-meadco-subscription="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"></script>
 
@@ -175,7 +175,7 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
 <script src="https://cdn.jsdelivr.net/npm/meadco-scriptxjs@1/src/meadco-scriptx.min.js"></script>
 
 <!-- .Addon code emulation, connect to on premnie server, no subscription id is required as it is the srver that is licensed.
-<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.6/dist/meadco-scriptxservicesprint.min.js" 
+<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1/dist/meadco-scriptxservicesprint.min.js" 
         data-meadco-server="http://<yourlocalserver>/scriptxservices/" 
         data-meadco-subscription=""></script>
 
