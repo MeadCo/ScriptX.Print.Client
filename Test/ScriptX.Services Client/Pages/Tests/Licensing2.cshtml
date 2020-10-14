@@ -5,7 +5,7 @@
     var server = $"http://{Request.Host.Host}:{Request.Host.Port}";
     var guid = "{666140C4-DFC8-435E-9243-E8A54042F918}";
     var revision = 0;
-    var warehouse = "bad-warehouse";
+    var warehouse = "warehouse";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -18,7 +18,6 @@
     <environment include="Development">
         <script src="/scripts/src/meadco-core.js"></script>
         <script src="/scripts/src/meadco-scriptxprint.js"></script>
-        <script src="/scripts/src/meadco-scriptxprinthtml.js"></script>
         <!-- javscript Add.on to Scriptx.Services compatibility -->
         <!-- Connect to ScriptX.Services for Windows PC -->
         <!-- Use the same evaluation GUID - it is subject to change -->
@@ -29,6 +28,7 @@
                 data-meadco-license-path="@warehouse"
                 data-meadco-license-revision="@revision" asp-append-version="true">
         </script>
+        <script src="/scripts/src/meadco-secmgr.js"></script>
 
         <script type="text/javascript">
             console.log("Try to useAttributes()...");
@@ -37,11 +37,10 @@
     </environment>
 
     <environment exclude="Development">
-        <script src="/scripts/dist/meadco-scriptxserviceslicensing.min.js"></script>
-
         <!-- javscript Add.on to Scriptx.Services compatibility -->
         <!-- Connect to ScriptX.Services for Windows PC -->
         <!-- Use the same evaluation GUID - it is subject to change -->
+        <script src="/scripts/dist/meadco-scriptxservicesprint.min.js"></script>
         <script src="/scripts/dist/meadco-scriptxserviceslicensing.min.js"
                 data-meadco-server="@server"
                 data-meadco-syncinit="true"

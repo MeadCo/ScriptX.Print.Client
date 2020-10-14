@@ -57,6 +57,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{06478A30
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tooling", "tooling", "{C916B2C2-9774-4ECC-9840-2DAD44ADD9F3}"
+	ProjectSection(SolutionItems) = preProject
+		..\tooling\distbundlesconfig.json = ..\tooling\distbundlesconfig.json
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{6FD10DBB-3406-4F8D-837D-BB17B3B5FB6C}"
 	ProjectSection(SolutionItems) = preProject

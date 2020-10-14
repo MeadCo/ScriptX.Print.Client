@@ -5,7 +5,7 @@ QUnit.test("Namespace basics", function (assert) {
     assert.ok(MeadCo.ScriptX.Print.Licensing, "MeadCo.ScriptX.Print.Licensing namespace exists");
     var api = MeadCo.ScriptX.Print.Licensing;
 
-    assert.equal(api.version, "1.7.0.1", "Correct version");
+    assert.equal(api.version, "1.7.0.2", "Correct version");
 
 });
 
@@ -54,7 +54,7 @@ QUnit.test("Apply license", function (assert) {
             done();
         },
         function (errorTxt) {
-            assert.equal(errorTxt, "Not Found", "Bad path fails with correct response");
+            assert.equal(errorTxt, "\"Unknown warehouse\"", "Bad path fails with correct response");
             done();
         });
 

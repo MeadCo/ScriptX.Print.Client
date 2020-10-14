@@ -5,7 +5,7 @@ QUnit.test("Namespace basics", function (assert) {
     assert.ok(MeadCo.ScriptX.Print, "MeadCo.ScriptX.Print namespace exists");
     var api = MeadCo.ScriptX.Print;
 
-    assert.equal(api.version, "1.7.0.2", "Correct version");
+    assert.equal(api.version, "1.7.0.4", "Correct version");
 
     assert.equal(api.ServiceClasses.CLOUD, 1, "ServiceClasses enum is OK");
     assert.equal(api.ServiceClasses.XX, undefined, "Unknown ServiceClasses enum is OK");
