@@ -87,6 +87,11 @@ namespace ScriptX.Services_Client.Controllers
                 return new DeviceSettings { PrinterName = "Test printer", IsDefault = true, PaperSizeName = "A4" };
             }
 
+            if (string.CompareOrdinal(deviceName, "systemdefault") == 0)
+            {
+                return new DeviceSettings { PrinterName = "Test system default printer", IsDefault = true, PaperSizeName = "A4" };
+            }
+
             return new DeviceSettings { PrinterName = deviceName, PaperSizeName = "A5",
                 Forms = new string[] { "A3", "A4", "A5" },
                 Bins = new string[] { "Upper", "Lower" },

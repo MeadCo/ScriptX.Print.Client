@@ -5,7 +5,7 @@ QUnit.test("Namespace basics", function (assert) {
     assert.ok(MeadCo.ScriptX.Print.Licensing, "MeadCo.ScriptX.Print.Licensing namespace exists");
     var api = MeadCo.ScriptX.Print.Licensing;
 
-    assert.equal(api.version, "1.7.0.2", "Correct version");
+    assert.equal(api.version, "1.7.1.0", "Correct version");
 
 });
 

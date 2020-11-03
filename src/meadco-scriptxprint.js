@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.7.0.4";
+    var version = "1.7.1.4";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
     var directApiLocation = "v1/printDirect";
@@ -350,7 +350,7 @@
         }
         var devInfo;
 
-        if ( !content || (typeof content === "string" && content.length === 0)) {
+        if (!content || (typeof content === "string" && content.length === 0)) {
             MeadCo.ScriptX.Print.reportError("Request to print no content - access denied?");
             if (typeof fnDone === "function") {
                 fnDone("Request to print no content");
@@ -460,7 +460,7 @@
 
         var devInfo;
 
-        if ( !document || (typeof document === "string" && document.length === 0)) {
+        if (!document || (typeof document === "string" && document.length === 0)) {
             MeadCo.ScriptX.Print.reportError("The document to print must be given.");
             if (typeof fnDone === "function") {
                 fnDone("Request to print no content");
@@ -583,7 +583,7 @@
             }
         }
 
-        if ( !content || (typeof content === "string" && content.length === 0)) {
+        if (!content || (typeof content === "string" && content.length === 0)) {
             MeadCo.ScriptX.Print.reportError("Request to print no content - access denied?");
             if (typeof fnDone === "function") {
                 fnDone("Request to print no content");
@@ -656,7 +656,7 @@
     function connectToServer(serverUrl, clientLicenseGuid) {
         setServer(serverUrl, clientLicenseGuid);
         // note that this will silently fail if no advanced printing license
-        getDeviceSettings({ name: "default", async: false });
+        getDeviceSettings({ name: "systemdefault", async: false });
 
         // also (async) cache server description
         getFromServer("", true,
@@ -669,7 +669,7 @@
         setServer(serverUrl, clientLicenseGuid);
         // note that this will silently fail if no advanced printing license
         getDeviceSettings({
-            name: "default",
+            name: "systemdefault",
             done: resolve,
             async: true,
             fail: reject
@@ -942,6 +942,12 @@
 
     function addOrUpdateDeviceSettings(data) {
         if (typeof data.printerName === "string") {
+            if (data.isDefault) {
+                for (var i = 0; i < deviceSettings.length; i++) {
+                    deviceSettings[i].isDefault = false;
+                }
+            }
+
             deviceSettings[data.printerName] = data;
             if (data.isDefault && printerName.length === 0) {
                 printerName = data.printerName;
@@ -949,9 +955,10 @@
         }
     }
 
-    function getDeviceSettings(oRequest) {
+    function getDeviceSettings(oRequest,useLicenseGuid) {
         oRequest.name = oRequest.name.replace(/\\/g, "||");
         MeadCo.log("Request get device info: " + oRequest.name);
+        var theLicense = arguments.length > 1 ? useLicenseGuid : licenseGuid;
 
         if (module.jQuery) {
             var serviceUrl = server + "/deviceinfo/" + encodeURIComponent(oRequest.name) + "/0";
@@ -963,7 +970,7 @@
                     cache: false,
                     async: oRequest.async, // => async if we have a callback
                     headers: {
-                        "Authorization": "Basic " + btoa(licenseGuid + ":")
+                        "Authorization": "Basic " + btoa(theLicense + ":")
                     }
                 })
                 .done(function (data) {
@@ -974,12 +981,19 @@
                     }
                 })
                 .fail(function (jqXhr, textStatus, errorThrown) {
+                    if (oRequest.name === "systemdefault") {
+                        console.warn("request for systemdefault printer failed - please update to ScriptX.Services 2.11.1");
+                        oRequest.name = "default";
+                        oRequest.async = false;
+                        getDeviceSettings(oRequest,theLicense);
+                    }
+                    else {
+                        errorThrown = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.getDeviceSettings:", jqXhr, textStatus, errorThrown);
+                        MeadCo.log("failed to getdevice: " + errorThrown);
 
-                    errorThrown = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.getDeviceSettings:", jqXhr, textStatus, errorThrown);
-                    MeadCo.log("failed to getdevice: " + errorThrown);
-
-                    if (typeof oRequest.fail === "function") {
-                        oRequest.fail(errorThrown);
+                        if (typeof oRequest.fail === "function") {
+                            oRequest.fail(errorThrown);
+                        }
                     }
                 });
         } else {
@@ -998,6 +1012,11 @@
                 getDeviceSettings({
                     name: sPrinterName,
                     async: false,
+                    done: function (printerData) {
+                        if (sPrinterName.toLowerCase() === "systemdefault") {
+                            sPrinterName = printerData.printerName;
+                        }
+                    },
                     fail: function (eTxt) { MeadCo.ScriptX.Print.reportError(eTxt); }
                 });
             }
@@ -1116,7 +1135,7 @@
                                     data.meadcoLicenseRevision,
                                     data.meadcoLicensePath);
 
-                                if (licenseApi.result != 0 && reportError ) {
+                                if (licenseApi.result != 0 && reportError) {
                                     MeadCo.ScriptX.Print.reportError(licenseApi.errorMessage);
                                 }
                             }
@@ -1386,7 +1405,7 @@
          */
         serviceDescription: function () {
 
-            if ( !cachedServiceDescription ) {
+            if (!cachedServiceDescription) {
                 getFromServer("", false,
                     function (data) { cachedServiceDescription = data; },
                     function (e) {
@@ -1406,7 +1425,7 @@
          */
         serviceDescriptionAsync: function (resolve, reject) {
 
-            if ( !cachedServiceDescription ) {
+            if (!cachedServiceDescription) {
                 getFromServer("", true,
                     function (data) {
                         cachedServiceDescription = data;

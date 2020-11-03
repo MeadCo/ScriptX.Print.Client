@@ -86,7 +86,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.7.0.8";
+    var moduleversion = "1.7.1.2";
     var emulatedVersion = "8.3.0.0";
     var servicesVersion = "";
     var printApi = MeadCo.ScriptX.Print;
@@ -731,7 +731,7 @@
         },
 
         Print: function (bPrompt, sOrOFrame, fnNotifyStarted) { // needs and wants update to ES2015 (for default values)
-            if ( !fnNotifyStarted ) {
+            if (!fnNotifyStarted) {
                 fnNotifyStarted = function (bStarted) { MeadCo.log("A print has started"); };
             }
             if (!sOrOFrame) {
@@ -969,21 +969,7 @@
         },
 
         DefaultPrinter: function () {
-            var i = 0;
-            var printerName = this.printer;
-
-            // optimise that the current printer is the default (often will be)
-            if (printerName !== "" && printApi.deviceSettingsFor(printerName).isDefault) {
-                return printerName;
-            }
-            else {
-                while ((printerName = this.EnumPrinters(i++)) !== "") {
-                    if (printApi.deviceSettingsFor(printerName).isDefault) {
-                        return printerName;
-                    }
-                }
-            }
-            return "";
+            return printApi.deviceSettingsFor("systemdefault").printerName;
         },
 
         // duplicate to cope with COM objects were/are not case sensitive
