@@ -866,7 +866,7 @@
             if (!bWaiting) {
                 MeadCo.log("Going to request status with .ajax");
                 bWaiting = true;
-                $.ajax(serverAndApi + "/status/" + jobId,
+                jQuery.ajax(serverAndApi + "/status/" + jobId,
                     {
                         dataType: "json",
                         method: "GET",
@@ -1047,12 +1047,12 @@
             //
             // meadco-subscription present => cloud/on premise service
             // meadco-license present => for Windows PC service
-            $("[data-meadco-subscription]").each(function () {
+            jQuery("[data-meadco-subscription]").each(function () {
                 if (typeof printApi === "undefined" || typeof printHtml === "undefined") {
                     console.warn("Unable to auto-connect subscription - print or printHtml API not present (yet?)");
                 } else {
                     if (!bDoneAuto) {
-                        var $this = $(this);
+                        var $this = jQuery(this);
                         var data = $this.data();
                         MeadCo.log("Auto connect susbcription to: " +
                             data.meadcoServer + ", or " + data.meadcoPrinthtmlserver +
@@ -1091,12 +1091,12 @@
                 return false;
             });
 
-            $("[data-meadco-license]").each(function () {
+            jQuery("[data-meadco-license]").each(function () {
                 if (typeof printApi === "undefined" || typeof printHtml === "undefined" || typeof licenseApi === "undefined") {
                     console.warn("Unable to auto-connect client license - print or printHtml or license API not present (yet?)");
                 } else {
                     if (!bDoneAuto) {
-                        var $this = $(this);
+                        var $this = jQuery(this);
                         var data = $this.data();
                         MeadCo.log("Auto connect client license to: " +
                             data.meadcoServer +
