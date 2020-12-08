@@ -16,7 +16,7 @@ QUnit.test("HTML API function", function (assert) {
 
         assert.equal(api.printerName, "Test printer", "Correct default printername");
         assert.equal(api.deviceSettings.printerName, "Test printer", "Correct device settings printername");
-        assert.strictEqual(api.deviceSettings.printToFileName, undefined, "PrintToFileName starts correct");
+        assert.strictEqual(api.deviceSettings.printToFileName, null, "PrintToFileName starts correct");
 
         api.deviceSettings.printToFileName = printToFile1;
 
