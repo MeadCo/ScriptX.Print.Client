@@ -1,4 +1,4 @@
-### Current Version : 1.7.2
+### Current Version : 1.8.0
 
 The MeadCo ScriptX.Services project brings control of printing to browser based content in all browsers on all devices with
 out needing a binary add-on.
@@ -127,6 +127,7 @@ All that is required is to implement the named functions.
 | MeadCo.ScriptX.Print.UI.PageSetup(function (bAccepted) {} ) | |
 | MeadCo.ScriptX.Print.UI.PrinterSettings(function (bAccepted) {} ) | |
 
+This is discussed in more detail in the [Dialogs with ScriptX.Services](https://www.meadroid.com/Developers/KnowledgeBank/Articles/Dialogs) article.
 An exemplar implemenation of UI is [provided](../src/jQuery-MeadCo.ScriptX.Print.UI.js) (implemented assuming Bootstrap and jQuery)
 
 See also:

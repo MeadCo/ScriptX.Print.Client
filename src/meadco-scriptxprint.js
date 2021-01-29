@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.7.2.2";
+    var version = "1.8.0.4";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
     var directApiLocation = "v1/printDirect";
@@ -97,6 +97,17 @@
      * @property {Array.<string>} forms Array of the names of the avbailable paper sizes
      * */
     var DeviceSettingsObject; // for doc generator
+
+    /**
+     * Provide authorisation details to access protected content. 
+     * 
+     * @typedef AccessControl
+     * @memberof MeadCoScriptXPrint
+     * @property {string} cookie The authorisation cookie in the form name=value
+     * */
+    var AccessControl = {
+        cookie: ""
+    };
 
     /**
      * Description of a code version. Semver is used 
@@ -189,6 +200,7 @@
 
     /**
      * Information about the service that is connected to - version detail and facilities available
+     * See also: https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXServices/WebServiceAPIReference/ServiceDescription/GET
      * 
      * @typedef ServiceDescriptionObject
      * @memberof MeadCoScriptXPrint
@@ -336,7 +348,7 @@
 
      * @param {ContentType} contentType enum type of content given (html snippet, url)
      * @param {string} content the content - a url, html snippet or complete html
-     * @param {object} htmlPrintSettings the settings to use - device annd html such as headers and footers
+     * @param {object} htmlPrintSettings the settings to use - page and html such as headers and footers
      * @param {function({string})} fnDone function to call when printing complete (and output returned), arg is null on no error, else error message
      * @param {function(status,sInformation,data)} fnProgress function to call when job status is updated
      * @param {any} data object to give pass to fnProgress
@@ -369,6 +381,7 @@
             Content: content,
             Settings: htmlPrintSettings,
             Device: devInfo,
+            ProtectedContentAccess: AccessControl,
             OnProgress: fnProgress,
             UserData: data
         };
@@ -479,6 +492,7 @@
             Description: pdfPrintSettings.jobDescription,
             Settings: pdfPrintSettings,
             Device: devInfo,
+            ProtectedContentAccess: AccessControl,
             OnProgress: fnProgress,
             UserData: data
         };
@@ -955,7 +969,7 @@
         }
     }
 
-    function getDeviceSettings(oRequest,useLicenseGuid) {
+    function getDeviceSettings(oRequest, useLicenseGuid) {
         oRequest.name = oRequest.name.replace(/\\/g, "||");
         MeadCo.log("Request get device info: " + oRequest.name);
         var theLicense = arguments.length > 1 ? useLicenseGuid : licenseGuid;
@@ -985,7 +999,7 @@
                         console.warn("request for systemdefault printer failed - please update to ScriptX.Services 2.11.1");
                         oRequest.name = "default";
                         oRequest.async = false;
-                        getDeviceSettings(oRequest,theLicense);
+                        getDeviceSettings(oRequest, theLicense);
                     }
                     else {
                         errorThrown = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.getDeviceSettings:", jqXhr, textStatus, errorThrown);
@@ -1200,6 +1214,20 @@
             errorAction = action;
         },
 
+        /**
+         * Get/set the cookie to be used to authorise access to protected content
+         * 
+         * @memberof MeadCoScriptXPrint
+         * @property {string} authorisationCookie - the cookie in the form name=value
+         */
+        get authorisationCookie() {
+            return AccessControl.cookie;
+        },
+
+        set authorisationCookie(cookie) {
+            AccessControl.cookie = cookie;
+        },
+
         /** 
          *  Get/set the currently active printer
          *  @memberof MeadCoScriptXPrint
@@ -1293,23 +1321,12 @@
         },
 
         /**
-         * search for processing attibutes for connection and subscription/license and process
-         * them. The attibutes can be on any element
+         * search for processing attibutes for connection and subscription/license and process them. The attibutes can be on any element. This function is called automatically by factory emulation and licensing emulation scripts so does not usually 
+         * need to be called by document script.
          * 
-         * data-meadco-server value is the root url, api/v1/printhtml, api/v1/licensing will be added by the library
-         * data-meadco-syncinit default is true for synchronous calls to the server, value 'false' to use asynchronous calls to the server
-         * 
-         * data-meadco-subscription present => cloud/on premise service, value is the subscription GUID
-         * data-meadco-license present => for Windows PC service, value is the license GUID
-         *
-         * If data-meadco-license is present then the following additional attributes can be used:
-         * 
-         * data-meadco-license-revision, value is the revision number of the license
-         * data-meadco-license-path,, value is the path to the license file (sxlic.mlf). A value of "warehouse" will cause the license to be downloaded from MeadCo's License Warehouse
-         * 
-         * Synchronous AJAX calls are deprecated in all browsers but may be useful to "quick start" use of older code. It is recommended that code is moved
+         * Please note synchronous AJAX calls are deprecated in all browsers but may be useful to "quick start" use of older code. It is recommended that code is moved
          * to using asynchronous calls as soon as practical. The MeadCoScriptXJS library can assist with this as it delivers promise rather than callback based code.
-         *  
+         * 
          * @function useAttributes
          * @memberof MeadCoScriptXPrint
          * @example
@@ -1328,6 +1345,19 @@
          *      data-meadco-license-path="warehouse"
          *      data-meadco-license-revision="3">
          * </script>
+         * 
+         * data-meadco-server value is the root url, api/v1/printhtml, api/v1/licensing will be added by the library
+         * data-meadco-syncinit default is true for synchronous calls to the server, value 'false' to use asynchronous calls to the server
+         * 
+         * data-meadco-subscription present => cloud/on premise service, value is the subscription GUID
+         * data-meadco-license present => for Windows PC service, value is the license GUID
+         *
+         * If data-meadco-license is present then the following additional attributes can be used:
+         * 
+         * data-meadco-license-revision, value is the revision number of the license
+         * data-meadco-license-path, value is the path to the license file (sxlic.mlf). A value of "warehouse" will cause the license to be downloaded from MeadCo's License Warehouse
+         * data-meadco-reporterror, default is "true", value "false" suppresses error messages during the initial connection to the service (only)
+         * 
          */
         useAttributes: function () {
             processAttributes();

@@ -86,7 +86,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.7.2.2";
+    var moduleversion = "1.8.0.2";
     var emulatedVersion = "8.3.0.0";
     var servicesVersion = "";
     var printApi = MeadCo.ScriptX.Print;
@@ -1261,8 +1261,15 @@
             } else {
                 printHtml.connectAsync("", "", resolve, reject);
             }
-        }
+        },
 
+        get PolyfillAuthorisationCookie() {
+            return MeadCo.ScriptX.Print.authorisationCookie;
+        },
+
+        set PolyfillAuthorisationCookie(cookie) {
+            MeadCo.ScriptX.Print.authorisationCookie = cookie;
+        }
     };
 
 });
