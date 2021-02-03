@@ -4,7 +4,7 @@ QUnit.test("Namespace basics", function (assert) {
 
     assert.ok(window.factory, "factory namespace exists");
     var api = window.factory;
-    var expectedVersion = "1.8.0.2";
+    var expectedVersion = "1.8.1.2";
     var emulatedVersion = "8.3.0.0";
     var servicesVersion = "11.12.13.14";
 
@@ -239,12 +239,12 @@ QUnit.test("factory.printing device settings", function (assert) {
 
 });
 
-QUnit.test("factory.printing - do printing with mock UI", function (assert) {
+QUnit.test("factory.printing - do printing with mock UI declined", function (assert) {
 
     var api = window.factory.printing;
     var api2 = MeadCo.ScriptX.Print.HTML;
 
-    var done = assert.async(14);
+    var done = assert.async(5);
 
     var url = serverUrl;
 
@@ -267,15 +267,35 @@ QUnit.test("factory.printing - do printing with mock UI", function (assert) {
             done();
         }), "Print api returned false");
 
-        assert.notOk(api.PrintHTML("http://www.meadroid.com",true, (bStarted) => {
-            assert.notOk(bStarted, "Prompted cancelled PrintHTML did not start");
+        assert.ok(api.PrintHTML("http://www.meadroid.com",true, (bStarted) => {
+            assert.notOk(bStarted, "Prompted cancelled PrintHTML did not start.");
             done();
         }), "Print api returned false");
 
-        assert.notOk(api.PrintHTMLEx("http://www.meadroid.com", true, (data) => { }, "t1", (bStarted) => {
-            assert.notOk(bStarted, "Prompted cancelled PrintHTMLEx did not start");
+        assert.ok(api.PrintHTMLEx("http://www.meadroid.com", true, (data) => { }, "t1", (bStarted) => {
+            assert.notOk(bStarted, "Prompted cancelled PrintHTMLEx did not start.");
             done();
         }), "Print api returned false");
+
+    }, function (errorText) {
+        assert.ok(false, "Should have connected to: " + url + " error: " + errorText);
+        done();
+    });
+
+});
+
+QUnit.test("factory.printing - do printing with mock UI accepted", function (assert) {
+
+    var api = window.factory.printing;
+    var api2 = MeadCo.ScriptX.Print.HTML;
+
+    var done = assert.async(10);
+
+    var url = serverUrl;
+
+    api2.connectAsync(url, licenseGuid, function (data) {
+        assert.ok(true, "Connected to server");
+        done();
 
         // mock UI accepted.
         MeadCo.ScriptX.Print.UI = {
@@ -295,10 +315,10 @@ QUnit.test("factory.printing - do printing with mock UI", function (assert) {
                 assert.throws(() => {
                     api.Print(true, "aframe");
                 },
-                function (err) {
-                    return err.message === "Unable to get frame content - frame does not exist";
-                },
-                "Raised error on prompted print on nonexisting frame is correct");
+                    function (err) {
+                        return err.message === "Unable to get frame content - frame does not exist";
+                    },
+                    "Raised error on prompted print on nonexisting frame is correct");
 
                 assert.ok(api.Print(true, window.self, (bStarted) => {
                     assert.ok(bStarted, "Prompted print frame self did start");
@@ -327,7 +347,7 @@ QUnit.test("factory.printing - do printing with mock UI", function (assert) {
 
                                     assert.ok(api.PrintHTMLEx("html://<p>hello world</p>", true, (status, sInformation, data) => {
                                         assert.equal(data, "t2", "PrintHTMLEx On progress function receives data: " + status + " => " + sInformation);
-                                        }, "t2", (bStarted) => {
+                                    }, "t2", (bStarted) => {
                                         assert.ok(bStarted, "Prompted PrintHTMLEx did start");
                                         assert.strictEqual(api.GetJobsCount(api.printer), 1, "There is a job for the printer");
                                         done();
@@ -357,7 +377,6 @@ QUnit.test("factory.printing - do printing with mock UI", function (assert) {
     });
 
 });
-
 
 QUnit.test("factory.printing - do printing with *no* UI", function (assert) {
 

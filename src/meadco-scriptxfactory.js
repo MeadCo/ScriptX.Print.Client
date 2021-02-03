@@ -86,7 +86,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.8.0.2";
+    var moduleversion = "1.8.1.2";
     var emulatedVersion = "8.3.0.0";
     var servicesVersion = "";
     var printApi = MeadCo.ScriptX.Print;
@@ -376,7 +376,7 @@
         return bStarted;
     }
 
-    function printHtmlContent(sUrl, bPrompt, fnNotifyStarted, fnCallback, data) {
+    function funcPrintHtmlContent(sUrl, bPrompt, fnNotifyStarted, fnCallback, data) {
         var sHtml = "";
 
         // if requesting snippet then trim to just the html
@@ -393,11 +393,32 @@
             sUrl = module.factory.baseURL(sUrl);
         }
 
-        return promptAndPrint(bPrompt,
-            function () {
-                MeadCo.log("printHtmlContent requesting print ...");
-                return sHtml.length > 0 ? printHtml.printHtml(sHtml, null, fnCallback, data) : printHtml.printFromUrl(sUrl, null, fnCallback, data);
-            }, fnNotifyStarted);
+        return function () {
+            return promptAndPrint(bPrompt,
+                function () {
+                    MeadCo.log("printHtmlContent requesting print ...");
+                    return sHtml.length > 0 ? printHtml.printHtml(sHtml, null, fnCallback, data) : printHtml.printFromUrl(sUrl, null, fnCallback, data);
+                }, fnNotifyStarted);
+        };
+    }
+
+    // printHtml() may be called in a loop or as multiple lines, this will lead to indeterminate order
+    // of ajax calls unless they are separated out; use settimeout() with incrementing timeout on each call. 
+    // But, we dont want the increment period to become too long so if nothing has happened, reset
+    var timeout = 0;
+    var previousPrintCall = 0;
+    function printHtmlContent(sUrl, bPrompt, fnNotifyStarted, fnCallback, data) {
+
+        // if previous call was over a second ago, reset
+        var t = (new Date()).getTime();
+        if ((t - previousPrintCall) > 1000) {
+            timeout = 0;
+        }
+        previousPrintCall = t;
+
+        setTimeout(funcPrintHtmlContent(sUrl, bPrompt, fnNotifyStarted, fnCallback, data), timeout);
+        timeout += 100;
+        return true;
     }
 
     function printPdfContent(sUrl, bPrompt, fnNotifyStarted, fnCallback, data) {
