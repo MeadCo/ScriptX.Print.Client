@@ -161,7 +161,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.8.1.0";
+    var version = "1.8.2.2";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
     var directApiLocation = "v1/printDirect";
@@ -432,7 +432,7 @@
 
     function queueJob(data) {
         activePrintQueue.push(data);
-        MeadCo.log("ScriptX.Print queueJob, jobCount: " + activePrintQueue.length);
+        MeadCo.log("ScriptX.Print queueJob: " + data.jobName + ", jobCount: " + activePrintQueue.length);
     }
 
     function jobCount() {
@@ -467,8 +467,12 @@
         var i;
         for (i = 0; i &lt; activePrintQueue.length; i++) {
             if (activePrintQueue[i].jobIdentifier === id) {
+                MeadCo.log("ScriptX.Print removing job: " + activePrintQueue[i].jobName);
                 activePrintQueue.splice(i, 1);
                 MeadCo.log("ScriptX.Print remove job, jobCount: " + activePrintQueue.length);
+
+                // no jobs being processed, allow next immediate start
+                if ( activePrintQueue.length == 0 ) previousPrintCallWasAt = 0;
                 return;
             }
         }
@@ -481,9 +485,116 @@
         }
     }
 
+    // funcPrintHtmlAtServer
+    //
+    // Create a closure on all the data for a print job which can be used with timeout.
+    //
+    function funcPrintHtmlAtServer(contentType, content, htmlPrintSettings, fnDone, fnProgress, data) {
+        MeadCo.log("started MeadCo.ScriptX.Print.print.printHtmlAtServer() Type: " + contentType);
+        if (contentType === enumContentType.URL) {
+            MeadCo.log(".. request print url: " + content);
+        }
+
+        // must deepclone objects not values by reference.
+        var devInfo;
+        if (printerName === "") {
+            devInfo = {};
+        } else {
+            devInfo = JSON.parse(JSON.stringify(deviceSettings[printerName]));
+        }
+
+        var requestData = {
+            ContentType: contentType,
+            Content: content,
+            Settings: JSON.parse(JSON.stringify(htmlPrintSettings)),
+            Device: devInfo,
+            ProtectedContentAccess: AccessControl,
+            OnProgress: fnProgress,
+            UserData: data
+        };
+
+        var fakeJob = {
+            jobIdentifier: Date.now(),
+            printerName: requestData.Device.printerName,
+            jobName: "Job timeout hold clientside"
+        };
+        queueJob(fakeJob); // essentially a lock on the queue to stop it looking empty until this job is processed
+
+        var serverApi = MeadCo.makeApiEndPoint(server, htmlApiLocation);
+        return function () {
+            removeJob(fakeJob.jobIdentifier);
+            return printAtServer(serverApi, requestData,
+                {
+                    fail: function (jqXhr, textStatus, errorThrown) {
+                        var err = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.printHtmlAtServer", jqXhr, textStatus, errorThrown);
+                        progress(requestData, enumPrintStatus.ERROR, err);
+                        MeadCo.ScriptX.Print.reportError(err);
+                        if (typeof fnDone === "function") {
+                            fnDone("Server error");
+                        }
+                    },
+
+                    queuedToFile: function (data) {
+                        MeadCo.log("default handler on queued to file response");
+                        progress(requestData, enumPrintStatus.QUEUED);
+                        monitorJob(serverApi, requestData, data.jobIdentifier,
+                            -1,
+                            function (data) {
+                                if (data !== null) {
+                                    MeadCo.log("Will download printed file");
+                                    progress(requestData, enumPrintStatus.COMPLETED);
+                                    window.open(server + "/download/" + data.jobIdentifier, "_self");
+                                }
+
+                                if (typeof fnDone === "function") {
+                                    fnDone(data === null ? "Server error" : null);
+                                }
+                            });
+                    },
+
+                    queuedToDevice: function (data) {
+                        MeadCo.log("print was queued to device");
+                        progress(requestData, enumPrintStatus.QUEUED);
+                        monitorJob(serverApi, requestData, data.jobIdentifier,
+                            -1,
+                            function (data) {
+                                if (data !== null) {
+                                    progress(requestData, enumPrintStatus.COMPLETED);
+                                }
+
+                                if (typeof fnDone === "function") {
+                                    fnDone(data === null ? "Server error" : null);
+                                }
+                            });
+                    },
+
+                    softError: function (data) {
+                        progress(requestData, enumPrintStatus.ERROR, data.message);
+                        MeadCo.ScriptX.Print.reportError(data.message);
+                        MeadCo.log("print has soft error");
+                        removeJob(data.jobIdentifier);
+                        if (typeof fnDone === "function") {
+                            MeadCo.log("Call fnDone");
+                            fnDone(data.message);
+                        }
+                    },
+
+                    ok: function (data) {
+                        progress(requestData, enumPrintStatus.COMPLETED);
+                        MeadCo.log("printed ok, no further information");
+                        removeJob(data.jobIdentifier);
+                        if (typeof fnDone === "function") {
+                            fnDone(null);
+                        }
+                    }
+                })
+        };
+    }
+
+
     /**
      * Post a request to the server api/v1/print to print some html and monitor the print job 
-     * to completion. If the server prints to file then the file is opened for the user (in a new window)
+     * to completion. If the server prints to file then the file is returned as a download
      * 
      * @function printHtmlAtServer
      * @memberof MeadCo.ScriptX.Print
@@ -497,12 +608,11 @@
      * @return {boolean} - true if a print was started (otherwise an error will be thrown)
      * @private
      */
+    var timeoutToJobStart = 0;
+    var previousPrintCallWasAt = 0;
+    var timeoutSpacingMSecs = 750;
+    var jobGapResetTimeout = 10000;
     function printHtmlAtServer(contentType, content, htmlPrintSettings, fnDone, fnProgress, data) {
-        MeadCo.log("started MeadCo.ScriptX.Print.print.printHtmlAtServer() Type: " + contentType + ", printerName: " + printerName);
-        if (contentType === enumContentType.URL) {
-            MeadCo.log(".. request print url: " + content);
-        }
-        var devInfo;
 
         if (!content || (typeof content === "string" &amp;&amp; content.length === 0)) {
             MeadCo.ScriptX.Print.reportError("Request to print no content - access denied?");
@@ -512,93 +622,128 @@
             return false;
         }
 
+        // if previous call was over (default) 10 seconds ago, reset
+        var t = Date.now();
+        if ((t - previousPrintCallWasAt) > jobGapResetTimeout) {
+            timeoutToJobStart = 0;
+        }
+        previousPrintCallWasAt = t;
+        setTimeout(funcPrintHtmlAtServer(contentType, content, htmlPrintSettings, fnDone, fnProgress, data), timeoutToJobStart);
+        timeoutToJobStart += timeoutSpacingMSecs;
+        return true;
+    }
+
+    // funcPrintPdfAtServer
+    //
+    // Create a closure on all the data for a print job which can be used with timeout.
+    //
+    function funcPrintPdfAtServer(document, pdfPrintSettings, fnDone, fnProgress, data) {
+
+        MeadCo.log("started MeadCo.ScriptX.Print.print.printPdfAtServer() document: " + document + ", printerName: " + printerName);
+
+        var devInfo;
+        // deep clones of objects
         if (printerName === "") {
             devInfo = {};
         } else {
-            devInfo = deviceSettings[printerName];
+            devInfo = JSON.parse(JSON.stringify(deviceSettings[printerName]));
         }
 
         var requestData = {
-            ContentType: contentType,
-            Content: content,
-            Settings: htmlPrintSettings,
+            Document: document,
+            Description: pdfPrintSettings.jobDescription,
+            Settings: JSON.parse(JSON.stringify(pdfPrintSettings)),
             Device: devInfo,
             ProtectedContentAccess: AccessControl,
             OnProgress: fnProgress,
             UserData: data
         };
 
-        var serverApi = MeadCo.makeApiEndPoint(server, htmlApiLocation);
-        return printAtServer(serverApi, requestData,
-            {
-                fail: function (jqXhr, textStatus, errorThrown) {
-                    var err = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.printHtmlAtServer", jqXhr, textStatus, errorThrown);
-                    progress(requestData, enumPrintStatus.ERROR, err);
-                    MeadCo.ScriptX.Print.reportError(err);
-                    if (typeof fnDone === "function") {
-                        fnDone("Server error");
+        // used/required by printAtServer ...
+        requestData.Settings.jobTitle = pdfPrintSettings.jobDescription;
+
+        var serverApi = MeadCo.makeApiEndPoint(server, pdfApiLocation);
+
+        var fakeJob = {
+            jobIdentifier: Date.now(),
+            printerName: requestData.Device.printerName,
+            jobName: "Job timeout hold clientside"
+        };
+        queueJob(fakeJob); // essentially a lock on the queue to stop it looking empty until this job is processed
+
+        return function () {
+            removeJob(fakeJob.jobIdentifier);
+            return printAtServer(serverApi, requestData,
+                {
+                    fail: function (jqXhr, textStatus, errorThrown) {
+                        var err = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.printPdfAtServer", jqXhr, textStatus, errorThrown);
+                        progress(requestData, enumPrintStatus.ERROR, err);
+                        MeadCo.ScriptX.Print.reportError(err);
+                        if (typeof fnDone === "function") {
+                            fnDone("Server error");
+                        }
+                    },
+
+                    queuedToFile: function (data) {
+                        MeadCo.log("default handler on queued to file response");
+                        progress(requestData, enumPrintStatus.QUEUED);
+                        monitorJob(serverApi, requestData, data.jobIdentifier,
+                            -1,
+                            function (data) {
+                                if (data !== null) {
+                                    MeadCo.log("Will download printed file");
+                                    progress(requestData, enumPrintStatus.COMPLETED);
+                                    window.open(server + "/download/" + data.jobIdentifier, "_self");
+                                }
+
+                                if (typeof fnDone === "function") {
+                                    fnDone(data === null ? "Server error" : null);
+                                }
+                            });
+                    },
+
+                    queuedToDevice: function (data) {
+                        MeadCo.log("print was queued to device");
+                        progress(requestData, enumPrintStatus.QUEUED);
+                        monitorJob(serverApi, requestData, data.jobIdentifier,
+                            -1,
+                            function (data) {
+                                if (data !== null) {
+                                    progress(requestData, enumPrintStatus.COMPLETED);
+                                }
+
+                                if (typeof fnDone === "function") {
+                                    fnDone(data === null ? "Server error" : null);
+                                }
+                            });
+                    },
+
+                    softError: function (data) {
+                        progress(requestData, enumPrintStatus.ERROR, data.message);
+                        MeadCo.ScriptX.Print.reportError(data.message);
+                        MeadCo.log("printpdf call has soft error, remove job: " + data.jobIdentifier);
+                        removeJob(data.jobIdentifier);
+                        if (typeof fnDone === "function") {
+                            MeadCo.log("Call fnDone");
+                            fnDone("Server error");
+                        }
+                    },
+
+                    ok: function (data) {
+                        progress(requestData, enumPrintStatus.COMPLETED);
+                        MeadCo.log("printed ok, no further information");
+                        removeJob(data.jobIdentifier);
+                        if (typeof fnDone === "function") {
+                            fnDone(null);
+                        }
                     }
-                },
-
-                queuedToFile: function (data) {
-                    MeadCo.log("default handler on queued to file response");
-                    progress(requestData, enumPrintStatus.QUEUED);
-                    monitorJob(serverApi, requestData, data.jobIdentifier,
-                        -1,
-                        function (data) {
-                            if (data !== null) {
-                                MeadCo.log("Will download printed file");
-                                progress(requestData, enumPrintStatus.COMPLETED);
-                                window.open(server + "/download/" + data.jobIdentifier, "_self");
-                            }
-
-                            if (typeof fnDone === "function") {
-                                fnDone(data === null ? "Server error" : null);
-                            }
-                        });
-                },
-
-                queuedToDevice: function (data) {
-                    MeadCo.log("print was queued to device");
-                    progress(requestData, enumPrintStatus.QUEUED);
-                    monitorJob(serverApi, requestData, data.jobIdentifier,
-                        -1,
-                        function (data) {
-                            if (data !== null) {
-                                progress(requestData, enumPrintStatus.COMPLETED);
-                            }
-
-                            if (typeof fnDone === "function") {
-                                fnDone(data === null ? "Server error" : null);
-                            }
-                        });
-                },
-
-                softError: function (data) {
-                    progress(requestData, enumPrintStatus.ERROR, data.message);
-                    MeadCo.ScriptX.Print.reportError(data.message);
-                    MeadCo.log("print has soft error");
-                    removeJob(data.jobIdentifier);
-                    if (typeof fnDone === "function") {
-                        MeadCo.log("Call fnDone");
-                        fnDone(data.message);
-                    }
-                },
-
-                ok: function (data) {
-                    progress(requestData, enumPrintStatus.COMPLETED);
-                    MeadCo.log("printed ok, no further information");
-                    removeJob(data.jobIdentifier);
-                    if (typeof fnDone === "function") {
-                        fnDone(null);
-                    }
-                }
-            });
+                });
+        };
     }
 
     /**
-     * Post a request to the server api/v1/print to print some html and monitor the print job 
-     * to completion. If the server prints to file then the file is opened for the user (in a new window)
+     * Post a request to the server api/v1/print to print a pdf document and monitor the print job 
+     * to completion. If the server prints to file then the file is returned as a download
      * 
      * @function printPdfAtServer
      * @memberof MeadCo.ScriptX.Print
@@ -611,9 +756,6 @@
      * @private
      */
     function printPdfAtServer(document, pdfPrintSettings, fnDone, fnProgress, data) {
-        MeadCo.log("started MeadCo.ScriptX.Print.print.printPdfAtServer() document: " + document + ", printerName: " + printerName);
-
-        var devInfo;
 
         if (!document || (typeof document === "string" &amp;&amp; document.length === 0)) {
             MeadCo.ScriptX.Print.reportError("The document to print must be given.");
@@ -623,92 +765,15 @@
             return false;
         }
 
-        if (printerName === "") {
-            devInfo = {};
-        } else {
-            devInfo = deviceSettings[printerName];
+        // if previous call was over (default) 10 seconds ago, reset
+        var t = Date.now();
+        if ((t - previousPrintCallWasAt) > jobGapResetTimeout) {
+            timeoutToJobStart = 0;
         }
-
-        var requestData = {
-            Document: document,
-            Description: pdfPrintSettings.jobDescription,
-            Settings: pdfPrintSettings,
-            Device: devInfo,
-            ProtectedContentAccess: AccessControl,
-            OnProgress: fnProgress,
-            UserData: data
-        };
-
-        // used/required by printAtServer ...
-        requestData.Settings.jobTitle = pdfPrintSettings.jobDescription;
-
-        var serverApi = MeadCo.makeApiEndPoint(server, pdfApiLocation);
-
-        return printAtServer(serverApi, requestData,
-            {
-                fail: function (jqXhr, textStatus, errorThrown) {
-                    var err = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.printPdfAtServer", jqXhr, textStatus, errorThrown);
-                    progress(requestData, enumPrintStatus.ERROR, err);
-                    MeadCo.ScriptX.Print.reportError(err);
-                    if (typeof fnDone === "function") {
-                        fnDone("Server error");
-                    }
-                },
-
-                queuedToFile: function (data) {
-                    MeadCo.log("default handler on queued to file response");
-                    progress(requestData, enumPrintStatus.QUEUED);
-                    monitorJob(serverApi, requestData, data.jobIdentifier,
-                        -1,
-                        function (data) {
-                            if (data !== null) {
-                                MeadCo.log("Will download printed file");
-                                progress(requestData, enumPrintStatus.COMPLETED);
-                                window.open(server + "/download/" + data.jobIdentifier, "_self");
-                            }
-
-                            if (typeof fnDone === "function") {
-                                fnDone(data === null ? "Server error" : null);
-                            }
-                        });
-                },
-
-                queuedToDevice: function (data) {
-                    MeadCo.log("print was queued to device");
-                    progress(requestData, enumPrintStatus.QUEUED);
-                    monitorJob(serverApi, requestData, data.jobIdentifier,
-                        -1,
-                        function (data) {
-                            if (data !== null) {
-                                progress(requestData, enumPrintStatus.COMPLETED);
-                            }
-
-                            if (typeof fnDone === "function") {
-                                fnDone(data === null ? "Server error" : null);
-                            }
-                        });
-                },
-
-                softError: function (data) {
-                    progress(requestData, enumPrintStatus.ERROR, data.message);
-                    MeadCo.ScriptX.Print.reportError(data.message);
-                    MeadCo.log("printpdf call has soft error, remove job: " + data.jobIdentifier);
-                    removeJob(data.jobIdentifier);
-                    if (typeof fnDone === "function") {
-                        MeadCo.log("Call fnDone");
-                        fnDone("Server error");
-                    }
-                },
-
-                ok: function (data) {
-                    progress(requestData, enumPrintStatus.COMPLETED);
-                    MeadCo.log("printed ok, no further information");
-                    removeJob(data.jobIdentifier);
-                    if (typeof fnDone === "function") {
-                        fnDone(null);
-                    }
-                }
-            });
+        previousPrintCallWasAt = t;
+        setTimeout(funcPrintPdfAtServer(document, pdfPrintSettings, fnDone, fnProgress, data), timeoutToJobStart);
+        timeoutToJobStart += timeoutSpacingMSecs;
+        return true;
     }
 
     /**
@@ -1881,7 +1946,37 @@
                     }
                 }
             }, interval);
+        },
+
+        /**
+         * Get/set the timeout between jobs when there is a series of print calls and maintaining the output order is required.
+         * The default is 750ms. On slow systems/slow connections this may need to be increased.
+         * 
+         * @memberof MeadCo.ScriptX.Print
+         * @property {number} queueTimeoutSpacing
+         */
+        get queueTimeoutSpacing() {
+            return timeoutSpacingMSecs;
+        },
+
+        set queueTimeoutSpacing(msec) {
+            timeoutSpacingMSecs = msec;
+        },
+
+        /**
+         * Get/set the time since last print call after which the job spacing timeout is reset
+         * 
+         * @memberof MeadCo.ScriptX.Print
+         * @property {number} queueGapResetTime
+         */
+        get queueGapResetTime() {
+            return jobGapResetTimeout;
+        },
+
+        set queueGapResetTime(msec) {
+            jobGapResetTimeout = msec;
         }
+
     };
 
 });

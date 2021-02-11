@@ -4,7 +4,7 @@ QUnit.test("Namespace basics", function (assert) {
 
     assert.ok(window.factory, "factory namespace exists");
     var api = window.factory;
-    var expectedVersion = "1.8.1.2";
+    var expectedVersion = "1.8.2.2";
     var emulatedVersion = "8.3.0.0";
     var servicesVersion = "11.12.13.14";
 
@@ -267,15 +267,15 @@ QUnit.test("factory.printing - do printing with mock UI declined", function (ass
             done();
         }), "Print api returned false");
 
-        assert.ok(api.PrintHTML("http://www.meadroid.com",true, (bStarted) => {
+        assert.notOk(api.PrintHTML("http://www.meadroid.com",true, (bStarted) => {
             assert.notOk(bStarted, "Prompted cancelled PrintHTML did not start.");
             done();
-        }), "Print api returned false");
+        }), "PrintHtml api returned false");
 
-        assert.ok(api.PrintHTMLEx("http://www.meadroid.com", true, (data) => { }, "t1", (bStarted) => {
+        assert.notOk(api.PrintHTMLEx("http://www.meadroid.com", true, (data) => { }, "t1", (bStarted) => {
             assert.notOk(bStarted, "Prompted cancelled PrintHTMLEx did not start.");
             done();
-        }), "Print api returned false");
+        }), "PrintHtmlEx api returned false");
 
     }, function (errorText) {
         assert.ok(false, "Should have connected to: " + url + " error: " + errorText);
@@ -340,7 +340,7 @@ QUnit.test("factory.printing - do printing with mock UI accepted", function (ass
                                 assert.strictEqual(api.GetJobsCount(api.printer), 1, "There is a job for the printer");
                                 done();
 
-                                api.WaitForSpoolingComplete(5000, (bAllComplete) => {
+                                api.WaitForSpoolingComplete(10000, (bAllComplete) => {
                                     assert.ok(bAllComplete, "All jobs are complete");
                                     assert.strictEqual(api.GetJobsCount(api.printer), 0, "There are no jobs for the printer");
                                     done();
@@ -352,7 +352,7 @@ QUnit.test("factory.printing - do printing with mock UI accepted", function (ass
                                         assert.strictEqual(api.GetJobsCount(api.printer), 1, "There is a job for the printer");
                                         done();
 
-                                        api.WaitForSpoolingComplete(5000, (bAllComplete) => {
+                                        api.WaitForSpoolingComplete(10000, (bAllComplete) => {
                                             assert.ok(bAllComplete, "All jobs are complete");
                                             assert.strictEqual(api.GetJobsCount(api.printer), 0, "There are no jobs for the printer");
                                             done();
@@ -399,7 +399,7 @@ QUnit.test("factory.printing - do printing with *no* UI", function (assert) {
             assert.strictEqual(api.GetJobsCount(api.printer), 1, "There is a job for the printer");
             done();
 
-            api.WaitForSpoolingComplete(2000, (bAllComplete) => {
+            api.WaitForSpoolingComplete(5000, (bAllComplete) => {
                 assert.ok(bAllComplete, "All jobs are complete");
                 assert.strictEqual(api.GetJobsCount(api.printer), 0, "There are no jobs for the printer");
                 done();
@@ -417,7 +417,7 @@ QUnit.test("factory.printing - do printing with *no* UI", function (assert) {
                     assert.strictEqual(api.GetJobsCount(api.printer), 1, "There is a printframe job for the printer");
                     done();
 
-                    api.WaitForSpoolingComplete(3000, (bAllComplete) => {
+                    api.WaitForSpoolingComplete(10000, (bAllComplete) => {
                         assert.ok(bAllComplete, "All jobs are complete");
                         assert.strictEqual(api.GetJobsCount(api.printer), 0, "There are no jobs for the printer");
                         done();
@@ -427,7 +427,7 @@ QUnit.test("factory.printing - do printing with *no* UI", function (assert) {
                             assert.strictEqual(api.GetJobsCount(api.printer), 1, "There is a job for the printer");
                             done();
 
-                            api.WaitForSpoolingComplete(5000, (bAllComplete) => {
+                            api.WaitForSpoolingComplete(20000, (bAllComplete) => {
                                 assert.ok(bAllComplete, "All jobs are complete");
                                 assert.strictEqual(api.GetJobsCount(api.printer), 0, "There are no jobs for the printer");
                                 done();
@@ -439,7 +439,7 @@ QUnit.test("factory.printing - do printing with *no* UI", function (assert) {
                                     assert.strictEqual(api.GetJobsCount(api.printer), 1, "There is a job for the printer");
                                     done();
 
-                                    api.WaitForSpoolingComplete(5000, (bAllComplete) => {
+                                    api.WaitForSpoolingComplete(20000, (bAllComplete) => {
                                         assert.ok(bAllComplete, "All jobs are complete");
                                         assert.strictEqual(api.GetJobsCount(api.printer), 0, "There are no jobs for the printer");
                                         done();
