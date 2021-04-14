@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
 
-    var moduleversion = "1.8.2.0";
+    var moduleversion = "1.8.3.1";
 
     /**
      * Enum to describe the units used on measurements - **NOTE** please use MeadCo.ScriptX.Print.MeasurementUnits instead
@@ -63,11 +63,13 @@
      * @typedef {number} PrintingPass
      * @enum {PrintingPass}
      * @readonly
+     * @property {number} DEFAULT 0 use the default at the print server
      * @property {number} ALL 1 print all pages
      * @property {number} ODD 2 print odd numbered pages only 
      * @property {number} EVEN 3 print even numbered pages only 
      */
     var mPrintingPass = {
+        DEFAULT: 0,
         ALL: 1,
         ODD: 2,
         EVEN: 3
@@ -368,7 +370,7 @@
 
         get printingPass() { return settingsCache.printingPass; },
         set printingPass(v) {
-            if (typeof v === "number" && v >= mPrintingPass.ALL && v <= mPrintingPass.ODDANDEVEN) {
+            if (typeof v === "number" && v >= mPrintingPass.DEFAULT && v <= mPrintingPass.EVEN) {
                 settingsCache.printingPass = v;
                 return;
             }

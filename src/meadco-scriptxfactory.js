@@ -86,7 +86,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.8.2.2";
+    var moduleversion = "1.8.3.1";
     var emulatedVersion = "8.3.0.0";
     var servicesVersion = "";
     var printApi = MeadCo.ScriptX.Print;
@@ -319,6 +319,7 @@
     var printPdf = MeadCo.ScriptX.Print.PDF;
     var settings = printHtml.settings;
     var printApi = MeadCo.ScriptX.Print;
+    var htmlPrefixes = ["html://", "html4://", "html5://"];
 
     var module = this;
 
@@ -376,15 +377,25 @@
         return bStarted;
     }
 
-    function printHtmlContent(sUrl, bPrompt, fnNotifyStarted, fnCallback, data) {
-        var sHtml = "";
+    function isSnippet(sContent) {
 
-        // default for printHtml/printHtmlEx is false
-        if (typeof (bPrompt) === 'undefined') bPrompt = false;
+        var foundPrefix = htmlPrefixes.find(function (sPrefix) {
+            return sContent.indexOf(sPrefix) === 0;
+        });
+
+        if (typeof foundPrefix === "string") {
+            return sContent.substring(foundPrefix.length);
+        }
+
+        return "";
+    }
+
+    function printHtmlContent(sUrl, bPrompt, fnNotifyStarted, fnCallback, data) {
+
+        var sHtml = isSnippet(sUrl);
 
         // if requesting snippet then trim to just the html
-        if (sUrl.indexOf('html://') === 0) {
-            sHtml = sUrl.substring(7);
+        if (sHtml.length > 0) {
             var docType = "<!doctype";
 
             // add-on scripters might also add doctype but the server handles this 
@@ -521,6 +532,7 @@
         get printingPass() {
             var v = "";
             switch (settings.printingPass) {
+                case printHtml.PrintingPasses.DEFAULT:
                 case printHtml.PrintingPasses.ALL:
                     v = "all";
                     break;
@@ -533,9 +545,6 @@
                     v = "even";
                     break;
 
-                case printHtml.PrintingPasses.ODDANDEVEN:
-                    v = "odd&even";
-                    break;
             }
             return v;
         },
@@ -552,7 +561,8 @@
                         break;
 
                     case "odd&even":
-                        x = printHtml.PrintingPasses.ODDANDEVEN;
+                    case "all":
+                        x = printHtml.PrintingPasses.ALL;
                         break;
                 }
             }
