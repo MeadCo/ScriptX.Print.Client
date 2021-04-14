@@ -54,6 +54,8 @@
     "readable-stream": "^3.6.0"
   },
   "dependencies": {
-    "jquery": ">=3.4.0"
+    "jquery": ">=3.4.0",
+    "y18n": ">=3.2.2",
+    "pug-code-gen": ">=2.0.3"
   }
 }
