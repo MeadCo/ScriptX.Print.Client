@@ -54,7 +54,7 @@
 
     // protected API
     var module = this;
-    var version = "1.8.3.0"; // matches the highest version number of sub-classes.
+    var version = "1.9.0.2"; // matches the highest version number of sub-classes.
     var bLog = ((typeof (MeadCo) !== "undefined" && typeof (MeadCo.logEnable) !== "undefined")) ? MeadCo.logEnable : false;
 
     var log = function (str) {
@@ -148,7 +148,7 @@
             }
         }
         else {
-            if (typeof jqXhr.responseJSON !== "object" && typeof jqXhr.responseText === "string" && jqXhr.responseText.length > 0 ) {
+            if (typeof jqXhr.responseJSON !== "object" && typeof jqXhr.responseText === "string" && jqXhr.responseText.length > 0) {
                 errorThrown = jqXhr.responseText;
             }
         }
@@ -157,7 +157,7 @@
         return errorThrown;
     }
 
-    log("MeadCo root namespace loaded.");
+    log("MeadCo root namespace " + version + " loaded.");
 
     // public API.
     return {

@@ -19,13 +19,14 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.8.3.0";
-    var htmlApiLocation = "v1/printHtml";
-    var pdfApiLocation = "v1/printPdf";
-    var directApiLocation = "v1/printDirect";
+    let version = "1.9.0.16";
+    let htmlApiLocation = "v1/printHtml";
+    let pdfApiLocation = "v1/printPdf";
+    let directApiLocation = "v1/printDirect";
+    let licenseApiLocation = "v1/licensing";
 
     // default printer 
-    var printerName = "";
+    let printerName = "";
 
     /**
      * Enum to describe the units used on measurements. Please be aware that (sadly) these enum values do *not* match  
@@ -39,7 +40,7 @@
      * @property {number} INCHES 1 
      * @property {number} MM 2 millimeters
      */
-    var enumMeasurementUnits = {
+    let enumMeasurementUnits = {
         DEFAULT: 0,
         INCHES: 1,
         MM: 2
@@ -53,7 +54,7 @@
      * @property {number} width width of paper in requested units
      * @property {number} height height of paper in requested units
      * */
-    var PageSize;  // for doc generator
+    let PageSize;  // for doc generator
 
     /**
      * Describe the margins within which to print.
@@ -65,7 +66,7 @@
      * @property {number} right right margin in requested units
      * @property {number} bottom bottom margin in requested units
      * */
-    var Margins;  // for doc generator
+    let Margins;  // for doc generator
 
     /**
      * Information about and the settings to use with an output printing device
@@ -96,7 +97,7 @@
      * @property {Array.<string>} bins Array of the names of the available paper sources
      * @property {Array.<string>} forms Array of the names of the avbailable paper sizes
      * */
-    var DeviceSettingsObject; // for doc generator
+    let DeviceSettingsObject; // for doc generator
 
     /**
      * Provide authorisation details to access protected content. 
@@ -105,7 +106,7 @@
      * @memberof MeadCoScriptXPrint
      * @property {string} cookie The authorisation cookie in the form name=value
      * */
-    var AccessControl = {
+    let AccessControl = {
         cookie: ""
     };
 
@@ -121,22 +122,149 @@
      * @property {int} majorRevision ignore
      * @property {int} minorRevision ignore 
      * */
-    var VersionObject; // for doc generator
+    let VersionObject; // for doc generator
 
-    var deviceSettings = {};
-    var module = this;
+    let deviceSettings = {};
+    let module = this;
 
-    var activePrintQueue = []; // current job queue
+    let activePrintQueue = []; // current job queue
 
-    var server = ""; // url to the server, server is CORS restricted
-    var licenseGuid = "";
-    var bConnected = false; // true when default device settings have been obtained from a .services server
+    // singleton wrapper to the server
+    //
+    // servicesServer.url
+    // servicesServer.test
+    // servicesServer.call
+    //
+    let servicesServer = {
 
-    var bDoneAuto = false;
+        serviceUrl: "",
 
-    var availablePrinters = [];
+        get url() {
+            return this.serviceUrl;
+        },
 
-    var cachedServiceDescription = null; // cached description of service server connected to 
+        set url(value) {
+            if (this.url !== value) {
+                let that = this;
+                that.test(value, 10, false, function (urlFound) {
+                    that.serviceUrl = urlFound;
+                    MeadCo.log("Set servicesServer to: " + that.serviceUrl);
+                });
+            }
+        },
+
+        // test
+        //
+        // Can we ask something and get a response, without using a license - checks the server is there.
+        //
+        // Will perform port hunt (increment the port number) when attempting to connect to
+        // ScriptX.Services for Windows PC
+        //
+        test: function (serverUrl, nHuntAllowed, bAsync, resolve, reject) {
+            if (serverUrl.length > 0) {
+                if (module.jQuery) {
+                    let that = this;
+                    let domHelper = document.createElement('a');
+                    domHelper.setAttribute('href', serverUrl);
+
+                    MeadCo.log("Test server requested: " + serverUrl + ", port: " + domHelper.port);
+
+                    // use the license API
+                    let serviceUrl = MeadCo.makeApiEndPoint(domHelper.href, licenseApiLocation + "/ping");
+                    MeadCo.log(".ajax() get: " + serviceUrl);
+
+                    module.jQuery.ajax(serviceUrl,
+                        {
+                            method: "GET",
+                            dataType: "json",
+                            cache: false,
+                            async: bAsync
+                        }).done(function (data) {
+                            resolve(domHelper.protocol + "//" + domHelper.host + domHelper.pathname);
+                        })
+                        .fail(function (jqXhr, textStatus, errorThrown) {
+                            // only do hunting with 4WPC and that must be on 127.0.0.1 or localhost
+                            if (nHuntAllowed > 0 && (domHelper.hostname === "localhost" || domHelper.hostname == "127.0.0.1")) {
+                                domHelper.port++;
+                                module.setTimeout(that.test(domHelper.protocol + "//" + domHelper.host + domHelper.pathname, --nHuntAllowed, bAsync, resolve, reject), 1);
+                            }
+                            else {
+                                errorThrown = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.servicesServer.test:", jqXhr, textStatus, errorThrown);
+                                if (typeof reject === "function")
+                                    reject(errorThrown);
+                            }
+                        });
+                }
+                else {
+                    MeadCo.error("jQuery is required by ScriptX.Services");
+                }
+            }
+        },
+
+        // send a method request to an end point
+        //
+        call: function (sApi, method, oApiData, bLicensed, bAsync, resolve, reject) {
+            if (module.jQuery) {
+                if (this.url !== "") {
+                    let serviceUrl = MeadCo.makeApiEndPoint(this.url, sApi);
+                    MeadCo.log("servicesServer.call() " + method + ": " + serviceUrl);
+                    let oPayload = {
+                        method: method,
+                        cache: false,
+                        async: bAsync,
+                        jsonp: false,
+                        dataType: "json",
+                        contentType: "application/json"
+                    };
+
+                    if (bLicensed) {
+                        oPayload.headers = {
+                            "Authorization": "Basic " + btoa(licenseGuid + ":")
+                        }
+                    }
+
+                    if (typeof oApiData === "object" && oApiData !== null) {
+                        MeadCo.log("payload defined.");
+                        oPayload.data = JSON.stringify(oApiData);
+                    }
+
+                    module.jQuery.ajax(serviceUrl, oPayload)
+                        .done(function (data) {
+                            if (typeof resolve === "function") {
+                                resolve(data);
+                            }
+                            return data;
+                        })
+                        .fail(function (jqXhr, textStatus, errorThrown) {
+                            errorThrown = MeadCo.parseAjaxError("MeadCo.ScriptX.Print:" + sApi + method, jqXhr, textStatus, errorThrown);
+                            if (typeof reject === "function")
+                                reject(errorThrown);
+                        });
+                } else {
+                    if (typeof reject === "function") {
+                        reject("MeadCo.ScriptX.Print : server connection is not defined.");
+                    }
+                    else
+                        throw new Error("MeadCo.ScriptX.Print : server connection is not defined.");
+                }
+            } else {
+                if (typeof reject === "function") {
+                    reject("MeadCo.ScriptX.Print : no known ajax helper available");
+                }
+                else
+                    throw new Error("MeadCo.ScriptX.Print : no known ajax helper available");
+            }
+        }
+    };
+
+    let licenseGuid = "";
+    let bConnected = false; // true when default device settings have been obtained from a .services server
+
+    let bDoneAuto = false;
+
+    let availablePrinters = [];
+
+    let cachedServiceDescription = null; // cached description of service server connected to 
 
     /**
      * Enum for type of content being posted to printHtml API
@@ -150,14 +278,14 @@
      * @property {number} INNERHTML 4 the passed string is a complete html document but missing the html tags
      * @property {number} STRING 8 the passed string is assumed to contain no html but may contain other language such as ZPL (for direct printing)
      */
-    var enumContentType = {
+    let enumContentType = {
         URL: 1, // the url will be downloaded and printed (for html and direct printing)
         HTML: 2, // the passed string is assumed to be a complete html document .. <html>..</html>
         INNERHTML: 4, // the passed string is a complete html document but missing the html tags
         STRING: 8 // the passed string is assumed to contain no html but may contain other language such as ZPL (for direct printing)
     };
 
-    var enumResponseStatus = {
+    let enumResponseStatus = {
         UNKNOWN: 0,
         QUEUEDTODEVICE: 1,
         QUEUEDTOFILE: 2,
@@ -175,11 +303,11 @@
      * @property {number} REPORT 1 Call MeadCo.ScriptX.Print.reportServerError(errMsg)
      * @property {number} THROW 2 throw an error : throw errMsg
      */
-    var enumErrorAction = {
+    let enumErrorAction = {
         REPORT: 1,
         THROW: 2
     };
-    var errorAction = enumErrorAction.REPORT;
+    let errorAction = enumErrorAction.REPORT;
 
     /**
      * Enum for the class of service connected to.
@@ -192,7 +320,7 @@
      * @property { number } ONPREMISE 2 ScriptX.Services for On Premise Devices
      * @property { number } WINDOWSPC 3 ScriptX.Services for Windows PC
      * */
-    var enumServiceClass = {
+    let enumServiceClass = {
         CLOUD: 1,
         ONPREMISE: 2,
         WINDOWSPC: 3
@@ -214,7 +342,7 @@
      * @property {boolean} PrintPDF Printing of PDF documents is supported
      * @property {boolean} PrintDIRECT Direct printing to a print device is supported
      * */
-    var ServiceDescriptionObject; // for Doc Generator
+    let ServiceDescriptionObject; // for Doc Generator
 
     /**
      * Enum for status code returned to print progress callbacks
@@ -235,7 +363,7 @@
      * @property {number} ERROR -1
      * @property {number} ABANDONED -2
      */
-    var enumPrintStatus = {
+    let enumPrintStatus = {
         NOTSTARTED: 0,
 
         // queue call back opcodes ...
@@ -263,7 +391,7 @@
      * @property {number} TRUE 1 collate pages when printing
      * @property {number} FALSE 2 do not collate pages
      */
-    var enumCollateOptions = {
+    let enumCollateOptions = {
         DEFAULT: 0,
         TRUE: 1,
         FALSE: 2
@@ -281,7 +409,7 @@
      * @property {number} VERTICAL 2 
      * @property {number} HORIZONTAL 3
      */
-    var enumDuplexOptions = {
+    let enumDuplexOptions = {
         DEFAULT: 0,
         SIMPLEX: 1,
         VERTICAL: 2,
@@ -330,7 +458,7 @@
                 MeadCo.log("ScriptX.Print remove job, jobCount: " + activePrintQueue.length);
 
                 // no jobs being processed, allow next immediate start
-                if ( activePrintQueue.length == 0 ) previousPrintCallWasAt = 0;
+                if (activePrintQueue.length == 0) previousPrintCallWasAt = 0;
                 return;
             }
         }
@@ -354,14 +482,14 @@
         }
 
         // must deepclone objects not values by reference.
-        var devInfo;
+        let devInfo;
         if (printerName === "") {
             devInfo = {};
         } else {
             devInfo = JSON.parse(JSON.stringify(deviceSettings[printerName]));
         }
 
-        var requestData = {
+        let requestData = {
             ContentType: contentType,
             Content: content,
             Settings: JSON.parse(JSON.stringify(htmlPrintSettings)),
@@ -371,20 +499,20 @@
             UserData: data
         };
 
-        var fakeJob = {
+        let fakeJob = {
             jobIdentifier: Date.now(),
             printerName: requestData.Device.printerName,
             jobName: "Job timeout hold clientside"
         };
         queueJob(fakeJob); // essentially a lock on the queue to stop it looking empty until this job is processed
 
-        var serverApi = MeadCo.makeApiEndPoint(server, htmlApiLocation);
+        let serverApi = MeadCo.makeApiEndPoint(servicesServer.url, htmlApiLocation);
         return function () {
             removeJob(fakeJob.jobIdentifier);
             return printAtServer(serverApi, requestData,
                 {
                     fail: function (jqXhr, textStatus, errorThrown) {
-                        var err = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.printHtmlAtServer", jqXhr, textStatus, errorThrown);
+                        let err = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.printHtmlAtServer", jqXhr, textStatus, errorThrown);
                         progress(requestData, enumPrintStatus.ERROR, err);
                         MeadCo.ScriptX.Print.reportError(err);
                         if (typeof fnDone === "function") {
@@ -401,7 +529,7 @@
                                 if (data !== null) {
                                     MeadCo.log("Will download printed file");
                                     progress(requestData, enumPrintStatus.COMPLETED);
-                                    window.open(server + "/download/" + data.jobIdentifier, "_self");
+                                    window.open(servicesServer.url + "/download/" + data.jobIdentifier, "_self");
                                 }
 
                                 if (typeof fnDone === "function") {
@@ -520,7 +648,7 @@
         // used/required by printAtServer ...
         requestData.Settings.jobTitle = pdfPrintSettings.jobDescription;
 
-        var serverApi = MeadCo.makeApiEndPoint(server, pdfApiLocation);
+        var serverApi = MeadCo.makeApiEndPoint(servicesServer.url, pdfApiLocation);
 
         var fakeJob = {
             jobIdentifier: Date.now(),
@@ -551,7 +679,7 @@
                                 if (data !== null) {
                                     MeadCo.log("Will download printed file");
                                     progress(requestData, enumPrintStatus.COMPLETED);
-                                    window.open(server + "/download/" + data.jobIdentifier, "_self");
+                                    window.open(servicesServer.url + "/download/" + data.jobIdentifier, "_self");
                                 }
 
                                 if (typeof fnDone === "function") {
@@ -688,7 +816,7 @@
             Device: deviceSettings[printerName] // not required by the server .. used by printAtServer()
         };
 
-        var serverApi = MeadCo.makeApiEndPoint(server, directApiLocation);
+        var serverApi = MeadCo.makeApiEndPoint(servicesServer.url, directApiLocation);
         return printAtServer(serverApi, requestData,
             {
                 fail: function (jqXhr, textStatus, errorThrown) {
@@ -719,10 +847,17 @@
             });
     }
 
+    // set the ScriptX.Services server to use and the client license/subscription id
+    //
+    // It is a assumed that a new server is being selected so caches are reset.
+    //
+    // All connection etc calls route to here, so here is the place to determine the port
+    // number to use.
+    //
     function setServer(serverUrl, clientLicenseGuid) {
         if (serverUrl.length > 0) {
             MeadCo.log("Print server requested: " + serverUrl + " => " + MeadCo.makeApiEndPoint(serverUrl, htmlApiLocation) + " with license: " + clientLicenseGuid);
-            server = MeadCo.makeApiEndPoint(serverUrl, htmlApiLocation);
+            servicesServer.url = MeadCo.makeApiEndPoint(serverUrl, htmlApiLocation);
             licenseGuid = clientLicenseGuid;
             printerName = "";
             deviceSettings = {};
@@ -761,40 +896,6 @@
             });
     }
 
-    // testServerConnection
-    //
-    // Can we ask something and get a respponse, without using a license - checks the server is there.
-    //
-    function testServerConnection(serverUrl, resolve, reject) {
-        if (serverUrl.length > 0) {
-            // use the license API
-            var licenseApi = "v1/licensing";
-            MeadCo.log("Test server requested: " + serverUrl + " => " + MeadCo.makeApiEndPoint(serverUrl, licenseApi));
-            serverUrl = MeadCo.makeApiEndPoint(serverUrl, licenseApi);
-            if (module.jQuery) {
-                var serviceUrl = serverUrl + "/ping";
-                MeadCo.log(".ajax() get: " + serviceUrl);
-                module.jQuery.ajax(serviceUrl,
-                    {
-                        method: "GET",
-                        dataType: "json",
-                        cache: false,
-                        async: true
-                    }).done(function (data) {
-                        resolve(data);
-                    })
-                    .fail(function (jqXhr, textStatus, errorThrown) {
-                        errorThrown = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.testServerConnection:", jqXhr, textStatus, errorThrown);
-                        if (typeof reject === "function")
-                            reject(errorThrown);
-                    });
-            }
-            else {
-                MeadCo.error("jQuery is required by ScriptX.Services");
-            }
-        }
-    }
-
     /**
      * Post a request to print
      * 
@@ -805,7 +906,7 @@
      */
     function printAtServer(serverAndApi, requestData, responseInterface) {
 
-        if (server.length <= 0) {
+        if (servicesServer.url.length <= 0) {
             throw new Error("MeadCo.ScriptX.Print : print server URL is not set or is invalid");
         }
 
@@ -885,42 +986,11 @@
      * @private
      */
     function getFromServer(sApi, async, onSuccess, onFail) {
-        if (module.jQuery) {
-            if (server !== "") {
-                var serviceUrl = MeadCo.makeApiEndPoint(server, sApi);
-                MeadCo.log(".ajax() get: " + serviceUrl);
-                module.jQuery.ajax(serviceUrl,
-                    {
-                        method: "GET",
-                        dataType: "json",
-                        cache: false,
-                        async: async,
-                        headers: {
-                            "Authorization": "Basic " + btoa(licenseGuid + ":")
-                        }
-                    }).done(function (data) {
-                        onSuccess(data);
-                    })
-                    .fail(function (jqXhr, textStatus, errorThrown) {
-                        errorThrown = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.getFromServer:", jqXhr, textStatus, errorThrown);
-                        if (typeof onFail === "function")
-                            onFail(errorThrown);
-                    });
-            } else {
-                if (typeof onFail === "function") {
-                    onFail("MeadCo.ScriptX.Print : server connection is not defined.");
-                }
-                else
-                    throw new Error("MeadCo.ScriptX.Print : server connection is not defined.");
-            }
-        } else {
-            if (typeof onFail === "function") {
-                onFail("MeadCo.ScriptX.Print : no known ajax helper available");
-            }
-            else
-                throw new Error("MeadCo.ScriptX.Print : no known ajax helper available");
-        }
+        return callService(sApi, "GET", null, true, async, onSuccess, onFail);
+    }
 
+    function callService(sApi, httpMethod, oApiData, bLicensed, bAsync, resolve, reject) {
+        return servicesServer.call(sApi, httpMethod, oApiData, bLicensed, bAsync, resolve, reject);
     }
 
     /**
@@ -1040,7 +1110,7 @@
         var theLicense = arguments.length > 1 ? useLicenseGuid : licenseGuid;
 
         if (module.jQuery) {
-            var serviceUrl = server + "/deviceinfo/" + encodeURIComponent(oRequest.name) + "/0";
+            var serviceUrl = servicesServer.url + "/deviceinfo/" + encodeURIComponent(oRequest.name) + "/0";
             MeadCo.log(".ajax() get: " + serviceUrl);
             module.jQuery.ajax(serviceUrl,
                 {
@@ -1457,7 +1527,7 @@
             // values for both arguments via printHtml.connectAsync() as it doesnt 
             // know the values so we assume a connectLite has already been called
             // and dont overwrite with empty values.
-            if (arguments.length === 2 && serverUrl !== null && licenseGuid !== null && serverUrl.length > 0 && licenseGuid.length > 0)
+            if (arguments.length === 2 && typeof serverUrl !== "undefined" && typeof licenseGuid !== "undefined" && serverUrl !== null && licenseGuid !== null && serverUrl.length > 0 && licenseGuid.length > 0)
                 setServer(serverUrl, licenseGuid);
         },
 
@@ -1484,11 +1554,11 @@
          * @function connectTestAsync
          * @memberof MeadCoScriptXPrint
          * @param {string} serverUrl the 'root' url to the server (the api path will be added by the library)
-         * @param {function} resolve function to call on success
+         * @param {function({foundServerUrl})} resolve function to call on success
          * @param {function({errorText})} reject function to call on failure
          */
         connectTestAsync: function (serverUrl, resolve, reject) {
-            testServerConnection(serverUrl, resolve, reject);
+            servicesServer.test(serverUrl, 10, true, resolve, reject);
         },
 
         /**
@@ -1833,6 +1903,27 @@
 
         set queueGapResetTime(msec) {
             jobGapResetTimeout = msec;
+        },
+
+
+        requestService: function (sApi, method, oApiData, bLicensed, bAsync, resolve, reject) {
+            return callService(sApi, method, oApiData, bLicensed, bAsync, resolve, reject);
+        },
+
+        getService: function (sApi, oApiData, bLicensed) {
+            return callService(sApi, "GET", oApiData, bLicensed, false);
+        },
+
+        postService: function (sApi, oApiData, bLicensed) {
+            return callService(sApi, "POST", oApiData, bLicensed, false);
+        },
+
+        getServiceAsync: function (sApi, oApiData, bLicensed, resolve, reject) {
+            return callService(sApi, "GET", oApiData, bLicensed, true, resolve, reject);
+        },
+
+        postServiceAsync: function (sApi, oApiData, bLicensed, resolve, reject) {
+            return callService(sApi, "POST", oApiData, bLicensed, true, resolve, reject);
         }
 
     };

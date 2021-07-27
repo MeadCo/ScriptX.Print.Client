@@ -24,10 +24,9 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.Licensing', function () {
-    var moduleversion = "1.8.3.0";
+    var moduleversion = "1.9.0.2";
     var apiLocation = "v1/licensing";
 
-    var server = ""; // url to the server, server is CORS restricted
     var licenseGuid = "";
     var licenseRevision = 0;
     var licensePath = ""; // "" => subscription (cloud) not client for Workstation, => value for client license
@@ -64,23 +63,16 @@
      * */
     var license = {};
 
-    if (!module.jQuery) {
-        MeadCo.warn("**** warning :: no jQuery");
-    }
-
-    function setServer(serverUrl) {
-        MeadCo.log("License server requested: " + MeadCo.makeApiEndPoint(serverUrl, apiLocation));
-        server = MeadCo.makeApiEndPoint(serverUrl, apiLocation);
-    }
-
     function connectToServer(serverUrl, slicenseGuid) {
         // a licensing call may be made first, if the print module is available, inform it.
         var p = MeadCo.ScriptX.Print;
         if (typeof p !== "undefined" && typeof p.connectLite === "function") {
             p.connectLite(serverUrl, slicenseGuid);
         }
+        else {
+            console.error("MeadCo.ScriptX.Print is not available");
+        }
 
-        setServer(serverUrl);
         licenseGuid = slicenseGuid;
         license = {};
         lastError = "No license applied";
@@ -89,8 +81,9 @@
     }
 
     function getSubscriptionFromServer(resolve, reject) {
-        if (server.length <= 0) {
-            var msg = "MeadCo.ScriptX.Licensing : License server API URL is not set or is invalid"
+        var p = MeadCo.ScriptX.Print;
+        if (typeof p == "undefined" || typeof p.connectLite !== "function") {
+            var msg = "MeadCo.ScriptX.Licensing : MeadCo.ScriptX.Print API not available"
             if (typeof reject === "function") {
                 reject(msg);
                 return;
@@ -105,46 +98,37 @@
             return license;
         }
 
-        if (module.jQuery) {
-            MeadCo.log(".ajax() get: " + server);
-            module.jQuery.ajax(server,
-                {
-                    method: "GET",
-                    dataType: "json",
-                    jsonp: false,
-                    cache: false,
-                    async: typeof resolve === "function",
-                    headers: {
-                        "Authorization": "Basic " + btoa(licenseGuid + ":")
-                    }
-                }).done(function (data) {
-                    lastError = "";
-                    $.extend(license, data);
-                    if (typeof resolve === "function") {
-                        resolve(license);
-                        return;
-                    }
-                })
-                .fail(function (jqXHR, textStatus, errorThrown) {
-                    lastError = MeadCo.parseAjaxError("MeadCo.ScriptX.Licensing.getSubscriptionFromServer: ", jqXHR, textStatus, errorThrown);
-                    if (typeof reject === "function") {
-                        reject(lastError);
-                        return;
-                    }
-                });
-            return license;
-        }
-        else {
-            MeadCo.error("jQuery is required by ScriptX.Services");
-        }
-
+        p.requestService(apiLocation, "GET", {}, true, typeof resolve === "function",
+            function (data) {
+                lastError = "";
+                $.extend(license, data);
+                if (typeof resolve === "function") {
+                    resolve(license);
+                    return;
+                }
+            },
+            function (errorText) {
+                lastError = "MeadCo.ScriptX.Licensing.getSubscriptionFromServer: ", + errorText;
+                if (typeof reject === "function") {
+                    reject(lastError);
+                    return;
+                }
+            }
+        );
+        return license;
     }
 
     function applyLicense(slicenseGuid, revision, path, resolve, reject) {
         MeadCo.log("Apply license: " + slicenseGuid + ",revision: " + revision + ", path: " + path);
 
-        if (server.length <= 0) {
-            throw new Error("MeadCo.ScriptX.Licensing : License server API URL is not set or is invalid");
+        var p = MeadCo.ScriptX.Print;
+        if (typeof p == "undefined" || typeof p.connectLite !== "function") {
+            var msg = "MeadCo.ScriptX.Licensing : MeadCo.ScriptX.Print API not available"
+            if (typeof reject === "function") {
+                reject(msg);
+                return;
+            }
+            throw new Error(msg);
         }
 
         licenseGuid = slicenseGuid;
@@ -154,36 +138,22 @@
             Revision: revision
         };
 
-        if (module.jQuery) {
-            MeadCo.log(".ajax() post: " + server);
-            module.jQuery.ajax(server,
-                {
-                    method: "POST",
-                    data: JSON.stringify(requestData),
-                    dataType: "json",
-                    contentType: "application/json",
-                    jsonp: false,
-                    cache: false,
-                    async: typeof resolve === "function"
-                }).done(function (data) {
-                    lastError = "";
-                    $.extend(license, data);
-                    if (typeof resolve === "function") {
-                        resolve(license);
-                        return;
-                    }
-                })
-                .fail(function (jqXHR, textStatus, errorThrown) {
-                    lastError = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.Licensing.applyLicense: ", jqXHR, textStatus, errorThrown);
-                    if (typeof reject === "function") {
-                        reject(lastError);
-                        return;
-                    }
-                });
-        }
-        else {
-            MeadCo.error("jQuery is required by ScriptX.Services");
-        }
+        p.requestService(apiLocation, "POST", requestData, false, typeof resolve === "function",
+            function (data) {
+                lastError = "";
+                $.extend(license, data);
+                if (typeof resolve === "function") {
+                    resolve(license);
+                    return;
+                }
+            },
+            function (errorText) {
+                lastError = "MeadCo.ScriptX.Print.Licensing.applyLicense: " + errorText;
+                if (typeof reject === "function") {
+                    reject(lastError);
+                    return;
+                }
+            });
 
         if (typeof resolve !== "function") {
             MeadCo.log("returning applied (sync) license: " + license.company);
@@ -194,7 +164,6 @@
     }
 
     MeadCo.log("MeadCo.ScriptX.Print.Licensing " + moduleversion + " loaded.");
-
 
     //////////////////////////////////////////////////
     // public API
