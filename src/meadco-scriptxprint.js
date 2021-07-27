@@ -19,14 +19,14 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    let version = "1.9.0.16";
-    let htmlApiLocation = "v1/printHtml";
-    let pdfApiLocation = "v1/printPdf";
-    let directApiLocation = "v1/printDirect";
-    let licenseApiLocation = "v1/licensing";
+    var version = "1.9.0.18";
+    var htmlApiLocation = "v1/printHtml";
+    var pdfApiLocation = "v1/printPdf";
+    var directApiLocation = "v1/printDirect";
+    var licenseApiLocation = "v1/licensing";
 
     // default printer 
-    let printerName = "";
+    var printerName = "";
 
     /**
      * Enum to describe the units used on measurements. Please be aware that (sadly) these enum values do *not* match  
@@ -40,7 +40,7 @@
      * @property {number} INCHES 1 
      * @property {number} MM 2 millimeters
      */
-    let enumMeasurementUnits = {
+    var enumMeasurementUnits = {
         DEFAULT: 0,
         INCHES: 1,
         MM: 2
@@ -54,7 +54,7 @@
      * @property {number} width width of paper in requested units
      * @property {number} height height of paper in requested units
      * */
-    let PageSize;  // for doc generator
+    var PageSize;  // for doc generator
 
     /**
      * Describe the margins within which to print.
@@ -66,7 +66,7 @@
      * @property {number} right right margin in requested units
      * @property {number} bottom bottom margin in requested units
      * */
-    let Margins;  // for doc generator
+    var Margins;  // for doc generator
 
     /**
      * Information about and the settings to use with an output printing device
@@ -97,7 +97,7 @@
      * @property {Array.<string>} bins Array of the names of the available paper sources
      * @property {Array.<string>} forms Array of the names of the avbailable paper sizes
      * */
-    let DeviceSettingsObject; // for doc generator
+    var DeviceSettingsObject; // for doc generator
 
     /**
      * Provide authorisation details to access protected content. 
@@ -106,7 +106,7 @@
      * @memberof MeadCoScriptXPrint
      * @property {string} cookie The authorisation cookie in the form name=value
      * */
-    let AccessControl = {
+    var AccessControl = {
         cookie: ""
     };
 
@@ -122,12 +122,12 @@
      * @property {int} majorRevision ignore
      * @property {int} minorRevision ignore 
      * */
-    let VersionObject; // for doc generator
+    var VersionObject; // for doc generator
 
-    let deviceSettings = {};
-    let module = this;
+    var deviceSettings = {};
+    var module = this;
 
-    let activePrintQueue = []; // current job queue
+    var activePrintQueue = []; // current job queue
 
     // singleton wrapper to the server
     //
@@ -135,7 +135,7 @@
     // servicesServer.test
     // servicesServer.call
     //
-    let servicesServer = {
+    var servicesServer = {
 
         serviceUrl: "",
 
@@ -145,7 +145,7 @@
 
         set url(value) {
             if (this.url !== value) {
-                let that = this;
+                var that = this;
                 that.test(value, 10, false, function (urlFound) {
                     that.serviceUrl = urlFound;
                     MeadCo.log("Set servicesServer to: " + that.serviceUrl);
@@ -163,14 +163,14 @@
         test: function (serverUrl, nHuntAllowed, bAsync, resolve, reject) {
             if (serverUrl.length > 0) {
                 if (module.jQuery) {
-                    let that = this;
-                    let domHelper = document.createElement('a');
+                    var that = this;
+                    var domHelper = document.createElement('a');
                     domHelper.setAttribute('href', serverUrl);
 
                     MeadCo.log("Test server requested: " + serverUrl + ", port: " + domHelper.port);
 
                     // use the license API
-                    let serviceUrl = MeadCo.makeApiEndPoint(domHelper.href, licenseApiLocation + "/ping");
+                    var serviceUrl = MeadCo.makeApiEndPoint(domHelper.href, licenseApiLocation + "/ping");
                     MeadCo.log(".ajax() get: " + serviceUrl);
 
                     module.jQuery.ajax(serviceUrl,
@@ -206,9 +206,9 @@
         call: function (sApi, method, oApiData, bLicensed, bAsync, resolve, reject) {
             if (module.jQuery) {
                 if (this.url !== "") {
-                    let serviceUrl = MeadCo.makeApiEndPoint(this.url, sApi);
+                    var serviceUrl = MeadCo.makeApiEndPoint(this.url, sApi);
                     MeadCo.log("servicesServer.call() " + method + ": " + serviceUrl);
-                    let oPayload = {
+                    var oPayload = {
                         method: method,
                         cache: false,
                         async: bAsync,
@@ -257,14 +257,14 @@
         }
     };
 
-    let licenseGuid = "";
-    let bConnected = false; // true when default device settings have been obtained from a .services server
+    var licenseGuid = "";
+    var bConnected = false; // true when default device settings have been obtained from a .services server
 
-    let bDoneAuto = false;
+    var bDoneAuto = false;
 
-    let availablePrinters = [];
+    var availablePrinters = [];
 
-    let cachedServiceDescription = null; // cached description of service server connected to 
+    var cachedServiceDescription = null; // cached description of service server connected to 
 
     /**
      * Enum for type of content being posted to printHtml API
@@ -278,14 +278,14 @@
      * @property {number} INNERHTML 4 the passed string is a complete html document but missing the html tags
      * @property {number} STRING 8 the passed string is assumed to contain no html but may contain other language such as ZPL (for direct printing)
      */
-    let enumContentType = {
+    var enumContentType = {
         URL: 1, // the url will be downloaded and printed (for html and direct printing)
         HTML: 2, // the passed string is assumed to be a complete html document .. <html>..</html>
         INNERHTML: 4, // the passed string is a complete html document but missing the html tags
         STRING: 8 // the passed string is assumed to contain no html but may contain other language such as ZPL (for direct printing)
     };
 
-    let enumResponseStatus = {
+    var enumResponseStatus = {
         UNKNOWN: 0,
         QUEUEDTODEVICE: 1,
         QUEUEDTOFILE: 2,
@@ -303,11 +303,11 @@
      * @property {number} REPORT 1 Call MeadCo.ScriptX.Print.reportServerError(errMsg)
      * @property {number} THROW 2 throw an error : throw errMsg
      */
-    let enumErrorAction = {
+    var enumErrorAction = {
         REPORT: 1,
         THROW: 2
     };
-    let errorAction = enumErrorAction.REPORT;
+    var errorAction = enumErrorAction.REPORT;
 
     /**
      * Enum for the class of service connected to.
@@ -320,7 +320,7 @@
      * @property { number } ONPREMISE 2 ScriptX.Services for On Premise Devices
      * @property { number } WINDOWSPC 3 ScriptX.Services for Windows PC
      * */
-    let enumServiceClass = {
+    var enumServiceClass = {
         CLOUD: 1,
         ONPREMISE: 2,
         WINDOWSPC: 3
@@ -342,7 +342,7 @@
      * @property {boolean} PrintPDF Printing of PDF documents is supported
      * @property {boolean} PrintDIRECT Direct printing to a print device is supported
      * */
-    let ServiceDescriptionObject; // for Doc Generator
+    var ServiceDescriptionObject; // for Doc Generator
 
     /**
      * Enum for status code returned to print progress callbacks
@@ -363,7 +363,7 @@
      * @property {number} ERROR -1
      * @property {number} ABANDONED -2
      */
-    let enumPrintStatus = {
+    var enumPrintStatus = {
         NOTSTARTED: 0,
 
         // queue call back opcodes ...
@@ -391,7 +391,7 @@
      * @property {number} TRUE 1 collate pages when printing
      * @property {number} FALSE 2 do not collate pages
      */
-    let enumCollateOptions = {
+    var enumCollateOptions = {
         DEFAULT: 0,
         TRUE: 1,
         FALSE: 2
@@ -409,7 +409,7 @@
      * @property {number} VERTICAL 2 
      * @property {number} HORIZONTAL 3
      */
-    let enumDuplexOptions = {
+    var enumDuplexOptions = {
         DEFAULT: 0,
         SIMPLEX: 1,
         VERTICAL: 2,
@@ -482,14 +482,14 @@
         }
 
         // must deepclone objects not values by reference.
-        let devInfo;
+        var devInfo;
         if (printerName === "") {
             devInfo = {};
         } else {
             devInfo = JSON.parse(JSON.stringify(deviceSettings[printerName]));
         }
 
-        let requestData = {
+        var requestData = {
             ContentType: contentType,
             Content: content,
             Settings: JSON.parse(JSON.stringify(htmlPrintSettings)),
@@ -499,20 +499,20 @@
             UserData: data
         };
 
-        let fakeJob = {
+        var fakeJob = {
             jobIdentifier: Date.now(),
             printerName: requestData.Device.printerName,
             jobName: "Job timeout hold clientside"
         };
         queueJob(fakeJob); // essentially a lock on the queue to stop it looking empty until this job is processed
 
-        let serverApi = MeadCo.makeApiEndPoint(servicesServer.url, htmlApiLocation);
+        var serverApi = MeadCo.makeApiEndPoint(servicesServer.url, htmlApiLocation);
         return function () {
             removeJob(fakeJob.jobIdentifier);
             return printAtServer(serverApi, requestData,
                 {
                     fail: function (jqXhr, textStatus, errorThrown) {
-                        let err = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.printHtmlAtServer", jqXhr, textStatus, errorThrown);
+                        var err = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.printHtmlAtServer", jqXhr, textStatus, errorThrown);
                         progress(requestData, enumPrintStatus.ERROR, err);
                         MeadCo.ScriptX.Print.reportError(err);
                         if (typeof fnDone === "function") {
@@ -849,21 +849,25 @@
 
     // set the ScriptX.Services server to use and the client license/subscription id
     //
-    // It is a assumed that a new server is being selected so caches are reset.
+    // Both arguments are optional, leaving the current values in place.
     //
     // All connection etc calls route to here, so here is the place to determine the port
     // number to use.
     //
     function setServer(serverUrl, clientLicenseGuid) {
-        if (serverUrl.length > 0) {
+        if (typeof serverUrl === "string" && serverUrl.length > 0) {
             MeadCo.log("Print server requested: " + serverUrl + " => " + MeadCo.makeApiEndPoint(serverUrl, htmlApiLocation) + " with license: " + clientLicenseGuid);
             servicesServer.url = MeadCo.makeApiEndPoint(serverUrl, htmlApiLocation);
-            licenseGuid = clientLicenseGuid;
+            licenseGuid = typeof clientLicenseGuid === "string" && clientLicenseGuid.length > 0 ? clientLicenseGuid : licenseGuid;
             printerName = "";
             deviceSettings = {};
             activePrintQueue = []; // warning, will kill any current monitoring
             bConnected = false;
             availablePrinters = [];
+        }
+        else {
+            MeadCo.log("Print server retained: " + servicesServer.url + " update with license: " + clientLicenseGuid);
+            licenseGuid = typeof clientLicenseGuid === "string" && clientLicenseGuid.length > 0 ? clientLicenseGuid : licenseGuid;
         }
     }
 
@@ -1527,9 +1531,8 @@
             // values for both arguments via printHtml.connectAsync() as it doesnt 
             // know the values so we assume a connectLite has already been called
             // and dont overwrite with empty values.
-            if (arguments.length === 2 && typeof serverUrl !== "undefined" && typeof licenseGuid !== "undefined" && serverUrl !== null && licenseGuid !== null && serverUrl.length > 0 && licenseGuid.length > 0)
-                setServer(serverUrl, licenseGuid);
-        },
+            setServer(serverUrl, licenseGuid);
+         },
 
         /**
          * Specify the server to use and the subscription/license id.

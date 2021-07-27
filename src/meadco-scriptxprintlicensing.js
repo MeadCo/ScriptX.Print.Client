@@ -108,11 +108,12 @@
                 }
             },
             function (errorText) {
-                lastError = "MeadCo.ScriptX.Licensing.getSubscriptionFromServer: ", + errorText;
+                lastError = "MeadCo.ScriptX.Licensing.getSubscriptionFromServer: " + errorText;
                 if (typeof reject === "function") {
                     reject(lastError);
                     return;
                 }
+                throw new Error(lastError);
             }
         );
         return license;

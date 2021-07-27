@@ -1,68 +1,87 @@
-﻿QUnit.test("Dev Tests", function (assert) {
+﻿QUnit.test("call server api with GET", function (assert) {
 
-    let api = window.factory.printing;
-    let api2 = MeadCo.ScriptX.Print.HTML;
+    var done = assert.async(8);
 
-    let done = assert.async(8);
+    var api = MeadCo.ScriptX.Print;
 
-    let url = serverUrl;
+    api.connectLite(badServerUrl, badLicenseGuid);
 
-    api2.connectAsync(url, licenseGuid, function (data) {
-        assert.ok(true, "Connected to server");
-        done();
-
-        // mock UI accepted.
-        MeadCo.ScriptX.Print.UI = {
-            PrinterSettings: (fnDialgCompleteCallBack) => { fnDialgCompleteCallBack(true); }
-        };
-
-        assert.ok(api.Print(true, window.self, (bStarted) => {
-            assert.ok(bStarted, "Prompted print self did start");
-            assert.strictEqual(api.GetJobsCount(api.printer), 1, "There is a job for the printer");
+    api.getFromServer("/twaddle/?units=0", false,
+        function (data) {
+            assert.ok(false, "Call to bad server should not succeed");
             done();
+        }, function (errorText) {
+            assert.ok(true, "Call to bad server failed, error was: " + errorText);
+            done();
+        });
 
-            assert.ok(api.Print(true, "testFrame", (bStarted) => {
-                assert.ok(bStarted, "Prompted print frame did start");
-                assert.strictEqual(api.GetJobsCount(api.printer), 2, "There is a printframe job for the printer");
-                done();
+    api.connectLite(serverUrl, badLicenseGuid);
 
-                api.WaitForSpoolingComplete(3000, (bAllComplete) => {
-                    assert.ok(bAllComplete, "All jobs are complete");
-                    assert.strictEqual(api.GetJobsCount(api.printer), 0, "There are no jobs for the printer");
-                    done();
+    api.getFromServer("/twaddle/?units=0", false,
+        function (data) {
+            assert.ok(false, "Call to bad api should not succeed");
+            done();
+        }, function (errorText) {
+            assert.ok(true, "Call to bad api failed, error was: " + errorText);
+            done();
+        });
 
-                    assert.ok(api.PrintHTML("http://www.meadroid.com", true, (bStarted) => {
-                        assert.ok(bStarted, "Prompted PrintHTML did start");
-                        assert.strictEqual(api.GetJobsCount(api.printer), 1, "There is a job for the printer");
-                        done();
+    api.getFromServer("/htmlPrintDefaults/?units=0", false,
+        function (data) {
+            assert.ok(false, "Call to api with bad license should not succeed");
+            done();
+        }, function (errorText) {
+            assert.ok(true, "Call to api with bad license failed, error was: " + errorText);
+            done();
+        });
 
-                        api.WaitForSpoolingComplete(10000, (bAllComplete) => {
-                            assert.ok(bAllComplete, "All jobs are complete");
-                            assert.strictEqual(api.GetJobsCount(api.printer), 0, "There are no jobs for the printer");
-                            done();
+    api.connectLite(serverUrl, licenseGuid);
+    api.getFromServer("/htmlPrintDefaults/?units=0", false,
+        function (data) {
+            assert.ok(true, "Call to api with good license succeeded");
+            done();
+        }, function (errorText) {
+            assert.ok(false, "Call to api with good license failed, error was: " + errorText);
+            done();
+        });
 
-                            assert.ok(api.PrintHTMLEx("html://<p>hello world</p>", true, (status, sInformation, data) => {
-                                assert.equal(data, "t2", "PrintHTMLEx On progress function receives data: " + status + " => " + sInformation);
-                            }, "t2", (bStarted) => {
-                                assert.ok(bStarted, "Prompted PrintHTMLEx did start");
-                                assert.strictEqual(api.GetJobsCount(api.printer), 1, "There is a job for the printer");
-                                done();
+    api.connectLite(serverUrl, null);
+    api.getFromServer("/htmlPrintDefaults/?units=0", false,
+        function (data) {
+            assert.ok(true, "Call to api succeeded - null license ignored");
+            done();
+        }, function (errorText) {
+            assert.ok(false, "Call to api with good license failed, error was: " + errorText);
+            done();
+        });
 
-                                api.WaitForSpoolingComplete(10000, (bAllComplete) => {
-                                    assert.ok(bAllComplete, "All jobs are complete");
-                                    assert.strictEqual(api.GetJobsCount(api.printer), 0, "There are no jobs for the printer");
-                                    done();
-                                });
+    api.connectLite(serverUrl, "");
+    api.getFromServer("/htmlPrintDefaults/?units=0", false,
+        function (data) {
+            assert.ok(true, "Call to api succeeded - empty license ignored");
+            done();
+        }, function (errorText) {
+            assert.ok(false, "Call to api with good license failed, error was: " + errorText);
+            done();
+        });
 
-                            }), "Print api returned true");
-                        });
+    api.connectLite(null, licenseGuid);
+    api.getFromServer("/htmlPrintDefaults/?units=0", false,
+        function (data) {
+            assert.ok(true, "Call to api succeeded - null server ignored");
+            done();
+        }, function (errorText) {
+            assert.ok(false, "Call to api with good license failed, error was: " + errorText);
+            done();
+        });
 
-                    }), "Print api returned true");
-
-                });
-            }), "Print api returned true");
-        }), "Print api returned true");
-
-    });
-
+    api.connectLite("", licenseGuid);
+    api.getFromServer("/htmlPrintDefaults/?units=0", false,
+        function (data) {
+            assert.ok(true, "Call to api succeeded - empty server ignored");
+            done();
+        }, function (errorText) {
+            assert.ok(false, "Call to api with good license failed, error was: " + errorText);
+            done();
+        });
 });

@@ -4,9 +4,9 @@
 
     assert.ok(MeadCo.ScriptX, "MeadCo.ScriptX exists");
 
-    assert.equal(MeadCo.ScriptX.LibVersion, "1.8.3", "MeadCo.ScriptX.LibVersion OK");
+    assert.equal(MeadCo.ScriptX.LibVersion, "1.9.0", "MeadCo.ScriptX.LibVersion OK");
 
-    assert.equal(MeadCo.ScriptX.Print.version, "1.9.0.16", "MeadCo.ScriptX.Print.version ok");
+    assert.equal(MeadCo.ScriptX.Print.version, "1.9.0.18", "MeadCo.ScriptX.Print.version ok");
  
 });
 

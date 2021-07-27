@@ -22,7 +22,7 @@ QUnit.test("Apply license", function (assert) {
             done();
         },
         function (errorTxt) {
-            assert.equal(errorTxt, "MeadCo.ScriptX.Print.Licensing.applyLicense: MeadCo.ScriptX.Print : server connection is not defined.", "Bad license GUID fails with correct response");
+            assert.equal(errorTxt, "MeadCo.ScriptX.Print.Licensing.applyLicense: Bad Request", "Bad license GUID fails with correct response");
             done();
         });
 
@@ -54,7 +54,7 @@ QUnit.test("Apply license", function (assert) {
             done();
         },
         function (errorTxt) {
-            assert.equal(errorTxt, "\"Unknown warehouse\"", "Bad path fails with correct response");
+            assert.equal(errorTxt, "MeadCo.ScriptX.Print.Licensing.applyLicense: \"Unknown warehouse\"", "Bad path fails with correct response");
             done();
         });
 
