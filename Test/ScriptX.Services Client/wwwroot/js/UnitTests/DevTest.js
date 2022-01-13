@@ -1,87 +1,41 @@
-﻿QUnit.test("call server api with GET", function (assert) {
+﻿QUnit.test("Connecting", function (assert) {
 
-    var done = assert.async(8);
+    var done = assert.async(1)
 
     var api = MeadCo.ScriptX.Print;
 
-    api.connectLite(badServerUrl, badLicenseGuid);
+    var url = serverUrl;
 
-    api.getFromServer("/twaddle/?units=0", false,
-        function (data) {
-            assert.ok(false, "Call to bad server should not succeed");
-            done();
-        }, function (errorText) {
-            assert.ok(true, "Call to bad server failed, error was: " + errorText);
-            done();
-        });
+    //api.connectAsync(url, "{}", function (data) {
+    //    assert.ok(false, "Should not have connected to: " + url + " with bad license");
+    //    done();
+    //}, function (errorText) {
+    //    assert.ok(true, "Failed to connect to: " + url + " with bad license GUID, error: " + errorText);
+    //    done();
+    //});
 
-    api.connectLite(serverUrl, badLicenseGuid);
+    //api.connectAsync(url, null, function (data) {
+    //    assert.ok(false, "Should not have connected to: " + url + " with bad license");
+    //    done();
+    //}, function (errorText) {
+    //    assert.ok(true, "Failed to connect to: " + url + " with null license GUID, error: " + errorText);
+    //    done();
+    //});
 
-    api.getFromServer("/twaddle/?units=0", false,
-        function (data) {
-            assert.ok(false, "Call to bad api should not succeed");
-            done();
-        }, function (errorText) {
-            assert.ok(true, "Call to bad api failed, error was: " + errorText);
-            done();
-        });
+    api.connectAsync(url, "", function (data) {
+        assert.ok(false, "Should not have connected to: " + url + " with bad license");
+        done();
+    }, function (errorText) {
+        assert.ok(true, "Failed to connect to: " + url + " with empty string license GUID, error: " + errorText);
+        done();
+    });
 
-    api.getFromServer("/htmlPrintDefaults/?units=0", false,
-        function (data) {
-            assert.ok(false, "Call to api with bad license should not succeed");
-            done();
-        }, function (errorText) {
-            assert.ok(true, "Call to api with bad license failed, error was: " + errorText);
-            done();
-        });
-
-    api.connectLite(serverUrl, licenseGuid);
-    api.getFromServer("/htmlPrintDefaults/?units=0", false,
-        function (data) {
-            assert.ok(true, "Call to api with good license succeeded");
-            done();
-        }, function (errorText) {
-            assert.ok(false, "Call to api with good license failed, error was: " + errorText);
-            done();
-        });
-
-    api.connectLite(serverUrl, null);
-    api.getFromServer("/htmlPrintDefaults/?units=0", false,
-        function (data) {
-            assert.ok(true, "Call to api succeeded - null license ignored");
-            done();
-        }, function (errorText) {
-            assert.ok(false, "Call to api with good license failed, error was: " + errorText);
-            done();
-        });
-
-    api.connectLite(serverUrl, "");
-    api.getFromServer("/htmlPrintDefaults/?units=0", false,
-        function (data) {
-            assert.ok(true, "Call to api succeeded - empty license ignored");
-            done();
-        }, function (errorText) {
-            assert.ok(false, "Call to api with good license failed, error was: " + errorText);
-            done();
-        });
-
-    api.connectLite(null, licenseGuid);
-    api.getFromServer("/htmlPrintDefaults/?units=0", false,
-        function (data) {
-            assert.ok(true, "Call to api succeeded - null server ignored");
-            done();
-        }, function (errorText) {
-            assert.ok(false, "Call to api with good license failed, error was: " + errorText);
-            done();
-        });
-
-    api.connectLite("", licenseGuid);
-    api.getFromServer("/htmlPrintDefaults/?units=0", false,
-        function (data) {
-            assert.ok(true, "Call to api succeeded - empty server ignored");
-            done();
-        }, function (errorText) {
-            assert.ok(false, "Call to api with good license failed, error was: " + errorText);
-            done();
-        });
+    //api.connectAsync(url, licenseGuid, function (data) {
+    //    assert.equal(data.printerName, "Test printer", "Connected async with correct device info");
+    //    assert.ok(api.isConnected, "isConnected");
+    //    done();
+    //}, function (errorText) {
+    //    assert.ok(false, "Should have connected to: " + url + " error: " + errorText);
+    //    done();
+    //});
 });

@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.9.0.18";
+    var version = "1.10.0.12";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
     var directApiLocation = "v1/printDirect";
@@ -138,19 +138,84 @@
     var servicesServer = {
 
         serviceUrl: "",
+        pendingUrl: "",
+        orchestratorPort: 0,
+        portsToTry: 10,
 
         get url() {
             return this.serviceUrl;
         },
 
+        // essentially synchronous set url, we set the pending vaoue so the code 
+        // executes synchronously here and there may then be an asynchronous sorting
+        // out when an api call is made (see implementation of call : function())
         set url(value) {
-            if (this.url !== value) {
-                var that = this;
-                that.test(value, 10, false, function (urlFound) {
-                    that.serviceUrl = urlFound;
-                    MeadCo.log("Set servicesServer to: " + that.serviceUrl);
-                });
+            MeadCo.log("servicesServer::setUrl: " + value);
+            if (this.IsChangingServer(value)) {
+                MeadCo.log("note set as pending");
+                this.serviceUrl = "";
+                this.pendingUrl = value;
             }
+        },
+
+        urlAsync: function (value, resolve, reject) {
+            MeadCo.log("servicesServer::urlAsync: " + value);
+            this.verifyUrl(value, true, resolve, reject);
+        },
+
+        verifyUrl: function (value, bAsync, resolve, reject) {
+
+            if (this.IsChangingServer(value)) {
+
+                var that = this;
+                var thatValue = value;
+
+                MeadCo.log("servicesServer::verifyurl: " + value + ", async: " + bAsync);
+
+                // if an orchestrator has been defined then ask it for the current users port
+                if (typeof this.orchestratorPort !== "number") {
+                    this.orchestratorPort = parseInt("" + this.orchestratorPort);
+                }
+
+                if (this.orchestratorPort > 0) {
+                    MeadCo.log("Using request to Orchestrator on port: " + this.orchestratorPort);
+                    module.jQuery.ajax("http://127.0.0.1:" + this.orchestratorPort + "/api/v1",
+                        {
+                            method: "GET",
+                            dataType: "json",
+                            cache: false,
+                            async: bAsync
+                        }).done(function (data) {
+
+                            MeadCo.log("orchestrator returned ScriptX.Services port: " + data.HttpPort)
+
+                            var urlHelper = new URL(thatValue);
+                            urlHelper.port = data.HttpPort;
+                            thatValue = urlHelper.protocol + "//" + urlHelper.host + urlHelper.pathname
+
+                            that.test(thatValue, 0, bAsync, function (urlFound) {
+                                that.serviceUrl = urlFound;
+                                that.pendingUrl = "";
+                                resolve(urlFound);
+                            }, reject);
+
+                        })
+                        .fail(function (jqXhr, textStatus, errorThrown) {
+                            reject(MeadCo.parseAjaxError("Failed to connect with orchestrator: ", jqXhr, textStatus, errorThrown));
+                        });
+                }
+                else {
+                    that.test(thatValue, that.portsToTry, bAsync, function (urlFound) {
+                        that.serviceUrl = urlFound;
+                        that.pendingUrl = "";
+                        resolve(urlFound);
+                    }, reject);
+                }
+            }
+            else {
+                resolve(this.serviceUrl);
+            }
+
         },
 
         // test
@@ -164,13 +229,12 @@
             if (serverUrl.length > 0) {
                 if (module.jQuery) {
                     var that = this;
-                    var domHelper = document.createElement('a');
-                    domHelper.setAttribute('href', serverUrl);
+                    var urlHelper = new URL(serverUrl);
 
-                    MeadCo.log("Test server requested: " + serverUrl + ", port: " + domHelper.port);
+                    MeadCo.log("Test server requested: " + serverUrl + ", port: " + urlHelper.port);
 
                     // use the license API
-                    var serviceUrl = MeadCo.makeApiEndPoint(domHelper.href, licenseApiLocation + "/ping");
+                    var serviceUrl = MeadCo.makeApiEndPoint(urlHelper.href, licenseApiLocation + "/ping");
                     MeadCo.log(".ajax() get: " + serviceUrl);
 
                     module.jQuery.ajax(serviceUrl,
@@ -180,13 +244,13 @@
                             cache: false,
                             async: bAsync
                         }).done(function (data) {
-                            resolve(domHelper.protocol + "//" + domHelper.host + domHelper.pathname);
+                            resolve(urlHelper.protocol + "//" + urlHelper.host + urlHelper.pathname);
                         })
                         .fail(function (jqXhr, textStatus, errorThrown) {
                             // only do hunting with 4WPC and that must be on 127.0.0.1 or localhost
-                            if (nHuntAllowed > 0 && (domHelper.hostname === "localhost" || domHelper.hostname == "127.0.0.1")) {
-                                domHelper.port++;
-                                module.setTimeout(that.test(domHelper.protocol + "//" + domHelper.host + domHelper.pathname, --nHuntAllowed, bAsync, resolve, reject), 1);
+                            if (nHuntAllowed > 0 && (urlHelper.hostname === "localhost" || urlHelper.hostname == "127.0.0.1")) {
+                                urlHelper.port++;
+                                module.setTimeout(that.test(urlHelper.protocol + "//" + urlHelper.host + urlHelper.pathname, --nHuntAllowed, bAsync, resolve, reject), 1);
                             }
                             else {
                                 errorThrown = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.servicesServer.test:", jqXhr, textStatus, errorThrown);
@@ -204,56 +268,82 @@
         // send a method request to an end point
         //
         call: function (sApi, method, oApiData, bLicensed, bAsync, resolve, reject) {
-            if (module.jQuery) {
-                if (this.url !== "") {
-                    var serviceUrl = MeadCo.makeApiEndPoint(this.url, sApi);
-                    MeadCo.log("servicesServer.call() " + method + ": " + serviceUrl);
-                    var oPayload = {
-                        method: method,
-                        cache: false,
-                        async: bAsync,
-                        jsonp: false,
-                        dataType: "json",
-                        contentType: "application/json"
-                    };
 
-                    if (bLicensed) {
-                        oPayload.headers = {
-                            "Authorization": "Basic " + btoa(licenseGuid + ":")
-                        }
+            if (this.url === "" && this.pendingUrl !== "") {
+                var that = this;
+                this.verifyUrl(this.pendingUrl, bAsync, function () {
+                    if (that.url !== "") {
+                        that.call(sApi, method, oApiData, bLicensed, bAsync, resolve, reject);
                     }
-
-                    if (typeof oApiData === "object" && oApiData !== null) {
-                        MeadCo.log("payload defined.");
-                        oPayload.data = JSON.stringify(oApiData);
+                    else {
+                        reject("Server url verification failed to set url");
                     }
+                }, reject);
+            }
+            else {
+                if (module.jQuery) {
+                    if (this.url !== "") {
+                        var serviceUrl = MeadCo.makeApiEndPoint(this.url, sApi);
+                        MeadCo.log("servicesServer.call() " + method + ": " + serviceUrl);
+                        var oPayload = {
+                            method: method,
+                            cache: false,
+                            async: bAsync,
+                            jsonp: false,
+                            dataType: "json",
+                            contentType: "application/json"
+                        };
 
-                    module.jQuery.ajax(serviceUrl, oPayload)
-                        .done(function (data) {
-                            if (typeof resolve === "function") {
-                                resolve(data);
+                        if (bLicensed) {
+                            oPayload.headers = {
+                                "Authorization": "Basic " + btoa(licenseGuid + ":")
                             }
-                            return data;
-                        })
-                        .fail(function (jqXhr, textStatus, errorThrown) {
-                            errorThrown = MeadCo.parseAjaxError("MeadCo.ScriptX.Print:" + sApi + method, jqXhr, textStatus, errorThrown);
-                            if (typeof reject === "function")
-                                reject(errorThrown);
-                        });
+                        }
+
+                        if (typeof oApiData === "object" && oApiData !== null) {
+                            MeadCo.log("payload defined.");
+                            oPayload.data = JSON.stringify(oApiData);
+                        }
+
+                        module.jQuery.ajax(serviceUrl, oPayload)
+                            .done(function (data) {
+                                if (typeof resolve === "function") {
+                                    resolve(data);
+                                }
+                                return data;
+                            })
+                            .fail(function (jqXhr, textStatus, errorThrown) {
+                                errorThrown = MeadCo.parseAjaxError("MeadCo.ScriptX.Print:" + sApi + method, jqXhr, textStatus, errorThrown);
+                                if (typeof reject === "function")
+                                    reject(errorThrown);
+                            });
+                    } else {
+                        if (typeof reject === "function") {
+                            reject("MeadCo.ScriptX.Print : server connection is not defined.");
+                        }
+                        else
+                            throw new Error("MeadCo.ScriptX.Print : server connection is not defined.");
+                    }
                 } else {
                     if (typeof reject === "function") {
-                        reject("MeadCo.ScriptX.Print : server connection is not defined.");
+                        reject("MeadCo.ScriptX.Print : no known ajax helper available");
                     }
                     else
-                        throw new Error("MeadCo.ScriptX.Print : server connection is not defined.");
+                        throw new Error("MeadCo.ScriptX.Print : no known ajax helper available");
                 }
-            } else {
-                if (typeof reject === "function") {
-                    reject("MeadCo.ScriptX.Print : no known ajax helper available");
-                }
-                else
-                    throw new Error("MeadCo.ScriptX.Print : no known ajax helper available");
             }
+        },
+
+        // determine if the server is changing - domain is the same, port may be different, we still think of it as the same.
+        IsChangingServer: function (aServerUrl) {
+            if (this.url !== "") {
+                var currentUrl = new URL(this.url);
+                var newUrl = new URL(aServerUrl);
+
+                return currentUrl.hostname != newUrl.hostname;
+            }
+
+            return true;
         }
     };
 
@@ -529,7 +619,7 @@
                                 if (data !== null) {
                                     MeadCo.log("Will download printed file");
                                     progress(requestData, enumPrintStatus.COMPLETED);
-                                    window.open(servicesServer.url + "/download/" + data.jobIdentifier, "_self");
+                                    window.open(serverApi + "/download/" + data.jobIdentifier, "_self");
                                 }
 
                                 if (typeof fnDone === "function") {
@@ -679,7 +769,7 @@
                                 if (data !== null) {
                                     MeadCo.log("Will download printed file");
                                     progress(requestData, enumPrintStatus.COMPLETED);
-                                    window.open(servicesServer.url + "/download/" + data.jobIdentifier, "_self");
+                                    window.open(serverApi + "/download/" + data.jobIdentifier, "_self");
                                 }
 
                                 if (typeof fnDone === "function") {
@@ -854,16 +944,23 @@
     // All connection etc calls route to here, so here is the place to determine the port
     // number to use.
     //
-    function setServer(serverUrl, clientLicenseGuid) {
+    function setServer(serverUrl, clientLicenseGuid, resolve, reject) {
         if (typeof serverUrl === "string" && serverUrl.length > 0) {
-            MeadCo.log("Print server requested: " + serverUrl + " => " + MeadCo.makeApiEndPoint(serverUrl, htmlApiLocation) + " with license: " + clientLicenseGuid);
-            servicesServer.url = MeadCo.makeApiEndPoint(serverUrl, htmlApiLocation);
+            MeadCo.log("Print server requested: " + serverUrl + " with license: " + clientLicenseGuid);
+
             licenseGuid = typeof clientLicenseGuid === "string" && clientLicenseGuid.length > 0 ? clientLicenseGuid : licenseGuid;
             printerName = "";
             deviceSettings = {};
             activePrintQueue = []; // warning, will kill any current monitoring
             bConnected = false;
             availablePrinters = [];
+
+            if (typeof resolve == "function") {
+                servicesServer.urlAsync(serverUrl, resolve, reject);
+            }
+            else {
+                servicesServer.url = serverUrl;
+            }
         }
         else {
             MeadCo.log("Print server retained: " + servicesServer.url + " update with license: " + clientLicenseGuid);
@@ -884,20 +981,21 @@
     }
 
     function connectToServerAsync(serverUrl, clientLicenseGuid, resolve, reject) {
-        setServer(serverUrl, clientLicenseGuid);
-        // note that this will silently fail if no advanced printing license
-        getDeviceSettings({
-            name: "systemdefault",
-            done: resolve,
-            async: true,
-            fail: reject
-        });
-
-        // also (async) cache server description
-        getFromServer("", true,
-            function (data) {
-                cachedServiceDescription = data;
+        setServer(serverUrl, clientLicenseGuid, function (foundUrl) {
+            // note that this will silently fail if no advanced printing license
+            getDeviceSettings({
+                name: "systemdefault",
+                done: resolve,
+                async: true,
+                fail: reject
             });
+
+            // also (async) cache server description
+            getFromServer("", true,
+                function (data) {
+                    cachedServiceDescription = data;
+                });
+        }, reject);
     }
 
     /**
@@ -1108,13 +1206,13 @@
         }
     }
 
-    function getDeviceSettings(oRequest, useLicenseGuid) {
+    function getDeviceSettings(oRequest) {
         oRequest.name = oRequest.name.replace(/\\/g, "||");
         MeadCo.log("Request get device info: " + oRequest.name);
-        var theLicense = arguments.length > 1 ? useLicenseGuid : licenseGuid;
+        var theLicense = licenseGuid;
 
         if (module.jQuery) {
-            var serviceUrl = servicesServer.url + "/deviceinfo/" + encodeURIComponent(oRequest.name) + "/0";
+            var serviceUrl = MeadCo.makeApiEndPoint(servicesServer.url, htmlApiLocation + "/deviceinfo/" + encodeURIComponent(oRequest.name) + "/0");
             MeadCo.log(".ajax() get: " + serviceUrl);
             module.jQuery.ajax(serviceUrl,
                 {
@@ -1260,7 +1358,9 @@
                             ", revision: " +
                             data.meadcoLicenseRevision +
                             ", sync: " +
-                            data.meadcoSyncinit);
+                            data.meadcoSyncinit +
+                            ", orchestrator: " +
+                            data.meadcoOrchestrator);
                         var syncInit = ("" + data.meadcoSyncinit)
                             .toLowerCase() !==
                             "false"; // defaults to true if not specified
@@ -1269,6 +1369,8 @@
                             "false"; // defaults to true if not specified
 
                         var server = data.meadcoServer;
+
+                        servicesServer.orchestratorPort = data.meadcoOrchestrator;
 
                         if (!syncInit) {
                             MeadCo.log("Async connectlite...");
@@ -1351,6 +1453,24 @@
 
         set onErrorAction(action) {
             errorAction = action;
+        },
+
+        /**
+         * Get/set the PORT number of the ScriptX.Services Orchestrator ('reverse proxy') to use. By definition orchestrator only listens
+         * on the local-loopback address.
+         * 
+         * This is only useful in uses cases of multiple users are simultaneously logged in to an instance of Windows.
+         * In these cases, the port number used by ScriptX.Services for Windows PC will be unqiue for each user.
+         * 
+         * The port number for the orchestrator is the same for each user as the orchestrator server is only active while the
+         * user is active. 
+         */
+        get orchestrator() {
+            return servicesServer.orchestratorPort;
+        },
+
+        set orchestrator(nPort) {
+            servicesServer.orchestratorPort = "" + nPort;
         },
 
         /**
@@ -1532,7 +1652,7 @@
             // know the values so we assume a connectLite has already been called
             // and dont overwrite with empty values.
             setServer(serverUrl, licenseGuid);
-         },
+        },
 
         /**
          * Specify the server to use and the subscription/license id.
