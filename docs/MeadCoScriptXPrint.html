@@ -121,7 +121,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Namespaces</h3><ul><li><a href="factory.html">factory</a></li><li><a href="MeadCo.html">MeadCo</a></li><li><a href="MeadCoScriptXPrint.html">MeadCo.ScriptX.Print</a></li><li><a href="MeadCoScriptXPrintHTML.html">MeadCo.ScriptX.Print.HTML</a></li><li><a href="MeadCoScriptXPrintLicensing.html">MeadCo.ScriptX.Print.Licensing</a></li><li><a href="MeadCoScriptXPrintPDF.html">MeadCo.ScriptX.Print.PDF</a></li><li><a href="secmgr.html">secmgr</a></li></ul><h3>Global</h3><ul><li><a href="global.html#orchestrator">orchestrator</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Namespaces</h3><ul><li><a href="factory.html">factory</a></li><li><a href="MeadCo.html">MeadCo</a></li><li><a href="MeadCoScriptXPrint.html">MeadCo.ScriptX.Print</a></li><li><a href="MeadCoScriptXPrintHTML.html">MeadCo.ScriptX.Print.HTML</a></li><li><a href="MeadCoScriptXPrintLicensing.html">MeadCo.ScriptX.Print.Licensing</a></li><li><a href="MeadCoScriptXPrintPDF.html">MeadCo.ScriptX.Print.PDF</a></li><li><a href="secmgr.html">secmgr</a></li></ul></div>
                 
             </nav>
         </div>
@@ -340,7 +340,7 @@ to using asynchronous calls as soon as practical. The MeadCoScriptXJS library ca
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1929">line 1929</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1932">line 1932</a>
             </span>
         </p>
     
@@ -465,7 +465,7 @@ to using asynchronous calls as soon as practical. The MeadCoScriptXJS library ca
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1489">line 1489</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1492">line 1492</a>
             </span>
         </p>
     
@@ -592,7 +592,7 @@ to using asynchronous calls as soon as practical. The MeadCoScriptXJS library ca
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1769">line 1769</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1772">line 1772</a>
             </span>
         </p>
     
@@ -717,7 +717,7 @@ to using asynchronous calls as soon as practical. The MeadCoScriptXJS library ca
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1568">line 1568</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1571">line 1571</a>
             </span>
         </p>
     
@@ -844,7 +844,7 @@ to using asynchronous calls as soon as practical. The MeadCoScriptXJS library ca
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1758">line 1758</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1761">line 1761</a>
             </span>
         </p>
     
@@ -971,7 +971,7 @@ to using asynchronous calls as soon as practical. The MeadCoScriptXJS library ca
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1971">line 1971</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1974">line 1974</a>
             </span>
         </p>
     
@@ -1110,6 +1110,139 @@ to using asynchronous calls as soon as practical. The MeadCoScriptXJS library ca
             
                 <div class="member">
 
+<h4 class="name" id=".orchestrator">
+    <a class="href-link" href="#.orchestrator">#</a>
+    
+        
+            <span class='tag'>static</span>
+        
+    
+    <span class="code-name">
+        orchestrator
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Get/set the PORT number of the ScriptX.Services Orchestrator ('reverse proxy') to use. By definition orchestrator only listens
+on the local-loopback address.</p>
+<p>This is only useful in uses cases of multiple users are simultaneously logged in to an instance of Windows.
+In these cases, the port number used by ScriptX.Services for Windows PC will be unique for each user.</p>
+<p>The port number for the orchestrator is the same for each user as the orchestrator server is only active while the
+user is active.</p>
+</div>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>orchestrator</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">string</span>
+|
+
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>the port number used by orchestrator (typically 41190)</p></td>
+</tr>
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
+            <span>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1478">line 1478</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
 <h4 class="name" id=".printerName">
     <a class="href-link" href="#.printerName">#</a>
     
@@ -1221,7 +1354,7 @@ to using asynchronous calls as soon as practical. The MeadCoScriptXJS library ca
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1502">line 1502</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1505">line 1505</a>
             </span>
         </p>
     
@@ -1348,7 +1481,7 @@ to using asynchronous calls as soon as practical. The MeadCoScriptXJS library ca
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1917">line 1917</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1920">line 1920</a>
             </span>
         </p>
     
@@ -1473,7 +1606,7 @@ to using asynchronous calls as soon as practical. The MeadCoScriptXJS library ca
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line2030">line 2030</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line2033">line 2033</a>
             </span>
         </p>
     
@@ -1599,7 +1732,7 @@ The default is 750ms. On slow systems/slow connections this may need to be incre
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line2016">line 2016</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line2019">line 2019</a>
             </span>
         </p>
     
@@ -1724,7 +1857,7 @@ The default is 750ms. On slow systems/slow connections this may need to be incre
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1535">line 1535</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1538">line 1538</a>
             </span>
         </p>
     
@@ -1897,7 +2030,7 @@ and therefore not recommended. Use connectAsync()</p>
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1632">line 1632</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1635">line 1635</a>
             </span>
         </p>
     
@@ -2126,7 +2259,7 @@ the device settings for the default printer.</p>
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1664">line 1664</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1667">line 1667</a>
             </span>
         </p>
     
@@ -2304,7 +2437,7 @@ the device settings for the default printer.</p>
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1735">line 1735</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1738">line 1738</a>
             </span>
         </p>
     
@@ -2481,7 +2614,7 @@ the device settings for the default printer.</p>
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1648">line 1648</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1651">line 1651</a>
             </span>
         </p>
     
@@ -2683,7 +2816,7 @@ the device settings for the default printer.</p>
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1681">line 1681</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1684">line 1684</a>
             </span>
         </p>
     
@@ -2836,7 +2969,7 @@ and not recommended.</p>
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1576">line 1576</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1579">line 1579</a>
             </span>
         </p>
     
@@ -2963,7 +3096,7 @@ printing is displayed by placing a lock on the queue.</p>
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1933">line 1933</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1936">line 1936</a>
             </span>
         </p>
     
@@ -3147,7 +3280,7 @@ printing is displayed by placing a lock on the queue.</p>
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1953">line 1953</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1956">line 1956</a>
             </span>
         </p>
     
@@ -3374,7 +3507,7 @@ printing is displayed by placing a lock on the queue.</p>
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1773">line 1773</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1776">line 1776</a>
             </span>
         </p>
     
@@ -3601,7 +3734,7 @@ printing is displayed by placing a lock on the queue.</p>
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1834">line 1834</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1837">line 1837</a>
             </span>
         </p>
     
@@ -3829,7 +3962,7 @@ and is completed (sent to the printer) when the api returns.</p>
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1820">line 1820</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1823">line 1823</a>
             </span>
         </p>
     
@@ -4134,7 +4267,7 @@ to completion. If the server prints to file then the file is opened for the user
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1787">line 1787</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1790">line 1790</a>
             </span>
         </p>
     
@@ -4414,7 +4547,7 @@ to completion. If the server prints to file then the file is opened for the user
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1804">line 1804</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1807">line 1807</a>
             </span>
         </p>
     
@@ -4594,7 +4727,7 @@ value of onErrorAction.</p>
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1850">line 1850</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1853">line 1853</a>
             </span>
         </p>
     
@@ -4752,7 +4885,7 @@ MeadCo.ScriptX.Print.reportFeatureNotImplemented = function (featureDescription)
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1890">line 1890</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1893">line 1893</a>
             </span>
         </p>
     
@@ -4910,7 +5043,7 @@ MeadCo.ScriptX.Print.reportServerError = function (errorTxt) {
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1871">line 1871</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1874">line 1874</a>
             </span>
         </p>
     
@@ -5011,7 +5144,7 @@ MeadCo.ScriptX.Print.reportServerError = function (errorTxt) {
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1694">line 1694</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1697">line 1697</a>
             </span>
         </p>
     
@@ -5213,7 +5346,7 @@ MeadCo.ScriptX.Print.reportServerError = function (errorTxt) {
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1713">line 1713</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1716">line 1716</a>
             </span>
         </p>
     
@@ -5314,7 +5447,7 @@ MeadCo.ScriptX.Print.reportServerError = function (errorTxt) {
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1539">line 1539</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1542">line 1542</a>
             </span>
         </p>
     
@@ -5516,7 +5649,7 @@ MeadCo.ScriptX.Print.reportServerError = function (errorTxt) {
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1551">line 1551</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1554">line 1554</a>
             </span>
         </p>
     
@@ -5620,7 +5753,7 @@ to using asynchronous calls as soon as practical. The MeadCoScriptXJS library ca
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1589">line 1589</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1592">line 1592</a>
             </span>
         </p>
     
@@ -5805,7 +5938,7 @@ then call the given callback function</p>
         <p class="tag-source">
             <a href="meadco-scriptxprint.js.html" class="button">View Source</a>
             <span>
-                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1975">line 1975</a>
+                <a href="meadco-scriptxprint.js.html">meadco-scriptxprint.js</a>, <a href="meadco-scriptxprint.js.html#line1978">line 1978</a>
             </span>
         </p>
     

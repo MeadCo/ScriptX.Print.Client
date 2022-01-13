@@ -1467,17 +1467,20 @@
          * on the local-loopback address.
          * 
          * This is only useful in uses cases of multiple users are simultaneously logged in to an instance of Windows.
-         * In these cases, the port number used by ScriptX.Services for Windows PC will be unqiue for each user.
+         * In these cases, the port number used by ScriptX.Services for Windows PC will be unique for each user.
          * 
          * The port number for the orchestrator is the same for each user as the orchestrator server is only active while the
          * user is active. 
+         * 
+         * @memberof MeadCoScriptXPrint
+         * @property {string|number} orchestrator - the port number used by orchestrator (typically 41190)
          */
         get orchestrator() {
             return servicesServer.orchestratorPort;
         },
 
         set orchestrator(nPort) {
-            servicesServer.orchestratorPort = "" + nPort;
+            servicesServer.orchestratorPort = nPort;
         },
 
         /**

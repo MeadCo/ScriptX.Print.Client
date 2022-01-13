@@ -123,7 +123,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Namespaces</h3><ul><li><a href="factory.html">factory</a></li><li><a href="MeadCo.html">MeadCo</a></li><li><a href="MeadCoScriptXPrint.html">MeadCo.ScriptX.Print</a></li><li><a href="MeadCoScriptXPrintHTML.html">MeadCo.ScriptX.Print.HTML</a></li><li><a href="MeadCoScriptXPrintLicensing.html">MeadCo.ScriptX.Print.Licensing</a></li><li><a href="MeadCoScriptXPrintPDF.html">MeadCo.ScriptX.Print.PDF</a></li><li><a href="secmgr.html">secmgr</a></li></ul><h3>Global</h3><ul><li><a href="global.html#orchestrator">orchestrator</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Namespaces</h3><ul><li><a href="factory.html">factory</a></li><li><a href="MeadCo.html">MeadCo</a></li><li><a href="MeadCoScriptXPrint.html">MeadCo.ScriptX.Print</a></li><li><a href="MeadCoScriptXPrintHTML.html">MeadCo.ScriptX.Print.HTML</a></li><li><a href="MeadCoScriptXPrintLicensing.html">MeadCo.ScriptX.Print.Licensing</a></li><li><a href="MeadCoScriptXPrintPDF.html">MeadCo.ScriptX.Print.PDF</a></li><li><a href="secmgr.html">secmgr</a></li></ul></div>
                 
             </nav>
         </div>
@@ -1609,17 +1609,20 @@
          * on the local-loopback address.
          * 
          * This is only useful in uses cases of multiple users are simultaneously logged in to an instance of Windows.
-         * In these cases, the port number used by ScriptX.Services for Windows PC will be unqiue for each user.
+         * In these cases, the port number used by ScriptX.Services for Windows PC will be unique for each user.
          * 
          * The port number for the orchestrator is the same for each user as the orchestrator server is only active while the
          * user is active. 
+         * 
+         * @memberof MeadCo.ScriptX.Print
+         * @property {string|number} orchestrator - the port number used by orchestrator (typically 41190)
          */
         get orchestrator() {
             return servicesServer.orchestratorPort;
         },
 
         set orchestrator(nPort) {
-            servicesServer.orchestratorPort = "" + nPort;
+            servicesServer.orchestratorPort = nPort;
         },
 
         /**
