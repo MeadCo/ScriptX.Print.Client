@@ -37,38 +37,47 @@ QUnit.test("Connecting to service", function (assert) {
     api.connectAsync(url, "{}", function (data) {
         assert.ok(false, "Should not have connected to: " + url + " with bad license");
         done();
+        done();
+        done();
+        done();
     }, function (errorText) {
         assert.ok(true, "Failed to connect to: " + url + " with bad license GUID, error: " + errorText);
         done();
+
+        api.connectAsync(url, null, function (data) {
+            assert.ok(false, "Should not have connected to: " + url + " with bad license");
+            done();
+            done();
+            done();
+        }, function (errorText) {
+            assert.ok(true, "Failed to connect to: " + url + " with null license GUID, error: " + errorText);
+            done();
+
+            api.connectAsync(url, "", function (data) {
+                assert.ok(false, "Should not have connected to: " + url + " with bad license");
+                done();
+                done();
+            }, function (errorText) {
+                assert.ok(true, "Failed to connect to: " + url + " with empty string license GUID, error: " + errorText);
+                done();
+
+                assert.strictEqual(MeadCo.ScriptX.Print.printerName, "", "Default printer name has not yet been set");
+
+                api.connectAsync(url, licenseGuid, function (data) {
+                    assert.equal(MeadCo.ScriptX.Print.printerName, "Test printer", "Default printer name has been set");
+                    assert.equal(api.settings.header, "Default header from server", "header values collected from server");
+                    assert.notStrictEqual(api.settings.locale, undefined, "There is a locale: " + api.settings.locale);
+                    done();
+                }, function (errorText) {
+                    assert.ok(false, "Should have connected to: " + url + " error: " + errorText);
+                    done();
+                });
+            });
+
+        });
+
     });
 
-    api.connectAsync(url, null, function (data) {
-        assert.ok(false, "Should not have connected to: " + url + " with bad license");
-        done();
-    }, function (errorText) {
-        assert.ok(true, "Failed to connect to: " + url + " with null license GUID, error: " + errorText);
-        done();
-    });
-
-    api.connectAsync(url, "", function (data) {
-        assert.ok(false, "Should not have connected to: " + url + " with bad license");
-        done();
-    }, function (errorText) {
-        assert.ok(true, "Failed to connect to: " + url + " with empty string license GUID, error: " + errorText);
-        done();
-    });
-
-    assert.strictEqual(MeadCo.ScriptX.Print.printerName, "", "Default printer name has not yet been set");
-
-    api.connectAsync(url, licenseGuid, function (data) {
-        assert.equal(MeadCo.ScriptX.Print.printerName, "Test printer", "Default printer name has been set");
-        assert.equal(api.settings.header, "Default header from server", "header values collected from server");
-        assert.notStrictEqual(api.settings.locale, undefined, "There is a locale: " + api.settings.locale);
-        done();
-    }, function (errorText) {
-        assert.ok(false, "Should have connected to: " + url + " error: " + errorText);
-        done();
-    });
 });
 
 QUnit.test("Grabbing content", function (assert) {

@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.10.0.12";
+    var version = "1.10.0.14";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
     var directApiLocation = "v1/printDirect";
@@ -337,10 +337,17 @@
         // determine if the server is changing - domain is the same, port may be different, we still think of it as the same.
         IsChangingServer: function (aServerUrl) {
             if (this.url !== "") {
-                var currentUrl = new URL(this.url);
-                var newUrl = new URL(aServerUrl);
 
-                return currentUrl.hostname != newUrl.hostname;
+                try {
+                    var currentUrl = new URL(this.url);
+                    var newUrl = new URL(aServerUrl);
+
+                    return currentUrl.hostname != newUrl.hostname;
+                } catch (e) {
+                    console.error("Failed to construct URL(): " + e.message + ", from: " + this.url + ", or: " + aServerUrl);
+                    console.error("Many errors will ensue");
+                    return false; // will stop attempts to use something bad.
+                }
             }
 
             return true;

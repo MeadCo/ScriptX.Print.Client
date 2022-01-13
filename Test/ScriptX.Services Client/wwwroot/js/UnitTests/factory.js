@@ -74,7 +74,7 @@ QUnit.test("OnDocumentComplete", function (assert) {
 
         done();
 
-        url2 = "https://www.meadroid.com";
+        url2 = "https://scriptxservices.meadroid.com";
         tf.src = url2;
 
         api.OnDocumentComplete(testFrame, function () {
@@ -230,7 +230,7 @@ QUnit.test("factory.printing device settings", function (assert) {
 
         assert.throws(() => { var x = api.printerControl("Unknown printer").Forms.length; },
             function (err) {
-                return err.message === "Cannot read property 'forms' of undefined";
+                return err.message === "Cannot read properties of undefined (reading 'forms')";
             },
             "Raised error on printerControl(badName) is correct");
         
