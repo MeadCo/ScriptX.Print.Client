@@ -214,7 +214,7 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
 
 Released under the [MIT](http://opensource.org/licenses/MIT) license. 
 
-Copyright (c) 2017-2021, Mead & Co Limited.
+Copyright (c) 2017-2022, Mead & Co Limited.
 
 
 
