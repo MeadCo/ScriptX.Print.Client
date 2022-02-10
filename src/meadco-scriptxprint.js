@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.10.0.14";
+    var version = "1.10.1.6";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
     var directApiLocation = "v1/printDirect";
@@ -139,11 +139,25 @@
 
         serviceUrl: "",
         pendingUrl: "",
+        failedUrl: "",
         orchestratorPort: 0,
         portsToTry: 10,
+        verifying: false,
 
         get url() {
+ 
+            if (this.serviceUrl === "" && this.pendingUrl !== "") {
+                MeadCo.warn("[GET] servicesServer.url is not ready, performing synchronous search. Recommend code re-org to resolve the server earlier and asynchronously.")
+                var that = this;
+                this.verifyUrl(this.pendingUrl, false, function () {
+                    return that.serviceUrl;
+                },function () {
+                        return "";
+                });
+            }
+
             return this.serviceUrl;
+
         },
 
         // essentially synchronous set url, we set the pending vaoue so the code 
@@ -165,7 +179,15 @@
 
         verifyUrl: function (value, bAsync, resolve, reject) {
 
-            if (this.IsChangingServer(value)) {
+            if (this.verifying && bAsync) {
+                console.warn("Verify called and verify in progress ....");
+                var that = this;
+                var thatValue = value;
+                window.setTimeout(function () { that.verifyUrl(thatValue, bAsync, resolve, reject); }, 1000);
+                return;
+            }
+
+            if (this.IsChangingServer(value) && !this.IsFailedConnection(value)) {
 
                 var that = this;
                 var thatValue = value;
@@ -179,6 +201,7 @@
 
                 if (this.orchestratorPort > 0) {
                     MeadCo.log("Using request to Orchestrator on port: " + this.orchestratorPort);
+                    that.verifying = true;
                     module.jQuery.ajax("http://127.0.0.1:" + this.orchestratorPort + "/api/v1",
                         {
                             method: "GET",
@@ -196,20 +219,43 @@
                             that.test(thatValue, 0, bAsync, function (urlFound) {
                                 that.serviceUrl = urlFound;
                                 that.pendingUrl = "";
+                                that.verifying = false;
                                 resolve(urlFound);
-                            }, reject);
+                            }, function (errorThrown) {
+                                that.serviceUrl = "";
+                                that.pendingUrl = "";
+                                that.failedUrl = thatValue;
+                                that.verifying = false;
+                                if (typeof reject === "function") {
+                                    reject(errorThrown);
+                                }
+                            });
 
                         })
                         .fail(function (jqXhr, textStatus, errorThrown) {
-                            reject(MeadCo.parseAjaxError("Failed to connect with orchestrator: ", jqXhr, textStatus, errorThrown));
+                            that.verifying = false;
+                             MeadCo.warn(MeadCo.parseAjaxError("Failed to connect with orchestrator: ", jqXhr, textStatus, errorThrown));
+                            MeadCo.log("Will try unorchestrated url");
+                            that.orchestratorPort = 0;
+                            that.verifyUrl(thatValue, bAsync, resolve, reject);
                         });
                 }
                 else {
+                    that.verifying = true;
                     that.test(thatValue, that.portsToTry, bAsync, function (urlFound) {
                         that.serviceUrl = urlFound;
                         that.pendingUrl = "";
+                        that.verifying = false;
                         resolve(urlFound);
-                    }, reject);
+                    }, function (errorThrown) {
+                        that.serviceUrl = "";
+                        that.pendingUrl = "";
+                        that.verifying = false;
+                        that.failedUrl = thatValue;
+                        if (typeof reject === "function") {
+                            reject("ScriptX.Services could not be found at " + thatValue);
+                        }
+                    });
                 }
             }
             else {
@@ -269,21 +315,23 @@
         //
         call: function (sApi, method, oApiData, bLicensed, bAsync, resolve, reject) {
 
-            if (this.url === "" && this.pendingUrl !== "") {
+            if (this.serviceUrl === "" && this.pendingUrl !== "") {
                 var that = this;
                 this.verifyUrl(this.pendingUrl, bAsync, function () {
                     if (that.url !== "") {
                         that.call(sApi, method, oApiData, bLicensed, bAsync, resolve, reject);
                     }
                     else {
-                        reject("Server url verification failed to set url");
+                        if (typeof reject === "function") {
+                            reject("Server url verification failed to set url");
+                        }
                     }
                 }, reject);
             }
             else {
                 if (module.jQuery) {
-                    if (this.url !== "") {
-                        var serviceUrl = MeadCo.makeApiEndPoint(this.url, sApi);
+                    if (this.serviceUrl !== "") {
+                        var serviceUrl = MeadCo.makeApiEndPoint(this.serviceUrl, sApi);
                         MeadCo.log("servicesServer.call() " + method + ": " + serviceUrl);
                         var oPayload = {
                             method: method,
@@ -336,21 +384,43 @@
 
         // determine if the server is changing - domain is the same, port may be different, we still think of it as the same.
         IsChangingServer: function (aServerUrl) {
-            if (this.url !== "") {
+            if (this.serviceUrl !== "") {
 
                 try {
-                    var currentUrl = new URL(this.url);
+                    var currentUrl = new URL(this.serviceUrl);
                     var newUrl = new URL(aServerUrl);
 
                     return currentUrl.hostname != newUrl.hostname;
                 } catch (e) {
-                    console.error("Failed to construct URL(): " + e.message + ", from: " + this.url + ", or: " + aServerUrl);
+                    console.error("Failed to construct URL(): " + e.message + ", from: " + this.serviceUrl + ", or: " + aServerUrl);
                     console.error("Many errors will ensue");
                     return false; // will stop attempts to use something bad.
                 }
             }
 
             return true;
+        },
+
+        // bad news to retest ports on a host that has already been tried, in a page lifetime, it isnt going to get any better.
+        IsFailedConnection: function (aServerUrl) {
+            if (this.failedUrl.length > 0) {
+                try {
+                    var failedUrl = new URL(this.failedUrl);
+                    var newUrl = new URL(aServerUrl);
+
+                    if (failedUrl.hostname === newUrl.hostname) {
+                        console.warn("Attempt to use: " + aServerUrl + " is noted as a failed connection and will not be retried");
+                        return true;
+                    }
+
+                    return false;
+                } catch (e) {
+                    console.error("Testing IsFailed unable to construct URL(): " + e.message + ", from: " + this.failedUrl + ", or: " + aServerUrl);
+                    return true; // will stop attempts to use something bad.
+                }
+            }
+
+            return false;
         }
     };
 
@@ -1216,51 +1286,31 @@
     function getDeviceSettings(oRequest) {
         oRequest.name = oRequest.name.replace(/\\/g, "||");
         MeadCo.log("Request get device info: " + oRequest.name);
-        var theLicense = licenseGuid;
 
-        if (module.jQuery) {
-            var serviceUrl = MeadCo.makeApiEndPoint(servicesServer.url, htmlApiLocation + "/deviceinfo/" + encodeURIComponent(oRequest.name) + "/0");
-            MeadCo.log(".ajax() get: " + serviceUrl);
-            module.jQuery.ajax(serviceUrl,
-                {
-                    dataType: "json",
-                    method: "GET",
-                    cache: false,
-                    async: oRequest.async, // => async if we have a callback
-                    headers: {
-                        "Authorization": "Basic " + btoa(theLicense + ":")
-                    }
-                })
-                .done(function (data) {
-                    bConnected = true;
-                    addOrUpdateDeviceSettings(data);
-                    if (typeof oRequest.done === "function") {
-                        oRequest.done(data);
-                    }
-                })
-                .fail(function (jqXhr, textStatus, errorThrown) {
-                    if (oRequest.name === "systemdefault") {
-                        console.warn("request for systemdefault printer failed - please update to ScriptX.Services 2.11.1");
-                        oRequest.name = "default";
-                        oRequest.async = false;
-                        getDeviceSettings(oRequest, theLicense);
-                    }
-                    else {
-                        errorThrown = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.getDeviceSettings:", jqXhr, textStatus, errorThrown);
-                        MeadCo.log("failed to getdevice: " + errorThrown);
+        getFromServer(htmlApiLocation + "/deviceinfo/" + encodeURIComponent(oRequest.name) + "/0", oRequest.async,
+            function (data) {
+                bConnected = true;
+                addOrUpdateDeviceSettings(data);
+                if (typeof oRequest.done === "function") {
+                    oRequest.done(data);
+                }
+            },
+            function (errTxt) {
+                if (oRequest.name === "systemdefault") {
+                    console.warn("request for systemdefault printer failed - please update to ScriptX.Services 2.11.1");
+                    oRequest.name = "default";
+                    oRequest.async = false;
+                    getDeviceSettings(oRequest);
+                }
+                else {
+                    MeadCo.log("failed to getdevice: " + errTxt);
 
-                        if (typeof oRequest.fail === "function") {
-                            oRequest.fail(errorThrown);
-                        }
+                    if (typeof oRequest.fail === "function") {
+                        oRequest.fail(errTxt);
                     }
-                });
-        } else {
-            if (typeof oRequest.fail === "function") {
-                oRequest.fail("MeadCo.ScriptX.Print : no known ajax helper available");
+                }
             }
-            else
-                throw new Error("MeadCo.ScriptX.Print : no known ajax helper available");
-        }
+        );
 
     }
 
@@ -1688,7 +1738,7 @@
          * @param {function({errorText})} reject function to call on failure
          */
         connectTestAsync: function (serverUrl, resolve, reject) {
-            servicesServer.test(serverUrl, 10, true, resolve, reject);
+            servicesServer.verifyUrl(serverUrl, true, resolve, reject);
         },
 
         /**

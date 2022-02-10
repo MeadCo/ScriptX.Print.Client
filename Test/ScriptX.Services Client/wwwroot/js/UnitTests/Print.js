@@ -5,7 +5,7 @@ QUnit.test("Namespace basics", function (assert) {
     assert.ok(MeadCo.ScriptX.Print, "MeadCo.ScriptX.Print namespace exists");
     var api = MeadCo.ScriptX.Print;
 
-    assert.equal(api.version, "1.10.0.12", "Correct version");
+    assert.equal(api.version, "1.10.1.6", "Correct version");
 
     assert.equal(api.ContentType.URL, 1, "ContentType enum is OK");
     assert.equal(api.ContentType.XX, undefined, "Unknown ContentType enum is OK");
@@ -22,7 +22,7 @@ QUnit.test("Namespace basics", function (assert) {
     assert.deepEqual(api.deviceSettings, {}, "Default device settings are empty object");
 
     assert.equal(api.deviceSettingsFor("My printer"), undefined, "Device settings for bad printer name shows error dialog and returns undefined");
-    assert.equal($("#qunit-fixture").text(), "Not Found", "Correct error message");
+    assert.equal($("#qunit-fixture").text(), "ScriptX.Services could not be found at http://clearServer", "Correct error message");
 
 });
 
@@ -53,7 +53,7 @@ QUnit.test("Device settings basics", function (assert) {
     assert.equal(api.printerName, "A3 printer", "Correct default printer name");
 
     api.printerName = "Garbage";
-    assert.equal($("#qunit-fixture").text(), "Not Found", "Correct error message on setting garbage printer");
+    assert.equal($("#qunit-fixture").text(), "MeadCo.ScriptX.Print : server connection is not defined.", "Correct error message on setting garbage printer");
     assert.equal(api.printerName, "A3 printer", "Default printer name stays correct.");
 
 });
@@ -71,7 +71,7 @@ QUnit.test("Testing connection", function (assert) {
         assert.ok(false, "Should not have connected to: " + url);
         done();
     }, function (errorText) {
-        assert.equal(errorText, "Server or network error", "connectTestAsync failed with correct error");
+        assert.equal(errorText, "ScriptX.Services could not be found at " + badServerUrl, "connectTestAsync failed with correct error");
         done();
     });
 
