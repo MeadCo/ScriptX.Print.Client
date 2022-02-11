@@ -1,4 +1,4 @@
-﻿var badServerUrl = "http://localhost:12";
+﻿var badServerUrl = "http://127.0.0.1:12";
 
 var serverUrl = window.location.protocol + "//" + window.location.host;
 //var serverUrl = "https://scriptxservices.meadroid.com";

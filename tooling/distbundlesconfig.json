@@ -24,6 +24,7 @@
     "outputFileName": "./dist/meadco-scriptxserviceslicensing.min.js",
     "inputFiles": [
       "./src/meadco-core.js",
+      "./src/meadco-scriptxprint.js",
       "./src/meadco-scriptxprintlicensing.js",
       "./src/meadco-secmgr.js"
     ]

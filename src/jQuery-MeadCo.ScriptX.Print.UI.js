@@ -5,7 +5,7 @@
 // A lightweight plug-in not implemented as a plug-in as it will only be used once or twice on a document
 // so polluting jQuery is unneccessary.
 //
-// Optional dependency: bootstrap-select.js : Bootstrap-select v1.10.0 (http://silviomoreto.github.io/bootstrap-select)
+// Optional dependency: bootstrap-select.js : Bootstrap-select (http://silviomoreto.github.io/bootstrap-select)
 // The above dependency is completely optional - the code looks for the enabling class.
 //
 
@@ -14,7 +14,7 @@
 
     var ui = MeadCo.createNS("MeadCo.ScriptX.Print.UI");
 
-    ui.version = "1.10.0.0";
+    ui.version = "1.10.1.0";
 
     // MeadCo.ScriptX.Print.UI.PageSetup()
     ui.PageSetup = function (fnCallBack) {
