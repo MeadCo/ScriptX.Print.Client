@@ -86,7 +86,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.10.1.0";
+    var moduleversion = "1.11.0.4";
     var emulatedVersion = "8.3.0.0";
     var servicesVersion = "";
     var printApi = MeadCo.ScriptX.Print;
@@ -743,7 +743,22 @@
         },
 
         Preview: function (sOrOFrame) {
-            printApi.reportFeatureNotImplemented("Preview", sOrOFrame);
+            if (!sOrOFrame) {
+                sOrOFrame = null;
+            }
+            else {
+                // passing in window, or window.self etc will not have an id .. don't barf on that code
+                if (typeof (sOrOFrame) === 'object' && !sOrOFrame.id) {
+                    sOrOFrame = null;
+                }
+            }
+
+            if (sOrOFrame !== null) {
+                var sFrame = typeof (sOrOFrame) === 'string' ? sOrOFrame : sOrOFrame.id;
+                return printHtml.previewFrame(sFrame);
+            }
+
+            printHtml.previewDocument();
         },
 
         Print: function (bPrompt, sOrOFrame, fnNotifyStarted) { // needs and wants update to ES2015 (for default values)

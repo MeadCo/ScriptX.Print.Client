@@ -54,7 +54,7 @@
 
     // protected API
     var module = this;
-    var version = "1.10.1.0"; // matches the highest version number of sub-classes.
+    var version = "1.11.0.2"; // matches the highest version number of sub-classes.
     var bLog = ((typeof (MeadCo) !== "undefined" && typeof (MeadCo.logEnable) !== "undefined")) ? MeadCo.logEnable : false;
 
     var log = function (str) {
@@ -245,7 +245,7 @@
         set scope(s) { module.scope = s; },
 
         /**
-         * Get the url to a ScriptX.Services api endpoint. If an enpoint is already present, it is replaced.
+         * Get the url to a ScriptX.Services api endpoint. If an endpoint is already present, it is replaced.
          * 
          * @function makeApiEndPoint
          * @memberof MeadCo
@@ -268,6 +268,32 @@
             }
             return serverUrl;
         },
+
+        /**
+         * Get the url to a ScriptX.Services api endpoint. If an endpoint is already present, it is replaced.
+         * 
+         * @function makeApiEndPoint
+         * @memberof MeadCo
+         * @param {string} serverUrl url to the server
+         * @param {string} endPoint the service endpoint, e.g. v1/preview
+         * @returns {string} url to the endpoint
+         */
+        makeServiceEndPoint: function (serverUrl, endPoint) {
+            // check if given partial ...
+            var p = serverUrl.indexOf("/api");
+            if (p === -1) {
+                if (serverUrl.lastIndexOf("/") !== (serverUrl.length - 1)) {
+                    serverUrl += "/";
+                }
+                serverUrl += endPoint;
+            }
+            else {
+                // given another api, chop and replace with requested api
+                serverUrl = serverUrl.substr(0, p) + "/" + endPoint;
+            }
+            return serverUrl;
+        },
+
 
         /**
          * Extract the error text from jQuery AJAX response

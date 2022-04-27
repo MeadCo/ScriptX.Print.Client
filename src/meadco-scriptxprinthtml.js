@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
 
-    var moduleversion = "1.10.1.0";
+    var moduleversion = "1.11.0.10";
 
     /**
      * Enum to describe the units used on measurements - **NOTE** please use MeadCo.ScriptX.Print.MeasurementUnits instead
@@ -168,7 +168,7 @@
             settingsCache.header = str;
         },
         get header() {
-            return ( !settingsCache.header || settingsCache.header === "%20") ? "" : settingsCache.header;
+            return (!settingsCache.header || settingsCache.header === "%20") ? "" : settingsCache.header;
         },
 
         set footer(str) {
@@ -179,7 +179,7 @@
         },
 
         get footer() {
-            return ( !settingsCache.footer || settingsCache.footer === "%20") ? "" : settingsCache.footer;
+            return (!settingsCache.footer || settingsCache.footer === "%20") ? "" : settingsCache.footer;
         },
 
         set headerFooterFont(str) {
@@ -190,7 +190,7 @@
         },
 
         get headerFooterFont() {
-            return ( !settingsCache.headerFooterFont || settingsCache.headerFooterFont === "%20") ? "" : settingsCache.headerFooterFont;
+            return (!settingsCache.headerFooterFont || settingsCache.headerFooterFont === "%20") ? "" : settingsCache.headerFooterFont;
         },
 
         get locale() {
@@ -488,6 +488,96 @@
         return MeadCo.ScriptX.Print.printHtml(contentType, content, htmlPrintSettings, fnDone, fnCallback, data);
     }
 
+    // Save the default and for job printer names (i.e. current printer) to be used during preview
+    // A single iFrame exists for all preview content (as its not known when the preview window is closed so the 
+    // iframe could be disposed of) so a function closure can't be enlisted to help.
+    //
+    // What need to happen is once the preview has been generated then the system default printer is set as the 
+    // browser will use that as the selected printer - only an issue of the print job printer does not match system 
+    // default. For browsers to use this, they must be configured to do so. ScriptX.Services appsettings are available
+    // to do this.
+    var jobPrinterName;
+    var defaultPrinterName;
+
+    function previewHtml(contentType, content) {
+        defaultPrinterName = MeadCo.ScriptX.Print.deviceSettingsFor("systemdefault").printerName
+        jobPrinterName = MeadCo.ScriptX.Print.printerName;
+
+        MeadCo.log("Starting preview html ... printer: " + jobPrinterName);
+
+        // create screen covering foreground panel with dots animation .. fairly agnostic to any UI framework in use.
+        //
+        var pws = document.getElementById("scriptXServices-PreviewWaitScreen");
+        if (pws == null) {
+            pws = document.createElement("DIV");
+            pws.innerHTML = '&shy;<style>' +
+                '.loader { background-color: rgba(0, 0, 0, 0.25); overflow: hidden; width: 100%; height: 100%; position: fixed;' +
+                'top: 0; left: 0; display: flex;  align-items:center; align-content:center; justify-content: center; z-index: 10000; } ' +
+                '.loader__element { border-radius: 100%; border: 5px solid #555; margin: 10px} ' +
+                '.loader__element:nth-child(1) { animation: preloader .6s ease-in-out alternate infinite; } ' +
+                '.loader__element:nth-child(2) { animation: preloader .6s ease-in-out alternate .2s infinite; } ' +
+                '.loader__element:nth-child(3) { animation: preloader .6s ease-in-out alternate .4s infinite; } ' +
+                '@keyframes preloader { 100% { transform: scale(2); } }' +
+                '</style>';
+            document.body.appendChild(pws.childNodes[1]);
+
+            pws = document.createElement("DIV");
+            pws.setAttribute("id", "scriptXServices-PreviewWaitScreen");
+            pws.className = "loader";
+
+            for (var i = 0; i < 3; i++) {
+                var dot = document.createElement("SPAN");
+                dot.className = "loader__element";
+                pws.appendChild(dot);
+            }
+            document.body.appendChild(pws);
+        }
+        else
+            pws.style.display = "flex";
+
+        MeadCo.ScriptX.Print.requestHtmlPreview(contentType, content, settingsCache, function (errorIfNotNull) {
+            MeadCo.log("Preview procesing completed: ", errorIfNotNull);
+            pws.style.display = "none";
+        },
+            function (sDownloadUrl, jobId) {
+                var previewUrl = MeadCo.makeServiceEndPoint(MeadCo.ScriptX.Print.serviceUrl, "v1/Preview/" + jobId + "/" + encodeURIComponent(document.URL));
+                MeadCo.log("Preview is available: " + previewUrl + ", ... printer: " + jobPrinterName);
+                var ifrm = document.getElementById("scriptXServices-PreviewFrame");
+                if (ifrm == null) {
+                    ifrm = document.createElement("IFRAME");
+                    ifrm.setAttribute("id", "scriptXServices-PreviewFrame");
+                    ifrm.style.width = 0;
+                    ifrm.style.height = 0;
+                    ifrm.style.display = "none";
+                    ifrm.style.visibility = "hidden";
+
+                    document.body.appendChild(ifrm);
+                    window.addEventListener("message", function (event) {
+                        MeadCo.log("message from: " + event + ", ... printer: " + jobPrinterName);
+                        if (event.data === "preview-wired") {
+                            MeadCo.log("preview is wired ... printer: " + jobPrinterName);
+                            MeadCo.ScriptX.Print.setSystemDefaultPrinterAsync(jobPrinterName, function () {
+                                MeadCo.log("system default printer set, request print preview");
+                                ifrm.contentWindow.postMessage("preview", MeadCo.ScriptX.Print.serviceUrl)
+                                window.setTimeout(function () {
+                                    MeadCo.ScriptX.Print.setSystemDefaultPrinterAsync(defaultPrinterName, function () { },
+                                        function (errorMsg) {
+                                            MeadCo.error("Preview failed to restore current printer after preview: " + errorMsg);
+                                            MeadCo.ScriptX.Print.reportError(errorMsg);
+                                        });
+                                }, 500);
+                            }, function (errorMsg) {
+                                MeadCo.error("Preview failed to set current printer for preview: " + errorMsg);
+                                MeadCo.ScriptX.Print.reportError(errorMsg);
+                            })
+
+                        }
+                    });
+                }
+                ifrm.setAttribute("src", previewUrl);
+            });
+    }
+
     MeadCo.log("MeadCo.ScriptX.Print.HTML " + moduleversion + " loaded.");
 
     if (!this.jQuery) {
@@ -585,6 +675,27 @@
          */
         printFrame: function (sFrame, fnCallOnDone, fnCallback, data) {
             return printHtmlAtServer(MeadCo.ScriptX.Print.ContentType.INNERHTML, frameContent(sFrame), document.title, fnCallOnDone, fnCallback, data);
+        },
+
+        /**
+         * Display a preview of the document as it will be printed.
+         * 
+         * @memberof MeadCoScriptXPrintHTML
+         * @function previewDocument
+         */
+        previewDocument: function () {
+            previewHtml(MeadCo.ScriptX.Print.ContentType.INNERHTML, documentContent());
+        },
+
+        /**
+         * Display a preview of the frame content document it will be printed.
+         *
+         * @memberof MeadCoScriptXPrintHTML
+         * @function previewFrame
+         * @param {string} sFrame the name of the iframe whose content is to be printed.
+        */
+        previewFrame: function (sFrame) {
+            previewHtml(MeadCo.ScriptX.Print.ContentType.INNERHTML, frameContent(sFrame));
         },
 
         /**
