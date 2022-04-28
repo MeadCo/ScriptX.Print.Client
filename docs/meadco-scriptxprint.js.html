@@ -161,7 +161,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.10.1.6";
+    var version = "1.11.0.20";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
     var directApiLocation = "v1/printDirect";
@@ -169,6 +169,10 @@
 
     // default printer 
     var printerName = "";
+
+    // using this printername causes ScriptX.Services to select 
+    // a printer that prints to a PDF file.
+    var magicPrintPreviewPrinter = "ScriptX.Services//PrintPreview.1"
 
     /**
      * Enum to describe the units used on measurements. Please be aware that (sadly) these enum values do *not* match  
@@ -287,14 +291,14 @@
         verifying: false,
 
         get url() {
- 
+
             if (this.serviceUrl === "" &amp;&amp; this.pendingUrl !== "") {
                 MeadCo.warn("[GET] servicesServer.url is not ready, performing synchronous search. Recommend code re-org to resolve the server earlier and asynchronously.")
                 var that = this;
                 this.verifyUrl(this.pendingUrl, false, function () {
                     return that.serviceUrl;
-                },function () {
-                        return "";
+                }, function () {
+                    return "";
                 });
             }
 
@@ -376,7 +380,7 @@
                         })
                         .fail(function (jqXhr, textStatus, errorThrown) {
                             that.verifying = false;
-                             MeadCo.warn(MeadCo.parseAjaxError("Failed to connect with orchestrator: ", jqXhr, textStatus, errorThrown));
+                            MeadCo.warn(MeadCo.parseAjaxError("Failed to connect with orchestrator: ", jqXhr, textStatus, errorThrown));
                             MeadCo.log("Will try unorchestrated url");
                             that.orchestratorPort = 0;
                             that.verifyUrl(thatValue, bAsync, resolve, reject);
@@ -603,7 +607,7 @@
     };
 
     /**
-     * Enum for type of content being posted to printHtml API
+     * Enum for required behaviour when an error occurs. 
      *
      * @memberof MeadCo.ScriptX.Print    
      * @typedef {number} ErrorAction
@@ -784,7 +788,8 @@
     //
     // Create a closure on all the data for a print job which can be used with timeout.
     //
-    function funcPrintHtmlAtServer(contentType, content, htmlPrintSettings, fnDone, fnProgress, data) {
+    var nextJobFileName = "";
+    function funcPrintHtmlAtServer(contentType, content, htmlPrintSettings, trackingData, fnDone, fnProgress, fnOnQueuedFileAvailable) {
         MeadCo.log("started MeadCo.ScriptX.Print.print.printHtmlAtServer() Type: " + contentType);
         if (contentType === enumContentType.URL) {
             MeadCo.log(".. request print url: " + content);
@@ -795,7 +800,13 @@
         if (printerName === "") {
             devInfo = {};
         } else {
-            devInfo = JSON.parse(JSON.stringify(deviceSettings[printerName]));
+            if (printerName === magicPrintPreviewPrinter) {
+                devInfo = JSON.parse(JSON.stringify({
+                    printerName: printerName
+                }));
+            }
+            else
+                devInfo = JSON.parse(JSON.stringify(deviceSettings[printerName]));
         }
 
         var requestData = {
@@ -805,7 +816,7 @@
             Device: devInfo,
             ProtectedContentAccess: AccessControl,
             OnProgress: fnProgress,
-            UserData: data
+            UserData: trackingData
         };
 
         var fakeJob = {
@@ -815,7 +826,12 @@
         };
         queueJob(fakeJob); // essentially a lock on the queue to stop it looking empty until this job is processed
 
+        var requiredOutputName = nextJobFileName;
+        nextJobFileName = "";
+
         var serverApi = MeadCo.makeApiEndPoint(servicesServer.url, htmlApiLocation);
+        var fnOnFileAvailable = fnOnQueuedFileAvailable;
+
         return function () {
             removeJob(fakeJob.jobIdentifier);
             return printAtServer(serverApi, requestData,
@@ -830,15 +846,20 @@
                     },
 
                     queuedToFile: function (data) {
-                        MeadCo.log("default handler on queued to file response");
+                        MeadCo.log("print is being queued to a file");
                         progress(requestData, enumPrintStatus.QUEUED);
                         monitorJob(serverApi, requestData, data.jobIdentifier,
                             -1,
                             function (data) {
                                 if (data !== null) {
-                                    MeadCo.log("Will download printed file");
+                                    MeadCo.log("download printed file is available");
                                     progress(requestData, enumPrintStatus.COMPLETED);
-                                    window.open(serverApi + "/download/" + data.jobIdentifier, "_self");
+
+                                    var api = serverApi + "/download/" + data.jobIdentifier;
+                                    if (requiredOutputName.length > 0) {
+                                        api += "/" + requiredOutputName;
+                                    }
+                                    fnOnFileAvailable(api, data.jobIdentifier);
                                 }
 
                                 if (typeof fnDone === "function") {
@@ -889,7 +910,12 @@
 
     /**
      * Post a request to the server api/v1/print to print some html and monitor the print job 
-     * to completion. If the server prints to file then the file is returned as a download
+     * to completion. If the server prints to file then the file is returned as a download.
+     * 
+     * There is no guarantee of the order of outgoing calls, no guarantee they will ber processed in 
+     * order at the server if they go from the client very quickly. ScriptX.Addon printHtml() was 
+     * deterministic in its order - jobs were printed in the order of the calls. In order to 
+     * achieve this without a push pull queue rapid calls are spaced a part via settimeout()
      * 
      * @function printHtmlAtServer
      * @memberof MeadCo.ScriptX.Print
@@ -899,7 +925,7 @@
      * @param {object} htmlPrintSettings the settings to use - page and html such as headers and footers
      * @param {function({string})} fnDone function to call when printing complete (and output returned), arg is null on no error, else error message
      * @param {function(status,sInformation,data)} fnProgress function to call when job status is updated
-     * @param {any} data object to give pass to fnProgress
+     * @param {any} trackingData object to give pass to fnProgress
      * @return {boolean} - true if a print was started (otherwise an error will be thrown)
      * @private
      */
@@ -907,7 +933,7 @@
     var previousPrintCallWasAt = 0;
     var timeoutSpacingMSecs = 750;
     var jobGapResetTimeout = 10000;
-    function printHtmlAtServer(contentType, content, htmlPrintSettings, fnDone, fnProgress, data) {
+    function printHtmlAtServer(contentType, content, htmlPrintSettings, fnDone, fnProgress, trackingData) {
 
         if (!content || (typeof content === "string" &amp;&amp; content.length === 0)) {
             MeadCo.ScriptX.Print.reportError("Request to print no content - access denied?");
@@ -923,7 +949,9 @@
             timeoutToJobStart = 0;
         }
         previousPrintCallWasAt = t;
-        setTimeout(funcPrintHtmlAtServer(contentType, content, htmlPrintSettings, fnDone, fnProgress, data), timeoutToJobStart);
+        setTimeout(funcPrintHtmlAtServer(contentType, content, htmlPrintSettings, trackingData, fnDone, fnProgress, function (sApi) {
+            window.open(sApi, "_self");
+        }), timeoutToJobStart);
         timeoutToJobStart += timeoutSpacingMSecs;
         return true;
     }
@@ -966,6 +994,9 @@
         };
         queueJob(fakeJob); // essentially a lock on the queue to stop it looking empty until this job is processed
 
+        var requiredOutputName = nextJobFileName;
+        nextJobFileName = "";
+
         return function () {
             removeJob(fakeJob.jobIdentifier);
             return printAtServer(serverApi, requestData,
@@ -988,7 +1019,11 @@
                                 if (data !== null) {
                                     MeadCo.log("Will download printed file");
                                     progress(requestData, enumPrintStatus.COMPLETED);
-                                    window.open(serverApi + "/download/" + data.jobIdentifier, "_self");
+                                    var api = serverApi + "/download/" + data.jobIdentifier;
+                                    if (requiredOutputName.length > 0) {
+                                        api += "/" + requiredOutputName;
+                                    }
+                                    window.open(api, "_self");
                                 }
 
                                 if (typeof fnDone === "function") {
@@ -1722,6 +1757,19 @@
             }
         },
 
+        setSystemDefaultPrinterAsync: function (sName, resolve, reject) {
+            if (typeof deviceSettings["systemdefault"] !== "undefined" &amp;&amp; deviceSettings["systemdefault"] == sName) {
+                MeadCo.log("setSystemDefaultPrinterAsync() does NOT need to do anything");
+                resolve();
+                return;
+            }
+
+            sName = "system::" + sName;
+            sName = sName.replace(/\\/g, "||");
+            MeadCo.log("Request systemDefaultPrinterAsync: " + sName);
+            callService(htmlApiLocation + "/CurrentPrinter/" + encodeURIComponent(sName), "PUT", null, true, true, resolve, reject);
+        },
+
         /**
          * Get the version of this module as a string major.minor.hotfix.build
          * @property {string} version
@@ -1729,6 +1777,16 @@
          */
         get version() {
             return version;
+        },
+
+        /**
+         * Get the full url of the ScriptX.Services server connected to 
+         * 
+         * @property {string} serviceUrl
+         * @memberof MeadCo.ScriptX.Print         
+         */
+        get serviceUrl() {
+            return servicesServer.url;
         },
 
         /**
@@ -1997,6 +2055,27 @@
         printHtml: printHtmlAtServer,
 
         /**
+         * Post a request to the server to generate a preview. When ready the url from which the preview can be downloaded
+         * is passed to the fnReady function.
+         * 
+         * @function requestHtmlPreview
+         * @memberof MeadCo.ScriptX.Print
+         * 
+         * @param {ContentType} contentType enum type of content given (html snippet, url)
+         * @param {string} content the content - a url, html snippet or complete html
+         * @param {object} htmlPrintSettings the html settings to use such as headers and footers, device settings (printer to use, copies etc) are taken from this static
+         * @param {function({string})} fnDone function to call when processing is complete arg is null on no error, else error message.
+         * @param {function({string})} fnReady function to call when the preview is available to download
+         */
+        requestHtmlPreview: function (contentType, content, htmlPrintSettings, fnDone, fnReady) {
+            var userPrinterName = printerName;
+            printerName = magicPrintPreviewPrinter;
+
+            funcPrintHtmlAtServer(contentType, content, htmlPrintSettings, {}, fnDone, function () { }, fnReady)();
+            printerName = userPrinterName;
+        },
+
+        /**
          * Post a request to the server to print some html and monitor the print job 
          * to completion. If the server prints to file then the file is opened for the user (in a new window)
          * 
@@ -2230,6 +2309,19 @@
             jobGapResetTimeout = msec;
         },
 
+        /**
+         * Get/set the name to use on the next job
+         * 
+         * @memberof MeadCo.ScriptX.Print
+         * @property {string} jobFileName
+         */
+        get jobFileName() {
+            return nextJobFileName;
+        },
+
+        set jobFileName(sname) {
+            nextJobFileName = sname;
+        },
 
         requestService: function (sApi, method, oApiData, bLicensed, bAsync, resolve, reject) {
             return callService(sApi, method, oApiData, bLicensed, bAsync, resolve, reject);
