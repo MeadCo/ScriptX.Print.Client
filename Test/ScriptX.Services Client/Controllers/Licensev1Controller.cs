@@ -87,7 +87,8 @@ namespace ScriptX.Services_Client.Controllers
 
             switch (license.Url.ToUpper())
             {
-                case "BAD-WAREHOUSE":
+                case "HTTP://LOCALHOST:64996/TESTS/BAD-WAREHOUSE":
+                case "HTTP://LOCALHOST:5000/TESTS/BAD-WAREHOUSE":
                     //throw LicenseException.BadLicense(new Exception("Unknown error from warehouse"));
                     return NotFound("Unknown warehouse");
               

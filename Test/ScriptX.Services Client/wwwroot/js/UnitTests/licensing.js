@@ -5,7 +5,7 @@ QUnit.test("Namespace basics", function (assert) {
     assert.ok(MeadCo.ScriptX.Print.Licensing, "MeadCo.ScriptX.Print.Licensing namespace exists");
     var api = MeadCo.ScriptX.Print.Licensing;
 
-    assert.equal(api.version, "1.11.0.0", "Correct version");
+    assert.equal(api.version, "1.11.1.2", "Correct version");
 
 });
 
@@ -16,13 +16,16 @@ QUnit.test("Apply license", function (assert) {
     var done = assert.async(5);
 
     api.connect(serverUrl);
+    var v = MeadCo.ScriptX.Print.serviceVersion();
+    console.log("Service version: ", v);
+
     api.applyAsync(badLicenseGuid, 0, "warehouse",
         function (license) {
             assert.notOk(true, "Should not succed with bad license GUID");
             done();
         },
         function (errorTxt) {
-            assert.equal(errorTxt, "MeadCo.ScriptX.Print.Licensing.applyLicense: Bad Request", "Bad license GUID fails with correct response");
+            assert.equal(errorTxt,"Bad Request", "Bad license GUID fails with correct response");
             done();
         });
 
@@ -54,7 +57,7 @@ QUnit.test("Apply license", function (assert) {
             done();
         },
         function (errorTxt) {
-            assert.equal(errorTxt, "MeadCo.ScriptX.Print.Licensing.applyLicense: \"Unknown warehouse\"", "Bad path fails with correct response");
+            assert.equal(errorTxt, "\"Unknown warehouse\"", "Bad path fails with correct response");
             done();
         });
 
