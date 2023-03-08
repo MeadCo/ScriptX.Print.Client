@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.11.1.8";
+    var version = "1.12.0.4";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
     var directApiLocation = "v1/printDirect";
@@ -34,7 +34,7 @@
 
     /**
      * Enum to describe the units used on measurements. Please be aware that (sadly) these enum values do *not* match  
-     * the values by the MeadCo ScriptX COM Servers. Please use MeadCo.ScriptX.MeasurementUnits (declared in MeadCoScriptJS) form compatibility
+     * the values by the MeadCo ScriptX COM Servers. Please use MeadCo.ScriptX.MeasurementUnits (declared in MeadCoScriptJS) for compatibility
      *
      * @memberof MeadCoScriptXPrint
      * @typedef {number} MeasurementUnits
@@ -145,6 +145,7 @@
         pendingUrl: "",
         failedUrl: "",
         orchestratorPort: 0,
+        orchestratorKey: "",
         portsToTry: 10,
         verifying: false,
 
@@ -206,7 +207,19 @@
                 if (this.orchestratorPort > 0) {
                     MeadCo.log("Using request to Orchestrator on port: " + this.orchestratorPort);
                     that.verifying = true;
-                    module.jQuery.ajax("http://127.0.0.1:" + this.orchestratorPort + "/api/v1",
+
+                    // by definition Orchestrator is local.
+                    var apiEndPoint;
+                    if (typeof this.orchestratorKey === "string" && this.orchestratorKey.length > 0) {
+                        apiEndPoint = "/api/v2?key=" + this.orchestratorKey;
+                    }
+                    else {
+                        apiEndPoint = "/api/v1";
+                    }
+
+                    MeadCo.log("servicesServer::querying orchestrator: " + "http://127.0.0.1:" + this.orchestratorPort + apiEndPoint);
+
+                    module.jQuery.ajax("http://127.0.0.1:" + this.orchestratorPort + apiEndPoint,
                         {
                             method: "GET",
                             dataType: "json",
@@ -224,7 +237,7 @@
                                 that.serviceUrl = urlFound;
                                 that.pendingUrl = "";
                                 that.verifying = false;
-                                resolve(urlFound);
+                                resolve(urlFound, true);
                             }, function (errorThrown) {
                                 that.serviceUrl = "";
                                 that.pendingUrl = "";
@@ -250,7 +263,7 @@
                         that.serviceUrl = urlFound;
                         that.pendingUrl = "";
                         that.verifying = false;
-                        resolve(urlFound);
+                        resolve(urlFound, false);
                     }, function (errorThrown) {
                         that.serviceUrl = "";
                         that.pendingUrl = "";
@@ -264,9 +277,12 @@
                 }
             }
             else {
-                resolve(this.serviceUrl);
+                if (this.IsFailedConnection(value)) {
+                    reject("ScriptX.Services connection to: " + value + " has already failed and will not be re-tried.")
+                }
+                else
+                    resolve(this.serviceUrl, this.orchestratorPort > 0);
             }
-
         },
 
         // test
@@ -295,18 +311,26 @@
                             cache: false,
                             async: bAsync
                         }).done(function (data) {
-                            resolve(urlHelper.protocol + "//" + urlHelper.host + urlHelper.pathname);
+                            var resolvedUrl = urlHelper.protocol + "//" + urlHelper.host + urlHelper.pathname;
+                            MeadCo.log("Test server succeed, resolve(" + resolvedUrl + ")")
+                            resolve(resolvedUrl);
                         })
                         .fail(function (jqXhr, textStatus, errorThrown) {
                             // only do hunting with 4WPC and that must be on 127.0.0.1 or localhost
+                            MeadCo.log("Test server failed: [" + errorThrown + "], " + nHuntAllowed + ", on: " + urlHelper.hostname);
                             if (nHuntAllowed > 0 && (urlHelper.hostname === "localhost" || urlHelper.hostname == "127.0.0.1")) {
                                 urlHelper.port++;
                                 module.setTimeout(that.test(urlHelper.protocol + "//" + urlHelper.host + urlHelper.pathname, --nHuntAllowed, bAsync, resolve, reject), 1);
                             }
                             else {
                                 errorThrown = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.servicesServer.test:", jqXhr, textStatus, errorThrown);
-                                if (typeof reject === "function")
+                                if (typeof reject === "function") {
+                                    MeadCo.log("rejecting with: " + errorThrown);
                                     reject(errorThrown);
+                                }
+                                else {
+                                    MeadCo.warn("failed with no reject function");
+                                }
                             }
                         });
                 }
@@ -387,7 +411,7 @@
             }
         },
 
-        // determine if the server is changing - domain is the same, port may be different, we still think of it as the same.
+        // determine if the server is changing - domain or port has changed.
         IsChangingServer: function (aServerUrl) {
             if (this.serviceUrl !== "") {
 
@@ -395,7 +419,7 @@
                     var currentUrl = new URL(this.serviceUrl);
                     var newUrl = new URL(aServerUrl);
 
-                    return currentUrl.hostname != newUrl.hostname;
+                    return currentUrl.hostname != newUrl.hostname || currentUrl.port != newUrl.port;
                 } catch (e) {
                     MeadCo.error("Failed to construct URL(): " + e.message + ", from: " + this.serviceUrl + ", or: " + aServerUrl);
                     MeadCo.error("Many errors will ensue");
@@ -1453,7 +1477,9 @@
                             ", sync: " +
                             data.meadcoSyncinit +
                             ", orchestrator: " +
-                            data.meadcoOrchestrator);
+                            data.meadcoOrchestrator +
+                            ", orchestratorKey: " +
+                            data.meadcoOrchestratorKey);
                         var syncInit = ("" + data.meadcoSyncinit)
                             .toLowerCase() !==
                             "false"; // defaults to true if not specified
@@ -1464,6 +1490,7 @@
                         var server = data.meadcoServer;
 
                         servicesServer.orchestratorPort = data.meadcoOrchestrator;
+                        servicesServer.orchestratorKey = data.meadcoOrchestratorKey;
 
                         if (!syncInit) {
                             MeadCo.log("Async connectlite...");
@@ -1567,6 +1594,18 @@
         },
 
         /**
+         * Get/set the key to use with Orchestrator Service for ScriptX.Services for Windows PC to recover the port registered for use with the same key.
+         * Typically, this will be the user name but can be any value.
+         * */
+        get orchestratorKey() {
+            return servicesServer.orchestratorKey;
+        },
+
+        set orchestratorKey(sKey) {
+            servicesServer.orchestratorKey = sKey;
+        },
+
+        /**
          * Get/set the cookie to be used to authorise access to protected content
          * 
          * @memberof MeadCoScriptXPrint
@@ -1652,7 +1691,7 @@
          * @memberof MeadCoScriptXPrint
          * @returns {VersionObject} the version
          */
-        serviceVersion: function () {           
+        serviceVersion: function () {
             return this.serviceDescription().serviceVersion;
         },
 

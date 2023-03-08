@@ -14,7 +14,7 @@
 
     var ui = MeadCo.createNS("MeadCo.ScriptX.Print.UI");
 
-    ui.version = "1.11.1.0";
+    ui.version = "1.12.0.0";
 
     // MeadCo.ScriptX.Print.UI.PageSetup()
     ui.PageSetup = function (fnCallBack) {
@@ -166,6 +166,7 @@
                     break;
 
                 case '4':
+                case '5':
                     dlg = '<div class="modal fade" tabindex="-1" role="dialog" id="dlg-printoptions"><div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role = "document">' +
                         '<div class="modal-content"><div class="modal-header"><h5 class="modal-title">Page setup</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
                         '<span aria-hidden="true">&times;</span></button></div><div class="modal-body"><div class="container-fluid"><fieldset><legend>Paper</legend><div class="form-group row">' +

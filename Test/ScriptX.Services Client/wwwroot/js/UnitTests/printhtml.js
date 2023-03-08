@@ -3,7 +3,7 @@
     assert.ok(MeadCo.ScriptX.Print.HTML, "MeadCo.ScriptX.Print.HTML namespace exists");
     var api = MeadCo.ScriptX.Print.HTML;
 
-    assert.equal(api.version, "1.11.1.0", "Correct version");
+    assert.equal(api.version, "1.12.0.0", "Correct version");
 
     // Don't change this or there will be compatibility issues with the server 
     assert.equal(MeadCo.ScriptX.Print.MeasurementUnits.MM, 2, "MeasurementUnits enum is OK");
