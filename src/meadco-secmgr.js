@@ -62,7 +62,7 @@
 })('secmgr', function () {
 
     // protected API
-    var moduleversion = "1.11.0.0";
+    var moduleversion = "1.12.0.0";
     var emulatedVersion = "8.2.0.0";
     var module = this;
     var logApi = MeadCo;
@@ -103,11 +103,11 @@
     };
 
     log("'secmgr' loaded.");
-    if (typeof licenseApi.GetLicenseAsync !== "function" ) {
+    if (typeof licenseApi.GetLicenseAsync !== "function") {
         MeadCo.error("MeadCo.ScriptX.Print.Licensing not available");
-    } 
+    }
 
-    if (typeof printApi.useAttributes !== "function" ) {
+    if (typeof printApi.useAttributes !== "function") {
         MeadCo.warn("Attribute based licensing not available as MeadCo.ScriptX.Print is not available");
     } else {
         printApi.useAttributes();
@@ -140,6 +140,17 @@
         },
 
         /**
+         * Get the text of the last error.
+         * 
+         * @property {string} errorMessage
+         * @memberof MeadCoScriptXPrintLicensing
+         * 
+         */
+        get errorMessage() {
+            return licenseApi.errorMessage;
+        },
+
+        /**
          * Get the details of the license using Asynchronous calls to the server.
          * See meadco-scriptxprintlicensing.js for more detail
          * @memberof secmgr
@@ -159,7 +170,7 @@
         },
 
         PolyfillInitAsync: function (resolve, reject) {
-            licenseApi.PolyfillInitAsync(resolve,reject);
+            licenseApi.PolyfillInitAsync(resolve, reject);
         }
     };
 });

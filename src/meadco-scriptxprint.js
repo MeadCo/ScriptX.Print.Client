@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.11.0.20";
+    var version = "1.12.0.4";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
     var directApiLocation = "v1/printDirect";
@@ -34,7 +34,7 @@
 
     /**
      * Enum to describe the units used on measurements. Please be aware that (sadly) these enum values do *not* match  
-     * the values by the MeadCo ScriptX COM Servers. Please use MeadCo.ScriptX.MeasurementUnits (declared in MeadCoScriptJS) form compatibility
+     * the values by the MeadCo ScriptX COM Servers. Please use MeadCo.ScriptX.MeasurementUnits (declared in MeadCoScriptJS) for compatibility
      *
      * @memberof MeadCoScriptXPrint
      * @typedef {number} MeasurementUnits
@@ -145,6 +145,7 @@
         pendingUrl: "",
         failedUrl: "",
         orchestratorPort: 0,
+        orchestratorKey: "",
         portsToTry: 10,
         verifying: false,
 
@@ -184,7 +185,7 @@
         verifyUrl: function (value, bAsync, resolve, reject) {
 
             if (this.verifying && bAsync) {
-                console.warn("Verify called and verify in progress ....");
+                MeadCo.warn("Verify called and verify in progress ....");
                 var that = this;
                 var thatValue = value;
                 window.setTimeout(function () { that.verifyUrl(thatValue, bAsync, resolve, reject); }, 1000);
@@ -206,7 +207,19 @@
                 if (this.orchestratorPort > 0) {
                     MeadCo.log("Using request to Orchestrator on port: " + this.orchestratorPort);
                     that.verifying = true;
-                    module.jQuery.ajax("http://127.0.0.1:" + this.orchestratorPort + "/api/v1",
+
+                    // by definition Orchestrator is local.
+                    var apiEndPoint;
+                    if (typeof this.orchestratorKey === "string" && this.orchestratorKey.length > 0) {
+                        apiEndPoint = "/api/v2?key=" + this.orchestratorKey;
+                    }
+                    else {
+                        apiEndPoint = "/api/v1";
+                    }
+
+                    MeadCo.log("servicesServer::querying orchestrator: " + "http://127.0.0.1:" + this.orchestratorPort + apiEndPoint);
+
+                    module.jQuery.ajax("http://127.0.0.1:" + this.orchestratorPort + apiEndPoint,
                         {
                             method: "GET",
                             dataType: "json",
@@ -224,7 +237,7 @@
                                 that.serviceUrl = urlFound;
                                 that.pendingUrl = "";
                                 that.verifying = false;
-                                resolve(urlFound);
+                                resolve(urlFound, true);
                             }, function (errorThrown) {
                                 that.serviceUrl = "";
                                 that.pendingUrl = "";
@@ -250,22 +263,26 @@
                         that.serviceUrl = urlFound;
                         that.pendingUrl = "";
                         that.verifying = false;
-                        resolve(urlFound);
+                        resolve(urlFound, false);
                     }, function (errorThrown) {
                         that.serviceUrl = "";
                         that.pendingUrl = "";
                         that.verifying = false;
                         that.failedUrl = thatValue;
                         if (typeof reject === "function") {
-                            reject("ScriptX.Services could not be found at " + thatValue);
+                            var urlHelper = new URL(thatValue);
+                            reject("ScriptX.Services could not be found at " + urlHelper.protocol + "//" + urlHelper.host + ". Is it installed and running?");
                         }
                     });
                 }
             }
             else {
-                resolve(this.serviceUrl);
+                if (this.IsFailedConnection(value)) {
+                    reject("ScriptX.Services connection to: " + value + " has already failed and will not be re-tried.")
+                }
+                else
+                    resolve(this.serviceUrl, this.orchestratorPort > 0);
             }
-
         },
 
         // test
@@ -294,18 +311,26 @@
                             cache: false,
                             async: bAsync
                         }).done(function (data) {
-                            resolve(urlHelper.protocol + "//" + urlHelper.host + urlHelper.pathname);
+                            var resolvedUrl = urlHelper.protocol + "//" + urlHelper.host + urlHelper.pathname;
+                            MeadCo.log("Test server succeed, resolve(" + resolvedUrl + ")")
+                            resolve(resolvedUrl);
                         })
                         .fail(function (jqXhr, textStatus, errorThrown) {
                             // only do hunting with 4WPC and that must be on 127.0.0.1 or localhost
+                            MeadCo.log("Test server failed: [" + errorThrown + "], " + nHuntAllowed + ", on: " + urlHelper.hostname);
                             if (nHuntAllowed > 0 && (urlHelper.hostname === "localhost" || urlHelper.hostname == "127.0.0.1")) {
                                 urlHelper.port++;
                                 module.setTimeout(that.test(urlHelper.protocol + "//" + urlHelper.host + urlHelper.pathname, --nHuntAllowed, bAsync, resolve, reject), 1);
                             }
                             else {
                                 errorThrown = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.servicesServer.test:", jqXhr, textStatus, errorThrown);
-                                if (typeof reject === "function")
+                                if (typeof reject === "function") {
+                                    MeadCo.log("rejecting with: " + errorThrown);
                                     reject(errorThrown);
+                                }
+                                else {
+                                    MeadCo.warn("failed with no reject function");
+                                }
                             }
                         });
                 }
@@ -386,7 +411,7 @@
             }
         },
 
-        // determine if the server is changing - domain is the same, port may be different, we still think of it as the same.
+        // determine if the server is changing - domain or port has changed.
         IsChangingServer: function (aServerUrl) {
             if (this.serviceUrl !== "") {
 
@@ -394,10 +419,10 @@
                     var currentUrl = new URL(this.serviceUrl);
                     var newUrl = new URL(aServerUrl);
 
-                    return currentUrl.hostname != newUrl.hostname;
+                    return currentUrl.hostname != newUrl.hostname || currentUrl.port != newUrl.port;
                 } catch (e) {
-                    console.error("Failed to construct URL(): " + e.message + ", from: " + this.serviceUrl + ", or: " + aServerUrl);
-                    console.error("Many errors will ensue");
+                    MeadCo.error("Failed to construct URL(): " + e.message + ", from: " + this.serviceUrl + ", or: " + aServerUrl);
+                    MeadCo.error("Many errors will ensue");
                     return false; // will stop attempts to use something bad.
                 }
             }
@@ -413,13 +438,13 @@
                     var newUrl = new URL(aServerUrl);
 
                     if (failedUrl.hostname === newUrl.hostname) {
-                        console.warn("Attempt to use: " + aServerUrl + " is noted as a failed connection and will not be retried");
+                        MeadCo.warn("Attempt to use: " + aServerUrl + " is noted as a failed connection and will not be retried");
                         return true;
                     }
 
                     return false;
                 } catch (e) {
-                    console.error("Testing IsFailed unable to construct URL(): " + e.message + ", from: " + this.failedUrl + ", or: " + aServerUrl);
+                    MeadCo.error("Testing IsFailed unable to construct URL(): " + e.message + ", from: " + this.failedUrl + ", or: " + aServerUrl);
                     return true; // will stop attempts to use something bad.
                 }
             }
@@ -503,15 +528,15 @@
      * 
      * @typedef ServiceDescriptionObject
      * @memberof MeadCoScriptXPrint
-     * @property {ServiceClasses} ServiceClass the class of the service; cloud, onpremise, pc
-     * @property {string} CurrentAPIVersion the latest version implemented (eg 'v1' or 'v2' etc)
-     * @property {VersionObject} ServiceVersion implementation version of the service
-     * @property {VersionObject} ServerVersion The version of ScriptX Server used by the service
-     * @property {VersionObject} ServiceUpgrade The latest version of the service that is available and later than ServiceVersion/me 
-     * @property {Array.<string>} AvailablePrinters Array of the names of the available printers
-     * @property {boolean} PrintHTML Printing of HTML is supported
-     * @property {boolean} PrintPDF Printing of PDF documents is supported
-     * @property {boolean} PrintDIRECT Direct printing to a print device is supported
+     * @property {ServiceClasses} serviceClass the class of the service; cloud, onpremise, pc
+     * @property {string} currentAPIVersion the latest version implemented (eg 'v1' or 'v2' etc)
+     * @property {VersionObject} serviceVersion implementation version of the service
+     * @property {VersionObject} serverVersion The version of ScriptX Server used by the service
+     * @property {VersionObject} serviceUpgrade The latest version of the service that is available and later than ServiceVersion/me 
+     * @property {Array.<string>} availablePrinters Array of the names of the available printers
+     * @property {boolean} printHTML Printing of HTML is supported
+     * @property {boolean} printPDF Printing of PDF documents is supported
+     * @property {boolean} printDIRECT Direct printing to a print device is supported
      * */
     var ServiceDescriptionObject; // for Doc Generator
 
@@ -617,7 +642,7 @@
                 return;
             }
         }
-        console.warn("Unable to find job: " + data.jobIdentifier + " to update it");
+        MeadCo.warn("Unable to find job: " + data.jobIdentifier + " to update it");
     }
 
     function removeJob(id) {
@@ -633,7 +658,7 @@
                 return;
             }
         }
-        console.warn("Unable to find job: " + id + " to remove it");
+        MeadCo.warn("Unable to find job: " + id + " to remove it");
     }
 
     function progress(requestData, status, information) {
@@ -1332,7 +1357,7 @@
             },
             function (errTxt) {
                 if (oRequest.name === "systemdefault") {
-                    console.warn("request for systemdefault printer failed - please update to ScriptX.Services 2.11.1");
+                    MeadCo.warn("request for systemdefault printer failed - please update to ScriptX.Services 2.11.1");
                     oRequest.name = "default";
                     oRequest.async = false;
                     getDeviceSettings(oRequest);
@@ -1392,7 +1417,7 @@
             // meadco-license present => for Windows PC service
             jQuery("[data-meadco-subscription]").each(function () {
                 if (typeof printApi === "undefined" || typeof printHtml === "undefined") {
-                    console.warn("Unable to auto-connect subscription - print or printHtml API not present (yet?)");
+                    MeadCo.log("Not auto-connecting subscription as print or printHtml API not present. Should be present on next attempt.");
                 } else {
                     if (!bDoneAuto) {
                         var $this = jQuery(this);
@@ -1413,7 +1438,7 @@
                         }
 
                         if (typeof server === "undefined") {
-                            console.error("No server specified");
+                            MeadCo.error("No server specified");
                         } else {
                             // in case there will be a request for the subnscription info ..
                             if (typeof licenseApi !== "undefined")
@@ -1423,8 +1448,8 @@
                                 MeadCo.log("Async connectlite...");
                                 printApi.connectLite(server, data.meadcoSubscription);
                             } else {
-                                console
-                                    .warn("Synchronous connection is deprecated, please use data-meadco-syncinit='false'");
+                                MeadCo
+                                    .warn("Synchronous connection is deprecated, please use data-meadco-syncinit='false'. Note that this may require additional code changes. Please see: https://www.meadroid.com/Developers/KnowledgeBank/HowToGuides/ScriptXServices/ThenToNow/Stage6");
                                 printHtml.connect(server, data.meadcoSubscription);
                             }
                             bDoneAuto = true;
@@ -1436,7 +1461,7 @@
 
             jQuery("[data-meadco-license]").each(function () {
                 if (typeof printApi === "undefined" || typeof printHtml === "undefined" || typeof licenseApi === "undefined") {
-                    console.warn("Unable to auto-connect client license - print or printHtml or license API not present (yet?)");
+                    MeadCo.log("Not auto-connecting client license as print or printHtml or license API not present. Should be present on next attempt.");
                 } else {
                     if (!bDoneAuto) {
                         var $this = jQuery(this);
@@ -1452,7 +1477,9 @@
                             ", sync: " +
                             data.meadcoSyncinit +
                             ", orchestrator: " +
-                            data.meadcoOrchestrator);
+                            data.meadcoOrchestrator +
+                            ", orchestratorKey: " +
+                            data.meadcoOrchestratorKey);
                         var syncInit = ("" + data.meadcoSyncinit)
                             .toLowerCase() !==
                             "false"; // defaults to true if not specified
@@ -1463,6 +1490,7 @@
                         var server = data.meadcoServer;
 
                         servicesServer.orchestratorPort = data.meadcoOrchestrator;
+                        servicesServer.orchestratorKey = data.meadcoOrchestratorKey;
 
                         if (!syncInit) {
                             MeadCo.log("Async connectlite...");
@@ -1471,8 +1499,8 @@
                                 data.meadcoLicensePath);
                             printApi.connectLite(server, data.meadcoLicense);
                         } else {
-                            console
-                                .warn("Synchronous connection is deprecated, please use data-meadco-syncinit='false'");
+                            MeadCo
+                                .warn("Synchronous connection is deprecated, please use data-meadco-syncinit='false'. Note that this may require additional code changes. Please see: https://www.meadroid.com/Developers/KnowledgeBank/HowToGuides/ScriptXServices/ThenToNow/Stage6");
                             licenseApi.connect(server, data.meadcoLicense);
                             if (typeof data.meadcoLicensePath !== "undefined" &&
                                 typeof data
@@ -1569,6 +1597,18 @@
         },
 
         /**
+         * Get/set the key to use with Orchestrator Service for ScriptX.Services for Windows PC to recover the port registered for use with the same key.
+         * Typically, this will be the user name but can be any value.
+         * */
+        get orchestratorKey() {
+            return servicesServer.orchestratorKey;
+        },
+
+        set orchestratorKey(sKey) {
+            servicesServer.orchestratorKey = sKey;
+        },
+
+        /**
          * Get/set the cookie to be used to authorise access to protected content
          * 
          * @memberof MeadCoScriptXPrint
@@ -1655,8 +1695,7 @@
          * @returns {VersionObject} the version
          */
         serviceVersion: function () {
-            var sd = this.cachedServiceDescription;
-            return sd.ServiceVersion;
+            return this.serviceDescription().serviceVersion;
         },
 
         /**

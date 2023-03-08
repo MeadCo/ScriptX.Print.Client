@@ -24,7 +24,7 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.Licensing', function () {
-    var moduleversion = "1.11.0.0";
+    var moduleversion = "1.12.0.0";
     var apiLocation = "v1/licensing";
 
     var licenseGuid = "";
@@ -108,7 +108,7 @@
                 }
             },
             function (errorText) {
-                lastError = "MeadCo.ScriptX.Licensing.getSubscriptionFromServer: " + errorText;
+                lastError = errorText;
                 if (typeof reject === "function") {
                     reject(lastError);
                     return;
@@ -132,6 +132,13 @@
             throw new Error(msg);
         }
 
+        if (path.toLowerCase() !== "warehouse") {
+            var url = new URL(path, window.location.href);
+            path = url.href;
+
+            MeadCo.log("path updated to: " + path);
+        }
+
         licenseGuid = slicenseGuid;
         var requestData = {
             Guid: slicenseGuid,
@@ -149,7 +156,7 @@
                 }
             },
             function (errorText) {
-                lastError = "MeadCo.ScriptX.Print.Licensing.applyLicense: " + errorText;
+                lastError = errorText;
                 if (typeof reject === "function") {
                     reject(lastError);
                     return;
@@ -279,6 +286,10 @@
          * 
          */
         get errorMessage() {
+            return lastError;
+        },
+
+        get detailOnError() {
             return lastError;
         },
 
