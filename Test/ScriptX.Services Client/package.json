@@ -6,7 +6,7 @@
     "bootstrap": ">=4.4.1",
     "jquery": ">=3.5.0",
     "popper.js": ">=1.16.1",
-    "qunit": "^2.9.0"
+    "qunit": "^2.19.4"
   },
   "devDependencies": {
     "gulp": "4.0.2",
