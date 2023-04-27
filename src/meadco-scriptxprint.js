@@ -19,11 +19,12 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.12.0.4";
+    var version = "1.14.0.2";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
     var directApiLocation = "v1/printDirect";
     var licenseApiLocation = "v1/licensing";
+    var printerApiLocation = "v1/printer";
 
     // default printer 
     var printerName = "";
@@ -108,7 +109,7 @@
      * 
      * @typedef AccessControl
      * @memberof MeadCoScriptXPrint
-     * @property {string} cookie The authorisation cookie in the form name=value
+     * @property {string} cookie The authorisation cookie in the form name=value|name2=value2
      * */
     var AccessControl = {
         cookie: ""
@@ -278,7 +279,12 @@
             }
             else {
                 if (this.IsFailedConnection(value)) {
-                    reject("ScriptX.Services connection to: " + value + " has already failed and will not be re-tried.")
+                    if (typeof reject === "function") {
+                        reject("ScriptX.Services connection to: " + value + " has already failed and will not be re-tried.")
+                    }
+                    else {
+                        MeadCo.warn("ScriptX.Services connection to: " + value + " has already failed and will not be re-tried.")
+                    }
                 }
                 else
                     resolve(this.serviceUrl, this.orchestratorPort > 0);
@@ -393,6 +399,9 @@
                                 errorThrown = MeadCo.parseAjaxError("MeadCo.ScriptX.Print:" + sApi + method, jqXhr, textStatus, errorThrown);
                                 if (typeof reject === "function")
                                     reject(errorThrown);
+                                else {
+                                    throw new Error(errorThrown);
+                                }
                             });
                     } else {
                         if (typeof reject === "function") {
@@ -1395,6 +1404,32 @@
         return {};
     }
 
+    function managePrinterConnection(sMethod, sShareName) {
+        console.warn("Synchronous calls to add/remove printer connections are not recommeneded as this will lock the browser UI. Consider using the asynchronous versions when working with in ScriptX.Services");
+        var sd = MeadCo.ScriptX.Print.serviceDescription();
+        if (sd.serviceClass == enumServiceClass.WINDOWSPC && sd.serviceVersion.major >= 2 && sd.serviceVersion.minor >= 19) {
+            callService(printerApiLocation + "/Connection/" + encodeURIComponent(sShareName), sMethod, null, true, false);
+        }
+        else {
+            MeadCo.error("ScriptX.Services for Windows PC 2.19 or later is required for add/remove PrinterConnection()");
+        }
+    }
+
+    function managePrinterConnectionAsync(sMethod, sShareName, onSuccess, onFail) {
+        MeadCo.ScriptX.Print.serviceDescriptionAsync(
+            function (sd) {
+                if (sd.serviceClass == enumServiceClass.WINDOWSPC && sd.serviceVersion.major >= 2 && sd.serviceVersion.minor >= 19) {
+                    callService(printerApiLocation + "/Connection/" + encodeURIComponent(sShareName), sMethod, null, true, true, onSuccess, onFail);
+                }
+                else {
+                    MeadCo.error("ScriptX.Services for Windows PC 2.19 or later is required for add/remove PrinterConnection()");
+                    onFail("add/remove PrinterConnection is not supported");
+                }
+            },
+            onFail
+        );
+    }
+
     // look for auto-processing attributes that define the server to connect to and the
     // license/subscription to be used. 
     //
@@ -1580,20 +1615,17 @@
          * on the local-loopback address.
          * 
          * This is only useful in uses cases of multiple users are simultaneously logged in to an instance of Windows.
-         * In these cases, the port number used by ScriptX.Services for Windows PC will be unique for each user.
+         * In these cases, the port number used by ScriptX.Services for Windows PC will be unqiue for each user.
          * 
          * The port number for the orchestrator is the same for each user as the orchestrator server is only active while the
          * user is active. 
-         * 
-         * @memberof MeadCoScriptXPrint
-         * @property {string|number} orchestrator - the port number used by orchestrator (typically 41190)
          */
         get orchestrator() {
             return servicesServer.orchestratorPort;
         },
 
         set orchestrator(nPort) {
-            servicesServer.orchestratorPort = nPort;
+            servicesServer.orchestratorPort = "" + nPort;
         },
 
         /**
@@ -1918,6 +1950,54 @@
          */
         get availablePrinterNames() {
             return availablePrinters;
+        },
+
+        /**
+         * Add a printer for the user. The printer driver must already be available. 
+         * 
+         * @function addPrinterConnection
+         * @memberof MeadCoScriptXPrint
+         * @param {any} sShareName - 
+         */
+        addPrinterConnection: function (sShareName) {
+            managePrinterConnection("PUT", sShareName);
+        },
+
+        /**
+         * Add a printer for the user. The printer driver must already be available. 
+         * 
+         * @function removePrinterConnection
+         * @memberof MeadCoScriptXPrint
+         * @param {any} sShareName - 
+         */
+        removePrinterConnection: function (sShareName) {
+            managePrinterConnection("DELETE", sShareName);
+        },
+
+        /**
+         * Add a printer for the user. The printer driver must already be available. 
+         * 
+         * @function addPrinterConnectionAsync
+         * @memberof MeadCoScriptXPrint
+         * @param {any} sShareName - 
+         * @param {any} onSuccess
+         * @param {any} onFail
+         */
+        addPrinterConnectionAsync: function (sShareName, onSuccess, onFail) {
+            managePrinterConnectionAsync("PUT", sShareName, onSuccess, onFail);
+        },
+
+        /**
+         * Add a printer for the user. The printer driver must already be available. 
+         * 
+         * @function removePrinterConnectionAsync
+         * @memberof MeadCoScriptXPrint
+         * @param {any} sShareName - 
+         * @param {any} onSuccess
+         * @param {any} onFail
+         */
+        removePrinterConnectionAsync: function (sShareName, onSuccess, onFail) {
+            managePrinterConnectionAsync("DELETE", sShareName, onSuccess, onFail);
         },
 
         /**

@@ -86,7 +86,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.12.0.0";
+    var moduleversion = "1.14.0.2";
     var emulatedVersion = "8.3.0.0";
     var servicesVersion = "";
     var printApi = MeadCo.ScriptX.Print;
@@ -1001,6 +1001,26 @@
 
         DefaultPrinter: function () {
             return printApi.deviceSettingsFor("systemdefault").printerName;
+        },
+
+        AddPrinterConnection: function (sShareName) {
+            printApi.addPrinterConnection(sShareName);
+        },
+
+        RemovePrinterConnection: function (sShareName) {
+            printApi.removePrinterConnection(sShareName);
+        },
+
+        AddPrinterConnectionAsync: function (sShareName, onSuccess) {
+            printApi.addPrinterConnectionAsync(sShareName, onSuccess, function (errTxt) {
+                printApi.reportError(errTxt);
+            });
+        },
+
+        RemovePrinterConnectionAsync: function (sShareName, onSuccess) {
+            printApi.removePrinterConnectionAsync(sShareName, onSuccess, function (errTxt) {
+                printApi.reportError(errTxt);
+            });
         },
 
         // duplicate to cope with COM objects were/are not case sensitive
