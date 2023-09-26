@@ -1,22 +1,31 @@
 ﻿MeadCo.logEnabled = true;
 
-QUnit.test("licenses", function (assert) {
+QUnit.test("Factory basics", function (assert) {
 
-    var api = MeadCo.ScriptX.Print.Licensing;
+    assert.ok(window.factory, "factory namespace exists");
+    var api = window.factory;
+    var expectedVersion = "1.14.1.0";
+    var emulatedVersion = "8.3.0.0";
+    var servicesVersion = "11.12.13.14";
 
-    var done = assert.async(1);
+    var a = new Object();
+    var b = new Object();
+    var c = new Object();
+    var d = new Object();
 
-    api.connect(serverUrl);
-    var v = MeadCo.ScriptX.Print.serviceVersion();
-    console.log("Service version: ", v);
+    api.GetComponentVersion("scriptx.factory.services", a, b, c, d);
+    var v = a[0] + "." + b[0] + "." + c[0] + "." + d[0];
 
-    api.applyAsync(licenseGuid, 0, "Bad-Warehouse",
-        function (license) {
-            assert.notOk(true, "Should not succed with bad warehouse");
-            done();
-        },
-        function (errorTxt) {
-            assert.equal(errorTxt, "\"Unknown warehouse\"", "Bad path fails with correct response");
-            done();
-        });
+    assert.equal(v, expectedVersion, "Correct library version");
+
+    api.GetComponentVersion("ScriptX.Factory", a, b, c, d);
+    v = a[0] + "." + b[0] + "." + c[0] + "." + d[0];
+
+    assert.equal(v, emulatedVersion, "Correct ScriptX emulation version via ScriptX.Factory");
+    assert.equal(api.ScriptXVersion, emulatedVersion, "Correct ScriptX emulation version via API");
+    assert.equal(api.ComponentVersionString("scriptx.factory.services"), expectedVersion, "Correct .services library version via ComponentVersionString");
+
+    MeadCo.ScriptX.Print.connectLite(serverUrl, " ");
+    assert.equal(api.ComponentVersionString("scriptx.services"), servicesVersion, "Correct .services server version via ComponentVersionString");
+
 });

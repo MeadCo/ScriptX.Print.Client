@@ -12,6 +12,7 @@ namespace ScriptX.Services_Client.Controllers
 {
     [Route("api")]
     [ApiController]
+    [Produces("application/json")]
     public class ServiceDescriptionController : ControllerBase
     {
         private ILogger _logger;
@@ -28,7 +29,7 @@ namespace ScriptX.Services_Client.Controllers
         // GET api/v1/licensing
         //
         [Route("")]
-        [HttpGet]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK)]
 
         public ActionResult<ServiceDescription> Get() => new ServiceDescription()
         {
