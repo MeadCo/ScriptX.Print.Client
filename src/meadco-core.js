@@ -54,7 +54,7 @@
 
     // protected API
     var module = this;
-    var version = "1.14.1.0"; // matches the highest version number of sub-classes.
+    var version = "1.14.1.2"; // matches the highest version number of sub-classes.
     var bLog = ((typeof (MeadCo) !== "undefined" && typeof (MeadCo.logEnable) !== "undefined")) ? MeadCo.logEnable : false;
 
     var log = function (str) {
@@ -264,7 +264,7 @@
             }
             else {
                 // given another api, chop and replace with requested api
-                serverUrl = serverUrl.substr(0, p) + "/api/" + apiLocation;
+                serverUrl = serverUrl.substring(0, p) + "/api/" + apiLocation;
             }
             return serverUrl;
         },
@@ -289,7 +289,7 @@
             }
             else {
                 // given another api, chop and replace with requested api
-                serverUrl = serverUrl.substr(0, p) + "/" + endPoint;
+                serverUrl = serverUrl.substring(0, p) + "/" + endPoint;
             }
             return serverUrl;
         },
