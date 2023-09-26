@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.14.0.2";
+    var version = "1.14.1.2";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
     var directApiLocation = "v1/printDirect";
@@ -252,10 +252,16 @@
                         })
                         .fail(function (jqXhr, textStatus, errorThrown) {
                             that.verifying = false;
-                            MeadCo.warn(MeadCo.parseAjaxError("Failed to connect with orchestrator: ", jqXhr, textStatus, errorThrown));
-                            MeadCo.log("Will try unorchestrated url");
-                            that.orchestratorPort = 0;
-                            that.verifyUrl(thatValue, bAsync, resolve, reject);
+                            that.serviceUrl = "";
+                            that.pendingUrl = "";
+                            that.failedUrl = thatValue;
+
+                            var msg = MeadCo.parseAjaxError("Failed to connect with Orchestrator: ", jqXhr, textStatus, errorThrown);
+                            MeadCo.warn(msg);
+
+                            if (typeof reject === "function") {
+                                reject(msg);
+                            }
                         });
                 }
                 else {

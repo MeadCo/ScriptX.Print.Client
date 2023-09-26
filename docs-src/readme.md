@@ -1,4 +1,4 @@
-### Current Version : 1.14.0
+### Current Version : 1.14.1
 
 The MeadCo ScriptX.Services project brings control of printing to browser based content in all browsers on all devices with
 out needing a binary add-on.
