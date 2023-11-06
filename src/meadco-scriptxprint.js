@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.14.1.2";
+    var version = "1.14.2.2";
     var htmlApiLocation = "v1/printHtml";
     var pdfApiLocation = "v1/printPdf";
     var directApiLocation = "v1/printDirect";
@@ -166,7 +166,7 @@
 
         },
 
-        // essentially synchronous set url, we set the pending vaoue so the code 
+        // essentially synchronous set url, we set the pending value so the code 
         // executes synchronously here and there may then be an asynchronous sorting
         // out when an api call is made (see implementation of call : function())
         set url(value) {
@@ -178,7 +178,7 @@
             }
         },
 
-        urlAsync: function (value, resolve, reject) {
+        setUrlAsync: function (value, resolve, reject) {
             MeadCo.log("servicesServer::urlAsync: " + value);
             this.verifyUrl(value, true, resolve, reject);
         },
@@ -260,7 +260,7 @@
                             MeadCo.warn(msg);
 
                             if (typeof reject === "function") {
-                                reject(msg);
+                                reject("Failed to connect with Orchestrator: " + msg);
                             }
                         });
                 }
@@ -1108,7 +1108,7 @@
             availablePrinters = [];
 
             if (typeof resolve == "function") {
-                servicesServer.urlAsync(serverUrl, resolve, reject);
+                servicesServer.setUrlAsync(serverUrl, resolve, reject);
             }
             else {
                 servicesServer.url = serverUrl;
