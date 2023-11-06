@@ -24,7 +24,7 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.Licensing', function () {
-    var moduleversion = "1.14.1.0";
+    var moduleversion = "1.14.2.2";
     var apiLocation = "v1/licensing";
 
     var licenseGuid = "";
@@ -132,7 +132,8 @@
             MeadCo.warn("No reject function for: " + msg);
         }
 
-        if (path.toLowerCase() !== "warehouse") {
+        var lcasePath = path.toLowerCase();
+        if (lcasePath !== "warehouse" && lcasePath !== "securewarehouse") {
             var url = new URL(path, window.location.href);
             path = url.href;
 
