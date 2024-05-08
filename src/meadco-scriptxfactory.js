@@ -1,5 +1,5 @@
 /**
- * MeadCo ScriptX 'window.factory' shim (support for modern browsers and IE 11) JS client library.<br/>
+ * MeadCo ScriptX 'window.factory' shim (support for modern browsers) JS client library.<br/>
  * 
  * The ScriptX Add-on for Internet Explorer is included on a html document with an &lt;object /&gt; element with a de-facto standard id of 'factory': &lt;object id='factory' /&gt;.
  * 
@@ -86,13 +86,13 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    var moduleversion = "1.14.2.0";
-    var emulatedVersion = "8.3.0.0";
-    var servicesVersion = "";
-    var printApi = MeadCo.ScriptX.Print;
-    var logApi = MeadCo; // could be console
+    const moduleversion = "1.15.0.5";
+    const emulatedVersion = "8.3.0.0";
+    let servicesVersion = "";
+    const printApi = MeadCo.ScriptX.Print;
+    const logApi = MeadCo; // could be console
 
-    var module = this;
+    let module = this;
 
     function log(str) {
         logApi.log("factory emulation :: " + str);
@@ -320,13 +320,14 @@
 })('factory.printing', function () {
 
     // protected API
-    var printHtml = MeadCo.ScriptX.Print.HTML;
-    var printPdf = MeadCo.ScriptX.Print.PDF;
-    var settings = printHtml.settings;
-    var printApi = MeadCo.ScriptX.Print;
-    var htmlPrefixes = ["html://", "html4://", "html5://"];
+    const printHtml = MeadCo.ScriptX.Print.HTML;
+    const printPdf = MeadCo.ScriptX.Print.PDF;
+    const settings = printHtml.settings;
+    const printApi = MeadCo.ScriptX.Print;
+    const htmlPrefixes = ["html://", "html4://", "html5://"];
 
-    var module = this;
+    let module = this;
+    let unloadMsg = "";
 
     module.factory.log("factory.Printing loaded.");
 
@@ -334,7 +335,6 @@
         if (typeof (bPrompt) === 'undefined') bPrompt = true;
         var lock = printApi.ensureSpoolingStatus();
         var bStarted = false;
-        var err = null;
 
         if (bPrompt) {
             if (MeadCo.ScriptX.Print.UI) {
@@ -346,18 +346,16 @@
                             fnNotifyStarted(bStarted);
                         }
                         catch (e) {
-                            err = e;
+                            MeadCo.error(e.message)
+                            fnNotifyStarted(false);
                         }
                     }
                     else
                         fnNotifyStarted(false);
 
                     printApi.freeSpoolStatus(lock);
-                });
 
-                if (err !== null) {
-                    throw err;
-                }
+                });
 
                 MeadCo.log("promptAndPrint exits ...");
                 return bStarted;
@@ -370,14 +368,12 @@
             fnNotifyStarted(bStarted);
         }
         catch (e) {
-            err = e;
+            MeadCo.error(e.message)
+            fnNotifyStarted(false);
         }
         finally {
             printApi.freeSpoolStatus(lock);
         }
-
-        if (err !== null)
-            throw err;
 
         return bStarted;
     }
@@ -768,7 +764,7 @@
 
         Print: function (bPrompt, sOrOFrame, fnNotifyStarted) { // needs and wants update to ES2015 (for default values)
             if (!fnNotifyStarted) {
-                fnNotifyStarted = function (bStarted) { MeadCo.log("A print has started"); };
+                fnNotifyStarted = function (bStarted) { MeadCo.log("A print has started: " + bStarted); };
             }
             if (!sOrOFrame) {
                 sOrOFrame = null;
@@ -992,12 +988,42 @@
             return printApi.deviceSettings.duplex;
         },
 
+        set onafterprint(fn) {
+            printApi.reportFeatureNotImplemented("onafterprint", fn);
+        },
         set onbeforeprint(fn) {
             printApi.reportFeatureNotImplemented("onbeforeprint", fn);
         },
 
-        set onafterprint(fn) {
-            printApi.reportFeatureNotImplemented("onafterprint", fn);
+        set onbeforeunload(sMsg) {
+            unloadMsg = sMsg;
+            window.addEventListener('beforeunload', async (e) => {
+                MeadCo.log("beforeunload handler running");
+                if (!MeadCo.ScriptX.Print.noJobsWaitingDelivery) {
+                    MeadCo.log("jobs are waiting client side, will prompt user (custom text is not supported by modern browsers)");
+                    e.returnValue = sMsg;
+                    e.preventDefault();
+                }
+                else {
+                    MeadCo.log("no jobs are waiting client side");
+                }
+            });
+        },
+
+        get onbeforeunload() {
+            return unloadMsg;
+        },
+
+        set onpagesetup(fn) {
+            printApi.reportFeatureNotImplemented("onpagesetup", fn);
+        },
+
+        set onuserpagesetup(fn) {
+            printApi.reportFeatureNotImplemented("onuserpagesetup", fn);
+        },
+
+        set onuserprint(fn) {
+            printApi.reportFeatureNotImplemented("onuserprint", fn);
         },
 
         set onuserprintpreview(fn) {
