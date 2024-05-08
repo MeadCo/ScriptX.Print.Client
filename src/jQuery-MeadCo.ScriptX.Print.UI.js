@@ -12,14 +12,19 @@
 (function (topLevelNs, $, undefined) {
     "use strict";
 
-    var ui = MeadCo.createNS("MeadCo.ScriptX.Print.UI");
+    if (!topLevelNs) {
+        return;
+    }
 
-    ui.version = "1.14.2.0";
+    var ui = topLevelNs.createNS("MeadCo.ScriptX.Print.UI");
+    ui.version = "1.15.0.9";
+
+    topLevelNs.log("MeadCo.ScriptX.Print.UI version is: " + ui.version);
 
     // MeadCo.ScriptX.Print.UI.PageSetup()
     ui.PageSetup = function (fnCallBack) {
 
-        if (!$.fn.modal) {
+        if (!$.fn.modal && !bootstrap.Modal) {
             console.error("MeadCo.ScriptX.Print.UI requires bootstrap Modal");
             fnCallBack(false);
             return;
@@ -39,7 +44,7 @@
         // Simple override is to include the dialog in the page with id="dlg-printoptions"
         //
         if (!$('#dlg-printoptions').length) {
-            console.log("UI.PageSetup bootstrap modal version: " + $.fn.modal.Constructor.VERSION);
+            console.log("UI.PageSetup bootstrap modal version: " + $.fn.modal.Constructor.VERSION + ", major: " + bs_majorVersion);
             var dlg;
 
             switch (bs_majorVersion) {
@@ -166,7 +171,6 @@
                     break;
 
                 case '4':
-                case '5':
                     dlg = '<div class="modal fade" tabindex="-1" role="dialog" id="dlg-printoptions"><div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role = "document">' +
                         '<div class="modal-content"><div class="modal-header"><h5 class="modal-title">Page setup</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
                         '<span aria-hidden="true">&times;</span></button></div><div class="modal-body"><div class="container-fluid"><fieldset><legend>Paper</legend><div class="form-group row">' +
@@ -190,6 +194,32 @@
                         '</div><div class="modal-footer"><button type="button" class="btn btn-primary" id="btn-saveoptions">OK</button><button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button></div></div></div></div>';
                     break;
 
+                case '5':
+                    dlg = '<div class="modal" tabindex="-1" id="dlg-printoptions"><div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role = "document">' +
+                        '<div class="modal-content"><div class="modal-header"><h5 class="modal-title">Page setup</h5><button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">' +
+                        '<span aria-hidden="true"></span></button></div><div class="modal-body"><div class="bs-component"><fieldset><legend>Paper</legend><div class="row">' +
+                        '<label for="fld-papersize" class="col-md-4 col-form-label text-right col-form-label-sm">Size</label><div class="col-md-8"><select class="' + sClass + ' form-select form-select-sm" id="fld-papersize"></select>' +
+                        '</div></div><div class="row mt-2"><div class="col-md-8 offset-md-4">' +
+                        '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" value="2" id="fld-portrait" name="fld-orientation" /><label class="form-check-label" for="fld-portrait">Portrait</label></div>' +
+                        '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" value="1" id="fld-landscape" name="fld-orientation" /><label class="form-check-label" for="fld-portrait">Landscape</label></div></div></div>' +
+                        '<div class="row"><div class="col-md-8 offset-md-4"><div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" name="fld-shrinktofit" id="fld-shrinktofit">' +
+                        '<label class="form-check-label" for="fld-shrinktofit">Shrink to fit</label></div></div></div><div class="row"><div class="col-md-8 offset-md-4"><div class="form-check form-check-inline">' +
+                        '<input class="form-check-input" type="checkbox" name="fld-printbackground" id="fld-printbackground"><label class="form-check-label" for="fld-printbackground">Print background colour and images</label>' +
+                        '</div></div></div></fieldset><fieldset><legend>Margins</legend><div class="row"><div class="col-md-8 offset-md-4">' +
+                        '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" value="2" id="fld-millimetres" name="fld-measure" /><label class="form-check-label" for="fld-millimetres">Millimetres</label></div>' +
+                        '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" value="1" id="fld-inches" name="fld-measure" /><label class="form-check-label" for="fld-inches">Inches</label></div></div></div>' +
+                        '<div class="row mt-2"><label class="col-md-4 col-form-label text-right col-form-label-sm">Left</label>' +
+                        '<div class="col-md-3"><div class="input-group"><input name="fld-marginL" id="fld-marginL" type="number" min="0" max="30" step="0.1" class="form-control text-right form-control-sm" data-rule="measure" value="1" />' +
+                        '</div></div><label class="col-md-2 col-form-label text-right col-form-label-sm">Top</label><div class="col-md-3"><div class="input-group"><input name="fld-marginT" id="fld-marginT" type="number" min="0" max="30" step="0.1" class="form-control text-right form-control-sm" data-rule="measure" value="1" />' +
+                        '</div></div></div><div class="row mt-2"><label class="col-md-4 col-form-label text-right col-form-label-sm">Right</label><div class="col-md-3"><div class="input-group">' +
+                        '<input name="fld-marginR" id="fld-marginR" type="number" min="0" max="30" step="0.1" class="form-control text-right form-control-sm" value="1" data-rule="measure"/></div></div><label class="col-md-2 col-form-label text-right col-form-label-sm">Bottom</label>' +
+                        '<div class="col-md-3"><div class="input-group"><input name="fld-marginB" id="fld-marginB" type="number" min="0" max="30" step="0.1" class="form-control text-right form-control-sm" value="1" data-rule="measure"/>' +
+                        '</div></div></div></fieldset><fieldset class="mt-2"><legend>Headers and footers</legend><div class="row"><label for="fld-header" class="col-md-4 col-form-label text-right col-form-label-sm">Header</label>' +
+                        '<div class="col-md-8"><input type="text" name="fld-header" id="fld-header" class="form-control form-control-sm" /></div></div><div class="row mt-2"><label for="fld-footer" class="col-md-4 col-form-label text-right col-form-label-sm">Footer</label>' +
+                        '<div class="col-md-8"><input type="text" name="fld-footer" id="fld-footer" class="form-control form-control-sm" /></div></div></fieldset></div>' +
+                        '</div><div class="modal-footer"><button type="button" class="btn btn-primary" id="btn-saveoptions">OK</button><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button></div></div></div></div>';
+                    break;
+
                 default:
                     console.error("Unknown version of bootstrap: " + bs_majorVersion);
                     fnCallBack(false);
@@ -202,15 +232,16 @@
         $('[name="fld-measure"]')
             .off('change')
             .on('change', function () {
+                const uiType = bs_majorVersion === "5" ? "number" : "text";
                 switch ($(this).val()) {
                     case '2': // mm from inches
-                        $('#dlg-printoptions input[type=text][data-rule=measure]').each(function () {
+                        $(`#dlg-printoptions input[type=${uiType}][data-rule=measure]`).each(function () {
                             convertAndDisplayinchesToMM($(this));
                         });
                         break;
 
                     case '1': // inches from mm
-                        $('#dlg-printoptions input[type=text][data-rule=measure]').each(function () {
+                        $(`#dlg-printoptions input[type=${uiType}][data-rule=measure]`).each(function () {
                             convertAndDisplayMMtoInches($(this));
                         });
                         break;
@@ -276,7 +307,7 @@
     // MeadCo.ScriptX.Print.UI.PrinterSettings()
     ui.PrinterSettings = function (fnCallBack) {
 
-        if (!$.fn.modal) {
+        if (!$.fn.modal && !bootstrap.Modal) {
             console.error("MeadCo.ScriptX.Print.UI requires bootstrap Modal");
             fnCallBack(false);
             return;
@@ -299,69 +330,81 @@
 
             switch (bs_majorVersion) {
                 case '3':
-                dlg = '<style>' +
-                '.modal-dialog legend { font-size: 1.2em; font-weight: bold; margin-bottom: 10px; } ' +
-                '.modal-dialog fieldset { padding-bottom: 0px; } ' +
-                '.modal-dialog .options-modal-body { padding-bottom: 0px !important; } ' +
-                '.modal-dialog .checkbox2 {  padding-top: 0px !important; min-height: 0px !important; } ' +
-                '.modal-dialog .radio2 { padding-top: 0px !important; min-height: 0px !important; } ' +
-                '</style>' +
-                '<div class="modal fade" id="dlg-printersettings">' +
-                '<div class="modal-dialog">' +
-                '<div class="modal-content">' +
-                '<div class="modal-header">' +
-                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-                '<h4 class="modal-title">Print</h4>' +
-                '</div>' +
-                '<div class="modal-body form-horizontal options-modal-body">' +
-                //'<fieldset>' +
-                //    '<legend>Printer</legend>' +
-                '<div class="form-group">' +
-                '<label class="col-md-4 control-label" for="fld-printerselect">Printer</label>' +
-                '<div class="col-md-8"><select class="' + sClass + ' form-control show-tick" id="fld-printerselect"></select></div>' +
-                '</div>' +
-                '<div class="form-group">' +
-                '<label class="col-md-4 control-label" for="fld-papersource">Paper source</label>' +
-                '<div class="col-md-8"><select class="' + sClass + ' form-control show-tick" id="fld-papersource"></select></div>' +
-                '</div>' +
-                '<div class="form-group">' +
-                '<label class="control-label col-md-4">Copies</label>' +
-                '<div class="col-md-3">' +
-                '<input name="fld-copies" id="fld-copies" type="text" class="form-control text-right" data-rule="quantity" value="1" />' +
-                '</div>' +
-                '<div class="col-md-5">' +
-                '<div class="checkbox2">' +
-                '<label class="checkbox-inline">' +
-                '<input type="checkbox" name="fld-collate" id="fld-collate">' +
-                ' Collate' +
-                '</label>' +
-                '</div>' +
-                '</div>' +
-                '</div>' +
-                //'</fieldset>' +
-                '</div>' +
-                '<div class="modal-footer">' +
-                '<button type="button" class="btn btn-primary" id="btn-savesettings">Print</button>' +
-                '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>' +
-                '</div>' +
-                '</div>' +
-                '<!-- /.modal-content -->' +
-                '</div>' +
-                '<!-- /.modal-dialog -->' +
-                '</div>' +
-                '<!-- /.modal -->';
+                    dlg = '<style>' +
+                        '.modal-dialog legend { font-size: 1.2em; font-weight: bold; margin-bottom: 10px; } ' +
+                        '.modal-dialog fieldset { padding-bottom: 0px; } ' +
+                        '.modal-dialog .options-modal-body { padding-bottom: 0px !important; } ' +
+                        '.modal-dialog .checkbox2 {  padding-top: 0px !important; min-height: 0px !important; } ' +
+                        '.modal-dialog .radio2 { padding-top: 0px !important; min-height: 0px !important; } ' +
+                        '</style>' +
+                        '<div class="modal fade" id="dlg-printersettings">' +
+                        '<div class="modal-dialog">' +
+                        '<div class="modal-content">' +
+                        '<div class="modal-header">' +
+                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+                        '<h4 class="modal-title">Print</h4>' +
+                        '</div>' +
+                        '<div class="modal-body form-horizontal options-modal-body">' +
+                        //'<fieldset>' +
+                        //    '<legend>Printer</legend>' +
+                        '<div class="form-group">' +
+                        '<label class="col-md-4 control-label" for="fld-printerselect">Printer</label>' +
+                        '<div class="col-md-8"><select class="' + sClass + ' form-control show-tick" id="fld-printerselect"></select></div>' +
+                        '</div>' +
+                        '<div class="form-group">' +
+                        '<label class="col-md-4 control-label" for="fld-papersource">Paper source</label>' +
+                        '<div class="col-md-8"><select class="' + sClass + ' form-control show-tick" id="fld-papersource"></select></div>' +
+                        '</div>' +
+                        '<div class="form-group">' +
+                        '<label class="control-label col-md-4">Copies</label>' +
+                        '<div class="col-md-3">' +
+                        '<input name="fld-copies" id="fld-copies" type="text" class="form-control text-right" data-rule="quantity" value="1" />' +
+                        '</div>' +
+                        '<div class="col-md-5">' +
+                        '<div class="checkbox2">' +
+                        '<label class="checkbox-inline">' +
+                        '<input type="checkbox" name="fld-collate" id="fld-collate">' +
+                        ' Collate' +
+                        '</label>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        //'</fieldset>' +
+                        '</div>' +
+                        '<div class="modal-footer">' +
+                        '<button type="button" class="btn btn-primary" id="btn-savesettings">Print</button>' +
+                        '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>' +
+                        '</div>' +
+                        '</div>' +
+                        '<!-- /.modal-content -->' +
+                        '</div>' +
+                        '<!-- /.modal-dialog -->' +
+                        '</div>' +
+                        '<!-- /.modal -->';
                     break;
 
                 case '4':
-                dlg = '<div class="modal fade" id="dlg-printersettings"><div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role = "document"><div class="modal-content">' +
-                '<div class="modal-header"><h5 class="modal-title">Print</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>' +
-                '</button></div><div class="modal-body"><div class="container-fluid"><div class="form-group row"><label for="fld-printerselect" class="col-md-4 col-form-label text-right col-form-label-sm">Printer</label>' +
-                '<div class="col-md-8"><select class="' + sClass + ' form-control col-form-label-sm custom-select custom-select-sm" id="fld-printerselect"></select></div></div><div class="form-group row">' +
-                '<label for="fld-papersource" class="col-md-4 col-form-label text-right col-form-label-sm">Paper source</label><div class="col-md-8"><select class="' + sClass + ' form-control col-form-label-sm custom-select custom-select-sm" id="fld-papersource"></select>' +
-                '</div></div><div class="form-group row align-items-center"><label for="fld-copies" class="col-md-4 col-form-label text-right col-form-label-sm">Copies</label><div class="col-md-3">' +
-                '<input name="fld-copies" id="fld-copies" type="text" class="form-control form-control-sm text-right" data-rule="quantity" value="1" /></div><div class="col-md-5"><div class="form-check form-check-inline">' +
-                '<input class="form-check-input" type="checkbox" name="fld-collate" id="fld-collate"><label class="form-check-label" for="fld-collate">Collate</label></div></div></div></div>' +
-                '</div><div class="modal-footer"><button type="button" class="btn btn-primary" id="btn-savesettings">Print</button><button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button></div></div></div></div >';
+                    dlg = '<div class="modal fade" id="dlg-printersettings"><div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role = "document"><div class="modal-content">' +
+                        '<div class="modal-header"><h5 class="modal-title">Print</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>' +
+                        '</button></div><div class="modal-body"><div class="container-fluid"><div class="form-group row"><label for="fld-printerselect" class="col-md-4 col-form-label text-right col-form-label-sm">Printer</label>' +
+                        '<div class="col-md-8"><select class="' + sClass + ' form-control col-form-label-sm custom-select custom-select-sm" id="fld-printerselect"></select></div></div><div class="form-group row">' +
+                        '<label for="fld-papersource" class="col-md-4 col-form-label text-right col-form-label-sm">Paper source</label><div class="col-md-8"><select class="' + sClass + ' form-control col-form-label-sm custom-select custom-select-sm" id="fld-papersource"></select>' +
+                        '</div></div><div class="form-group row align-items-center"><label for="fld-copies" class="col-md-4 col-form-label text-right col-form-label-sm">Copies</label><div class="col-md-3">' +
+                        '<input name="fld-copies" id="fld-copies" type="text" class="form-control form-control-sm text-right" data-rule="quantity" value="1" /></div><div class="col-md-5"><div class="form-check form-check-inline">' +
+                        '<input class="form-check-input" type="checkbox" name="fld-collate" id="fld-collate"><label class="form-check-label" for="fld-collate">Collate</label></div></div></div></div>' +
+                        '</div><div class="modal-footer"><button type="button" class="btn btn-primary" id="btn-savesettings">Print</button><button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button></div></div></div></div >';
+                    break;
+
+                case '5':
+                    dlg = '<div class="modal" id="dlg-printersettings"><div class="modal-dialog role = "document"><div class="modal-content">' +
+                        '<div class="modal-header"><h5 class="modal-title">Print</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span>' +
+                        '</button></div><div class="modal-body"><div class="bs-component"><div class="row"><label for="fld-printerselect" class="col-md-4 form-label text-right col-form-label-sm">Printer</label>' +
+                        '<div class="col-md-8"><select class="' + sClass + ' form-select form-select-sm" id="fld-printerselect"></select></div></div><div class="row mt-2">' +
+                        '<label for="fld-papersource" class="col-md-4 form-label text-right col-form-label-sm">Paper source</label><div class="col-md-8"><select class="' + sClass + ' form-select form-select-sm" id="fld-papersource"></select>' +
+                        '</div></div><div class="row g-3" style="margin-top:-8px"><label for="fld-copies" class="col-md-4 form-label text-right col-form-label-sm">Copies</label><div class="col-md-3">' +
+                        '<input name="fld-copies" id="fld-copies" type="number" min="1" max="5" step="1" class="form-control form-control-sm text-right" data-rule="quantity" value="1" /></div><div class="col-md-5"><div class="form-check" style="margin-top: 4px">' +
+                        '<input class="form-check-input" type="checkbox" name="fld-collate" id="fld-collate"><label class="form-check-label" for="fld-collate">Collate</label></div></div></div></div>' +
+                        '</div><div class="modal-footer"><button type="button" class="btn btn-primary" id="btn-savesettings">Print</button><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button></div></div></div></div >';
                     break;
 
                 default:
@@ -371,23 +414,6 @@
             }
 
             $('body').append(dlg);
-
-
-            $('[name="fld-measure"]').on('change', function () {
-                switch ($(this).val()) {
-                    case '2': // mm from inches
-                        $('#dlg-printersettings input[type=text][data-rule=currency]').each(function () {
-                            convertAndDisplayinchesToMM($(this));
-                        });
-                        break;
-
-                    case '1': // inches from mm
-                        $('#dlg-printersettings input[type=text][data-rule=currency]').each(function () {
-                            convertAndDisplayMMtoInches($(this));
-                        });
-                        break;
-                }
-            });
 
             $('#dlg-printersettings #fld-printerselect').change(function (ev) {
                 onSelectPrinter($(this).val());
@@ -415,7 +441,17 @@
 
         fillPrintersList();
         showPrinterSettings();
-        $('#dlg-printersettings').modal('show');
+
+        if (bs_majorVersion === "5") {
+            let d = new bootstrap.Modal(document.getElementById('dlg-printersettings'), {
+                backdrop: 'static',
+                keyboard: false,
+                show: false
+            });
+            d.show();
+        }
+        else
+            $('#dlg-printersettings').modal('show');
 
         if (sClass === "selectpicker") {
             $('#dlg-printersettings .selectpicker').selectpicker('refresh');
@@ -430,7 +466,7 @@
         fillAndSetBinsList();
 
         var $dlg = $('#dlg-printersettings');
-        $dlg.find('#fld-collate').prop('checked', printApi.deviceSettings.collate === printApi.CollateOptions.TRUE);
+        $dlg.find('#fld-collate').prop('checked', settings.collate === printApi.CollateOptions.TRUE);
         $dlg.find('#fld-copies').val(settings.copies);
 
     }
@@ -499,6 +535,8 @@
         if ($printers.hasClass("selectpicker")) {
             $printers.selectpicker('refresh');
         }
+        else
+            onSelectPrinter(printApi.printerName);
     }
 
     function onSelectPrinter(printerName) {
@@ -532,19 +570,24 @@
 
     function fillAndSetBinsList() {
         var printApi = MeadCo.ScriptX.Print;
-        var binsArray = printApi.deviceSettingsFor(printApi.printerName).bins;
-        var $bins = $('#fld-papersource');
 
-        $('#fld-papersource > option').remove();
-        for (var i = 0; i < binsArray.length; i++) {
-            $bins.append("<option>" + binsArray[i]);
-        }
+        printApi.deviceSettingsForAsync(printApi.printerName, (settings) => {
+            var binsArray = settings.bins;
+            var $bins = $('#fld-papersource');
 
-        $bins.val(printApi.deviceSettings.paperSourceName);
+            $('#fld-papersource > option').remove();
+            for (var i = 0; i < binsArray.length; i++) {
+                $bins.append("<option>" + binsArray[i]);
+            }
 
-        if ($bins.hasClass("selectpicker")) {
-            $bins.selectpicker('refresh');
-        }
+            $bins.val(settings.paperSourceName);
+
+            if ($bins.hasClass("selectpicker")) {
+                $bins.selectpicker('refresh');
+            }
+        },
+            (eTxt) => { MeadCo.ScriptX.Print.reportError(eTxt); });
+
     }
 
     // convert the current inches value in the control to MM
@@ -557,4 +600,4 @@
         $el.val(((parseFloat($el.val()) * 100) / 2540).toFixed(2));
     }
 
-}(window.MeadCo = window.MeadCo || {}, jQuery));
+})(window.MeadCo = window.MeadCo || null, jQuery);
