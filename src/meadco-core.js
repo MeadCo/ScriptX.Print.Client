@@ -54,8 +54,9 @@
 
     // protected API
     var module = this;
-    var version = "1.14.2.0"; // matches the highest version number of sub-classes.
+    var version = "1.15.0.3"; // matches the highest version number of sub-classes.
     var bLog = ((typeof (MeadCo) !== "undefined" && typeof (MeadCo.logEnable) !== "undefined")) ? MeadCo.logEnable : false;
+    var bUseFetch = ((typeof (MeadCo) !== "undefined" && typeof (MeadCo.useFetch) !== "undefined")) ? MeadCo.useFetch : false;
 
     var log = function (str) {
         if (bLog) {
@@ -203,6 +204,16 @@
         },
 
         /**
+         * Get/set state of forcing use of fetch even if jQuery(.ajax) is available. Default is off
+         * @property {boolean} logEnabled
+         * @memberof MeadCo         * 
+         */
+        get fetchEnabled() { return bUseFetch; },
+        set fetchEnabled(bEnable) {
+            bUseFetch = bEnable;
+        },
+
+        /**
          * Create a namespace
          * @function createNS
          * @memberof MeadCo
@@ -309,8 +320,22 @@
          */
         parseAjaxError: function (logText, jqXhr, textStatus, errorThrown) {
             return parseError(logText, jqXhr, textStatus, errorThrown);
-        }
+        },
 
+        /**
+         * Extract the error text from browser fetch response
+         * 
+         * @function parseFetchError
+         * @memberof MeadCo
+         * 
+         * @param {object} errorThrown error caught from fetch 
+         * @returns {string} The error text to display
+         */
+        parseFetchError: function (logText, errorThrown) {
+            const msg = typeof errorThrown === "string" ? errorThrown : errorThrown.message;
+            error("**warning: FETCH call failure in " + logText + ": " + msg);
+            return msg;
+        }
     };
 
 });
