@@ -24,15 +24,16 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.Licensing', function () {
-    var moduleversion = "1.14.2.2";
-    var apiLocation = "v1/licensing";
+    const moduleversion = "1.15.0.3";
+    const apiLocation = "v1/licensing";
 
-    var licenseGuid = "";
-    var licenseRevision = 0;
-    var licensePath = ""; // "" => subscription (cloud) not client for Workstation, => value for client license
-    var lastError = "No license applied";
+    let licenseGuid = "";
+    let licenseRevision = 0;
+    let licensePath = ""; // "" => subscription (cloud) not client for Workstation, => value for client license
+    let lastError = "No license applied";
+    let applyInProgress = false;
 
-    var module = this;
+    const module = this;
 
     /**
      * The capabilities that can be licensed.
@@ -81,7 +82,7 @@
     }
 
     function getSubscriptionFromServer(resolve, reject) {
-        var p = MeadCo.ScriptX.Print;
+        const p = MeadCo.ScriptX.Print;
         if (typeof p == "undefined" || typeof p.connectLite !== "function") {
             var msg = "MeadCo.ScriptX.Licensing : MeadCo.ScriptX.Print API not available"
             if (typeof reject === "function") {
@@ -101,7 +102,7 @@
         p.requestService(apiLocation, "GET", {}, true, typeof resolve === "function",
             function (data) {
                 lastError = "";
-                $.extend(license, data);
+                license = { ...license, ...data };
                 if (typeof resolve === "function") {
                     resolve(license);
                     return;
@@ -120,9 +121,10 @@
     }
 
     function applyLicense(slicenseGuid, revision, path, resolve, reject) {
+
         MeadCo.log("Apply license: " + slicenseGuid + ",revision: " + revision + ", path: " + path);
 
-        var p = MeadCo.ScriptX.Print;
+        const p = MeadCo.ScriptX.Print;
         if (typeof p == "undefined" || typeof p.connectLite !== "function") {
             var msg = "MeadCo.ScriptX.Licensing : MeadCo.ScriptX.Print API not available"
             if (typeof reject === "function") {
@@ -132,16 +134,16 @@
             MeadCo.warn("No reject function for: " + msg);
         }
 
-        var lcasePath = path.toLowerCase();
+        const lcasePath = path.toLowerCase();
         if (lcasePath !== "warehouse" && lcasePath !== "securewarehouse") {
-            var url = new URL(path, window.location.href);
+            const url = new URL(path, window.location.href);
             path = url.href;
 
             MeadCo.log("path updated to: " + path);
         }
 
         licenseGuid = slicenseGuid;
-        var requestData = {
+        const requestData = {
             Guid: slicenseGuid,
             Url: path,
             Revision: revision
@@ -150,7 +152,7 @@
         p.requestService(apiLocation, "POST", requestData, false, typeof resolve === "function",
             function (data) {
                 lastError = "";
-                $.extend(license, data);
+                license = { ...license, ...data };
                 if (typeof resolve === "function") {
                     resolve(license);
                     return;
