@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30406.217
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{F483EA25-6581-4C95-80F9-42E54B1866FD}"
 	ProjectSection(SolutionItems) = preProject
@@ -19,6 +19,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7C47A878-72F0-4EFE-B23F-EB6B67DE8594}"
 	ProjectSection(SolutionItems) = preProject
 		..\src\jQuery-MeadCo.ScriptX.Print.UI.js = ..\src\jQuery-MeadCo.ScriptX.Print.UI.js
+		..\src\Bootstrap5-MeadCo.ScriptX.Print.UI.js = ..\src\Bootstrap5-MeadCo.ScriptX.Print.UI.js
 		..\src\meadco-core.js = ..\src\meadco-core.js
 		..\src\meadco-scriptxfactory.js = ..\src\meadco-scriptxfactory.js
 		..\src\meadco-scriptxprint.js = ..\src\meadco-scriptxprint.js
