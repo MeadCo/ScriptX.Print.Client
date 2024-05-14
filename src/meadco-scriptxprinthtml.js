@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
 
-    var moduleversion = "1.15.0.5";
+    var moduleversion = "1.15.0.7";
 
     /**
      * Enum to describe the units used on measurements - **NOTE** please use MeadCo.ScriptX.Print.MeasurementUnits instead
@@ -527,6 +527,9 @@
 
             if (f == null) {
                 f = window.frames[sFrame];
+                if ( !f ) {
+                    throw new Error("Unable to get frame content - frame does not exist");
+                }
             }
             else
                 f = f.contentWindow;
