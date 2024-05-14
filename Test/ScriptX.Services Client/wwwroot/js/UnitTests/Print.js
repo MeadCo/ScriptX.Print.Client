@@ -5,7 +5,7 @@ QUnit.test("Namespace basics", function (assert) {
     assert.ok(MeadCo.ScriptX.Print, "MeadCo.ScriptX.Print namespace exists");
     var api = MeadCo.ScriptX.Print;
 
-    assert.equal(api.version, "1.14.2.2", "Correct version");
+    assert.equal(api.version, Versions.MeadCoScriptXPrint, "Correct version");
 
     assert.equal(api.ContentType.URL, 1, "ContentType enum is OK");
     assert.equal(api.ContentType.XX, undefined, "Unknown ContentType enum is OK");
@@ -21,8 +21,17 @@ QUnit.test("Namespace basics", function (assert) {
     assert.notEqual(api.deviceSettings, null, "Default device settings are not null");
     assert.deepEqual(api.deviceSettings, {}, "Default device settings are empty object");
 
-    assert.equal(api.deviceSettingsFor("My printer"), undefined, "Device settings for bad printer name shows error dialog and returns undefined");
-    assert.equal($("#qunit-fixture").text(), "ScriptX.Services could not be found at http://clearserver. Is it installed and running?", "Correct error message");
+    if (MeadCo.fetchEnabled) {
+        const done = assert.async(1);
+        api.deviceSettingsForAsync("Garbage", () => { done() }, (eTxt) => {
+            assert.equal(eTxt, "ScriptX.Services could not be found at http://clearserver. Is it installed and running?", "Correct error message");           
+            done();
+        })
+    }
+    else {
+        assert.equal(api.deviceSettingsFor("My printer"), undefined, "Device settings for bad printer name shows error dialog and returns undefined");
+        assert.equal($("#qunit-fixture").text(), "ScriptX.Services could not be found at http://clearserver. Is it installed and running?", "Correct error message");
+    }
 
 });
 
@@ -53,9 +62,19 @@ QUnit.test("Device settings basics", function (assert) {
     assert.equal(api.printerName, "A3 printer", "Correct default printer name");
 
     api.printerName = "Garbage";
-    assert.equal($("#qunit-fixture").text(), "MeadCo.ScriptX.Print : server connection is not defined.", "Correct error message on setting garbage printer");
     assert.equal(api.printerName, "A3 printer", "Default printer name stays correct.");
 
+    if (MeadCo.fetchEnabled) {
+        const done = assert.async(1);
+        api.deviceSettingsForAsync("Garbage", () => { done() }, (eTxt) => {
+            assert.equal($("#qunit-fixture").text(), "MeadCo.ScriptX.Print : server connection is not defined.", "Correct error message on setting garbage printer");
+            done();
+        })
+    }
+    else {
+        api.deviceSettingsFor("Garbage");
+        assert.equal($("#qunit-fixture").text(), "MeadCo.ScriptX.Print : server connection is not defined.", "Correct error message on setting garbage printer");
+    }
 });
 
 QUnit.test("Testing connection", function (assert) {
@@ -172,84 +191,124 @@ QUnit.test("call server api with GET", function (assert) {
 
     api.connectLite(badServerUrl, badLicenseGuid);
 
-    api.getFromServer("/twaddle/?units=0", false,
+    api.getFromServer("/twaddle/?units=0", MeadCo.fetchEnabled,
         function (data) {
             assert.ok(false, "Call to bad server should not succeed");
+            done();
+            done();
+            done();
+            done();
+            done();
+            done();
+            done();
             done();
         }, function (errorText) {
             assert.ok(true, "Call to bad server failed, error was: " + errorText);
             done();
+
+            api.connectLite(serverUrl, badLicenseGuid);
+
+            api.getFromServer("/twaddle/?units=0", MeadCo.fetchEnabled,
+                function (data) {
+                    assert.ok(false, "Call to bad api should not succeed");
+                    done();
+                    done();
+                    done();
+                    done();
+                    done();
+                    done();
+                    done();
+                }, function (errorText) {
+                    assert.ok(true, "Call to bad api failed, error was: " + errorText);
+                    done();
+
+                    api.getFromServer("/htmlPrintDefaults/?units=0", MeadCo.fetchEnabled,
+                        function (data) {
+                            assert.ok(false, "Call to api with bad license should not succeed");
+                            done();
+                            done();
+                            done();
+                            done();
+                            done();
+                            done();
+                        }, function (errorText) {
+                            assert.ok(true, "Call to api with bad license failed, error was: " + errorText);
+                            done();
+
+                            api.connectLite(serverUrl, licenseGuid);
+                            api.getFromServer("/htmlPrintDefaults/?units=0", MeadCo.fetchEnabled,
+                                function (data) {
+                                    assert.ok(true, "Call to api with good license succeeded");
+                                    done();
+
+                                    api.connectLite(serverUrl, null);
+                                    api.getFromServer("/htmlPrintDefaults/?units=0", MeadCo.fetchEnabled,
+                                        function (data) {
+                                            assert.ok(true, "Call to api succeeded - null license ignored");
+                                            done();
+
+                                            api.connectLite(serverUrl, "");
+                                            api.getFromServer("/htmlPrintDefaults/?units=0", MeadCo.fetchEnabled,
+                                                function (data) {
+                                                    assert.ok(true, "Call to api succeeded - empty license ignored");
+                                                    done();
+
+
+                                                    api.connectLite(null, licenseGuid);
+                                                    api.getFromServer("/htmlPrintDefaults/?units=0", MeadCo.fetchEnabled,
+                                                        function (data) {
+                                                            assert.ok(true, "Call to api succeeded - null server ignored");
+                                                            done();
+
+                                                            api.connectLite("", licenseGuid);
+                                                            api.getFromServer("/htmlPrintDefaults/?units=0", MeadCo.fetchEnabled,
+                                                                function (data) {
+                                                                    assert.ok(true, "Call to api succeeded - empty server ignored");
+                                                                    done();
+                                                                }, function (errorText) {
+                                                                    assert.ok(false, "Call to api with good license failed, error was: " + errorText);
+                                                                    done();
+                                                                 });
+
+                                                        }, function (errorText) {
+                                                            assert.ok(false, "Call to api with good license failed, error was: " + errorText);
+                                                            done();
+                                                            done();
+                                                        });
+
+
+                                                }, function (errorText) {
+                                                    assert.ok(false, "Call to api with good license failed, error was: " + errorText);
+                                                    done();
+                                                    done();
+                                                    done();
+                                                });
+
+                                        }, function (errorText) {
+                                            assert.ok(false, "Call to api with good license failed, error was: " + errorText);
+                                            done();
+                                            done();
+                                            done();
+                                            done();
+                                        });
+ 
+                                }, function (errorText) {
+                                    assert.ok(false, "Call to api with good license failed, error was: " + errorText);
+                                    done();
+                                    done();
+                                    done();
+                                    done();
+                                    done();
+
+                                });
+
+                        });
+
+                });
+
         });
 
-    api.connectLite(serverUrl, badLicenseGuid);
 
-    api.getFromServer("/twaddle/?units=0", false,
-        function (data) {
-            assert.ok(false, "Call to bad api should not succeed");
-            done();
-        }, function (errorText) {
-            assert.ok(true, "Call to bad api failed, error was: " + errorText);
-            done();
-        });
-
-    api.getFromServer("/htmlPrintDefaults/?units=0", false,
-        function (data) {
-            assert.ok(false, "Call to api with bad license should not succeed");
-            done();
-        }, function (errorText) {
-            assert.ok(true, "Call to api with bad license failed, error was: " + errorText);
-            done();
-        });
-
-    api.connectLite(serverUrl, licenseGuid);
-    api.getFromServer("/htmlPrintDefaults/?units=0", false,
-        function (data) {
-            assert.ok(true, "Call to api with good license succeeded");
-            done();
-        }, function (errorText) {
-            assert.ok(false, "Call to api with good license failed, error was: " + errorText);
-            done();
-        });
-
-    api.connectLite(serverUrl, null);
-    api.getFromServer("/htmlPrintDefaults/?units=0", false,
-        function (data) {
-            assert.ok(true, "Call to api succeeded - null license ignored");
-            done();
-        }, function (errorText) {
-            assert.ok(false, "Call to api with good license failed, error was: " + errorText);
-            done();
-        });
-
-    api.connectLite(serverUrl, "");
-    api.getFromServer("/htmlPrintDefaults/?units=0", false,
-        function (data) {
-            assert.ok(true, "Call to api succeeded - empty license ignored");
-            done();
-        }, function (errorText) {
-            assert.ok(false, "Call to api with good license failed, error was: " + errorText);
-            done();
-        });
-
-    api.connectLite(null, licenseGuid);
-    api.getFromServer("/htmlPrintDefaults/?units=0", false,
-        function (data) {
-            assert.ok(true, "Call to api succeeded - null server ignored");
-            done();
-        }, function (errorText) {
-            assert.ok(false, "Call to api with good license failed, error was: " + errorText);
-            done();
-        });
-
-    api.connectLite("", licenseGuid);
-    api.getFromServer("/htmlPrintDefaults/?units=0", false,
-        function (data) {
-            assert.ok(true, "Call to api succeeded - empty server ignored");
-            done();
-        }, function (errorText) {
-            assert.ok(false, "Call to api with good license failed, error was: " + errorText);
-            done();
-        });
 });
 
 QUnit.test("queue management", function (assert) {
@@ -263,11 +322,11 @@ QUnit.test("queue management", function (assert) {
 
     var lock = api.ensureSpoolingStatus();
 
-    assert.notEqual(api.activeJobs, 0, "with ensureSpoolingStatus() there are now active jobs");
+    assert.notEqual(api.clientSideJobs, 0, "with ensureSpoolingStatus() there are now active client jobs");
     assert.ok(api.isSpooling, "Is spooling");
 
     api.freeSpoolStatus(lock);
-    assert.equal(api.activeJobs, 0, "After freeSpoolStatus there are no active jobs again");
+    assert.equal(api.clientSideJobs, 0, "After freeSpoolStatus there are no active client jobs again");
     assert.notOk(api.isSpooling, "Not spooling again ");
 
     var done = assert.async();

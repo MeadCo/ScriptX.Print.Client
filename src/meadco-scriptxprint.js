@@ -26,7 +26,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    const version = "1.15.0.9";
+    const version = "1.15.0.15";
     const htmlApiLocation = "v1/printHtml";
     const pdfApiLocation = "v1/printPdf";
     const directApiLocation = "v1/printDirect";
@@ -466,8 +466,10 @@
         //
         call: function (sApi, method, oApiData, bLicensed, bAsync, resolve, reject) {
 
+            const that = this;
+
             if (this.serviceUrl === "" && this.pendingUrl !== "") {
-                const that = this;
+
                 this.verifyUrl(this.pendingUrl, bAsync, function () {
                     if (that.url !== "") {
                         that.call(sApi, method, oApiData, bLicensed, bAsync, resolve, reject);
@@ -520,7 +522,7 @@
                                 }
                             })
                             .always(function (dataOrjqXHR, textStatus, jqXHRorErrorThrown) {
-                                this.undoTrust();
+                                that.undoTrust();
                             });
                     }
                     else {
@@ -549,19 +551,27 @@
                                 keepalive: false
                             })
                                 .then((response) => {
-                                    this.undoTrust();
+                                    that.undoTrust();
                                     if (!response.ok) {
                                         // throw new Error(`HTTP Error: ${response.status}`)
-                                        const err = response.text()
-                                            .then(errorTxt => {
-                                                const errorThrown = MeadCo.parseFetchError("MeadCo.ScriptX.Print:" + sApi + method, errorTxt);
-                                                if (typeof reject === "function")
-                                                    reject(errorThrown);
-                                                else {
-                                                    throw new Error(errorThrown);
-                                                }
-                                            });
-
+                                        if ( response.status == 500 || response.status == 404 ) {
+                                            const err = response.text()
+                                                .then(errorTxt => {
+                                                    const errorThrown = MeadCo.parseFetchError("MeadCo.ScriptX.Print:" + sApi + method, errorTxt);
+                                                    if (typeof reject === "function")
+                                                        reject(errorThrown);
+                                                    else {
+                                                        throw new Error(errorThrown);
+                                                    }
+                                                });
+                                        }
+                                        else {
+                                            if (typeof reject === "function")
+                                                reject(response.statusText);
+                                            else {
+                                                throw new Error(response.statusText);
+                                            }
+                                        }
                                         return;
                                     }
                                     return response.json();
@@ -597,6 +607,8 @@
                         throw new Error("MeadCo.ScriptX.Print : server connection is not defined.");
                 }
             }
+
+            return true;
         },
 
         // determine if the server is changing - domain or port has changed when not using orchestrator
@@ -1326,7 +1338,7 @@
 
         queueJob(fakeJob); // essentially a lock on the queue to stop it looking empty while we await the result
 
-        callService(sApi + "/print", "POST", requestData, true, true, (data) => {
+        return callService(sApi + "/print", "POST", requestData, true, true, (data) => {
             MeadCo.log("Success response: " + data.status);
             data.printerName = requestData.Device.printerName;
             data.jobName = typeof requestData.Settings.jobTitle === "string" && requestData.Settings.jobTitle.length > 0 ? requestData.Settings.jobTitle : "server job";
@@ -1372,11 +1384,11 @@
      * @private
      */
     function getFromServer(sApi, async, onSuccess, onFail) {
-        callService(sApi, "GET", null, true, async, onSuccess, onFail);
+        return callService(sApi, "GET", null, true, async, onSuccess, onFail);
     }
 
     function callService(sApi, httpMethod, oApiData, bLicensed, bAsync, resolve, reject) {
-        servicesServer.call(sApi, httpMethod, oApiData, bLicensed, bAsync, resolve, reject);
+        return servicesServer.call(sApi, httpMethod, oApiData, bLicensed, bAsync, resolve, reject);
     }
 
     function processMonitorResponse(requestData, data, intervalId, jobId, timeOut, functionComplete) {
@@ -1498,7 +1510,6 @@
                 if (oRequest.name === "systemdefault") {
                     MeadCo.warn("request for systemdefault printer failed - please update to ScriptX.Services 2.11.1");
                     oRequest.name = "default";
-                    oRequest.async = false;
                     getDeviceSettings(oRequest);
                 }
                 else {
@@ -1841,26 +1852,35 @@
         set printerName(deviceRequest) {
             if (!(deviceRequest === printerName || deviceRequest.name === printerName)) {
                 if (typeof deviceRequest === "string") {
-                    // not already cached, go fetch (synchronously) if synchronous is available
-                    // if synchronous is not available then getDeviceSettingsAsync() must be called after this
-                    // call. 
-                    if (typeof deviceSettings[deviceRequest] === "undefined" && !MeadCo.fetchEnabled) {
-                        getDeviceSettings({
-                            name: deviceRequest,
-                            done: function (data) {
-                                printerName = data.printerName;
-                            },
-                            async: false,
-                            fail: function (eTxt) {
-                                MeadCo.ScriptX.Print.reportError(eTxt);
-                            }
-                        });
-                    } else {
-                        printerName = deviceRequest;
-                        if (typeof deviceSettings[deviceRequest] === "undefined" && MeadCo.fetchEnabled) {
-                            getDeviceSettingsForAsync(sPrinterName, () => { }, () => { });
+
+                    if (typeof deviceSettings[deviceRequest] === "undefined") {
+                        // not already cached, get (synchronously) if synchronous is available
+                        // if synchronous is not available then getDeviceSettingsAsync() must be called after this
+                        // call. 
+                        if (module.jQuery && !MeadCo.fetchEnabled) {
+                            getDeviceSettings({
+                                name: deviceRequest,
+                                done: function (data) {
+                                    printerName = data.printerName;
+                                },
+                                async: false,
+                                fail: function (eTxt) {
+                                    MeadCo.ScriptX.Print.reportError(eTxt);
+                                }
+                            });
+                        }
+                        else {
+                            MeadCo.warn("Asynchronous processing of set printerName, synchronous calls to obtain device details will fail until this completes.")
+                            getDeviceSettingsForAsync(deviceRequest,
+                                (data) => { printerName = data.printerName; },
+                                (eTxt) => { MeadCo.ScriptX.Print.reportError(eTxt); }
+                            );
                         }
                     }
+                    else {
+                        printerName = deviceRequest;
+                    }
+
                 } else {
                     getDeviceSettings(deviceRequest);
                 }
@@ -1955,7 +1975,8 @@
          * @function deviceSettingsForAsync
          * @memberof MeadCoScriptXPrint
          * @param {string} sPrinterName the name of the printer device to return the settings for 
-         * @returns {DeviceSettingsObject} object with properties
+         * @param {function({DeviceSettingsObject})} resolve function to call on success
+         * @param {function({errorText})} reject function to call on failure
          */
         deviceSettingsForAsync: function (sPrinterName, resolve, reject) {
             getDeviceSettingsForAsync(sPrinterName, resolve, reject);

@@ -8,7 +8,7 @@ var licenseGuid = "666140C4-DFC8-435E-9243-E8A54042F918".toLocaleLowerCase();
 
 var badLicenseGuid = "123";
 
-MeadCo.logEnabled = true;
+// MeadCo.logEnabled = true;
 
 MeadCo.ScriptX.Print.reportServerError = function (txt) {
     console.log("ReportServerError: ", txt);

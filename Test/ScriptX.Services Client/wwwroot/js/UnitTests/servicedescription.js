@@ -5,7 +5,7 @@ QUnit.test("Namespace basics", function (assert) {
     assert.ok(MeadCo.ScriptX.Print, "MeadCo.ScriptX.Print namespace exists");
     var api = MeadCo.ScriptX.Print;
 
-    assert.equal(api.version, "1.14.2.2", "Correct version");
+    assert.equal(api.version, Versions.MeadCoScriptXPrint, "Correct version");
 
     assert.equal(api.ServiceClasses.CLOUD, 1, "ServiceClasses enum is OK");
     assert.equal(api.ServiceClasses.XX, undefined, "Unknown ServiceClasses enum is OK");
@@ -18,11 +18,13 @@ QUnit.test("Testing connection", function (assert) {
 
     var url = serverUrl;
 
-    api.connectLite(url," ");
-    sd = api.serviceDescription();
+    api.connectLite(url, " ");
 
-    assert.equal(sd.serviceClass, api.ServiceClasses.WINDOWSPC, "Synchronous request - correct service class returned");
-    assert.equal(sd.currentAPIVersion, "v1", "Synchronous request - correct api version");
+    if (!MeadCo.fetchEnabled) { // fetch cannt do synchronous
+        sd = api.serviceDescription();
+        assert.equal(sd.serviceClass, api.ServiceClasses.WINDOWSPC, "Synchronous request - correct service class returned");
+        assert.equal(sd.currentAPIVersion, "v1", "Synchronous request - correct api version");
+    }
 
     var done = assert.async(1);
 

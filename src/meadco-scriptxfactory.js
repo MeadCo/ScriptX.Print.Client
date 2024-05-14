@@ -333,8 +333,9 @@
 
     function promptAndPrint(bPrompt, fnPrint, fnNotifyStarted) {
         if (typeof (bPrompt) === 'undefined') bPrompt = true;
-        var lock = printApi.ensureSpoolingStatus();
-        var bStarted = false;
+        const lock = printApi.ensureSpoolingStatus();
+        let bStarted = false;
+        let err = null;
 
         if (bPrompt) {
             if (MeadCo.ScriptX.Print.UI) {
@@ -346,6 +347,7 @@
                             fnNotifyStarted(bStarted);
                         }
                         catch (e) {
+                            err = e;
                             MeadCo.error(e.message)
                             fnNotifyStarted(false);
                         }
@@ -358,6 +360,11 @@
                 });
 
                 MeadCo.log("promptAndPrint exits ...");
+
+                if (err != null) { // not great but a breaking change to remove this behaviour
+                    throw err;
+                }
+
                 return bStarted;
             }
             MeadCo.warn("prompted print requested but no UI library loaded. See: https://www.meadroid.com/Developers/KnowledgeBank/Articles/Dialogs");
@@ -368,12 +375,17 @@
             fnNotifyStarted(bStarted);
         }
         catch (e) {
+            err = e;
             MeadCo.error(e.message)
             fnNotifyStarted(false);
         }
         finally {
             printApi.freeSpoolStatus(lock);
         }
+
+        if (err !== null)
+            throw err;
+
 
         return bStarted;
     }
