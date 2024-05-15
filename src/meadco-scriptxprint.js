@@ -452,7 +452,7 @@
                             });
                     }
                     else {
-                        MeadCo.warn("Synchronous Ajax calls requires jQuery");
+                        MeadCo.error("Synchronous Ajax calls requires jQuery");
                         if (typeof reject === "function") {
                             reject("Synchronous Ajax calls requires jQuery");
                         }
@@ -1855,8 +1855,8 @@
 
                     if (typeof deviceSettings[deviceRequest] === "undefined") {
                         // not already cached, get (synchronously) if synchronous is available
-                        // if synchronous is not available then getDeviceSettingsAsync() must be called after this
-                        // call. 
+                        // if synchronous is not available then getDeviceSettingsAsync() must be called 
+                        // We have no choice but to fail this call. 
                         if (module.jQuery && !MeadCo.fetchEnabled) {
                             getDeviceSettings({
                                 name: deviceRequest,
@@ -1870,11 +1870,13 @@
                             });
                         }
                         else {
-                            MeadCo.warn("Asynchronous processing of set printerName, synchronous calls to obtain device details will fail until this completes.")
+                            MeadCo.error("Asynchronous processing of set printerName required, synchronous calls to obtain device details will fail until this completes.")
                             getDeviceSettingsForAsync(deviceRequest,
                                 (data) => { printerName = data.printerName; },
                                 (eTxt) => { MeadCo.ScriptX.Print.reportError(eTxt); }
                             );
+
+                            MeadCo.ScriptX.Print.reportError("Not Found");
                         }
                     }
                     else {
