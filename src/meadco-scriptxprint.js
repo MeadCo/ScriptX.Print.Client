@@ -12,10 +12,12 @@
  * Synchronous AJAX calls are deprecated in all browsers but may be useful to "quick start" use of older code. It is recommended that code is moved
  * to using asynchronous calls as soon as practical. The MeadCoScriptXJS library can assist with this as it delivers promise rather than callback based code.
  * 
- * AJAX calls can be made via jQuery or browser native fetch(). If jQuery is available it will be used by preference - if used v1.19 or later is required.
+ * AJAX calls can be made via jQuery or browser native fetch(). If jQuery is available it will be used by preference - if used jQuery v1.19 or later is required.
+ * 
  * jQuery is required for synchronous AJAX calls.
  * 
  * To use fetch, even if jQuery is available then set MeadCo.fetchEnabled to false. 
+ * 
  * This can be done using an attribute: data-meadco-usefetch="true" or declare var MeadCo = { useFetch: true } before including this library
  * This is useful if a very old version of jQuery is required for UI.
  *
@@ -26,7 +28,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    const version = "1.15.0.15";
+    const version = "1.15.0.18";
     const htmlApiLocation = "v1/printHtml";
     const pdfApiLocation = "v1/printPdf";
     const directApiLocation = "v1/printDirect";
@@ -1876,7 +1878,11 @@
                                 (eTxt) => { MeadCo.ScriptX.Print.reportError(eTxt); }
                             );
 
-                            MeadCo.ScriptX.Print.reportError("Not Found");
+                            // awful, solely to not break backwards compatibility
+                            if (servicesServer.serviceUrl === "")
+                                MeadCo.ScriptX.Print.reportError("MeadCo.ScriptX.Print : server connection is not defined.");
+                            else
+                                MeadCo.ScriptX.Print.reportError("Not Found");
                         }
                     }
                     else {
@@ -2422,7 +2428,7 @@
         },
 
         /**
-         * The number of client only jobs (locks and those waiting for delivery to the server) active at this client
+         * Check if there are no jobs waiting for delivery to the server (faster than clientSideJobs==0)
          * 
          * @memberof MeadCoScriptXPrint
          * @property {bool} noJobsWaitingDelivery true if no jobs waiting
@@ -2464,7 +2470,7 @@
         },
 
         /**
-         * Get if print is still 'spooling'.still queued at the server
+         * Get if print is still 'spooling', in other words still queued at the server
          * 
          * @memberof MeadCoScriptXPrint
          * @property {bool} isSpooling

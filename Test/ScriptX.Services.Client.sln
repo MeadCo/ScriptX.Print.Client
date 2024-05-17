@@ -18,8 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs-src", "docs-src", "{6F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7C47A878-72F0-4EFE-B23F-EB6B67DE8594}"
 	ProjectSection(SolutionItems) = preProject
-		..\src\jQuery-MeadCo.ScriptX.Print.UI.js = ..\src\jQuery-MeadCo.ScriptX.Print.UI.js
 		..\src\Bootstrap5-MeadCo.ScriptX.Print.UI.js = ..\src\Bootstrap5-MeadCo.ScriptX.Print.UI.js
+		..\src\jQuery-MeadCo.ScriptX.Print.UI.js = ..\src\jQuery-MeadCo.ScriptX.Print.UI.js
 		..\src\meadco-core.js = ..\src\meadco-core.js
 		..\src\meadco-scriptxfactory.js = ..\src\meadco-scriptxfactory.js
 		..\src\meadco-scriptxprint.js = ..\src\meadco-scriptxprint.js
@@ -39,7 +39,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dist", "dist", "{0F97F6FD-0
 		..\dist\meadco-scriptxservices.min.js = ..\dist\meadco-scriptxservices.min.js
 		..\dist\meadco-scriptxserviceslicensing.min.js = ..\dist\meadco-scriptxserviceslicensing.min.js
 		..\dist\meadco-scriptxservicesprint.min.js = ..\dist\meadco-scriptxservicesprint.min.js
+		..\dist\meadco-scriptxservicesprintUI-2.min.js = ..\dist\meadco-scriptxservicesprintUI-2.min.js
 		..\dist\meadco-scriptxservicesprintUI.min.js = ..\dist\meadco-scriptxservicesprintUI.min.js
+		..\dist\meadco-scriptxservicesUI-2.min.js = ..\dist\meadco-scriptxservicesUI-2.min.js
 		..\dist\meadco-scriptxservicesUI.min.js = ..\dist\meadco-scriptxservicesUI.min.js
 	EndProjectSection
 EndProject

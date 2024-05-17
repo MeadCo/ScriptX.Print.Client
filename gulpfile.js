@@ -4,7 +4,7 @@ const gulp = require("gulp"),
     concat = require("gulp-concat"),
     cssmin = require("gulp-cssmin"),
     htmlmin = require("gulp-htmlmin"),
-    uglify = require("gulp-uglify"),
+    terser = require('gulp-terser'),
     merge = require("merge-stream"),
     pipeline = require('readable-stream').pipeline,
     del = require("del"),
@@ -27,11 +27,7 @@ function mintoDist() {
     var tasks = getBundles(/\.js$/).map(function (bundle) {
         return pipeline(
             gulp.src(bundle.inputFiles, { base: "." }),
-            uglify({ 
-                output: {
-                    comments: "some"
-                }
-                }),
+            terser(),
             concat(bundle.outputFileName),
             gulp.dest(".")
         );
@@ -99,6 +95,7 @@ gulp.task('DocStatics', function () {
 ///////////////////////////////////////////
 // callable processes to build outputs.
 //
+gulp.task('Minify', gulp.series(cleanDist, mintoDist));
 
 gulp.task('MakeDocs', gulp.series('CompileDocs', 'ProcessDocs1', 'ProcessDocs2', 'ProcessDocs3', 'ProcessDocs4','DocStatics'));
 
