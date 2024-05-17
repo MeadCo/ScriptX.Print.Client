@@ -11,6 +11,15 @@
  * 
  * Synchronous AJAX calls are deprecated in all browsers but may be useful to "quick start" use of older code. It is recommended that code is moved
  * to using asynchronous calls as soon as practical. The MeadCoScriptXJS library can assist with this as it delivers promise rather than callback based code.
+ * 
+ * AJAX calls can be made via jQuery or browser native fetch(). If jQuery is available it will be used by preference - if used jQuery v1.19 or later is required.
+ * 
+ * jQuery is required for synchronous AJAX calls.
+ * 
+ * To use fetch, even if jQuery is available then set MeadCo.fetchEnabled to false. 
+ * 
+ * This can be done using an attribute: data-meadco-usefetch="true" or declare var MeadCo = { useFetch: true } before including this library
+ * This is useful if a very old version of jQuery is required for UI.
  *
  * @namespace MeadCoScriptXPrint
  */
@@ -19,19 +28,23 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    var version = "1.14.2.2";
-    var htmlApiLocation = "v1/printHtml";
-    var pdfApiLocation = "v1/printPdf";
-    var directApiLocation = "v1/printDirect";
-    var licenseApiLocation = "v1/licensing";
-    var printerApiLocation = "v1/printer";
+    const version = "1.15.0.18";
+    const htmlApiLocation = "v1/printHtml";
+    const pdfApiLocation = "v1/printPdf";
+    const directApiLocation = "v1/printDirect";
+    const licenseApiLocation = "v1/licensing";
+    const printerApiLocation = "v1/printer";
 
     // default printer 
-    var printerName = "";
+    let printerName = "";
 
     // using this printername causes ScriptX.Services to select 
     // a printer that prints to a PDF file.
-    var magicPrintPreviewPrinter = "ScriptX.Services//PrintPreview.1"
+    const magicPrintPreviewPrinter = "ScriptX.Services//PrintPreview.1"
+
+    const jobNameWaitingForSend = "[hold.clientside]";
+    const jobNameSentWaitingResponse = "[wait.response]";
+    const jobNameHoldEnsureSpoolingStatus = "[hold.ensureSpoolStatus]";
 
     /**
      * Enum to describe the units used on measurements. Please be aware that (sadly) these enum values do *not* match  
@@ -45,7 +58,7 @@
      * @property {number} INCHES 1 
      * @property {number} MM 2 millimeters
      */
-    var enumMeasurementUnits = {
+    const enumMeasurementUnits = {
         DEFAULT: 0,
         INCHES: 1,
         MM: 2
@@ -129,10 +142,10 @@
      * */
     var VersionObject; // for doc generator
 
-    var deviceSettings = {};
-    var module = this;
+    let deviceSettings = {};
+    const module = this;
 
-    var activePrintQueue = []; // current job queue
+    let activePrintQueue = []; // current job queue
 
     // singleton wrapper to the server
     //
@@ -140,17 +153,31 @@
     // servicesServer.test
     // servicesServer.call
     //
-    var servicesServer = {
+    const servicesServer = {
 
         serviceUrl: "",
         pendingUrl: "",
         failedUrl: "",
+        verifiedUrl: "",
         orchestratorPort: 0,
         orchestratorKey: "",
         portsToTry: 10,
         verifying: false,
+        trustVerifiedConnection: true, // if true then once a connection has been found, trust that it will be valid for the page lifetime
+
+        undoTrust: function () {
+            if (!this.trustVerifiedConnection && this.serviceUrl !== "") {
+                this.verifiedUrl = this.serviceUrl;
+                this.pendingUrl = this.serviceUrl;
+                this.serviceUrl = "";
+            }
+        },
 
         get url() {
+
+            if (this.verifiedUrl !== "") {
+                return this.verifiedUrl;
+            }
 
             if (this.serviceUrl === "" && this.pendingUrl !== "") {
                 MeadCo.warn("[GET] servicesServer.url is not ready, performing synchronous search. Recommend code re-org to resolve the server earlier and asynchronously.")
@@ -220,49 +247,94 @@
 
                     MeadCo.log("servicesServer::querying orchestrator: " + "http://127.0.0.1:" + this.orchestratorPort + apiEndPoint);
 
-                    module.jQuery.ajax("http://127.0.0.1:" + this.orchestratorPort + apiEndPoint,
-                        {
-                            method: "GET",
-                            dataType: "json",
-                            cache: false,
-                            async: bAsync
-                        }).done(function (data) {
+                    if (module.jQuery && !MeadCo.fetchEnabled) {
+                        module.jQuery.ajax("http://127.0.0.1:" + this.orchestratorPort + apiEndPoint,
+                            {
+                                method: "GET",
+                                dataType: "json",
+                                cache: false,
+                                async: bAsync
+                            }).done(function (data) {
 
-                            MeadCo.log("orchestrator returned ScriptX.Services port: " + data.HttpPort)
+                                MeadCo.log("orchestrator returned ScriptX.Services port: " + data.HttpPort)
 
-                            var urlHelper = new URL(thatValue);
-                            urlHelper.port = data.HttpPort;
-                            thatValue = urlHelper.protocol + "//" + urlHelper.host + urlHelper.pathname
+                                var urlHelper = new URL(thatValue);
+                                urlHelper.port = data.HttpPort;
+                                thatValue = urlHelper.protocol + "//" + urlHelper.host + urlHelper.pathname
 
-                            that.test(thatValue, 0, bAsync, function (urlFound) {
-                                that.serviceUrl = urlFound;
-                                that.pendingUrl = "";
+                                that.test(thatValue, 0, bAsync, function (urlFound) {
+                                    that.serviceUrl = urlFound;
+                                    that.pendingUrl = "";
+                                    that.verifying = false;
+                                    resolve(urlFound, true);
+                                }, function (errorThrown) {
+                                    that.serviceUrl = "";
+                                    that.pendingUrl = "";
+                                    that.failedUrl = thatValue;
+                                    that.verifying = false;
+                                    if (typeof reject === "function") {
+                                        reject(errorThrown);
+                                    }
+                                });
+
+                            })
+                            .fail(function (jqXhr, textStatus, errorThrown) {
                                 that.verifying = false;
-                                resolve(urlFound, true);
-                            }, function (errorThrown) {
                                 that.serviceUrl = "";
                                 that.pendingUrl = "";
                                 that.failedUrl = thatValue;
-                                that.verifying = false;
+
+                                const msg = MeadCo.parseAjaxError("Failed to connect with Orchestrator: ", jqXhr, textStatus, errorThrown);
+                                MeadCo.warn(msg);
+
                                 if (typeof reject === "function") {
-                                    reject(errorThrown);
+                                    reject("Failed to connect with Orchestrator: " + msg);
                                 }
                             });
+                    }
+                    else {
+                        fetch("http://127.0.0.1:" + this.orchestratorPort + apiEndPoint)
+                            .then((response) => {
+                                if (!response.ok) {
+                                    throw new Error(`HTTP Error: ${response.status}`)
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                MeadCo.log("orchestrator returned ScriptX.Services port: " + data.HttpPort)
 
-                        })
-                        .fail(function (jqXhr, textStatus, errorThrown) {
-                            that.verifying = false;
-                            that.serviceUrl = "";
-                            that.pendingUrl = "";
-                            that.failedUrl = thatValue;
+                                var urlHelper = new URL(thatValue);
+                                urlHelper.port = data.HttpPort;
+                                thatValue = urlHelper.protocol + "//" + urlHelper.host + urlHelper.pathname
 
-                            var msg = MeadCo.parseAjaxError("Failed to connect with Orchestrator: ", jqXhr, textStatus, errorThrown);
-                            MeadCo.warn(msg);
+                                that.test(thatValue, 0, bAsync, function (urlFound) {
+                                    that.serviceUrl = urlFound;
+                                    that.pendingUrl = "";
+                                    that.verifying = false;
+                                    resolve(urlFound, true);
+                                }, function (errorThrown) {
+                                    that.serviceUrl = "";
+                                    that.pendingUrl = "";
+                                    that.failedUrl = thatValue;
+                                    that.verifying = false;
+                                    if (typeof reject === "function") {
+                                        reject(errorThrown);
+                                    }
+                                });
+                            })
+                            .catch(error => {
+                                that.verifying = false;
+                                that.serviceUrl = "";
+                                that.pendingUrl = "";
+                                that.failedUrl = thatValue;
 
-                            if (typeof reject === "function") {
-                                reject("Failed to connect with Orchestrator: " + msg);
-                            }
-                        });
+                                const errorThrown = MeadCo.parseFetchError("MeadCo.ScriptX.Print:verifyUrl - " + value, error);
+
+                                if (typeof reject === "function") {
+                                    reject("Failed to connect with Orchestrator: " + errorThrown);
+                                }
+                            });
+                    }
                 }
                 else {
                     that.verifying = true;
@@ -306,16 +378,16 @@
         //
         test: function (serverUrl, nHuntAllowed, bAsync, resolve, reject) {
             if (serverUrl.length > 0) {
-                if (module.jQuery) {
-                    var that = this;
-                    var urlHelper = new URL(serverUrl);
+                const that = this;
+                let urlHelper = new URL(serverUrl);
 
-                    MeadCo.log("Test server requested: " + serverUrl + ", port: " + urlHelper.port);
+                MeadCo.log("Test server requested: " + serverUrl + ", port: " + urlHelper.port);
 
-                    // use the license API
-                    var serviceUrl = MeadCo.makeApiEndPoint(urlHelper.href, licenseApiLocation + "/ping");
+                // use the license API
+                const serviceUrl = MeadCo.makeApiEndPoint(urlHelper.href, licenseApiLocation + "/ping");
+
+                if (module.jQuery && !MeadCo.fetchEnabled) {
                     MeadCo.log(".ajax() get: " + serviceUrl);
-
                     module.jQuery.ajax(serviceUrl,
                         {
                             method: "GET",
@@ -323,7 +395,7 @@
                             cache: false,
                             async: bAsync
                         }).done(function (data) {
-                            var resolvedUrl = urlHelper.protocol + "//" + urlHelper.host + urlHelper.pathname;
+                            const resolvedUrl = urlHelper.protocol + "//" + urlHelper.host + urlHelper.pathname;
                             MeadCo.log("Test server succeed, resolve(" + resolvedUrl + ")")
                             resolve(resolvedUrl);
                         })
@@ -347,8 +419,48 @@
                         });
                 }
                 else {
-                    MeadCo.error("jQuery is required by ScriptX.Services");
+                    MeadCo.log("fetch get: " + serviceUrl);
+                    if (bAsync) {
+                        fetch(serviceUrl)
+                            .then((response) => {
+                                if (!response.ok) {
+                                    throw new Error(`HTTP Error: ${response.status}`)
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                const resolvedUrl = urlHelper.protocol + "//" + urlHelper.host + urlHelper.pathname;
+                                MeadCo.log("Test server succeed, resolve(" + resolvedUrl + ")")
+                                resolve(resolvedUrl);
+                            })
+                            .catch((error) => {
+                                // only do hunting with 4WPC and that must be on 127.0.0.1 or localhost
+                                MeadCo.log("Test server failed: [" + error + "], " + nHuntAllowed + ", on: " + urlHelper.hostname);
+                                if (nHuntAllowed > 0 && (urlHelper.hostname === "localhost" || urlHelper.hostname == "127.0.0.1")) {
+                                    urlHelper.port++;
+                                    module.setTimeout(that.test(urlHelper.protocol + "//" + urlHelper.host + urlHelper.pathname, --nHuntAllowed, bAsync, resolve, reject), 1);
+                                }
+                                else {
+                                    errorThrown = MeadCo.parseFetchError("MeadCo.ScriptX.Print.servicesServer.test:", error);
+                                    if (typeof reject === "function") {
+                                        MeadCo.log("rejecting with: " + errorThrown);
+                                        reject(errorThrown);
+                                    }
+                                    else {
+                                        MeadCo.warn("failed with no reject function");
+                                    }
+                                }
+
+                            });
+                    }
+                    else {
+                        MeadCo.error("Synchronous Ajax calls requires jQuery");
+                        if (typeof reject === "function") {
+                            reject("Synchronous Ajax calls requires jQuery");
+                        }
+                    }
                 }
+
             }
         },
 
@@ -356,8 +468,10 @@
         //
         call: function (sApi, method, oApiData, bLicensed, bAsync, resolve, reject) {
 
+            const that = this;
+
             if (this.serviceUrl === "" && this.pendingUrl !== "") {
-                var that = this;
+
                 this.verifyUrl(this.pendingUrl, bAsync, function () {
                     if (that.url !== "") {
                         that.call(sApi, method, oApiData, bLicensed, bAsync, resolve, reject);
@@ -370,30 +484,30 @@
                 }, reject);
             }
             else {
-                if (module.jQuery) {
-                    if (this.serviceUrl !== "") {
-                        var serviceUrl = MeadCo.makeApiEndPoint(this.serviceUrl, sApi);
-                        MeadCo.log("servicesServer.call() " + method + ": " + serviceUrl);
-                        var oPayload = {
-                            method: method,
-                            cache: false,
-                            async: bAsync,
-                            jsonp: false,
-                            dataType: "json",
-                            contentType: "application/json"
-                        };
+                if (this.serviceUrl !== "") {
+                    const serviceUrl = MeadCo.makeApiEndPoint(this.serviceUrl, sApi);
+                    MeadCo.log("servicesServer.call() " + method + ": " + serviceUrl);
+                    let oPayload = {
+                        method: method,
+                        cache: false,
+                        async: bAsync,
+                        jsonp: false,
+                        dataType: "json",
+                        contentType: "application/json"
+                    };
 
-                        if (bLicensed) {
-                            oPayload.headers = {
-                                "Authorization": "Basic " + btoa(licenseGuid + ":")
-                            }
+                    if (bLicensed) {
+                        oPayload.headers = {
+                            "Authorization": "Basic " + btoa(licenseGuid + ":")
                         }
+                    }
 
-                        if (typeof oApiData === "object" && oApiData !== null) {
-                            MeadCo.log("payload defined.");
-                            oPayload.data = JSON.stringify(oApiData);
-                        }
+                    if (!this.IsEmptyPayload(oApiData)) {
+                        MeadCo.log("payload defined.");
+                        oPayload.data = JSON.stringify(oApiData);
+                    }
 
+                    if (module.jQuery && !MeadCo.fetchEnabled) {
                         module.jQuery.ajax(serviceUrl, oPayload)
                             .done(function (data) {
                                 if (typeof resolve === "function") {
@@ -408,25 +522,98 @@
                                 else {
                                     throw new Error(errorThrown);
                                 }
+                            })
+                            .always(function (dataOrjqXHR, textStatus, jqXHRorErrorThrown) {
+                                that.undoTrust();
                             });
-                    } else {
-                        if (typeof reject === "function") {
-                            reject("MeadCo.ScriptX.Print : server connection is not defined.");
-                        }
-                        else
-                            throw new Error("MeadCo.ScriptX.Print : server connection is not defined.");
                     }
-                } else {
+                    else {
+                        if (bAsync) {
+                            if (bLicensed) {
+                                oPayload.headers = {
+                                    "Authorization": "Basic " + btoa(licenseGuid + ":"),
+                                    "Content-type": "application/json"
+                                }
+                            }
+                            else {
+                                oPayload.headers = {
+                                    "Content-type": "application/json"
+                                }
+                            }
+
+                            const netcall = fetch(serviceUrl, {
+                                method: oPayload.method,
+                                headers: oPayload.headers,
+                                body: oPayload.data,
+                                referrerPolicy: "origin-when-cross-origin",
+                                mode: "cors",
+                                credentials: "omit",
+                                cache: "no-store",
+                                redirect: "error",
+                                keepalive: false
+                            })
+                                .then((response) => {
+                                    that.undoTrust();
+                                    if (!response.ok) {
+                                        // throw new Error(`HTTP Error: ${response.status}`)
+                                        if ( response.status == 500 || response.status == 404 ) {
+                                            const err = response.text()
+                                                .then(errorTxt => {
+                                                    const errorThrown = MeadCo.parseFetchError("MeadCo.ScriptX.Print:" + sApi + method, errorTxt);
+                                                    if (typeof reject === "function")
+                                                        reject(errorThrown);
+                                                    else {
+                                                        throw new Error(errorThrown);
+                                                    }
+                                                });
+                                        }
+                                        else {
+                                            if (typeof reject === "function")
+                                                reject(response.statusText);
+                                            else {
+                                                throw new Error(response.statusText);
+                                            }
+                                        }
+                                        return;
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    if (data && typeof resolve === "function") {
+                                        resolve(data);
+                                    }
+                                })
+                                .catch((error) => {
+                                    const errorThrown = MeadCo.parseFetchError("MeadCo.ScriptX.Print:" + sApi + method, error);
+                                    if (typeof reject === "function")
+                                        reject(errorThrown);
+                                    else {
+                                        throw new Error(errorThrown);
+                                    }
+                                });
+                        }
+                        else {
+                            if (typeof reject === "function") {
+                                reject("Synchronous Ajax calls requires jQuery");
+                            }
+                            else
+                                throw new Error("Synchronous Ajax calls requires jQuery");
+                        }
+                    }
+                }
+                else {
                     if (typeof reject === "function") {
-                        reject("MeadCo.ScriptX.Print : no known ajax helper available");
+                        reject("MeadCo.ScriptX.Print : server connection is not defined.");
                     }
                     else
-                        throw new Error("MeadCo.ScriptX.Print : no known ajax helper available");
+                        throw new Error("MeadCo.ScriptX.Print : server connection is not defined.");
                 }
             }
+
+            return true;
         },
 
-        // determine if the server is changing - domain or port has changed.
+        // determine if the server is changing - domain or port has changed when not using orchestrator
         IsChangingServer: function (aServerUrl) {
             if (this.serviceUrl !== "") {
 
@@ -434,7 +621,7 @@
                     var currentUrl = new URL(this.serviceUrl);
                     var newUrl = new URL(aServerUrl);
 
-                    return currentUrl.hostname != newUrl.hostname || currentUrl.port != newUrl.port;
+                    return currentUrl.hostname != newUrl.hostname || (currentUrl.port != newUrl.port && this.orchestratorPort == 0);
                 } catch (e) {
                     MeadCo.error("Failed to construct URL(): " + e.message + ", from: " + this.serviceUrl + ", or: " + aServerUrl);
                     MeadCo.error("Many errors will ensue");
@@ -443,6 +630,10 @@
             }
 
             return true;
+        },
+
+        IsEmptyPayload(oPayload) {
+            return oPayload === null || (Object.keys(oPayload).length === 0 && oPayload.constructor === Object);
         },
 
         // bad news to retest ports on a host that has already been tried, in a page lifetime, it isnt going to get any better.
@@ -629,7 +820,7 @@
 
     function queueJob(data) {
         activePrintQueue.push(data);
-        MeadCo.log("ScriptX.Print queueJob: " + data.jobName + ", jobCount: " + activePrintQueue.length);
+        MeadCo.log("ScriptX.Print queueJob: " + data.jobIdentifier + ", name: " + data.jobName + ", jobCount: " + activePrintQueue.length);
     }
 
     function jobCount() {
@@ -638,42 +829,28 @@
     }
 
     function findJob(id) {
-        var i;
-        for (i = 0; i < activePrintQueue.length; i++) {
-            if (activePrintQueue[i].jobIdentifier === id) {
-                return activePrintQueue[i];
-            }
-        }
-        return null;
+        return activePrintQueue.find(e => e.jobIdentifier === id);
     }
 
     function updateJob(data) {
-        var i;
-        for (i = 0; i < activePrintQueue.length; i++) {
-            if (activePrintQueue[i].jobIdentifier === data.jobIdentifier) {
-                Object.keys(data).forEach(function (key) {
-                    activePrintQueue[i][key] = data[key];
-                });
-                return;
-            }
+        let j = findJob(data.jobIdentifier);
+        if (j) {
+            Object.keys(data).forEach(function (key) {
+                j[key] = data[key];
+            });
+            return;
         }
+
         MeadCo.warn("Unable to find job: " + data.jobIdentifier + " to update it");
     }
 
     function removeJob(id) {
-        var i;
-        for (i = 0; i < activePrintQueue.length; i++) {
-            if (activePrintQueue[i].jobIdentifier === id) {
-                MeadCo.log("ScriptX.Print removing job: " + activePrintQueue[i].jobName);
-                activePrintQueue.splice(i, 1);
-                MeadCo.log("ScriptX.Print remove job, jobCount: " + activePrintQueue.length);
 
-                // no jobs being processed, allow next immediate start
-                if (activePrintQueue.length == 0) previousPrintCallWasAt = 0;
-                return;
-            }
-        }
-        MeadCo.warn("Unable to find job: " + id + " to remove it");
+        activePrintQueue = activePrintQueue.filter(e => e.jobIdentifier !== id);
+        MeadCo.log(`ScriptX.Print removed job: ${id}, jobCount: ${activePrintQueue.length}`);
+        // no jobs being processed, allow next immediate start
+        if (activePrintQueue.length == 0) previousPrintCallWasAt = 0;
+
     }
 
     function progress(requestData, status, information) {
@@ -720,22 +897,20 @@
         var fakeJob = {
             jobIdentifier: Date.now(),
             printerName: requestData.Device.printerName,
-            jobName: "Job timeout hold clientside"
+            jobName: jobNameWaitingForSend
         };
         queueJob(fakeJob); // essentially a lock on the queue to stop it looking empty until this job is processed
 
         var requiredOutputName = nextJobFileName;
         nextJobFileName = "";
 
-        var serverApi = MeadCo.makeApiEndPoint(servicesServer.url, htmlApiLocation);
         var fnOnFileAvailable = fnOnQueuedFileAvailable;
 
         return function () {
             removeJob(fakeJob.jobIdentifier);
-            return printAtServer(serverApi, requestData,
+            return printAtServer(htmlApiLocation, requestData,
                 {
-                    fail: function (jqXhr, textStatus, errorThrown) {
-                        var err = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.printHtmlAtServer", jqXhr, textStatus, errorThrown);
+                    fail: function (err) {
                         progress(requestData, enumPrintStatus.ERROR, err);
                         MeadCo.ScriptX.Print.reportError(err);
                         if (typeof fnDone === "function") {
@@ -746,14 +921,14 @@
                     queuedToFile: function (data) {
                         MeadCo.log("print is being queued to a file");
                         progress(requestData, enumPrintStatus.QUEUED);
-                        monitorJob(serverApi, requestData, data.jobIdentifier,
+                        monitorJob(htmlApiLocation, requestData, data.jobIdentifier,
                             -1,
                             function (data) {
                                 if (data !== null) {
                                     MeadCo.log("download printed file is available");
                                     progress(requestData, enumPrintStatus.COMPLETED);
 
-                                    var api = serverApi + "/download/" + data.jobIdentifier;
+                                    var api = MeadCo.makeApiEndPoint(servicesServer.url, htmlApiLocation + "/download/" + data.jobIdentifier);
                                     if (requiredOutputName.length > 0) {
                                         api += "/" + requiredOutputName;
                                     }
@@ -769,7 +944,7 @@
                     queuedToDevice: function (data) {
                         MeadCo.log("print was queued to device");
                         progress(requestData, enumPrintStatus.QUEUED);
-                        monitorJob(serverApi, requestData, data.jobIdentifier,
+                        monitorJob(htmlApiLocation, requestData, data.jobIdentifier,
                             -1,
                             function (data) {
                                 if (data !== null) {
@@ -862,7 +1037,7 @@
 
         MeadCo.log("started MeadCo.ScriptX.Print.print.printPdfAtServer() document: " + document + ", printerName: " + printerName);
 
-        var devInfo;
+        let devInfo;
         // deep clones of objects
         if (printerName === "") {
             devInfo = {};
@@ -870,7 +1045,7 @@
             devInfo = JSON.parse(JSON.stringify(deviceSettings[printerName]));
         }
 
-        var requestData = {
+        const requestData = {
             Document: document,
             Description: pdfPrintSettings.jobDescription,
             Settings: JSON.parse(JSON.stringify(pdfPrintSettings)),
@@ -883,12 +1058,10 @@
         // used/required by printAtServer ...
         requestData.Settings.jobTitle = pdfPrintSettings.jobDescription;
 
-        var serverApi = MeadCo.makeApiEndPoint(servicesServer.url, pdfApiLocation);
-
-        var fakeJob = {
+        const fakeJob = {
             jobIdentifier: Date.now(),
             printerName: requestData.Device.printerName,
-            jobName: "Job timeout hold clientside"
+            jobName: jobNameWaitingForSend
         };
         queueJob(fakeJob); // essentially a lock on the queue to stop it looking empty until this job is processed
 
@@ -897,10 +1070,9 @@
 
         return function () {
             removeJob(fakeJob.jobIdentifier);
-            return printAtServer(serverApi, requestData,
+            return printAtServer(pdfApiLocation, requestData,
                 {
-                    fail: function (jqXhr, textStatus, errorThrown) {
-                        var err = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.printPdfAtServer", jqXhr, textStatus, errorThrown);
+                    fail: function (err) {
                         progress(requestData, enumPrintStatus.ERROR, err);
                         MeadCo.ScriptX.Print.reportError(err);
                         if (typeof fnDone === "function") {
@@ -911,13 +1083,13 @@
                     queuedToFile: function (data) {
                         MeadCo.log("default handler on queued to file response");
                         progress(requestData, enumPrintStatus.QUEUED);
-                        monitorJob(serverApi, requestData, data.jobIdentifier,
+                        monitorJob(pdfApiLocation, requestData, data.jobIdentifier,
                             -1,
                             function (data) {
                                 if (data !== null) {
                                     MeadCo.log("Will download printed file");
                                     progress(requestData, enumPrintStatus.COMPLETED);
-                                    var api = serverApi + "/download/" + data.jobIdentifier;
+                                    let api = MeadCo.makeApiEndPoint(servicesServer.url, pdfApiLocation + "/download/" + data.jobIdentifier);
                                     if (requiredOutputName.length > 0) {
                                         api += "/" + requiredOutputName;
                                     }
@@ -933,7 +1105,7 @@
                     queuedToDevice: function (data) {
                         MeadCo.log("print was queued to device");
                         progress(requestData, enumPrintStatus.QUEUED);
-                        monitorJob(serverApi, requestData, data.jobIdentifier,
+                        monitorJob(pdfApiLocation, requestData, data.jobIdentifier,
                             -1,
                             function (data) {
                                 if (data !== null) {
@@ -994,7 +1166,7 @@
         }
 
         // if previous call was over (default) 10 seconds ago, reset
-        var t = Date.now();
+        const t = Date.now();
         if ((t - previousPrintCallWasAt) > jobGapResetTimeout) {
             timeoutToJobStart = 0;
         }
@@ -1048,7 +1220,7 @@
             return false;
         }
 
-        var requestData = {
+        const requestData = {
             ContentType: contentType,
             Content: content,
             PrinterName: printerName,
@@ -1058,11 +1230,9 @@
             Device: deviceSettings[printerName] // not required by the server .. used by printAtServer()
         };
 
-        var serverApi = MeadCo.makeApiEndPoint(servicesServer.url, directApiLocation);
-        return printAtServer(serverApi, requestData,
+        return printAtServer(directApiLocation, requestData,
             {
-                fail: function (jqXhr, textStatus, errorThrown) {
-                    var err = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.printDirectAtServer", jqXhr, textStatus, errorThrown);
+                fail: function (err) {
                     MeadCo.ScriptX.Print.reportError(err);
                     if (typeof fnDone === "function") {
                         fnDone("Server error");
@@ -1115,7 +1285,7 @@
             }
         }
         else {
-            MeadCo.log("Print server retained: " + servicesServer.url + " update with license: " + clientLicenseGuid);
+            MeadCo.log("Print server retained in setServer: " + servicesServer.url + " may update with license: {" + clientLicenseGuid + "} (if provided)");
             licenseGuid = typeof clientLicenseGuid === "string" && clientLicenseGuid.length > 0 ? clientLicenseGuid : licenseGuid;
         }
     }
@@ -1153,79 +1323,55 @@
     /**
      * Post a request to print
      * 
-     * @param {string} serverAndApi The full server url api endpoint (e.g. http://localhost:3000/api/printhtml). The method '/print' will be added. 
+     * @param {string} sApi The server api endpoint (e.g. api/printhtml). The method '/print' will be added. 
      * @param {object} requestData The data to be posted
      * @param {functionList} responseInterface Callbacks to process responses
      * @returns {bool} true if request sent
      */
-    function printAtServer(serverAndApi, requestData, responseInterface) {
+    function printAtServer(sApi, requestData, responseInterface) {
 
-        if (servicesServer.url.length <= 0) {
-            throw new Error("MeadCo.ScriptX.Print : print server URL is not set or is invalid");
-        }
-
-        var fakeJob = {
+        const fakeJob = {
             jobIdentifier: Date.now(),
             printerName: requestData.Device.printerName,
-            jobName: "Job starting"
+            jobName: jobNameSentWaitingResponse
         };
 
+        MeadCo.log("printAtServer using: " + sApi);
 
-        if (module.jQuery) {
-            MeadCo.log(".ajax() post to: " + serverAndApi);
-            // MeadCo.log(JSON.stringify(requestData));
+        queueJob(fakeJob); // essentially a lock on the queue to stop it looking empty while we await the result
 
-            queueJob(fakeJob); // essentially a lock on the queue to stop it looking empty while we await the result
-            module.jQuery.ajax(serverAndApi + "/print",
-                {
-                    data: JSON.stringify(requestData),
-                    dataType: "json",
-                    contentType: "application/json",
-                    method: "POST",
-                    headers: {
-                        "Authorization": "Basic " + btoa(licenseGuid + ":")
-                    }
-                })
-                .done(function (data) {
-                    MeadCo.log("Success response: " + data.status);
-                    data.printerName = requestData.Device.printerName;
-                    data.jobName = requestData.Settings.jobTitle;
-                    queueJob(data);
-                    removeJob(fakeJob.jobIdentifier);
-                    switch (data.status) {
-                        case enumResponseStatus.QUEUEDTOFILE:
-                            responseInterface.queuedToFile(data);
-                            break;
+        return callService(sApi + "/print", "POST", requestData, true, true, (data) => {
+            MeadCo.log("Success response: " + data.status);
+            data.printerName = requestData.Device.printerName;
+            data.jobName = typeof requestData.Settings.jobTitle === "string" && requestData.Settings.jobTitle.length > 0 ? requestData.Settings.jobTitle : "server job";
+            queueJob(data);
+            removeJob(fakeJob.jobIdentifier);
+            switch (data.status) {
+                case enumResponseStatus.QUEUEDTOFILE:
+                    responseInterface.queuedToFile(data);
+                    break;
 
-                        case enumResponseStatus.QUEUEDTODEVICE:
-                            responseInterface.queuedToDevice(data);
-                            break;
+                case enumResponseStatus.QUEUEDTODEVICE:
+                    responseInterface.queuedToDevice(data);
+                    break;
 
-                        case enumResponseStatus.SOFTERROR:
-                        case enumResponseStatus.UNKNOWN:
-                            responseInterface.softError(data);
-                            break;
+                case enumResponseStatus.SOFTERROR:
+                case enumResponseStatus.UNKNOWN:
+                    responseInterface.softError(data);
+                    break;
 
-                        case enumResponseStatus.OK:
-                            responseInterface.ok(data);
-                            break;
-                    }
-                })
-                .fail(function (jqXhr, textStatus, errorThrown) {
-                    removeJob(fakeJob.jobIdentifier);
-                    if (typeof responseInterface.fail === "function") {
-                        responseInterface.fail(jqXhr, textStatus, errorThrown);
-                    }
-                });
-            return true;
-        } else {
-            if (typeof responseInterface.fail === "function") {
-                responseInterface.fail("MeadCo.ScriptX.Print : no known ajax helper available");
+                case enumResponseStatus.OK:
+                    responseInterface.ok(data);
+                    break;
             }
-            else {
-                throw new Error("MeadCo.ScriptX.Print : no known ajax helper available");
+        },
+            (errMsg) => {
+                removeJob(fakeJob.jobIdentifier);
+                if (typeof responseInterface.fail === "function") {
+                    responseInterface.fail(errMsg);
+                }
             }
-        }
+        );
     }
 
     /**
@@ -1247,98 +1393,90 @@
         return servicesServer.call(sApi, httpMethod, oApiData, bLicensed, bAsync, resolve, reject);
     }
 
+    function processMonitorResponse(requestData, data, intervalId, jobId, timeOut, functionComplete) {
+        MeadCo.log("processMonitorResponse::jobStatus: " + data.status);
+        switch (data.status) {
+            case enumPrintStatus.COMPLETED:
+                MeadCo.log("clear interval: " + intervalId);
+                window.clearInterval(intervalId);
+                removeJob(jobId);
+                functionComplete(data);
+                break;
+
+            case enumPrintStatus.NOTSTARTED:
+            case enumPrintStatus.DOWNLOADED:
+            case enumPrintStatus.DOWNLOADING:
+            case enumPrintStatus.PRINTING:
+            case enumPrintStatus.QUEUED:
+            case enumPrintStatus.STARTING:
+            case enumPrintStatus.PAUSED:
+            case enumPrintStatus.PRINTPDF:
+                progress(requestData, data.status, data.message);
+                updateJob(data);
+                // keep going
+                if (timeOut > 0 && (++counter * interval) > timeOut) {
+                    window.clearInterval(intervalId);
+                    MeadCo.ScriptX.Print.reportError("unknown failure while printing.");
+                }
+                break;
+
+            case enumPrintStatus.ERROR:
+            case enumPrintStatus.ABANDONED:
+                MeadCo.log("error status in monitorJob so clear interval: " + intervalId);
+                progress(requestData, data.status, data.message);
+                removeJob(jobId);
+                window.clearInterval(intervalId);
+                MeadCo.ScriptX.Print.reportError("The print failed with the error: " + data.message);
+                functionComplete(null);
+                break;
+
+            default:
+                progress(requestData, data.status, data.message);
+                MeadCo.log("unknown status in monitorJob so clear interval: " + intervalId);
+                removeJob(jobId);
+                window.clearInterval(intervalId);
+                functionComplete(null);
+                break;
+        }
+
+    }
+
     /**
      * Monitor a job that has been known to start  on the server. Get job status from the server and record in the job queue 
      * and process status appropriately. Progress callbacks will occur.
      * 
      * @function monitorJob
      * @memberof MeadCoScriptXPrint
-     * @param {string} serverAndApi The full server url api endpoint (e.g. http://localhost:3000/api/printhtml). The method '/status/' will be added.
+     * @param {string} serverAndApi The server api endpoint (e.g. api/printhtml). The method '/status/' will be added.
      * @param {string} requestData The original data sent with the print request
      * @param {string} jobId The id return from the server for the job (to be monitored)
      * @param {number} timeOut Time give the job to complete or assume has got stuck, -1 means no timeout.
      * @param {function({object})} functionComplete function to call when job is complete. Argument is null on error, the data returned from the status call on success,.
      * @private
      */
-    function monitorJob(serverAndApi, requestData, jobId, timeOut, functionComplete) {
+    function monitorJob(sApi, requestData, jobId, timeOut, functionComplete) {
         MeadCo.log("monitorJob: " + jobId);
-        var counter = 0;
-        var interval = 1000;
-        var bWaiting = false;
-        var intervalId = window.setInterval(function () {
+        const interval = 1000;
+        let bWaiting = false;
+        let intervalId = window.setInterval(function () {
             if (!bWaiting) {
-                MeadCo.log("Going to request status with .ajax");
-                bWaiting = true;
-                jQuery.ajax(serverAndApi + "/status/" + jobId,
-                    {
-                        dataType: "json",
-                        method: "GET",
-                        cache: false,
-                        headers: {
-                            "Authorization": "Basic " + btoa(licenseGuid + ":")
-                        }
-                    }).done(function (data) {
-                        MeadCo.log("jobStatus: " + data.status);
-                        switch (data.status) {
-                            case enumPrintStatus.COMPLETED:
-                                MeadCo.log("clear interval: " + intervalId);
-                                window.clearInterval(intervalId);
-                                removeJob(jobId);
-                                functionComplete(data);
-                                break;
-
-                            case enumPrintStatus.NOTSTARTED:
-                            case enumPrintStatus.DOWNLOADED:
-                            case enumPrintStatus.DOWNLOADING:
-                            case enumPrintStatus.PRINTING:
-                            case enumPrintStatus.QUEUED:
-                            case enumPrintStatus.STARTING:
-                            case enumPrintStatus.PAUSED:
-                            case enumPrintStatus.PRINTPDF:
-                                progress(requestData, data.status, data.message);
-                                updateJob(data);
-                                // keep going
-                                if (timeOut > 0 && (++counter * interval) > timeOut) {
-                                    window.clearInterval(intervalId);
-                                    MeadCo.ScriptX.Print.reportError("unknown failure while printing.");
-                                }
-                                bWaiting = false;
-                                break;
-
-                            case enumPrintStatus.ERROR:
-                            case enumPrintStatus.ABANDONED:
-                                MeadCo.log("error status in monitorJob so clear interval: " + intervalId);
-                                progress(requestData, data.status, data.message);
-                                removeJob(jobId);
-                                window.clearInterval(intervalId);
-                                MeadCo.ScriptX.Print.reportError("The print failed with the error: " + data.message);
-                                functionComplete(null);
-                                break;
-
-                            default:
-                                progress(requestData, data.status, data.message);
-                                MeadCo.log("unknown status in monitorJob so clear interval: " + intervalId);
-                                removeJob(jobId);
-                                window.clearInterval(intervalId);
-                                functionComplete(null);
-                                break;
-                        }
-                    })
-                    .fail(function (jqXhr, textStatus, errorThrown) {
-
-                        errorThrown = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.monitorJob:", jqXhr, textStatus, errorThrown);
-
+                bWaiting = true; // ensure if the interval fires again before the last call response has been dealt with, wait till next interval until it has been dealt with
+                getFromServer(sApi + "/status/" + jobId, true, (data) => {
+                    processMonitorResponse(requestData, data, intervalId, jobId, timeOut, functionComplete);
+                    bWaiting = false;
+                },
+                    (errorThrown) => {
                         MeadCo.log("error: " + errorThrown + " in monitorJob so clear interval: " + intervalId);
                         progress(requestData, enumPrintStatus.ERROR, errorThrown);
                         removeJob(jobId);
                         window.clearInterval(intervalId);
                         functionComplete(null);
+                        bWaiting = false;
                     });
             } else {
                 MeadCo.log("** info : still waiting for last status request to complete");
             }
-        },
-            interval);
+        }, interval);
 
         MeadCo.log("intervalId: " + intervalId);
     }
@@ -1374,7 +1512,6 @@
                 if (oRequest.name === "systemdefault") {
                     MeadCo.warn("request for systemdefault printer failed - please update to ScriptX.Services 2.11.1");
                     oRequest.name = "default";
-                    oRequest.async = false;
                     getDeviceSettings(oRequest);
                 }
                 else {
@@ -1410,6 +1547,28 @@
         return {};
     }
 
+    function getDeviceSettingsForAsync(sPrinterName, resolve, reject) {
+        if (typeof sPrinterName === "string" && sPrinterName !== "") {
+            if (typeof deviceSettings[sPrinterName] === "undefined") {
+                getDeviceSettings({
+                    name: sPrinterName,
+                    async: true,
+                    done: function (printerData) {
+                        if (sPrinterName.toLowerCase() === "systemdefault") {
+                            sPrinterName = printerData.printerName;
+                        }
+                        resolve(deviceSettings[sPrinterName])
+                    },
+                    fail: function (eTxt) { reject(eTxt); }
+                });
+            }
+            else
+                resolve(deviceSettings[sPrinterName]);
+        }
+        else
+            reject("a printer name is required");
+    }
+
     function managePrinterConnection(sMethod, sShareName) {
         console.warn("Synchronous calls to add/remove printer connections are not recommeneded as this will lock the browser UI. Consider using the asynchronous versions when working with in ScriptX.Services");
         var sd = MeadCo.ScriptX.Print.serviceDescription();
@@ -1443,70 +1602,68 @@
     //
     function processAttributes() {
         MeadCo.log("MeadCo.ScriptX.Print ... looking for auto connect, already found?: " + bDoneAuto);
-        if (this.jQuery && !bDoneAuto) {
+
+        if (!bDoneAuto) {
             // protected API
             var printHtml = MeadCo.ScriptX.Print.HTML;
             var printApi = MeadCo.ScriptX.Print;
             var licenseApi = MeadCo.ScriptX.Print.Licensing;
 
-            // general connection
-            //
-            // data-meadco-server is the root url, api/v1/printhtml, api/v1/licensing will be added by the library
-            // as required.
-            //
-            // meadco-subscription present => cloud/on premise service
-            // meadco-license present => for Windows PC service
-            jQuery("[data-meadco-subscription]").each(function () {
-                if (typeof printApi === "undefined" || typeof printHtml === "undefined") {
-                    MeadCo.log("Not auto-connecting subscription as print or printHtml API not present. Should be present on next attempt.");
-                } else {
-                    if (!bDoneAuto) {
-                        var $this = jQuery(this);
-                        var data = $this.data();
-                        MeadCo.log("Auto connect susbcription to: " +
-                            data.meadcoServer + ", or " + data.meadcoPrinthtmlserver +
-                            ", with subscription: " +
-                            data.meadcoSubscription +
-                            ", sync: " +
-                            data.meadcoSyncinit);
-                        var syncInit = ("" + data.meadcoSyncinit)
-                            .toLowerCase() !==
-                            "false"; // defaults to true if not specified
+            const cloudOrOnPremise = document.querySelector('[data-meadco-subscription]');
+            if (cloudOrOnPremise) {
+                const data = cloudOrOnPremise.dataset;
+                MeadCo.log("Auto connect susbcription to: " +
+                    data.meadcoServer + ", or " + data.meadcoPrinthtmlserver +
+                    ", with subscription: " +
+                    data.meadcoSubscription +
+                    ", sync: " +
+                    data.meadcoSyncinit +
+                    ", usefetch: " +
+                    data.meadcoUsefetch
+                );
+                const syncInit = ("" + data.meadcoSyncinit)
+                    .toLowerCase() !==
+                    "false"; // defaults to true if not specified
 
-                        var server = data.meadcoServer;
-                        if (typeof server === "undefined") {
-                            server = data.meadcoPrinthtmlserver;
-                        }
-
-                        if (typeof server === "undefined") {
-                            MeadCo.error("No server specified");
-                        } else {
-                            // in case there will be a request for the subnscription info ..
-                            if (typeof licenseApi !== "undefined")
-                                licenseApi.connect(server, data.meadcoSubscription);
-
-                            if (!syncInit) {
-                                MeadCo.log("Async connectlite...");
-                                printApi.connectLite(server, data.meadcoSubscription);
-                            } else {
-                                MeadCo
-                                    .warn("Synchronous connection is deprecated, please use data-meadco-syncinit='false'. Note that this may require additional code changes. Please see: https://www.meadroid.com/Developers/KnowledgeBank/HowToGuides/ScriptXServices/ThenToNow/Stage6");
-                                printHtml.connect(server, data.meadcoSubscription);
-                            }
-                            bDoneAuto = true;
-                        }
-                    }
+                if (!syncInit) {
+                    const sFetchDefined = ("" + data.meadcoUsefetch);
+                    if (sFetchDefined.length > 0)
+                        MeadCo.fetchEnabled = sFetchDefined.toLowerCase() === "true";
                 }
-                return false;
-            });
+                else
+                    MeadCo.fetchEnabled = false;
 
-            jQuery("[data-meadco-license]").each(function () {
-                if (typeof printApi === "undefined" || typeof printHtml === "undefined" || typeof licenseApi === "undefined") {
-                    MeadCo.log("Not auto-connecting client license as print or printHtml or license API not present. Should be present on next attempt.");
+                const server = data.meadcoServer;
+                if (typeof server === "undefined") {
+                    server = data.meadcoPrinthtmlserver;
+                }
+
+                if (typeof server === "undefined") {
+                    MeadCo.error("No server specified");
                 } else {
-                    if (!bDoneAuto) {
-                        var $this = jQuery(this);
-                        var data = $this.data();
+                    // in case there will be a request for the subnscription info ..
+                    if (typeof licenseApi !== "undefined")
+                        licenseApi.connect(server, data.meadcoSubscription);
+
+                    if (!syncInit) {
+                        MeadCo.log("Async connectlite...");
+                        printApi.connectLite(server, data.meadcoSubscription);
+                    } else {
+                        MeadCo
+                            .warn("Synchronous connection is deprecated.jQuery is required for synchronous behaviour.To update to asynchronous behaviour please use data - meadco - syncinit='false'. Note that this may require additional code changes. Please see: https://www.meadroid.com/Developers/KnowledgeBank/HowToGuides/ScriptXServices/ThenToNow/Stage6");
+                        printHtml.connect(server, data.meadcoSubscription);
+                    }
+                    bDoneAuto = true;
+                }
+            }
+            else {
+                const wPC = document.querySelector('[data-meadco-license]');
+
+                if (wPC) {
+                    if (typeof printApi === "undefined" || typeof printHtml === "undefined" || typeof licenseApi === "undefined") {
+                        MeadCo.log("Not auto-connecting client license as print or printHtml or license API not present. Should be present on next attempt.");
+                    } else {
+                        const data = wPC.dataset;
                         MeadCo.log("Auto connect client license to: " +
                             data.meadcoServer +
                             ", with license: " +
@@ -1517,31 +1674,62 @@
                             data.meadcoLicenseRevision +
                             ", sync: " +
                             data.meadcoSyncinit +
+                            ", useFetch: " +
+                            data.meadcoUsefetch +
                             ", orchestrator: " +
                             data.meadcoOrchestrator +
                             ", orchestratorKey: " +
-                            data.meadcoOrchestratorKey);
-                        var syncInit = ("" + data.meadcoSyncinit)
-                            .toLowerCase() !==
-                            "false"; // defaults to true if not specified
-                        var reportError = ("" + data.meadcoReporterror)
-                            .toLowerCase() !==
-                            "false"; // defaults to true if not specified
+                            data.meadcoOrchestratorKey +
+                            ", trustVerifiedConnection: " +
+                            data.meadcoTrustVerifiedConnection);
 
-                        var server = data.meadcoServer;
+                        const syncInit = ("" + data.meadcoSyncinit)
+                            .toLowerCase() !==
+                            "false"; // defaults to true if not specified
+                        const reportError = ("" + data.meadcoReporterror)
+                            .toLowerCase() !==
+                            "false"; // defaults to true if not specified
+                        const applyLicense = ("" + data.meadcoApplyLicense)
+                            .toLowerCase() ==
+                            "true"; // only applies to async, defaults to false if not specified; if MeadCo ScriptXJS is in use, it will do the apply. Set true if it is not being used.
+
+                        const server = data.meadcoServer;
 
                         servicesServer.orchestratorPort = data.meadcoOrchestrator;
                         servicesServer.orchestratorKey = data.meadcoOrchestratorKey;
+                        servicesServer.trustVerifiedConnection = ("" + data.meadcoTrustVerifiedConnection)
+                            .toLowerCase() !==
+                            "false"; // defaults to true if not specified
+
 
                         if (!syncInit) {
                             MeadCo.log("Async connectlite...");
+                            const sFetchDefined = ("" + data.meadcoUsefetch);
+                            if (sFetchDefined.length > 0)
+                                MeadCo.fetchEnabled = sFetchDefined.toLowerCase() === "true";
+
                             licenseApi.connectLite(server, data.meadcoLicense,
                                 data.meadcoLicenseRevision,
                                 data.meadcoLicensePath);
                             printApi.connectLite(server, data.meadcoLicense);
+
+                            if (applyLicense) {
+                                licenseApi.applyAsync(data.meadcoLicense, data.meadcoLicenseRevision, data.meadcoLicensePath,
+                                    () => {
+                                        MeadCo.log("NOTE: license has been applied successfully from async processing of attribute with values");
+                                    },
+                                    (e) => {
+                                        MeadCo.error(`Failed to apply the license: ${e}, error is: ${licenseApi.errorMessage}`);
+                                        if (reportError) {
+                                            MeadCo.ScriptX.Print.reportError(licenseApi.errorMessage);
+                                        }
+                                    }
+                                );
+                            }
                         } else {
                             MeadCo
-                                .warn("Synchronous connection is deprecated, please use data-meadco-syncinit='false'. Note that this may require additional code changes. Please see: https://www.meadroid.com/Developers/KnowledgeBank/HowToGuides/ScriptXServices/ThenToNow/Stage6");
+                                .warn("Synchronous connection is deprecated. jQuery is required for synchronous behaviour. To update to asynchronous behaviour please use data-meadco-syncinit='false'. Note that this may require additional code changes. Please see: https://www.meadroid.com/Developers/KnowledgeBank/HowToGuides/ScriptXServices/ThenToNow/Stage6");
+                            MeadCo.fetchEnabled = false;
                             licenseApi.connect(server, data.meadcoLicense);
                             if (typeof data.meadcoLicensePath !== "undefined" &&
                                 typeof data
@@ -1560,14 +1748,8 @@
                         bDoneAuto = true;
                     }
                 }
-                return false;
-            });
-
+            }
         }
-    }
-
-    if (!module.jQuery) {
-        MeadCo.log("**** warning :: no jQuery *******");
     }
 
     MeadCo.log("MeadCo.ScriptX.Print " + version + " loaded.");
@@ -1672,21 +1854,41 @@
         set printerName(deviceRequest) {
             if (!(deviceRequest === printerName || deviceRequest.name === printerName)) {
                 if (typeof deviceRequest === "string") {
-                    // not already cached, go fetch (synchronously)
+
                     if (typeof deviceSettings[deviceRequest] === "undefined") {
-                        getDeviceSettings({
-                            name: deviceRequest,
-                            done: function (data) {
-                                printerName = data.printerName;
-                            },
-                            async: false,
-                            fail: function (eTxt) {
-                                MeadCo.ScriptX.Print.reportError(eTxt);
-                            }
-                        });
-                    } else {
+                        // not already cached, get (synchronously) if synchronous is available
+                        // if synchronous is not available then getDeviceSettingsAsync() must be called 
+                        // We have no choice but to fail this call. 
+                        if (module.jQuery && !MeadCo.fetchEnabled) {
+                            getDeviceSettings({
+                                name: deviceRequest,
+                                done: function (data) {
+                                    printerName = data.printerName;
+                                },
+                                async: false,
+                                fail: function (eTxt) {
+                                    MeadCo.ScriptX.Print.reportError(eTxt);
+                                }
+                            });
+                        }
+                        else {
+                            MeadCo.error("Asynchronous processing of set printerName required, synchronous calls to obtain device details will fail until this completes.")
+                            getDeviceSettingsForAsync(deviceRequest,
+                                (data) => { printerName = data.printerName; },
+                                (eTxt) => { MeadCo.ScriptX.Print.reportError(eTxt); }
+                            );
+
+                            // awful, solely to not break backwards compatibility
+                            if (servicesServer.serviceUrl === "")
+                                MeadCo.ScriptX.Print.reportError("MeadCo.ScriptX.Print : server connection is not defined.");
+                            else
+                                MeadCo.ScriptX.Print.reportError("Not Found");
+                        }
+                    }
+                    else {
                         printerName = deviceRequest;
                     }
+
                 } else {
                     getDeviceSettings(deviceRequest);
                 }
@@ -1772,6 +1974,20 @@
          */
         deviceSettingsFor: function (sPrinterName) {
             return getDeviceSettingsFor(sPrinterName);
+        },
+
+        /**
+         * Get the device settings (papersize etc) for the named printer. If not already downloaded
+         * this function is asynchronous. 
+         * 
+         * @function deviceSettingsForAsync
+         * @memberof MeadCoScriptXPrint
+         * @param {string} sPrinterName the name of the printer device to return the settings for 
+         * @param {function({DeviceSettingsObject})} resolve function to call on success
+         * @param {function({errorText})} reject function to call on failure
+         */
+        deviceSettingsForAsync: function (sPrinterName, resolve, reject) {
+            getDeviceSettingsForAsync(sPrinterName, resolve, reject);
         },
 
         /**
@@ -2105,6 +2321,19 @@
         },
 
         /**
+         * Extract the error text from browser fetch response
+         * 
+         * @function parseFetchError
+         * @memberof MeadCoScriptXPrint
+         * 
+         * @param {object} errorThrown error caught from fetch 
+         * @returns {string} The error text to display
+         */
+        parseFetchError: function (logText, errorThrown) {
+            return MeadCo.parseFetchError(logText, errorThrown);
+        },
+
+        /**
          * 'derived' classes call this function to report errors, will either throw or report depending on 
          * value of onErrorAction.
          * 
@@ -2165,7 +2394,8 @@
         },
 
         /**
-         * The list of jobs currently active at the server for this client
+         * The list of jobs currently active at this client or server (client 'jobs' are those waiting to be 
+         * delivered to the server and 'locks' while asychronous UI is in progress).
          * 
          * @memberof MeadCoScriptXPrint
          * @property {object[]} queue array of jobs 
@@ -2176,15 +2406,36 @@
         },
 
         /**
-         * The number of jobs there are actgive at the server for this client
-         * (same as MeadCo.ScriptX.Print.queue.length)
+         * The number of jobs there are active *at the server* for this client
          * 
          * @memberof MeadCoScriptXPrint
          * @property {int} activeJobs the number of jobs
          * @readonly
          */
         get activeJobs() {
-            return jobCount();
+            return this.queue.filter(j => j.jobName !== jobNameWaitingForSend && j.jobName !== jobNameSentWaitingResponse && j.jobName !== jobNameHoldEnsureSpoolingStatus).length;
+        },
+
+        /**
+         * The number of client only jobs (locks and those waiting for delivery to the server) active at this client
+         * 
+         * @memberof MeadCoScriptXPrint
+         * @property {int} clientSideJobs the number of jobs
+         * @readonly
+         */
+        get clientSideJobs() {
+            return this.queue.filter(j => j.jobName == jobNameWaitingForSend || j.jobName == jobNameSentWaitingResponse || j.jobName == jobNameHoldEnsureSpoolingStatus).length;
+        },
+
+        /**
+         * Check if there are no jobs waiting for delivery to the server (faster than clientSideJobs==0)
+         * 
+         * @memberof MeadCoScriptXPrint
+         * @property {bool} noJobsWaitingDelivery true if no jobs waiting
+         * @readonly
+         */
+        get noJobsWaitingDelivery() {
+            return this.queue.every(j => j.jobName !== jobNameWaitingForSend && j.jobName !== jobNameSentWaitingResponse && j.jobName !== jobNameHoldEnsureSpoolingStatus);
         },
 
         /**
@@ -2202,7 +2453,7 @@
          * });
          */
         ensureSpoolingStatus: function () {
-            var lock = { jobIdentifier: Date.now(), printerName: "ensureJobsPrinter", jobName: "null Job" };
+            var lock = { jobIdentifier: Date.now(), printerName: "ensureJobsPrinter", jobName: jobNameHoldEnsureSpoolingStatus };
             queueJob(lock);
             return lock;
         },
@@ -2219,7 +2470,7 @@
         },
 
         /**
-         * Get if print is still 'spooling'.still queued at the server
+         * Get if print is still 'spooling', in other words still queued at the server
          * 
          * @memberof MeadCoScriptXPrint
          * @property {bool} isSpooling
@@ -2230,7 +2481,7 @@
         },
 
         /**
-         * Start (asynchronous) monitor to observe until no more job spooling/waiting at the server
+         * Start (asynchronous) monitor to observe until no more jobs spooling/waiting at the server
          * then call the given callback function
          * 
          * @memberof MeadCoScriptXPrint
@@ -2244,7 +2495,6 @@
                 throw "WaitForSpoolingComplete requires a completion callback";
             }
 
-            var timerId;
             var startTime = Date.now();
             var interval = 250;
 
@@ -2261,6 +2511,63 @@
                     }
                 }
             }, interval);
+        },
+
+        /**
+         * Start (asynchronous) monitor to observe until all submitted jobs have been
+         * delivered to the server, there will probably be jobs still waiting to process/spool
+         * at the server. It is not safe to close the browser window until this function 
+         * indicates completion
+         * 
+         * @memberof MeadCoScriptXPrint
+         * @function waitForDeliveryComplete
+         * @param {int} iTimeout wait until complete or timeout (in ms) -1 => infinite
+         * @param {function({bool})} fnComplete callback function, arg is true if all jobs delivered
+
+         */
+        waitForDeliveryComplete: function (iTimeout, fnComplete) {
+            MeadCo.log("Started waitForDeliveryComplete(" + iTimeout + ")");
+            if (typeof fnComplete !== "function") {
+                throw "waitForDeliveryComplete requires a completion callback";
+            }
+
+            const startTime = Date.now();
+            const interval = 250;
+            const that = this;
+
+            const intervalId = window.setInterval(() => {
+                if (that.noJobsWaitingDelivery) {
+                    MeadCo.log("waitForDeliveryComplete - complete");
+                    window.clearInterval(intervalId);
+                    fnComplete(true);
+                } else {
+                    if (iTimeout >= 0 && Date.now() - startTime > iTimeout) {
+                        MeadCo.log("waitForDeliveryComplete - timeout");
+                        window.clearInterval(intervalId);
+                        fnComplete(false);
+                    }
+                }
+            }, interval);
+
+        },
+
+        /**
+          * Waits for all pending operations originated with Print, PrintHTML and BatchPrintPDF to be delivered to the server. This is useful
+          * to determine when it is safe to call window.close() and not loose jobs and is a significantly shorter period than waitForSpoolingComplete()
+          * 
+          * @function waitForDeliveryCompleteAsync
+          * @memberof MeadCoScriptXPrint
+          * @returns {Promise} Promise object represents boolean with value true if all jobs have been delivered.
+          * @example 
+          * MeadCo.ScriptX.PrintPage(false);
+          * await MeadCo.ScriptX.Print.waitForDeliveryCompleteAsync();
+          * self.close();
+          */
+        waitForDeliveryCompleteAsync: function () {
+            const that = this;
+            return new Promise(function (resolve, reject) {
+                that.waitForDeliveryComplete(-1, resolve);
+            });
         },
 
         /**

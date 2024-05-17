@@ -20,7 +20,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.PDF', function () {
 
-    var moduleversion = "1.14.2.0";
+    var moduleversion = "1.15.0.2";
 
     /**
      * Enum to describe the orientation of the paper
@@ -109,10 +109,6 @@
     }
 
     MeadCo.log("MeadCo.ScriptX.Print.PDF " + moduleversion + " loaded.");
-
-    if (!this.jQuery) {
-        MeadCo.log("**** warning :: no jQuery");
-    }
 
     // public API
     return {

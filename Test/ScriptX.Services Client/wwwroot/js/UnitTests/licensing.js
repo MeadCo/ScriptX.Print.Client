@@ -5,7 +5,7 @@ QUnit.test("Namespace basics", function (assert) {
     assert.ok(MeadCo.ScriptX.Print.Licensing, "MeadCo.ScriptX.Print.Licensing namespace exists");
     var api = MeadCo.ScriptX.Print.Licensing;
 
-    assert.equal(api.version, "1.14.2.2", "Correct version");
+    assert.equal(api.version, Versions.MeadCoScriptXPrintLicensing, "Correct version");
 
 });
 
@@ -16,8 +16,14 @@ QUnit.test("Apply license", function (assert) {
     var done = assert.async(5);
 
     api.connect(serverUrl);
-    var v = MeadCo.ScriptX.Print.serviceVersion();
-    console.log("Service version: ", v);
+
+    if (MeadCo.useFetch) {
+        MeadCo.ScriptX.Print.serviceVersionAsync((v) => { console.log("Service version: ", v); }, (e) => { console.error("Get servuice version failed: ", e); });
+    }
+    else {
+        var v = MeadCo.ScriptX.Print.serviceVersion();
+        console.log("Service version: ", v);
+    }
 
     api.applyAsync(badLicenseGuid, 0, "warehouse",
         function (license) {

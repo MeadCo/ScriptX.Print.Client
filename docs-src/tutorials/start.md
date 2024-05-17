@@ -12,7 +12,7 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
 
 
 ```javascript
-<!-- ScriptX Services client emulation libraries - depend on jQuery -->
+<!-- ScriptX Services client emulation libraries optionally use jQuery. It is not a dependency -->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
 
 <!-- Promise polyfill for IE -->
@@ -56,7 +56,7 @@ A promise polyfill is required if the browser does not support promises (for exa
 We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/promise-polyfill)
 
 ```javascript
-<!-- ScriptX Services client emulation libraries - depend on jQuery -->
+<!-- ScriptX Services client emulation libraries optionally use jQuery. It is not a dependency -->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
 
 <!-- Promise polyfiull for IE -->
@@ -101,7 +101,7 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
 
 
 ```javascript
-<!-- ScriptX Services client emulation libraries - depend on jQuery -->
+<!-- ScriptX Services client emulation libraries optionally use jQuery. It is not a dependency -->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
 
 <!-- Promise polyfiull for IE -->

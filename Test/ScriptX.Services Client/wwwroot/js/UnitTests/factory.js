@@ -4,7 +4,7 @@ QUnit.test("Namespace basics", function (assert) {
 
     assert.ok(window.factory, "factory namespace exists");
     var api = window.factory;
-    var expectedVersion = "1.14.2.0";
+    var expectedVersion = Versions.ScriptxFactoryServices;
     var emulatedVersion = "8.3.0.0";
     var servicesVersion = "11.12.13.14";
 
@@ -26,7 +26,19 @@ QUnit.test("Namespace basics", function (assert) {
     assert.equal(api.ComponentVersionString("scriptx.factory.services"), expectedVersion, "Correct .services library version via ComponentVersionString");
 
     MeadCo.ScriptX.Print.connectLite(serverUrl, " ");
-    assert.equal(api.ComponentVersionString("scriptx.services"), servicesVersion, "Correct .services server version via ComponentVersionString");
+    if (MeadCo.useFetch) {
+        var done = assert.async(1);
+
+        MeadCo.ScriptX.Print.serviceDescriptionAsync(() => {
+            assert.equal(api.ComponentVersionString("scriptx.services"), servicesVersion, "Correct .services server version via Async+ComponentVersionString");
+            done();
+        }, (errorText) => {
+            assert.ok(false, "serviceDescriptionAsync error: " + errorText);
+            done();
+        });
+    }
+    else 
+        assert.equal(api.ComponentVersionString("scriptx.services"), servicesVersion, "Correct .services server version via ComponentVersionString");
 
 });
 
@@ -182,6 +194,7 @@ QUnit.test("factory.printing device settings", function (assert) {
     assert.strictEqual(api.printer, "", "Set bad printer ignored correctly");
 
     var m = "";
+
     try {
         api.currentPrinter = "My printer";
     } catch (e) {
@@ -190,15 +203,6 @@ QUnit.test("factory.printing device settings", function (assert) {
 
     assert.strictEqual(api.printer, "", "Set bad currentPrinter ignored correctly");
     assert.strictEqual(m, "Not Found", "Set bad currentPrinter, correct exception");
-
-    try {
-        api.CurrentPrinter = "My printer";
-    } catch (e) {
-        m = e.message;
-    }
-
-    assert.strictEqual(api.printer, "", "Set bad CurrentPrinter ignored correctly");
-    assert.strictEqual(m, "Not Found", "Set bad CurrentPrinter, correct exception");
 
     var done = assert.async(1);
 

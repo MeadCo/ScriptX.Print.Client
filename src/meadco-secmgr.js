@@ -62,14 +62,14 @@
 })('secmgr', function () {
 
     // protected API
-    var moduleversion = "1.14.2.0";
-    var emulatedVersion = "8.2.0.0";
-    var module = this;
-    var logApi = MeadCo;
+    const moduleversion = "1.15.0.2";
+    const emulatedVersion = "8.2.0.0";
+    const module = this;
+    const logApi = MeadCo;
 
     // protected API
-    var printApi = MeadCo.ScriptX.Print;
-    var licenseApi = MeadCo.ScriptX.Print.Licensing;
+    const printApi = MeadCo.ScriptX.Print;
+    const licenseApi = MeadCo.ScriptX.Print.Licensing;
 
     function log(str) {
         logApi.log("secmgr emulation :: " + str);
@@ -77,14 +77,14 @@
 
     // extend the namespace
     module.extendSecMgrNamespace = function (name, definition) {
-        var theModule = definition();
+        const theModule = definition();
 
         log("MeadCo security manager extending namespace2: " + name);
         // walk/build the namespace part by part and assign the module to the leaf
-        var namespaces = name.split(".");
-        var scope = this;
-        for (var i = 0; i < namespaces.length; i++) {
-            var packageName = namespaces[i];
+        const namespaces = name.split(".");
+        const scope = this;
+        for (let i = 0; i < namespaces.length; i++) {
+            const packageName = namespaces[i];
             if (i === namespaces.length - 1) {
                 if (typeof scope[packageName] === "undefined") {
                     log("installing implementation at: " + packageName);
