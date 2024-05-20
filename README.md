@@ -24,7 +24,7 @@ This is achieved by integrating with [MeadCo ScriptX.Services](https://www.meadr
 * an on premise Microsoft Windows (x64) Server
 * a Microsoft Windows 10 or later x64 PC 
 
-When used in conjunction with the MeadCoScriptXJS library, this emulation ensures a high degree 
+When used in conjunction with the [MeadCoScriptXJS library](https://github.com/MeadCo/MeadCoScriptXJS), this emulation ensures a high degree 
 of compatibility with in-browser scripts originally written for the ScriptX.Add-on. 
 This allows the same code to be executed with either the ScriptX.Add-on for Internet Explorer or ScriptX Services, depending on the client device/browser.
 

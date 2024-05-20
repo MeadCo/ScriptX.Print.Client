@@ -144,18 +144,15 @@
 <p>The same code will work when the Add-on is present, but the add-on will be used in preference.</p>
 <p>A promise polyfill is required if the browser does not support promises (for example Internet Explorer).
 We recommend (and test with) <a href="https://github.com/taylorhakes/promise-polyfill">Promise Polyfill</a></p>
-<pre class="prettyprint source lang-javascript"><code>&lt;!-- ScriptX Services client emulation libraries optionally use jQuery. It is not a dependency -->
+<pre class="prettyprint source lang-javascript"><code>&lt;!-- ScriptX Services client emulation libraries optionally use jQuery. It is **not** a dependency -->
 &lt;script src=&quot;https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js&quot;>&lt;/script>
-
-&lt;!-- Promise polyfill for IE -->
-&lt;script src=&quot;https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js&quot;>&lt;/script>
 
 &lt;!-- MeadCoScriptXJS Library -->
 &lt;script src=&quot;https://cdn.jsdelivr.net/npm/meadco-scriptxjs@1/src/meadco-scriptx.min.js&quot;>&lt;/script>
 
 &lt;!-- .Addon emulation, connect to server with publishing license id. -->
 &lt;!-- Use an evaluation license id for the value of data-meadco-license -->
-&lt;script src=&quot;https://cdn.jsdelivr.net/npm/scriptxprint-html@1.6/dist/meadco-scriptxservicesprint.min.js&quot; 
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/scriptxprint-html@1/dist/meadco-scriptxservicesprint.min.js&quot; 
         data-meadco-server=&quot;http://127.0.0.1:41991&quot; 
         data-meadco-license=&quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&quot;>&lt;/script>
 
@@ -184,11 +181,8 @@ We recommend (and test with) <a href="https://github.com/taylorhakes/promise-pol
 <p>Remove all references to ScriptX.Addon (i.e. the &lt;object /&gt; elements as ScriptX.Addon can only print to locally installed printers).</p>
 <p>A promise polyfill is required if the browser does not support promises (for example Internet Explorer).
 We recommend (and test with) <a href="https://github.com/taylorhakes/promise-polyfill">Promise Polyfill</a></p>
-<pre class="prettyprint source lang-javascript"><code>&lt;!-- ScriptX Services client emulation libraries optionally use jQuery. It is not a dependency -->
+<pre class="prettyprint source lang-javascript"><code>&lt;!-- ScriptX Services client emulation libraries optionally use jQuery. It is **not** a dependency -->
 &lt;script src=&quot;https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js&quot;>&lt;/script>
-
-&lt;!-- Promise polyfiull for IE -->
-&lt;script src=&quot;https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js&quot;>&lt;/script>
 
 &lt;!-- MeadCoScriptXJS Library -->
 &lt;script src=&quot;https://cdn.jsdelivr.net/npm/meadco-scriptxjs@1/src/meadco-scriptx.min.js&quot;>&lt;/script>
@@ -222,19 +216,14 @@ We recommend (and test with) <a href="https://github.com/taylorhakes/promise-pol
 <li>Initilise print parameters</li>
 </ol>
 <p>Remove all references to ScriptX.Addon (i.e. the &lt;object /&gt; elements as ScriptX.Addon can only print to locally installed printers).</p>
-<p>A promise polyfill is required if the browser does not support promises (for example Internet Explorer).
-We recommend (and test with) <a href="https://github.com/taylorhakes/promise-polyfill">Promise Polyfill</a></p>
-<pre class="prettyprint source lang-javascript"><code>&lt;!-- ScriptX Services client emulation libraries optionally use jQuery. It is not a dependency -->
+<pre class="prettyprint source lang-javascript"><code>&lt;!-- ScriptX Services client emulation libraries optionally use jQuery. It is **not** a dependency -->
 &lt;script src=&quot;https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js&quot;>&lt;/script>
-
-&lt;!-- Promise polyfiull for IE -->
-&lt;script src=&quot;https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js&quot;>&lt;/script>
 
 &lt;!-- MeadCoScriptXJS Library -->
 &lt;script src=&quot;https://cdn.jsdelivr.net/npm/meadco-scriptxjs@1/src/meadco-scriptx.min.js&quot;>&lt;/script>
 
 &lt;!-- .Addon code emulation, connect to on premnie server, no subscription id is required as it is the srver that is licensed.
-&lt;script src=&quot;https://cdn.jsdelivr.net/npm/scriptxprint-html@1.6/dist/meadco-scriptxservicesprint.min.js&quot; 
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/scriptxprint-html@1/dist/meadco-scriptxservicesprint.min.js&quot; 
         data-meadco-server=&quot;http://&lt;yourlocalserver>/scriptxservices/&quot; 
         data-meadco-subscription=&quot;&quot;>&lt;/script>
 

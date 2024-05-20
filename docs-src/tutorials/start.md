@@ -12,18 +12,15 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
 
 
 ```javascript
-<!-- ScriptX Services client emulation libraries optionally use jQuery. It is not a dependency -->
+<!-- ScriptX Services client emulation libraries optionally use jQuery. It is **not** a dependency -->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
-
-<!-- Promise polyfill for IE -->
-<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
 
 <!-- MeadCoScriptXJS Library -->
 <script src="https://cdn.jsdelivr.net/npm/meadco-scriptxjs@1/src/meadco-scriptx.min.js"></script>
 
 <!-- .Addon emulation, connect to server with publishing license id. -->
 <!-- Use an evaluation license id for the value of data-meadco-license -->
-<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.6/dist/meadco-scriptxservicesprint.min.js" 
+<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1/dist/meadco-scriptxservicesprint.min.js" 
         data-meadco-server="http://127.0.0.1:41991" 
         data-meadco-license="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"></script>
 
@@ -56,11 +53,8 @@ A promise polyfill is required if the browser does not support promises (for exa
 We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/promise-polyfill)
 
 ```javascript
-<!-- ScriptX Services client emulation libraries optionally use jQuery. It is not a dependency -->
+<!-- ScriptX Services client emulation libraries optionally use jQuery. It is **not** a dependency -->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
-
-<!-- Promise polyfiull for IE -->
-<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
 
 <!-- MeadCoScriptXJS Library -->
 <script src="https://cdn.jsdelivr.net/npm/meadco-scriptxjs@1/src/meadco-scriptx.min.js"></script>
@@ -96,22 +90,15 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
 
 Remove all references to ScriptX.Addon (i.e. the &lt;object /&gt; elements as ScriptX.Addon can only print to locally installed printers).
 
-A promise polyfill is required if the browser does not support promises (for example Internet Explorer). 
-We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/promise-polyfill)
-
-
 ```javascript
-<!-- ScriptX Services client emulation libraries optionally use jQuery. It is not a dependency -->
+<!-- ScriptX Services client emulation libraries optionally use jQuery. It is **not** a dependency -->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
-
-<!-- Promise polyfiull for IE -->
-<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
 
 <!-- MeadCoScriptXJS Library -->
 <script src="https://cdn.jsdelivr.net/npm/meadco-scriptxjs@1/src/meadco-scriptx.min.js"></script>
 
 <!-- .Addon code emulation, connect to on premnie server, no subscription id is required as it is the srver that is licensed.
-<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.6/dist/meadco-scriptxservicesprint.min.js" 
+<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1/dist/meadco-scriptxservicesprint.min.js" 
         data-meadco-server="http://<yourlocalserver>/scriptxservices/" 
         data-meadco-subscription=""></script>
 

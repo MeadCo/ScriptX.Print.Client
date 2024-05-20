@@ -1,35 +1,36 @@
 ### Current Version : 1.15.1
 
-The MeadCo ScriptX.Services project revolutionizes the control of printing for browser-based content across all browsers and devices, 
-eliminating the need for a binary add-on.
+The MeadCo ScriptX.Services Client Library serves a dual function:
 
-The MeadCo ScriptX.Services Client Library provides a dual-purpose solution: a structured library for interfacing with 
-the [ScriptX.Services API](https://support.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXServices), and an emulation of MeadCo’s ScriptX.Add-on for Internet Explorer on Windows.
+1. It acts as a structured framework for interacting with 
+the [ScriptX.Services API](https://support.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXServices) and
+2. Provides an emulated version of the MeadCo ScriptX.Add-on for Internet Explorer on Windows platforms.
 
-In a binary-free environment, the ScriptX.Services Client Library serves as the JavaScript libraries that bridge the gap between client
-devices and the server system. This system provides printing services, regardless of the server’s location:
+In a binary-free environment, the javascript ScriptX.Services Client Library bridges the gap between client
+devices and the server system providing printing services, regardless of the server’s location:
 
 * in the cloud at [scriptxservices.meadroid.com](https://scriptxservices.meadroid.com)
 * an on premise Microsoft Windows (x64) Server
 * a Microsoft Windows x64 PC 
 
-The primary objective of these libraries is to aid those with a substantial amount of client JavaScript code targeting the use of the 
-ScriptX Add-On for Internet Explorer. These libraries facilitate a smooth transition to using ScriptX.Services, with a large portion 
-of the original code remaining intact.
+The libraries enable a seamless transition to ScriptX.Services for those who have developed a significant amount of client JavaScript code for the ScriptX 
+Add-On for Internet Explorer, allowing for the retention of a substantial portion of the original code. While much of the existing code will 
+continue to operate unmodified, some code may require updates. A [comprehensive discussion](https://support.meadroid.com/Developers/KnowledgeBank/HowToGuides/ScriptXServices/ThenToNow) outlines the few potential challenges.
 
-When used in conjunction with the [MeadCoScriptXJS library](https://github.com/MeadCo/MeadCoScriptXJS) an emulation of the ScriptX Add-on API
-is provided. This delivers significant levels of compatibility with in-browser scripts written for the Add-on, allowing the same code to run 
-with either the Add-on for Internet Explorer or ScriptX Services, depending on the client device.
+When integrated with the [MeadCoScriptXJS library](https://github.com/MeadCo/MeadCoScriptXJS), an emulation of the ScriptX Add-on API is achieved. This ensures a high degree of 
+compatibility with in-browser scripts crafted for the Add-on, facilitating the execution of the same code with either the Add-on 
+for Internet Explorer or ScriptX Services, without necessitating a significant re-write, contingent on the client browser. 
 
-The library is also exemplary for use in modern settings, with support for “async” as many APIs return promises. In these cases, users have numerous choices regarding how deep into the library structure they find useful.
+Moreover, the [MeadCoScriptXJS library](https://github.com/MeadCo/MeadCoScriptXJS) is optimised for contemporary applications, offering support ‘async’ operations as many APIs return a Promise object over the 
+callback model of this library.
 
 #### A Note on Browsers and Devices
 
-The libraries are developed for ‘evergreen’ browsers. As of v1.15, Internet Explorer is no longer actively tested or supported.
+The MeadCo ScriptX.Add-on continues to be available and supports Internet Explorer. JavaScript code in this scenario will be utilizing the ‘window.factory’ object.
 
-However, MeadCo ScriptX.Add-on continues to be available and supports Internet Explorer. JavaScript code in this scenario will be utilizing the ‘window.factory’ object.
+The MeadCo ScriptX.Services Client Library is developed for ‘evergreen’ browsers. As of v1.15, Internet Explorer is no longer actively tested or supported.
 
-By using a compatibility layer written in JavaScript, the same code can be brought to more modern browsers. This is, of course, provided that the HTML that renders successfully in the older browser also renders correctly in modern browsers.
+By using this compatibility layer written in JavaScript, the same browser client code can be brought to more modern browsers. This is, of course, provided that the HTML that renders successfully in the older browser also renders correctly in modern browsers.
 
 The ScriptX.Services Client libraries are self-sufficient and do not depend on anything other than themselves. We understand that our 
 clients are diverse and may have dependencies on many libraries. We aim not to work against those choices but to work in harmony with them.
@@ -99,14 +100,14 @@ with .Addon and .Services with no changes in simple cases and few changes in mor
 The MeadCo ScriptX.Service Client Library implements a heirarchy of static 'classes' (or singleton object instances!) at the bottom of which is an implementation of
 the .Addon API (factory, factory.printing et al) in javascript. The implementation
 is necessarily imperfect. In particular the support for synchronous coding with the ubiquitous WaitFortSpoolingComplete() API is impossible to emulate 
-fully in javascript (the only possible way to attempt an eumulation causes blocking in the browser via 
+fully in javascript thaty workls in all browsers (the only possible way to attempt an eumulation causes blocking in the browser via 
 synchronous AJAX which is deeply unsatisfactory and so is not implemented). 
 
-Such imperfections are **smoothed** by use of the MeadCoScriptXJS library which provides a layer to hide the differences betweeen .Addon and .Services and so enable a single code base. For example there
+> Such imperfections are **smoothed** by use of the MeadCoScriptXJS library which provides a layer to hide the differences betweeen .Addon and .Services and so enable a single code base. For example there
 is an implementation of the WaitFortSpoolingComplete() API which returns a Promise. This in turn enables the use of ````await MeadCo.ScriptX.WaitForSpoolingComplete();```` - obviously this must be within 
 an async block so some re-coding is required.
 
-Note that the [MeadCoScriptXJS](https://github.com/MeadCo/MeadCoScriptXJS) library does **not have to be used**. In its absense, meadco-scriptxfactory.js and its dependencies on the hierarchy implement a reasonable and usable emulation of &quot;factory.printing&quot; though functionality such as WaitForSpoolingComplete is not a compatible emulation.
+> Note that the [MeadCoScriptXJS](https://github.com/MeadCo/MeadCoScriptXJS) library does **not have to be used**. In its absense, meadco-scriptxfactory.js and its dependencies on the hierarchy implement a reasonable and usable emulation of &quot;factory.printing&quot; though functionality such as WaitForSpoolingComplete is not a compatible emulation.
 
 #### User Interface
 
