@@ -204,7 +204,7 @@
 })('secmgr', function () {
 
     // protected API
-    const moduleversion = "1.15.0.2";
+    const moduleversion = "1.15.1.2";
     const emulatedVersion = "8.2.0.0";
     const module = this;
     const logApi = MeadCo;
@@ -224,7 +224,7 @@
         log("MeadCo security manager extending namespace2: " + name);
         // walk/build the namespace part by part and assign the module to the leaf
         const namespaces = name.split(".");
-        const scope = this;
+        let scope = this;
         for (let i = 0; i &lt; namespaces.length; i++) {
             const packageName = namespaces[i];
             if (i === namespaces.length - 1) {

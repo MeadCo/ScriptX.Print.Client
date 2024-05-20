@@ -54,7 +54,7 @@
 
     // protected API
     var module = this;
-    var version = "1.15.0.4"; // matches the highest version number of sub-classes.
+    var version = "1.15.1.4"; // matches the highest version number of sub-classes.
     var bLog = ((typeof (MeadCo) !== "undefined" && typeof (MeadCo.logEnable) !== "undefined")) ? MeadCo.logEnable : false;
     var bUseFetch = ((typeof (MeadCo) !== "undefined" && typeof (MeadCo.useFetch) !== "undefined")) ? MeadCo.useFetch : false;
 
