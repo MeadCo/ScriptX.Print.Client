@@ -7,7 +7,7 @@ the [ScriptX.Services API](https://support.meadroid.com/Developers/KnowledgeBank
 2. Provides an emulated version of the MeadCo ScriptX.Add-on for Internet Explorer on Windows platforms.
 
 In a binary-free environment, the javascript ScriptX.Services Client Library bridges the gap between client
-devices and the server system providing printing services, regardless of the server’s location:
+devices and the server system providing printing services, regardless of the server&apos;s location:
 
 * in the cloud at [scriptxservices.meadroid.com](https://scriptxservices.meadroid.com)
 * an on premise Microsoft Windows (x64) Server
@@ -21,14 +21,14 @@ When integrated with the [MeadCoScriptXJS library](https://github.com/MeadCo/Mea
 compatibility with in-browser scripts crafted for the Add-on, facilitating the execution of the same code with either the Add-on 
 for Internet Explorer or ScriptX Services, without necessitating a significant re-write, contingent on the client browser. 
 
-Moreover, the [MeadCoScriptXJS library](https://github.com/MeadCo/MeadCoScriptXJS) is optimised for contemporary applications, offering support ‘async’ operations as many APIs return a Promise object over the 
+Moreover, the [MeadCoScriptXJS library](https://github.com/MeadCo/MeadCoScriptXJS) is optimised for contemporary applications, offering support &quot;async&quot; operations as many APIs return a Promise object over the 
 callback model of this library.
 
 #### A Note on Browsers and Devices
 
-The MeadCo ScriptX.Add-on continues to be available and supports Internet Explorer. JavaScript code in this scenario will be utilizing the ‘window.factory’ object.
+The MeadCo ScriptX.Add-on continues to be available and supports Internet Explorer. JavaScript code in this scenario will be utilizing the &quot;window.factory&quot; object.
 
-The MeadCo ScriptX.Services Client Library is developed for ‘evergreen’ browsers. As of v1.15, Internet Explorer is no longer actively tested or supported.
+The MeadCo ScriptX.Services Client Library is developed for &quot;evergreen&quot; browsers. As of v1.15, Internet Explorer is no longer actively tested or supported.
 
 By using this compatibility layer written in JavaScript, the same browser client code can be brought to more modern browsers. This is, of course, provided that the HTML that renders successfully in the older browser also renders correctly in modern browsers.
 
@@ -121,8 +121,8 @@ All that is required is to implement the named functions.
 
 | function | Purpose |
 |--- | --- |
-| MeadCo.ScriptX.Print.UI.PageSetup(function (bAccepted) {} ) | |
-| MeadCo.ScriptX.Print.UI.PrinterSettings(function (bAccepted) {} ) | |
+| MeadCo.ScriptX.Print.UI.PageSetup(function (bAccepted) {} ) | A page setup dialog, headers and footers etc. |
+| MeadCo.ScriptX.Print.UI.PrinterSettings(function (bAccepted) {} ) | A printer set up dialog - list of available printers, use of collated printing |
 
 This is discussed in more detail in the [Dialogs with ScriptX.Services](https://www.meadroid.com/Developers/KnowledgeBank/Articles/Dialogs) article.
 Exemplar implemenations of UI are provided: [Bootstrap3/4 with jQuery](../src/jQuery-MeadCo.ScriptX.Print.UI.js) (implemented assuming Bootstrap and jQuery) and [Bootstrap 5 no jQuery](../src/Bootstrap5-MeadCo.ScriptX.Print.UI.js)
