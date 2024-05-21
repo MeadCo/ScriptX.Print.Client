@@ -19,17 +19,20 @@
         data-meadco-license="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"></script>
 
 <script type="text/javascript">
-   $(window).on('load', function () {
-     MeadCo.ScriptX.InitAsync().then(function {
-       MeadCo.ScriptX.Printing.header = 
-          "MeadCo's ScriptX&b:&p of &P:&bBasic Printing Sample";
-       MeadCo.ScriptX.Printing.footer = 
-          "The de facto standard for advanced web-based printing";
-       MeadCo.ScriptX.Printing.orientation = "landscape";
-       $("#btnprint").click(function() { 
-            MeadCo.ScriptX.PrintPage(false);
-       });
-     })      
+   $(window).on('load', async () => {
+        try {
+           await MeadCo.ScriptX.InitAsync();
+           MeadCo.ScriptX.Printing.header = 
+              "MeadCo's ScriptX&b:&p of &P:&bBasic Printing Sample";
+           MeadCo.ScriptX.Printing.footer = 
+              "The de facto standard for advanced web-based printing";
+           MeadCo.ScriptX.Printing.orientation = "landscape";
+           $("#btnprint").click(() => { 
+                MeadCo.ScriptX.PrintPage(false); });
+        }
+        catch (e) {
+            console.error(e);
+        }
    });
 </script>
 ```
