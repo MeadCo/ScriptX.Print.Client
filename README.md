@@ -79,7 +79,8 @@ Or, for print only to cloud/on premise services,
 <!-- MeadCoScriptXJS Library -->
 <script src="https://cdn.jsdelivr.net/npm/meadco-scriptxjs@1/src/meadco-scriptx.min.js"></script>
 
-<!-- Use an evaluation license id for the value of data-meadco-license : the current id can be found here https://support.meadroid.com/deploy/services/ -->
+<!-- Use an evaluation license id for the value of data-meadco-license
+     the current id can be found here https://support.meadroid.com/deploy/services/ -->
 <script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1/dist/meadco-scriptxservicesprint.min.js" 
         data-meadco-server="http://127.0.0.1:41991" 
         data-meadco-license="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
@@ -123,7 +124,8 @@ Or, if using jQuery :
 <script src="https://cdn.jsdelivr.net/npm/meadco-scriptxjs@1/src/meadco-scriptx.min.js"></script>
 
 <!-- .Addon emulation, connect to server with publishing license id. -->
-<!-- Use an evaluation license id for the value of data-meadco-license : the current id can be found here https://support.meadroid.com/deploy/services/ -->
+<!-- Use an evaluation license id for the value of data-meadco-license:
+     the current id can be found here https://support.meadroid.com/deploy/services/ -->
 <script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1/dist/meadco-scriptxservicesprint.min.js" 
         data-meadco-server="http://127.0.0.1:41991" 
         data-meadco-license="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
@@ -160,7 +162,8 @@ Or, if using jQuery :
 <!-- MeadCoScriptXJS Library -->
 <script src="https://cdn.jsdelivr.net/npm/meadco-scriptxjs@1/src/meadco-scriptx.min.js"></script>
 
-<!-- Use an evaluation license id for the value of data-meadco-license : the current id can be found here https://support.meadroid.com/deploy/services/ -->
+<!-- Use an evaluation license id for the value of data-meadco-license
+     the current id can be found here https://support.meadroid.com/deploy/services/ -->
 <script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1/dist/meadco-scriptxservicesprint.min.js" 
         data-meadco-server="https://scriptxservices.meadroid.com" 
         data-meadco-subscription="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
@@ -234,12 +237,6 @@ Or, if using jQuery :
 4. Initialise the [MeadCoScriptXJS](https://meadco.github.io/MeadCoScriptXJS) library
 5. Initilise print parameters
 
-Remove all references to ScriptX.Addon (i.e. the &lt;object /&gt; elements as ScriptX.Addon can only print to locally installed printers).
-
-A promise polyfill is required if the browser does not support promises (for example Internet Explorer). 
-We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/promise-polyfill)
-
-
 ```javascript
 <!-- ScriptX Services client emulation libraries optionally use jQuery. It is not a dependency -->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
@@ -275,9 +272,9 @@ We recommend (and test with) [Promise Polyfill](https://github.com/taylorhakes/p
 
 * [MeadCoScriptXJS Library Reference](https://meadco.github.io/MeadCoScriptXJS)
 
-* [Getting Started with ScriptX.Services](https://www.meadroid.com/Developers/KnowledgeBank/HowToGuides/ScriptXServices/GettingStarted)
+* [Getting Started with ScriptX.Services](https://support.meadroid.com/Developers/KnowledgeBank/HowToGuides/ScriptXServices/GettingStarted)
 
-* [ScriptX Add-on for Internet Explorer API reference](https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn).
+* [ScriptX Add-on for Internet Explorer API reference](https://support.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn).
 
 * [ScriptX.Services on Cloud](https://scriptxservices.meadroid.com/)
 
