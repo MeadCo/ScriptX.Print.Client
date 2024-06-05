@@ -13,13 +13,14 @@ devices and the server system providing printing services, regardless of the ser
 * an on premise Microsoft Windows (x64) Server
 * a Microsoft Windows x64 PC 
 
-When integrated with the [MeadCoScriptXJS library](https://github.com/MeadCo/MeadCoScriptXJS), an emulation of the ScriptX Add-on API is achieved. This ensures a high degree of 
-compatibility with in-browser scripts crafted for the Add-on, facilitating the execution of the same code with either the Add-on 
-for Internet Explorer or ScriptX Services, without necessitating a significant re-write, contingent on the client browser. 
+When the [MeadCoScriptXJS library](https://github.com/MeadCo/MeadCoScriptXJS)  is integrated, it ensures a high degree of
+compatibility with in-browser scripts originally designed for the Add-on. This compatibility allows the same code to be executed with 
+either the Add-on for Internet Explorer or with ScriptX Services in any evergreen/modern browser. This integration eliminates the need for significant code rewrites.
 
-The libraries enable a smooth transition to ScriptX.Services for those who have developed a significant amount of client JavaScript code for the ScriptX 
-Add-On for Internet Explorer, allowing for the retention of a substantial portion of the original code. While much of the existing code will 
-continue to operate unmodified, some code may require updates. A [comprehensive discussion](https://support.meadroid.com/Developers/KnowledgeBank/HowToGuides/ScriptXServices/ThenToNow) outlines the few potential challenges.
+For those who have developed a significant amount of client JavaScript code for the ScriptX 
+Add-On for Internet Explorer the libraries enable a smooth transition to ScriptX.Services  allowing for the retention of a substantial portion of the original code.
+While much of the existing code will continue to operate unmodified, some code may require updates.
+A [comprehensive discussion](https://support.meadroid.com/Developers/KnowledgeBank/HowToGuides/ScriptXServices/ThenToNow) outlines the potential challenges.
 
 Moreover, the [MeadCoScriptXJS library](https://github.com/MeadCo/MeadCoScriptXJS) is optimised for contemporary applications, offering support &quot;async&quot; operations as many APIs return a Promise object over the 
 callback model of this library.
