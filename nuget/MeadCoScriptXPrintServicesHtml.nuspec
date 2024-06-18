@@ -28,5 +28,6 @@
 
     <!-- this will shift out to its own package -->
     <file src="..\src\jQuery-MeadCo.ScriptX.Print.UI.js" target="content\scripts\MeadCo.ScriptX\jQuery-MeadCo.ScriptX.Print.UI-1.15.1.js" />
+	<file src="..\src\Bootstrap5-MeadCo.ScriptX.Print.UI.js" target="content\scripts\MeadCo.ScriptX\Bootstrap5-MeadCo.ScriptX.Print.UI-1.15.1.js" />	  
   </files>
 </package>
