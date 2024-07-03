@@ -62,9 +62,9 @@
 })('secmgr', function () {
 
     // protected API
-    const moduleversion = "1.15.1.2";
+    const moduleversion = "1.15.2.1";
     const emulatedVersion = "8.2.0.0";
-    const module = this;
+    const thisSpace = this;
     const logApi = MeadCo;
 
     // protected API
@@ -76,7 +76,7 @@
     }
 
     // extend the namespace
-    module.extendSecMgrNamespace = function (name, definition) {
+    thisSpace.extendSecMgrNamespace = function (name, definition) {
         const theModule = definition();
 
         log("MeadCo security manager extending namespace2: " + name);
@@ -183,9 +183,9 @@
 })('secmgr.object', function () {
 
     // protected API
-    var module = this;
+    var outerScope = this;
 
-    module.secmgr.log("secmgr.object loaded.");
+    outerScope.secmgr.log("secmgr.object loaded.");
 
     /*
      * This completes the emulation of an  &lt;object /&gt; element
@@ -196,5 +196,5 @@
      * @property {object} secmgr
      * @memberof secmgrobject
      */
-    return this.secmgr;
+    return outerScope.secmgr;
 });

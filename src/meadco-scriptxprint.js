@@ -28,7 +28,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    const version = "1.15.1.18";
+    const version = "1.15.2.1";
     const htmlApiLocation = "v1/printHtml";
     const pdfApiLocation = "v1/printPdf";
     const directApiLocation = "v1/printDirect";
@@ -143,7 +143,7 @@
     var VersionObject; // for doc generator
 
     let deviceSettings = {};
-    const module = this;
+    const outerScope = this;
 
     let activePrintQueue = []; // current job queue
 
@@ -247,8 +247,8 @@
 
                     MeadCo.log("servicesServer::querying orchestrator: " + "http://127.0.0.1:" + this.orchestratorPort + apiEndPoint);
 
-                    if (module.jQuery && !MeadCo.fetchEnabled) {
-                        module.jQuery.ajax("http://127.0.0.1:" + this.orchestratorPort + apiEndPoint,
+                    if (outerScope.jQuery && !MeadCo.fetchEnabled) {
+                        outerScope.jQuery.ajax("http://127.0.0.1:" + this.orchestratorPort + apiEndPoint,
                             {
                                 method: "GET",
                                 dataType: "json",
@@ -386,9 +386,9 @@
                 // use the license API
                 const serviceUrl = MeadCo.makeApiEndPoint(urlHelper.href, licenseApiLocation + "/ping");
 
-                if (module.jQuery && !MeadCo.fetchEnabled) {
+                if (outerScope.jQuery && !MeadCo.fetchEnabled) {
                     MeadCo.log(".ajax() get: " + serviceUrl);
-                    module.jQuery.ajax(serviceUrl,
+                    outerScope.jQuery.ajax(serviceUrl,
                         {
                             method: "GET",
                             dataType: "json",
@@ -404,7 +404,7 @@
                             MeadCo.log("Test server failed: [" + errorThrown + "], " + nHuntAllowed + ", on: " + urlHelper.hostname);
                             if (nHuntAllowed > 0 && (urlHelper.hostname === "localhost" || urlHelper.hostname == "127.0.0.1")) {
                                 urlHelper.port++;
-                                module.setTimeout(that.test(urlHelper.protocol + "//" + urlHelper.host + urlHelper.pathname, --nHuntAllowed, bAsync, resolve, reject), 1);
+                                outerScope.setTimeout(that.test(urlHelper.protocol + "//" + urlHelper.host + urlHelper.pathname, --nHuntAllowed, bAsync, resolve, reject), 1);
                             }
                             else {
                                 errorThrown = MeadCo.parseAjaxError("MeadCo.ScriptX.Print.servicesServer.test:", jqXhr, textStatus, errorThrown);
@@ -438,7 +438,7 @@
                                 MeadCo.log("Test server failed: [" + error + "], " + nHuntAllowed + ", on: " + urlHelper.hostname);
                                 if (nHuntAllowed > 0 && (urlHelper.hostname === "localhost" || urlHelper.hostname == "127.0.0.1")) {
                                     urlHelper.port++;
-                                    module.setTimeout(that.test(urlHelper.protocol + "//" + urlHelper.host + urlHelper.pathname, --nHuntAllowed, bAsync, resolve, reject), 1);
+                                    outerScope.setTimeout(that.test(urlHelper.protocol + "//" + urlHelper.host + urlHelper.pathname, --nHuntAllowed, bAsync, resolve, reject), 1);
                                 }
                                 else {
                                     errorThrown = MeadCo.parseFetchError("MeadCo.ScriptX.Print.servicesServer.test:", error);
@@ -507,8 +507,8 @@
                         oPayload.data = JSON.stringify(oApiData);
                     }
 
-                    if (module.jQuery && !MeadCo.fetchEnabled) {
-                        module.jQuery.ajax(serviceUrl, oPayload)
+                    if (outerScope.jQuery && !MeadCo.fetchEnabled) {
+                        outerScope.jQuery.ajax(serviceUrl, oPayload)
                             .done(function (data) {
                                 if (typeof resolve === "function") {
                                     resolve(data);
@@ -556,7 +556,7 @@
                                     that.undoTrust();
                                     if (!response.ok) {
                                         // throw new Error(`HTTP Error: ${response.status}`)
-                                        if ( response.status == 500 || response.status == 404 ) {
+                                        if (response.status == 500 || response.status == 404) {
                                             const err = response.text()
                                                 .then(errorTxt => {
                                                     const errorThrown = MeadCo.parseFetchError("MeadCo.ScriptX.Print:" + sApi + method, errorTxt);
@@ -762,8 +762,8 @@
      * @property {number} COMPLETED 6
      * @property {number} PAUSED 7
      * @property {number} PRINTPDF 8
-     * @property {number} ERROR -1 (minus 1)
-     * @property {number} ABANDONED -2 (minus 2)
+     * @property {number} ERROR -1
+     * @property {number} ABANDONED -2
      */
     var enumPrintStatus = {
         NOTSTARTED: 0,
@@ -1859,7 +1859,7 @@
                         // not already cached, get (synchronously) if synchronous is available
                         // if synchronous is not available then getDeviceSettingsAsync() must be called 
                         // We have no choice but to fail this call. 
-                        if (module.jQuery && !MeadCo.fetchEnabled) {
+                        if (outerScope.jQuery && !MeadCo.fetchEnabled) {
                             getDeviceSettings({
                                 name: deviceRequest,
                                 done: function (data) {
@@ -2005,42 +2005,28 @@
          * <script src="lib/meadco-scriptxservicesprintUI.min.js" 
          *      data-meadco-server="https://app.corpservices/" 
          *      data-meadco-subscription="" data-meadco-syncinit="false">
-         *      data-meadco-usefetch="true"
-         *      data-meadco-syncinit="false"
          * </script>;
          * 
          * <!-- an example connection to ScriptX.Services for Windows PC -->
          * <script src="lib/meadco-scriptxservicesUI.min.js"
          *      data-meadco-server="http://127.0.0.1:41191" 
          *      data-meadco-license="{6BC6808B-D645-40B6-AE80-E9D0825797EF}" 
-         *      data-meadco-license-path="warehouse"
-         *      data-meadco-license-revision="3"
          *      data-meadco-syncinit="false" 
-         *      data-meadco-usefetch="true"
-         *      data-meadco-reporterror="true" 
-         *      data-meadco-applylicense="true"
-         *      data-meadco-orchestrator="41192"
-         *      data-meadco-orchestrator-key="user"
-         *      data-meadco-trust-verified-connection="true"
-         * >
+         *      data-meadco-license-path="warehouse"
+         *      data-meadco-license-revision="3">
          * </script>
          * 
-         * data-meadco-server value is the root url (endpoints, i.e. api/v1/printhtml, api/v1/licensing etc will be added by the library)
+         * data-meadco-server value is the root url, api/v1/printhtml, api/v1/licensing will be added by the library
          * data-meadco-syncinit default is true for synchronous calls to the server, value 'false' to use asynchronous calls to the server
-         * data-meadco-usefetch default is false, value 'true' to use fetch API for asynchronous calls to the server and not use jQuerry anywhere in the library
-         * data-meadco-trust-verified-connection default is true, value 'false' to not trust the connection to the server but use 'paranoid' mode and verify the connection before every call.
-         *
+         * 
          * data-meadco-subscription present => cloud/on premise service, value is the subscription GUID
          * data-meadco-license present => for Windows PC service, value is the license GUID
          *
-         * If data-meadco-license (i.e using ScriptX.Services for Windows PC) is present then the following additional attributes can be used:
+         * If data-meadco-license is present then the following additional attributes can be used:
          * 
          * data-meadco-license-revision, value is the revision number of the license
-         * data-meadco-license-path, value is the path to the license file (sxlic.mlf). A value of "warehouse" or "securewarehouse" will cause the license to be downloaded from MeadCo's License Warehouse ("securewarehouse" requires a secure connection to the Warehouse server)
+         * data-meadco-license-path, value is the path to the license file (sxlic.mlf). A value of "warehouse" will cause the license to be downloaded from MeadCo's License Warehouse
          * data-meadco-reporterror, default is "true", value "false" suppresses error messages during the initial connection to the service (only)
-         * data-meadco-applylicense default is false, value 'true' only applies to async. If MeadCo ScriptXJS is in use, it will do the apply. Set true if it is not being used.
-         * data-meadco-orchestrator value is the port number of the ScriptX.Services Orchestrator ('reverse proxy') to use
-         * data-meadco-orchestrator-key value is the key to use with Orchestrator Service for ScriptX.Services for Windows PC to recover the port registered for use with the same key
          * 
          */
         useAttributes: function () {

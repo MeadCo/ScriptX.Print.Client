@@ -86,13 +86,13 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    const moduleversion = "1.15.1.6";
+    const moduleversion = "1.15.2.1";
     const emulatedVersion = "8.3.0.0";
     let servicesVersion = "";
     const printApi = MeadCo.ScriptX.Print;
     const logApi = MeadCo; // could be console
 
-    let module = this;
+    let outerScope = this;
 
     function log(str) {
         logApi.log("factory emulation :: " + str);
@@ -151,7 +151,7 @@
 
                 case "meadco.secmgr":
                     try {
-                        v = module.secmgr.version;
+                        v = outerScope.secmgr.version;
                     } catch (e) { v = "0.0.0.0"; }
                     break;
 
@@ -179,7 +179,7 @@
             var c = new Object();
             var d = new Object();
 
-            module.factory.GetComponentVersion(sProgId, a, b, c, d);
+            outerScope.factory.GetComponentVersion(sProgId, a, b, c, d);
             return a[0] + "." + b[0] + "." + c[0] + "." + d[0];
         },
 
@@ -232,7 +232,7 @@
                     factory.printing.printer = sPrinterName;
 
                     if (eContentType === printApi.ContentType.URL) {
-                        sContent = module.factory.baseURL(sContent);
+                        sContent = outerScope.factory.baseURL(sContent);
                     }
 
                     bPrinted = printApi.printDirect(eContentType, sContent);
@@ -281,7 +281,7 @@
             log("MeadCo factory extending namespace: " + name);
             // walk/build the namespace part by part and assign the module to the leaf
             var namespaces = name.split(".");
-            var scope = module;
+            var scope = outerScope;
             for (var i = 0; i < namespaces.length; i++) {
                 var packageName = namespaces[i];
                 if (i === namespaces.length - 1) {
@@ -306,7 +306,7 @@
             if (e.ctrlKey && e.keyCode == 80 && !e.shiftKey) {
                 e.preventDefault();
                 log("ctrl-p being handled.");
-                module.print();
+                outerScope.print();
             }
         },
 
@@ -326,10 +326,10 @@
     const printApi = MeadCo.ScriptX.Print;
     const htmlPrefixes = ["html://", "html4://", "html5://"];
 
-    let module = this;
+    let outerScope = this;
     let unloadMsg = "";
 
-    module.factory.log("factory.Printing loaded.");
+    outerScope.factory.log("factory.Printing loaded.");
 
     function promptAndPrint(bPrompt, fnPrint, fnNotifyStarted) {
         if (typeof (bPrompt) === 'undefined') bPrompt = true;
@@ -417,7 +417,7 @@
             }
         } else {
             // if a relative URL supplied then add the base URL of this website
-            sUrl = module.factory.baseURL(sUrl);
+            sUrl = outerScope.factory.baseURL(sUrl);
         }
 
         return promptAndPrint(bPrompt,
@@ -431,7 +431,7 @@
     function printPdfContent(sUrl, bPrompt, fnNotifyStarted, fnCallback, data) {
         // if a relative URL supplied then add the base URL of this website
         if (typeof printPdf !== "undefined") {
-            sUrl = module.factory.baseURL(sUrl);
+            sUrl = outerScope.factory.baseURL(sUrl);
 
             return promptAndPrint(bPrompt,
                 function () {
@@ -596,10 +596,10 @@
     if (typeof printApi !== "undefined") {
         printApi.useAttributes();
 
-        if (typeof module.print === "function") {
-            module.factory.log("overwriting module.print");
-            module.print = function () {
-                module.factory.log("window.print() called and being handled.");
+        if (typeof outerScope.print === "function") {
+            outerScope.factory.log("overwriting outerScope.print");
+            outerScope.print = function () {
+                outerScope.factory.log("window.print() called and being handled.");
                 promptAndPrint(
                     true,
                     function () {
@@ -613,7 +613,7 @@
         // listen for Ctrl-P and override ...
         var doNotEnable = document.querySelector("[data-meadco-ctrlp='false']") != null;
         if (!doNotEnable) {
-            module.factory.log("using addEventListener('keydown',factory.keyPressCtrlP) for Ctrl-P");
+            outerScope.factory.log("using addEventListener('keydown',factory.keyPressCtrlP) for Ctrl-P");
             document.addEventListener("keydown", factory.keyPressCtrlP);
         }
     }
@@ -627,7 +627,7 @@
         //
 
         set header(str) {
-            module.factory.log("set factory.printing.header: " + str);
+            outerScope.factory.log("set factory.printing.header: " + str);
             settings.header = str;
         },
 
@@ -1373,9 +1373,9 @@
 })('factory.object', function () {
 
     // protected API
-    var module = this;
+    var outerScope = this;
 
-    module.factory.log("factory.object loaded.");
+    outerScope.factory.log("factory.object loaded.");
 
     /*
      * This completes the emulation of an &lt;object /&gt; element
@@ -1386,7 +1386,7 @@
      * @property {object} factory
      * @memberof factoryobject
      */
-    return module.factory;
+    return outerScope.factory;
 });
 
 ; (function (name, definition) {
@@ -1396,9 +1396,9 @@
 })('factory.object.js', function () {
 
     // protected API
-    var module = this;
+    var outerScope = this;
 
-    module.factory.log("factory.object.js loaded.");
+    outerScope.factory.log("factory.object.js loaded.");
 
     // public API
     return {

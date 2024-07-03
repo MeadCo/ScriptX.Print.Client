@@ -10,13 +10,13 @@ var MeadCo = {
 }
 
 const Versions = {
-    MeadCo: "1.15.1.4",
+    MeadCo: "1.15.2.1",
     MeadCoScriptX: "1.10.1",
-    MeadCoScriptXPrint: "1.15.1.18",
-    ScriptxFactoryServices: "1.15.1.6",
-    MeadCoScriptXPrintLicensing: "1.15.1.4",
-    MeadCoScriptXPrintHTML: "1.15.1.8",
-    MeadCoScriptXPrintPDF: "1.15.1.2",
-    SecMgr: "1.15.1.2",
-    MeadCoScriptXPrintUI: "1.15.1.12"
+    MeadCoScriptXPrint: "1.15.2.1",
+    ScriptxFactoryServices: "1.15.2.1",
+    MeadCoScriptXPrintLicensing: "1.15.2.0",
+    MeadCoScriptXPrintHTML: "1.15.2.0",
+    MeadCoScriptXPrintPDF: "1.15.2.0",
+    SecMgr: "1.15.2.1",
+    MeadCoScriptXPrintUI: "1.15.2.0"
 }

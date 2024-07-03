@@ -53,8 +53,8 @@
 })('MeadCo', function () {
 
     // protected API
-    var module = this;
-    var version = "1.15.1.4"; // matches the highest version number of sub-classes.
+    var outerScope = this;
+    var version = "1.15.2.1"; // matches the highest version number of sub-classes.
     var bLog = ((typeof (MeadCo) !== "undefined" && typeof (MeadCo.logEnable) !== "undefined")) ? MeadCo.logEnable : false;
     var bUseFetch = ((typeof (MeadCo) !== "undefined" && typeof (MeadCo.useFetch) !== "undefined")) ? MeadCo.useFetch : false;
 
@@ -73,13 +73,13 @@
     };
 
     // extend the namespace
-    module.extendMeadCoNamespace = function (name, definition) {
+    outerScope.extendMeadCoNamespace = function (name, definition) {
         var theModule = definition()
 
         log("MeadCo root extending namespace: " + name);
         // walk/build the namespace part by part and assign the module to the leaf
         var namespaces = name.split(".");
-        var scope = (module.scope || this.jQuery || this.ender || this.$ || this);
+        var scope = (outerScope.scope || this.jQuery || this.ender || this.$ || this);
         for (var i = 0; i < namespaces.length; i++) {
             var packageName = namespaces[i];
             if (i === namespaces.length - 1) {
@@ -225,7 +225,7 @@
          */
         createNS: function (namespace) {
             var nsparts = namespace.split(".");
-            var parent = module.scope.MeadCo;
+            var parent = outerScope.scope.MeadCo;
 
             // we want to be able to include or exclude the root namespace so we strip
             // it if it's in the namespace
@@ -253,7 +253,7 @@
          * @private
          * @param {object} s the scope in which to create namesapces
          */
-        set scope(s) { module.scope = s; },
+        set scope(s) { outerScope.scope = s; },
 
         /**
          * Get the url to a ScriptX.Services api. If an api is already present, it is replaced.
