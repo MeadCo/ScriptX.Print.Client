@@ -28,7 +28,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    const version = "1.15.2.1";
+    const version = "1.15.2.3";
     const htmlApiLocation = "v1/printHtml";
     const pdfApiLocation = "v1/printPdf";
     const directApiLocation = "v1/printDirect";
@@ -347,10 +347,15 @@
                         that.serviceUrl = "";
                         that.pendingUrl = "";
                         that.verifying = false;
-                        that.failedUrl = thatValue;
+
+                        try {
+                            let t = new URL(thatValue);
+                            that.failedUrl = thatValue;
+                        }
+                        catch (_) { }
+
                         if (typeof reject === "function") {
-                            var urlHelper = new URL(thatValue);
-                            reject("ScriptX.Services could not be found at " + urlHelper.protocol + "//" + urlHelper.host + ". Is it installed and running?");
+                            reject("ScriptX.Services could not be found at \"" + thatValue + "\". Is it installed and running?");
                         }
                     });
                 }
@@ -358,7 +363,7 @@
             else {
                 if (this.IsFailedConnection(value)) {
                     if (typeof reject === "function") {
-                        reject("ScriptX.Services connection to: " + value + " has already failed and will not be re-tried.")
+                        reject("ScriptX.Services connection to: " + value + " is either invalid or has already failed and will not be re-tried.")
                     }
                     else {
                         MeadCo.warn("ScriptX.Services connection to: " + value + " has already failed and will not be re-tried.")
@@ -379,7 +384,18 @@
         test: function (serverUrl, nHuntAllowed, bAsync, resolve, reject) {
             if (serverUrl.length > 0) {
                 const that = this;
-                let urlHelper = new URL(serverUrl);
+                let urlHelper;
+
+                try {
+                    urlHelper = new URL(serverUrl);
+                    if (urlHelper.protocol !== 'http:' && urlHelper.protocol !== 'https:') {
+                        reject("Invalid protocol: " + serverUrl);
+                        return;
+                    }
+                } catch (_) {
+                    reject("Invalid URL: " + serverUrl);
+                    return;
+                }
 
                 MeadCo.log("Test server requested: " + serverUrl + ", port: " + urlHelper.port);
 
