@@ -6,10 +6,12 @@ const gulp = require("gulp"),
     htmlmin = require("gulp-htmlmin"),
     terser = require('gulp-terser'),
     merge = require("merge-stream"),
+    sourcemaps = require("gulp-sourcemaps"),
     pipeline = require('readable-stream').pipeline,
     del = require("del"),
     bundleconfig = require("./tooling/distbundlesconfig.json"),
     replace = require('gulp-replace'),
+    rename = require('gulp-rename'),
     jsdoc = require('gulp-jsdoc3');
 
 //////////////////////////////
@@ -23,16 +25,28 @@ function getBundles(regexPattern) {
 }
 
 // minimse and bundle
-function mintoDist() {
+function BundleMinToDist() {
     var tasks = getBundles(/\.js$/).map(function (bundle) {
         return pipeline(
             gulp.src(bundle.inputFiles, { base: "." }),
-            terser(),
+            sourcemaps.init(),
             concat(bundle.outputFileName),
+            terser(),
+            sourcemaps.write('.'),
             gulp.dest(".")
         );
     });
     return merge(tasks);
+}
+
+// mimise and map individual files
+function MinifyAndMapToDist() {
+    return gulp.src('src/**/*.js')
+    .pipe(sourcemaps.init())
+        .pipe(terser())
+        .pipe(rename({ suffix: '.min' }))
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest('dist'));
 }
 
 // clean any previous bundle packages 
@@ -95,10 +109,10 @@ gulp.task('DocStatics', function () {
 ///////////////////////////////////////////
 // callable processes to build outputs.
 //
-gulp.task('Minify', gulp.series(cleanDist, mintoDist));
+gulp.task('Minify', gulp.series(cleanDist, gulp.parallel(BundleMinToDist, MinifyAndMapToDist)));
 
 gulp.task('MakeDocs', gulp.series('CompileDocs', 'ProcessDocs1', 'ProcessDocs2', 'ProcessDocs3', 'ProcessDocs4','DocStatics'));
 
 gulp.task('BuildDocs', gulp.series(cleanDocs,'MakeDocs'));
 
-gulp.task('BuildDist', gulp.series(gulp.parallel(cleanDist,cleanDocs), gulp.parallel(mintoDist, 'MakeDocs')));
+gulp.task('BuildDist', gulp.series(gulp.parallel(cleanDist, cleanDocs), gulp.parallel(BundleMinToDist, 'MakeDocs')));
