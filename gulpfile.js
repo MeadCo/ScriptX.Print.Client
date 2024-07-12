@@ -50,13 +50,10 @@ function MinifyAndMapToDist() {
 }
 
 // clean any previous bundle packages 
-function cleanDist() {
-    var files = bundleconfig.map(function (bundle) {
-        return bundle.outputFileName;
-    });
-
-    return del(files, { force: true });
-}
+gulp.task('CleanDist', function () {
+    del('dist/**', { force: true });
+    return Promise.resolve('the value is ignored');
+});
 
 ////////////////////////////////////
 // Build documentation site from js content using jsdoc
@@ -109,10 +106,13 @@ gulp.task('DocStatics', function () {
 ///////////////////////////////////////////
 // callable processes to build outputs.
 //
-gulp.task('Minify', gulp.series(cleanDist, gulp.parallel(BundleMinToDist, MinifyAndMapToDist)));
+gulp.task('Minify', gulp.series('CleanDist', gulp.parallel(BundleMinToDist, MinifyAndMapToDist)));
 
 gulp.task('MakeDocs', gulp.series('CompileDocs', 'ProcessDocs1', 'ProcessDocs2', 'ProcessDocs3', 'ProcessDocs4','DocStatics'));
 
 gulp.task('BuildDocs', gulp.series(cleanDocs,'MakeDocs'));
 
-gulp.task('BuildDist', gulp.series(gulp.parallel(cleanDist, cleanDocs), gulp.parallel(BundleMinToDist, 'MakeDocs')));
+gulp.task('BuildDist', gulp.series(gulp.parallel('CleanDist', cleanDocs), gulp.parallel(BundleMinToDist, 'MakeDocs')));
+
+gulp.task('Clean', gulp.parallel('CleanDist', cleanDocs));
+

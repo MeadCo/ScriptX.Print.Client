@@ -2,7 +2,7 @@
   "name": "scriptxprint-html",
   "version": "1.15.2",
   "description": "General library and emulation of ScriptX.Add-on for use with ScriptX.Services",
-  "main": "meadco-scriptxprinthtml.js",
+  "main": "dist/meadco-scriptxservices.min.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/MeadCo/ScriptX.Print.Client"
