@@ -28,7 +28,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    const version = "1.15.2.3";
+    const version = "1.15.2.4";
     const htmlApiLocation = "v1/printHtml";
     const pdfApiLocation = "v1/printPdf";
     const directApiLocation = "v1/printDirect";

@@ -21,12 +21,12 @@ As a result of being available on Github and NPM, the packages are available fro
 For the complete library supporting Cloud, On Premise and Windows PC services:
 
 ```javascript
-<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.15.1/dist/meadco-scriptxservices.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.15.2/dist/meadco-scriptxservices.min.js"></script>
 ```
 
 Or, for print only to cloud/on premise services,
 
 ```javascript
-<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.15.1/dist/meadco-scriptxservicesprint.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1.15.2/dist/meadco-scriptxservicesprint.min.js"></script>
 ```
 

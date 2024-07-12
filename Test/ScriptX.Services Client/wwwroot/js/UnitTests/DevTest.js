@@ -4,7 +4,7 @@ QUnit.test("Factory basics", function (assert) {
 
     assert.ok(window.factory, "factory namespace exists");
     var api = window.factory;
-    var expectedVersion = "1.15.1.5";
+    var expectedVersion = "1.15.2.5";
     var emulatedVersion = "8.3.0.0";
     var servicesVersion = "11.12.13.14";
 

@@ -1,4 +1,4 @@
-### Current Version : 1.15.1
+### Current Version : 1.15.2
 
 The MeadCo ScriptX.Services Client Library serves a dual function:
 

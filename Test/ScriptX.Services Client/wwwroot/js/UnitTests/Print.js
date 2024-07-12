@@ -24,13 +24,13 @@ QUnit.test("Namespace basics", function (assert) {
     if (MeadCo.fetchEnabled) {
         const done = assert.async(1);
         api.deviceSettingsForAsync("Garbage", () => { done() }, (eTxt) => {
-            assert.equal(eTxt, "ScriptX.Services could not be found at http://clearserver. Is it installed and running?", "Correct error message");           
+            assert.equal(eTxt, "ScriptX.Services could not be found at \"http://clearServer\". Is it installed and running?", "Correct error message");           
             done();
         })
     }
     else {
         assert.equal(api.deviceSettingsFor("My printer"), undefined, "Device settings for bad printer name shows error dialog and returns undefined");
-        assert.equal($("#qunit-fixture").text(), "ScriptX.Services could not be found at http://clearserver. Is it installed and running?", "Correct error message");
+        assert.equal($("#qunit-fixture").text(), "ScriptX.Services could not be found at \"http://clearServer\". Is it installed and running?", "Correct error message");
     }
 
 });
@@ -90,7 +90,7 @@ QUnit.test("Testing connection", function (assert) {
         assert.ok(false, "Should not have connected to: " + url);
         done();
     }, function (errorText) {
-        assert.equal(errorText, "ScriptX.Services could not be found at " + badServerUrl + ". Is it installed and running?", "connectTestAsync failed with correct error");
+        assert.equal(errorText, "ScriptX.Services could not be found at \"" + badServerUrl + "\". Is it installed and running?", "connectTestAsync failed with correct error");
         done();
     });
 
