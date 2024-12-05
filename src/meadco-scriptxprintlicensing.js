@@ -24,7 +24,7 @@
 ; (function (name, definition) {
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.Licensing', function () {
-    const moduleversion = "1.15.2.0";
+    const moduleversion = "1.16.0.0";
     const apiLocation = "v1/licensing";
 
     let licenseGuid = "";

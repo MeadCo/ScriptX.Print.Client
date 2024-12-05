@@ -28,7 +28,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    const version = "1.15.2.4";
+    const version = "1.16.0.2";
     const htmlApiLocation = "v1/printHtml";
     const pdfApiLocation = "v1/printPdf";
     const directApiLocation = "v1/printDirect";
@@ -282,13 +282,18 @@
                                 that.verifying = false;
                                 that.serviceUrl = "";
                                 that.pendingUrl = "";
-                                that.failedUrl = thatValue;
 
                                 const msg = MeadCo.parseAjaxError("Failed to connect with Orchestrator: ", jqXhr, textStatus, errorThrown);
                                 MeadCo.warn(msg);
 
+                                try {
+                                    let t = new URL(thatValue);
+                                    that.failedUrl = thatValue;
+                                }
+                                catch (_) { }
+
                                 if (typeof reject === "function") {
-                                    reject("Failed to connect with Orchestrator: " + msg);
+                                    reject("ScriptX.Services (Orchestrator) could not be found at \"" + thatValue + "\". Is it installed and running?");
                                 }
                             });
                     }
@@ -326,12 +331,15 @@
                                 that.verifying = false;
                                 that.serviceUrl = "";
                                 that.pendingUrl = "";
-                                that.failedUrl = thatValue;
 
-                                const errorThrown = MeadCo.parseFetchError("MeadCo.ScriptX.Print:verifyUrl - " + value, error);
+                                try {
+                                    let t = new URL(thatValue);
+                                    that.failedUrl = thatValue;
+                                }
+                                catch (_) { }
 
                                 if (typeof reject === "function") {
-                                    reject("Failed to connect with Orchestrator: " + errorThrown);
+                                    reject("ScriptX.Services (Orchestrator) could not be found at \"" + thatValue + "\". Is it installed and running?");
                                 }
                             });
                     }
@@ -502,6 +510,7 @@
             else {
                 if (this.serviceUrl !== "") {
                     const serviceUrl = MeadCo.makeApiEndPoint(this.serviceUrl, sApi);
+                    const currentUrl = window.location.href;
                     MeadCo.log("servicesServer.call() " + method + ": " + serviceUrl);
                     let oPayload = {
                         method: method,
@@ -514,7 +523,13 @@
 
                     if (bLicensed) {
                         oPayload.headers = {
-                            "Authorization": "Basic " + btoa(licenseGuid + ":")
+                            "Authorization": "Basic " + btoa(licenseGuid + ":"),
+                            "X-Meadroid-Path": currentUrl
+                        }
+                    }
+                    else {
+                        oPayload.headers = {
+                            "X-Meadroid-Path": currentUrl
                         }
                     }
 
@@ -548,11 +563,13 @@
                             if (bLicensed) {
                                 oPayload.headers = {
                                     "Authorization": "Basic " + btoa(licenseGuid + ":"),
+                                    "X-Meadroid-Path": currentUrl,
                                     "Content-type": "application/json"
                                 }
                             }
                             else {
                                 oPayload.headers = {
+                                    "X-Meadroid-Path": currentUrl,
                                     "Content-type": "application/json"
                                 }
                             }
