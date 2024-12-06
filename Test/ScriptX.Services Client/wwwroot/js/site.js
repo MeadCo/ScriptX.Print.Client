@@ -12,7 +12,7 @@ var MeadCo = {
 const Versions = {
     MeadCo: "1.16.0.0",
     MeadCoScriptX: "1.10.1",
-    MeadCoScriptXPrint: "1.16.0.2",
+    MeadCoScriptXPrint: "1.16.0.4",
     ScriptxFactoryServices: "1.16.0.0",
     MeadCoScriptXPrintLicensing: "1.16.0.0",
     MeadCoScriptXPrintHTML: "1.16.0.0",
