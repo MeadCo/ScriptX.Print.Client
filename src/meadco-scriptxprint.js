@@ -28,7 +28,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    const version = "1.16.0.2";
+    const version = "1.16.0.4";
     const htmlApiLocation = "v1/printHtml";
     const pdfApiLocation = "v1/printPdf";
     const directApiLocation = "v1/printDirect";
@@ -797,6 +797,11 @@
      * @property {number} PRINTPDF 8
      * @property {number} ERROR -1
      * @property {number} ABANDONED -2
+     *
+     * These are internal and should not be seen. However it is known CODEEXEPTION can leak and be seen.
+     * @property {number} COLLECTED 100
+     * @property {number} CODEEXEPTION 101
+     * @property {number} COMPLETEDWAITINGFORCOLLECTION 102
      */
     var enumPrintStatus = {
         NOTSTARTED: 0,
@@ -1455,7 +1460,8 @@
 
             case enumPrintStatus.ERROR:
             case enumPrintStatus.ABANDONED:
-                MeadCo.log("error status in monitorJob so clear interval: " + intervalId);
+            case enumPrintStatus.CODEEXEPTION:
+                MeadCo.log("error status in processMonitorResponse so clear interval: " + intervalId);
                 progress(requestData, data.status, data.message);
                 removeJob(jobId);
                 window.clearInterval(intervalId);
@@ -1465,7 +1471,7 @@
 
             default:
                 progress(requestData, data.status, data.message);
-                MeadCo.log("unknown status in monitorJob so clear interval: " + intervalId);
+                MeadCo.log("unknown status in processMonitorResponse so clear interval: " + intervalId);
                 removeJob(jobId);
                 window.clearInterval(intervalId);
                 functionComplete(null);
