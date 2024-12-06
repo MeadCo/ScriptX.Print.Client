@@ -27,40 +27,41 @@ function getBundles(regexPattern) {
 // minimse and bundle
 function BundleMinToDist() {
     var tasks = getBundles(/\.js$/).map(function (bundle) {
-        return pipeline(
-            gulp.src(bundle.inputFiles, { base: "." }),
-            sourcemaps.init(),
-            concat(bundle.outputFileName),
-            terser(),
-            sourcemaps.write('.'),
-            gulp.dest(".")
-        );
+        return gulp.src(bundle.inputFiles, { base: "." })
+            .pipe(sourcemaps.init())
+            .pipe(concat(bundle.outputFileName))
+            .pipe(terser())
+            .pipe(sourcemaps.write('.'))
+            .pipe(gulp.dest("."));
     });
     return merge(tasks);
 }
 
 // mimise and map individual files
 function MinifyAndMapToDist() {
-    return gulp.src('src/**/*.js')
+    var tasks = gulp.src('src/**/*.js')
     .pipe(sourcemaps.init())
         .pipe(terser())
         .pipe(rename({ suffix: '.min' }))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('dist'));
+    return merge(tasks);
 }
 
-// clean any previous bundle packages 
-gulp.task('CleanDist', function () {
-    del('dist/**', { force: true });
-    return Promise.resolve('the value is ignored');
-});
+async function CleanDistFolder() {
+    console.log("Cleaning dist folder...");
+    return del(['./dist']);
+}
 
 ////////////////////////////////////
 // Build documentation site from js content using jsdoc
 
 // remove previous output
-function cleanDocs() {
-    return del('./docs');
+async function CleanDocsFolder() {
+    console.log("Cleaning docs folder...");
+    return del(['./docs']);
+    // console.log("Completed clean docs folder...");
+    // await Promise.resolve('some result');
 }
 
 // extract docs and compile to html, adds in readme.md from docs-src
@@ -75,10 +76,13 @@ function ProcessName(nsname) {
 
     var badName = nsname.replace(/\./g, "");
 
-    // console.log("Replace: " + badName + " with: " + nsname);
+    console.log("Replace: " + badName + " with: " + nsname);
+
+//    var regx = new RegExp(badName + "(?![a-zA-Z]*\.html)", "gi")
+//    return gulp.src("./docs/*.html").pipe(replace(regx, nsname)).pipe(gulp.dest("./docs"));
 
     var regx = new RegExp(badName + "(?![a-zA-Z]*\.html)", "gi")
-    return gulp.src("./docs/*.html").pipe(replace(regx, nsname)).pipe(gulp.dest("./docs"));
+    return gulp.src("./docs/**/*.html").pipe(replace(regx, nsname)).pipe(gulp.dest("./docs"));
 }
 
 // call dot processing for each update required so can chain one after the other .. crude but works
@@ -103,16 +107,34 @@ gulp.task('DocStatics', function () {
     return gulp.src('./docs-src/build/**').pipe(gulp.dest('./docs/build/'));
 });
 
+gulp.task('Bundle1', function () {
+    return BundleMinToDist();
+});
+
+gulp.task('Minify1', function () {
+    return MinifyAndMapToDist();
+});
+
+gulp.task("CleanDist", function () {
+    return CleanDistFolder();
+});
+
+gulp.task("CleanDocs", function () {
+    return CleanDocsFolder();
+});
+
 ///////////////////////////////////////////
 // callable processes to build outputs.
 //
-gulp.task('Minify', gulp.series('CleanDist', gulp.parallel(BundleMinToDist, MinifyAndMapToDist)));
+gulp.task('Minify', gulp.series('CleanDist', gulp.series(BundleMinToDist, MinifyAndMapToDist)));
+
+gulp.task('Clean', gulp.parallel('CleanDist', 'CleanDocs'));
 
 gulp.task('MakeDocs', gulp.series('CompileDocs', 'ProcessDocs1', 'ProcessDocs2', 'ProcessDocs3', 'ProcessDocs4','DocStatics'));
 
-gulp.task('BuildDocs', gulp.series(cleanDocs,'MakeDocs'));
+gulp.task('BuildDocs', gulp.series('CleanDocs','MakeDocs'));
 
-gulp.task('BuildDist', gulp.series(gulp.parallel('CleanDist', cleanDocs), gulp.parallel(BundleMinToDist, 'MakeDocs')));
+gulp.task('BuildDist', gulp.series('Clean', gulp.parallel(gulp.series(BundleMinToDist, MinifyAndMapToDist), 'MakeDocs')));
 
-gulp.task('Clean', gulp.parallel('CleanDist', cleanDocs));
+
 
