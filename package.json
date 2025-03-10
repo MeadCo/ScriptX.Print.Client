@@ -23,7 +23,8 @@
   "homepage": "https://scriptxservices.meadroid.com/",
   "files": [
     "src/*.js",
-    "dist/*.js"
+    "dist/*.js",
+    "dist/*.map"
   ],
   "scripts": {
     "dist": "gulp BuildDist",

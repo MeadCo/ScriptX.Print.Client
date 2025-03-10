@@ -36,13 +36,37 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{0B0CC34E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dist", "dist", "{0F97F6FD-078E-41D0-B35B-5151D7B9ED95}"
 	ProjectSection(SolutionItems) = preProject
+		..\dist\Bootstrap5-MeadCo.ScriptX.Print.UI.min.js = ..\dist\Bootstrap5-MeadCo.ScriptX.Print.UI.min.js
+		..\dist\Bootstrap5-MeadCo.ScriptX.Print.UI.min.js.map = ..\dist\Bootstrap5-MeadCo.ScriptX.Print.UI.min.js.map
+		..\dist\jQuery-MeadCo.ScriptX.Print.UI.min.js = ..\dist\jQuery-MeadCo.ScriptX.Print.UI.min.js
+		..\dist\jQuery-MeadCo.ScriptX.Print.UI.min.js.map = ..\dist\jQuery-MeadCo.ScriptX.Print.UI.min.js.map
+		..\dist\meadco-core.min.js = ..\dist\meadco-core.min.js
+		..\dist\meadco-core.min.js.map = ..\dist\meadco-core.min.js.map
+		..\dist\meadco-scriptxfactory.min.js = ..\dist\meadco-scriptxfactory.min.js
+		..\dist\meadco-scriptxfactory.min.js.map = ..\dist\meadco-scriptxfactory.min.js.map
+		..\dist\meadco-scriptxprint.min.js = ..\dist\meadco-scriptxprint.min.js
+		..\dist\meadco-scriptxprint.min.js.map = ..\dist\meadco-scriptxprint.min.js.map
+		..\dist\meadco-scriptxprinthtml.min.js = ..\dist\meadco-scriptxprinthtml.min.js
+		..\dist\meadco-scriptxprinthtml.min.js.map = ..\dist\meadco-scriptxprinthtml.min.js.map
+		..\dist\meadco-scriptxprintlicensing.min.js = ..\dist\meadco-scriptxprintlicensing.min.js
+		..\dist\meadco-scriptxprintlicensing.min.js.map = ..\dist\meadco-scriptxprintlicensing.min.js.map
+		..\dist\meadco-scriptxprintpdf.min.js = ..\dist\meadco-scriptxprintpdf.min.js
+		..\dist\meadco-scriptxprintpdf.min.js.map = ..\dist\meadco-scriptxprintpdf.min.js.map
 		..\dist\meadco-scriptxservices.min.js = ..\dist\meadco-scriptxservices.min.js
+		..\dist\meadco-scriptxservices.min.js.map = ..\dist\meadco-scriptxservices.min.js.map
 		..\dist\meadco-scriptxserviceslicensing.min.js = ..\dist\meadco-scriptxserviceslicensing.min.js
+		..\dist\meadco-scriptxserviceslicensing.min.js.map = ..\dist\meadco-scriptxserviceslicensing.min.js.map
 		..\dist\meadco-scriptxservicesprint.min.js = ..\dist\meadco-scriptxservicesprint.min.js
+		..\dist\meadco-scriptxservicesprint.min.js.map = ..\dist\meadco-scriptxservicesprint.min.js.map
 		..\dist\meadco-scriptxservicesprintUI-2.min.js = ..\dist\meadco-scriptxservicesprintUI-2.min.js
+		..\dist\meadco-scriptxservicesprintUI-2.min.js.map = ..\dist\meadco-scriptxservicesprintUI-2.min.js.map
 		..\dist\meadco-scriptxservicesprintUI.min.js = ..\dist\meadco-scriptxservicesprintUI.min.js
+		..\dist\meadco-scriptxservicesprintUI.min.js.map = ..\dist\meadco-scriptxservicesprintUI.min.js.map
 		..\dist\meadco-scriptxservicesUI-2.min.js = ..\dist\meadco-scriptxservicesUI-2.min.js
+		..\dist\meadco-scriptxservicesUI-2.min.js.map = ..\dist\meadco-scriptxservicesUI-2.min.js.map
 		..\dist\meadco-scriptxservicesUI.min.js = ..\dist\meadco-scriptxservicesUI.min.js
+		..\dist\meadco-scriptxservicesUI.min.js.map = ..\dist\meadco-scriptxservicesUI.min.js.map
+		..\dist\meadco-secmgr.min.js.map = ..\dist\meadco-secmgr.min.js.map
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScriptX.Services Client", "ScriptX.Services Client\ScriptX.Services Client.csproj", "{1097C054-BAB0-4B08-A582-E6AD925BD423}"
