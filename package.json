@@ -1,6 +1,6 @@
 {
   "name": "scriptxprint-html",
-  "version": "1.16.0",
+  "version": "1.16.1",
   "description": "General library and emulation of ScriptX.Add-on for use with ScriptX.Services",
   "main": "dist/meadco-scriptxservices.min.js",
   "repository": {
@@ -60,6 +60,5 @@
     "pug-code-gen": ">=2.0.3",
     "y18n": ">=3.2.2"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
