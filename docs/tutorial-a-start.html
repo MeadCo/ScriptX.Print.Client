@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>secmgr - Documentation</title>
+    <title>Tutorial: Getting started - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -35,456 +35,125 @@
 
 <div id="main">
     
-    <h1 class="page-title">secmgr</h1>
+    <h1 class="page-title">Tutorial: Getting started</h1>
     
 
-    
-
-
-
-
-<section>
+    <section>
 
 <header>
     
-        <h2>
-        
-            Namespace
-        
-        </h2>
-        
-    
+
+    <h2>Getting started</h2>
 </header>
 
 <article>
-    
-        <div class="container-overview">
-        
-            
-
-
-    
-
-    <h4 class="name" id="secmgr">secmgr</h4>
-
-    
-    <p class="summary usertext"><p>MeadCo ScriptX 'window.secmgr' shim (support for modern browsers and IE 11) JS client library</p>
-<p>The MeadCo Security Manager Add-on for Internet Explorer is included on a html document with an &lt;object id='secmgr' /&gt; element with a de-facto standard id of 'secmgr'.</p></p>
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>MeadCo ScriptX 'window.secmgr' shim (support for modern browsers and IE 11) JS client library</p>
-<p>The MeadCo Security Manager Add-on for Internet Explorer is included on a html document with an &lt;object id='secmgr' /&gt; element with a de-facto standard id of 'secmgr'.</p>
-<p>The object is referenced with the property window.secmgr which exposes properties and methods.</p>
-<p>The MeadCo Security Manager Add-on for Internet Explorer provided for prompting the user to accept use of the license that enabled advanced features of ScriptX.Add-on. Frequently
-there was then no further reference to Security Manager and in such cases this shim is not required.</p>
-<p>This use case can be emulated by using appropriate attributes on an element (for example a &lt;script&gt;&lt;/script&gt;) on the page and including meadco-scriptxprint.js to process the attributes. This shim is then <em>not</em> required.</p>
-<p>Please note that when working with ScriptX.Services for Windows PC meadco-scriptxprintlicensing.js is required even with the use of attributes.</p>
-<p>This shim is required if you have code that relies upon being able to inspect the availability of a license.</p>
-<p>Full documentation on the properties/methods is provided by the technical reference documentation for the ScriptX Add-on for Internet Explorer: https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn/secmgr. That documentation is not reproduced here.</p>
-<p>If the startup script determines that the MeadCo Security Manager Add-on for IE is already active then it will quietly give priority to the object. In other words, the Add-on has precedence on Internet Explorer.</p>
-<p>This enables the same experience (almost) to be delivered to any browser on any device with the same html/javascript code.</p>
-<p>It is strongly recommended that the MeadCoScriptJS library (https://github.com/MeadCo/MeadCoScriptXJS) is used in conjunction with this library as it provides code (Promises) to assist
-with working with the significant difference between the synchronous nature of the functions of ScriptX.Add-on (which hide the underlying asynchrony) and the asynchronous nature of javascript AJAX processing.</p>
-<p>Requires:
-meadco-core.js
-meadco-scriptxprint.js
-meadco-scriptxprintlicensing.js</p></li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="meadco-secmgr.js.html">meadco-secmgr.js</a>, <a href="meadco-secmgr.js.html#line1">line 1</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-        </div>
-    
-
-    
-
-    
-
-    
-    
-    
-
-     
-
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-<h4 class="name" id=".version"><span class="type-signature type-signature-static">(static) </span>version<span class="type-signature"></span></h4>
-
-
-<p class="summary"><p>Get the version of this module as a string major.minor.hotfix.build</p>.</p>
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>Get the version of this module as a string major.minor.hotfix.build</p></li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="meadco-secmgr.js.html">meadco-secmgr.js</a>, <a href="meadco-secmgr.js.html#line126">line 126</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    
-
-<table class="props">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>version</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<div class="description usertext">
-    <p>Get the version of this module as a string major.minor.hotfix.build</p>
-</div>
-
-
-
-
-
-
-
-
-        
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    <h4 class="name" id=".GetLicenseAsync"><span class="type-signature type-signature-static">(static) </span>GetLicenseAsync<span class="signature">(resolve, reject)</span><span class="type-signature"></span></h4>
-
-    
-    <p class="summary usertext">Get the details of the license using Asynchronous calls to the server.</p>
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>Get the details of the license using Asynchronous calls to the server.
-See meadco-scriptxprintlicensing.js for more detail</p></li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="meadco-secmgr.js.html">meadco-secmgr.js</a>, <a href="meadco-secmgr.js.html#line153">line 153</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5 class="h5-parameters">Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>resolve</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>function to call on successfulk completion</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>reject</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>function to call on failure with reason for failure</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-    
-
-    
-
-    
+    <h2>Quick start - ScriptX.Services for Microsoft Windows PC</h2>
+<ol>
+<li><a href="https://www.meadroid.com/Downloads/ScriptXServices/Download">Download and install ScriptX.Services for Microsoft Windows (x64) PC</a></li>
+<li>Link to the required libraries with service connection details</li>
+<li>Initialise the <a href="https://meadco.github.io/MeadCoScriptXJS">MeadCoScriptXJS</a> library</li>
+<li>Initilise print parameters</li>
+</ol>
+<pre class="prettyprint source lang-javascript"><code>&lt;!-- ScriptX Services client emulation libraries optionally use jQuery. It is **not** a dependency -->
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js&quot;>&lt;/script>
+
+&lt;!-- MeadCoScriptXJS Library -->
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/meadco-scriptxjs@1/src/meadco-scriptx.min.js&quot;>&lt;/script>
+
+&lt;!-- Connect to server with publishing license id. -->
+&lt;!-- Use an evaluation license id for the value of data-meadco-license -->
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/scriptxprint-html@1/dist/meadco-scriptxservices.min.js&quot; 
+        data-meadco-server=&quot;http://127.0.0.1:41991&quot; 
+        data-meadco-license=&quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&quot;>&lt;/script>
+
+&lt;script type=&quot;text/javascript&quot;>
+   $(window).on('load', async () => {
+        try {
+           await MeadCo.ScriptX.InitAsync();
+           MeadCo.ScriptX.Printing.header = 
+              &quot;MeadCo's ScriptX&b:&p of &P:&bBasic Printing Sample&quot;;
+           MeadCo.ScriptX.Printing.footer = 
+              &quot;The de facto standard for advanced web-based printing&quot;;
+           MeadCo.ScriptX.Printing.orientation = &quot;landscape&quot;;
+           $(&quot;#btnprint&quot;).click(() => { 
+                MeadCo.ScriptX.PrintPage(false); });
+        }
+        catch (e) {
+            console.error(e);
+        }
+   });
+&lt;/script>
+</code></pre>
+<h2>Quick start - ScriptX.Services on Cloud for any browser</h2>
+<ol>
+<li><a href="https://scriptxservices.meadroid.com/CloudService/Signup">Sign up for a subscription identifier</a></li>
+<li>Link to the required libraries with service connection details</li>
+<li>Initialise the <a href="https://meadco.github.io/MeadCoScriptXJS">MeadCoScriptXJS</a> library</li>
+<li>Initilise print parameters</li>
+</ol>
+<pre class="prettyprint source lang-javascript"><code>&lt;!-- ScriptX Services client emulation libraries optionally use jQuery. It is **not** a dependency -->
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js&quot;>&lt;/script>
+
+&lt;!-- MeadCoScriptXJS Library -->
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/meadco-scriptxjs@1/src/meadco-scriptx.min.js&quot;>&lt;/script>
+
+&lt;!-- Connect to cloud server with registered use id. -->
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/scriptxprint-html@1.6/dist/meadco-scriptxservicesprint.min.js&quot; 
+        data-meadco-server=&quot;https://scriptxservices.meadroid.com&quot; 
+        data-meadco-subscription=&quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&quot;>&lt;/script>
+
+&lt;script type=&quot;text/javascript&quot;>
+   $(window).on('load', function () {
+     MeadCo.ScriptX.InitAsync().then(function {
+       MeadCo.ScriptX.Printing.header = 
+          &quot;MeadCo's ScriptX&b:&p of &P:&bBasic Printing Sample&quot;;
+       MeadCo.ScriptX.Printing.footer = 
+          &quot;The de facto standard for advanced web-based printing&quot;;
+       MeadCo.ScriptX.Printing.orientation = &quot;landscape&quot;;
+       $(&quot;#btnprint&quot;).click(function() { 
+            MeadCo.ScriptX.PrintPage(false);
+       });
+     })      
+   });
+&lt;/script>
+</code></pre>
+<h2>Quick start - ScriptX.Services On Premise</h2>
+<ol>
+<li><a href="https://www.meadroid.com/Downloads/ScriptXServices/Download">Download and install ScriptX.Services for On Premise Devices</a></li>
+<li>Request and install an evaluation license</li>
+<li>Link to the required libraries with service connection details</li>
+<li>Initialise the <a href="https://meadco.github.io/MeadCoScriptXJS">MeadCoScriptXJS</a> library</li>
+<li>Initilise print parameters</li>
+</ol>
+<pre class="prettyprint source lang-javascript"><code>&lt;!-- ScriptX Services client emulation libraries optionally use jQuery. It is **not** a dependency -->
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js&quot;>&lt;/script>
+
+&lt;!-- MeadCoScriptXJS Library -->
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/meadco-scriptxjs@1/src/meadco-scriptx.min.js&quot;>&lt;/script>
+
+&lt;!-- Connect to on premise server, no subscription id is required as it is the srver that is licensed.
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/scriptxprint-html@1/dist/meadco-scriptxservicesprint.min.js&quot; 
+        data-meadco-server=&quot;http://&lt;yourlocalserver>/scriptxservices/&quot; 
+        data-meadco-subscription=&quot;&quot;>&lt;/script>
+
+&lt;script type=&quot;text/javascript&quot;>
+   $(window).on('load', function () {
+     MeadCo.ScriptX.InitAsync().then(function {
+       MeadCo.ScriptX.Printing.header = 
+          &quot;MeadCo's ScriptX&b:&p of &P:&bBasic Printing Sample&quot;;
+       MeadCo.ScriptX.Printing.footer = 
+          &quot;The de facto standard for advanced web-based printing&quot;;
+       MeadCo.ScriptX.Printing.orientation = &quot;landscape&quot;;
+       $(&quot;#btnprint&quot;).click(function() { 
+            MeadCo.ScriptX.PrintPage(false);
+       });
+     })      
+   });
+&lt;/script>
+</code></pre>
 </article>
 
 </section>
-
-
-
 
     
     

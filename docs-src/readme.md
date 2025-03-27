@@ -1,4 +1,5 @@
-### Current Version : 1.16.1
+# MeadCo ScriptX.Services Client Library
+## Current version {@packageversion}
 
 The MeadCo ScriptX.Services Client Library serves a dual function:
 
@@ -25,7 +26,7 @@ A [comprehensive discussion](https://support.meadroid.com/Developers/KnowledgeBa
 Moreover, the [MeadCoScriptXJS library](https://github.com/MeadCo/MeadCoScriptXJS) is optimised for contemporary applications, offering support &quot;async&quot; operations as many APIs return a Promise object over the 
 callback model of this library.
 
-#### A Note on Browsers and Devices
+# A Note on Browsers and Devices
 
 The MeadCo ScriptX.Add-on continues to be available and supports Internet Explorer. JavaScript code in this scenario will be utilizing the &quot;window.factory&quot; object.
 
@@ -36,9 +37,9 @@ By using this compatibility layer written in JavaScript, the same browser client
 The ScriptX.Services Client libraries are self-sufficient and do not depend on anything other than themselves. We understand that our 
 clients are diverse and may have dependencies on many libraries. We aim not to work against those choices but to work in harmony with them.
 
-## Architectural Overview
+# Architectural Overview
 
-### Background
+## Background
 
 ScriptX.Addon (a COM/ActiveX object) appears to script code in the browser (Internet Explorer) as the object &quot;window.factory&quot; (assuming that the de-facto standard id of &quot;factory&quot; has been used on the ScriptX &lt;object /&gt; element). From this object, the object &quot;printing&quot; is available, leading to code such as this:
 
@@ -50,7 +51,7 @@ factory.printing.Print(false);
 
 The extensive API of properties and methods is documented [here](https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn).
 
-#### MeadCoScriptXJS Library
+## MeadCoScriptXJS Library
 
 In addition to the ScriptX.Addon API a [javascript library](https://github.com/MeadCo/MeadCoScriptXJS) was developed to extend the API with convenience functions. Started in 2013, this library took the 
 approach of &quot;namespaces&quot; / static classes, which were popular(-ish) then as a means of ensuring no clashes of names etc. A significant amount of code has 
@@ -96,7 +97,7 @@ MeadCo.ScriptX is an object providing for verified initialisation and a number o
 The final &quot;trick&quot; is that if MeadCo.ScriptX.Printing is pointed to an implementation of the .Addon API in javascript and that implementation uses the ScriptX.Services API to perform printing then code using the MeadCoScriptXJS library will work 
 with .Addon and .Services with no changes in simple cases and few changes in more complex cases.
 
-### Support for .Addon Emulation in ScriptX.Services
+# Support for .Addon Emulation in ScriptX.Services
 
 The MeadCo ScriptX.Service Client Library implements a heirarchy of static 'classes' (or singleton object instances!) at the bottom of which is an implementation of
 the .Addon API (factory, factory.printing et al) in javascript. The implementation
@@ -110,7 +111,7 @@ an async block so some re-coding is required.
 
 > Note that the [MeadCoScriptXJS](https://github.com/MeadCo/MeadCoScriptXJS) library does **not have to be used**. In its absense, meadco-scriptxfactory.js and its dependencies on the hierarchy implement a reasonable and usable emulation of &quot;factory.printing&quot; though functionality such as WaitForSpoolingComplete is not a compatible emulation.
 
-#### User Interface
+# User Interface
 
 The library does not implement any UI - Printer or Print Settings dialogs. This enables decoupling from any UI dependencies that may be problematic - for example, to Bootstrap, or to not Bootstrap?
 
@@ -133,3 +134,4 @@ See also:
  * [ScriptX Add-on for Internet Explorer API reference](https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn).
  * [ScriptX.Services on Cloud](https://scriptxservices.meadroid.com/)
  * [ScriptX Services Samples - Cloud, On Premise, for Windows PC](https://scriptxprintsamples.meadroid.com/) the samples make use of MeadCoScriptXJS and ScriptX.Services.Client to deliver samples that work in any scenario with the same code.
+ * {@tutorial start} - a quick start guide to using the library.

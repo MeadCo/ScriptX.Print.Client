@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>secmgr - Documentation</title>
+    <title>Tutorial: Minified collections - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -35,456 +35,151 @@
 
 <div id="main">
     
-    <h1 class="page-title">secmgr</h1>
+    <h1 class="page-title">Tutorial: Minified collections</h1>
     
 
-    
-
-
-
-
-<section>
+    <section>
 
 <header>
     
-        <h2>
-        
-            Namespace
-        
-        </h2>
-        
-    
+
+    <h2>Minified collections</h2>
 </header>
 
 <article>
-    
-        <div class="container-overview">
-        
-            
-
-
-    
-
-    <h4 class="name" id="secmgr">secmgr</h4>
-
-    
-    <p class="summary usertext"><p>MeadCo ScriptX 'window.secmgr' shim (support for modern browsers and IE 11) JS client library</p>
-<p>The MeadCo Security Manager Add-on for Internet Explorer is included on a html document with an &lt;object id='secmgr' /&gt; element with a de-facto standard id of 'secmgr'.</p></p>
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>MeadCo ScriptX 'window.secmgr' shim (support for modern browsers and IE 11) JS client library</p>
-<p>The MeadCo Security Manager Add-on for Internet Explorer is included on a html document with an &lt;object id='secmgr' /&gt; element with a de-facto standard id of 'secmgr'.</p>
-<p>The object is referenced with the property window.secmgr which exposes properties and methods.</p>
-<p>The MeadCo Security Manager Add-on for Internet Explorer provided for prompting the user to accept use of the license that enabled advanced features of ScriptX.Add-on. Frequently
-there was then no further reference to Security Manager and in such cases this shim is not required.</p>
-<p>This use case can be emulated by using appropriate attributes on an element (for example a &lt;script&gt;&lt;/script&gt;) on the page and including meadco-scriptxprint.js to process the attributes. This shim is then <em>not</em> required.</p>
-<p>Please note that when working with ScriptX.Services for Windows PC meadco-scriptxprintlicensing.js is required even with the use of attributes.</p>
-<p>This shim is required if you have code that relies upon being able to inspect the availability of a license.</p>
-<p>Full documentation on the properties/methods is provided by the technical reference documentation for the ScriptX Add-on for Internet Explorer: https://www.meadroid.com/Developers/KnowledgeBank/TechnicalReference/ScriptXAddOn/secmgr. That documentation is not reproduced here.</p>
-<p>If the startup script determines that the MeadCo Security Manager Add-on for IE is already active then it will quietly give priority to the object. In other words, the Add-on has precedence on Internet Explorer.</p>
-<p>This enables the same experience (almost) to be delivered to any browser on any device with the same html/javascript code.</p>
-<p>It is strongly recommended that the MeadCoScriptJS library (https://github.com/MeadCo/MeadCoScriptXJS) is used in conjunction with this library as it provides code (Promises) to assist
-with working with the significant difference between the synchronous nature of the functions of ScriptX.Add-on (which hide the underlying asynchrony) and the asynchronous nature of javascript AJAX processing.</p>
-<p>Requires:
-meadco-core.js
-meadco-scriptxprint.js
-meadco-scriptxprintlicensing.js</p></li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="meadco-secmgr.js.html">meadco-secmgr.js</a>, <a href="meadco-secmgr.js.html#line1">line 1</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-        </div>
-    
-
-    
-
-    
-
-    
-    
-    
-
-     
-
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-<h4 class="name" id=".version"><span class="type-signature type-signature-static">(static) </span>version<span class="type-signature"></span></h4>
-
-
-<p class="summary"><p>Get the version of this module as a string major.minor.hotfix.build</p>.</p>
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>Get the version of this module as a string major.minor.hotfix.build</p></li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="meadco-secmgr.js.html">meadco-secmgr.js</a>, <a href="meadco-secmgr.js.html#line126">line 126</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    
-
-<table class="props">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>version</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
+    <p>The library contains the following source files :</p>
+<h3>Core</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Namespace</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>meadco-core.js</td>
+<td>MeadCo</td>
+<td>Core functionality required for creating objects in the namespace and other general utilities</td>
+</tr>
+<tr>
+<td>meadco-scriptxprint.js</td>
+<td>MeadCo.ScriptX.Print</td>
+<td>Implements calls to the ScriptX.Services Web print APIs including processing of responses with tracking of jobs at the server</td>
+</tr>
+<tr>
+<td>meadco-scriptxprinthtml.js</td>
+<td>MeadCo.ScriptX.Print.HTML</td>
+<td>Implements support for the structures required by the Web API for html printing and functions to gather the HTML to be printed from the current document</td>
+</tr>
+<tr>
+<td>meadco-scriptxprintpdf.js</td>
+<td>MeadCo.ScriptX.Print.PDF</td>
+<td>Implements support for the structures required by the Web API for printing PDF documents</td>
+</tr>
+<tr>
+<td>meadco-scriptxfactory.js</td>
+<td>&quot;factory&quot;</td>
+<td>Implements emulations of factory, factory.printing..., factory.rawPrinting, factory.js</td>
+</tr>
+</tbody>
 </table>
-
-
-
-
-
-
-<div class="description usertext">
-    <p>Get the version of this module as a string major.minor.hotfix.build</p>
-</div>
-
-
-
-
-
-
-
-
-        
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    <h4 class="name" id=".GetLicenseAsync"><span class="type-signature type-signature-static">(static) </span>GetLicenseAsync<span class="signature">(resolve, reject)</span><span class="type-signature"></span></h4>
-
-    
-    <p class="summary usertext">Get the details of the license using Asynchronous calls to the server.</p>
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>Get the details of the license using Asynchronous calls to the server.
-See meadco-scriptxprintlicensing.js for more detail</p></li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="meadco-secmgr.js.html">meadco-secmgr.js</a>, <a href="meadco-secmgr.js.html#line153">line 153</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5 class="h5-parameters">Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>resolve</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>function to call on successfulk completion</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>reject</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>function to call on failure with reason for failure</p></td>
-        </tr>
-
-    
-    </tbody>
+<h3>Licensing</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Namespace</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>meadco-scriptxprintlicensing.js</td>
+<td>MeadCo.ScriptX.Print.Licensing</td>
+<td>Implements calls to the ScriptX.Services Web licensing API</td>
+</tr>
+<tr>
+<td>meadco-secmgr.js</td>
+<td>&quot;secmgr&quot;</td>
+<td>Implements emulation of secmgr</td>
+</tr>
+</tbody>
 </table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-    
-
-    
-
-    
+<h3>UI</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Namespace</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>jQuery-MeadCo.ScriptX.Print.UI.js</td>
+<td>MeadCo.ScriptX.Print.UI</td>
+<td>Implements the dialogs PageSetup and PrinterSettings with Bootstrap 3/4 and jQuery</td>
+</tr>
+<tr>
+<td>Bootstrap5-MeadCo.ScriptX.Print.UI.js</td>
+<td>MeadCo.ScriptX.Print.UI</td>
+<td>Implements the dialogs PageSetup and PrinterSettings with Bootstrap 5 without jQuery</td>
+</tr>
+</tbody>
+</table>
+<h2>Collections</h2>
+<p>The following minimised collections are provided/available from each repository:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Includes</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>meadco-scriptxservices.min.js</td>
+<td>All core modules for printing including window.factory and window.secmgr emulation but no support for UI prompts.</td>
+<td>Full support for ScriptX Services on Windows PC. But, <strong>no</strong> UI dialog modules are included.</td>
+</tr>
+<tr>
+<td>meadco-scriptxservicesUI.min.js</td>
+<td>As above but includes UI prompt Page and Print setup UI dialogs (require Bootstrap 3/4 and jQuery).</td>
+<td>Full support for ScriptX Services on Windows PC where print promopt dialogs are required.</td>
+</tr>
+<tr>
+<td>meadco-scriptxservicesUI-2.min.js</td>
+<td>As above but includes UI prompt Page and Print setup UI dialogs (require Bootstrap 5 no jQuery).</td>
+<td>Full support for ScriptX Services on Windows PC where print promopt dialogs are required.</td>
+</tr>
+<tr>
+<td>meadco-scriptxservicesprint.min.js</td>
+<td>All core modules for printing print including window.factory emulation. No UI modules or support licensing for ScriptX Services on Windows PC.</td>
+<td>Intended for working with ScriptX.Services on Cloud or On Premise.</td>
+</tr>
+<tr>
+<td>meadco-scriptxservicesprintUI.min.js</td>
+<td>As above but includes Page and Print setup UI dialogs (require Bootstrap 3/4 and jQuery).</td>
+<td>For working with ScriptX.Services on Cloud or On Premise where print prompt dialogs are required.</td>
+</tr>
+<tr>
+<td>meadco-scriptxservicesprintUI-2.min.js</td>
+<td>As above but includes Page and Print setup UI dialogs (require Bootstrap5 no jQuery).</td>
+<td>For working with ScriptX.Services on Cloud or On Premise where print prompt dialogs are required.</td>
+</tr>
+<tr>
+<td>meadco-scriptxserviceslicensing.min.js</td>
+<td>window.secmgr emulation for ScriptX Services on Windows PC.</td>
+<td>Super low download cost for a 'license install' page.</td>
+</tr>
+</tbody>
+</table>
 </article>
 
 </section>
-
-
-
 
     
     
