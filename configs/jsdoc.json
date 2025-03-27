@@ -23,10 +23,11 @@
   "templates": {
     "cleverLinks": false,
     "monospaceLinks": false,
-    "search": false,
+    "search": true,
     "default": {
       "staticFiles": {
         "include": [
+          "./docs-src/styles"
         ]
       }
     }
