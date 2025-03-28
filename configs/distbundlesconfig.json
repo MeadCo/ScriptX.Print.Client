@@ -1,6 +1,6 @@
 ﻿[
   {
-    "outputFileName": "./dist/meadco-scriptxservicesprint.min.js",
+    "outputFileName": "../dist/meadco-scriptxservicesprint.min.js",
     "inputFiles": [
       "./src/meadco-core.js",
       "./src/meadco-scriptxprint.js",
@@ -10,7 +10,7 @@
     ]
   },
   {
-    "outputFileName": "./dist/meadco-scriptxservicesprintUI.min.js",
+    "outputFileName": "../dist/meadco-scriptxservicesprintUI.min.js",
     "inputFiles": [
       "./src/meadco-core.js",
       "./src/meadco-scriptxprint.js",
@@ -21,7 +21,7 @@
     ]
   },
   {
-    "outputFileName": "./dist/meadco-scriptxservicesprintUI-2.min.js",
+    "outputFileName": "../dist/meadco-scriptxservicesprintUI-2.min.js",
     "inputFiles": [
       "./src/meadco-core.js",
       "./src/meadco-scriptxprint.js",
@@ -32,7 +32,7 @@
     ]
   },
   {
-    "outputFileName": "./dist/meadco-scriptxserviceslicensing.min.js",
+    "outputFileName": "../dist/meadco-scriptxserviceslicensing.min.js",
     "inputFiles": [
       "./src/meadco-core.js",
       "./src/meadco-scriptxprint.js",
@@ -41,7 +41,7 @@
     ]
   },
   {
-    "outputFileName": "./dist/meadco-scriptxservices.min.js",
+    "outputFileName": "../dist/meadco-scriptxservices.min.js",
     "inputFiles": [
       "./src/meadco-core.js",
       "./src/meadco-scriptxprint.js",
@@ -53,7 +53,7 @@
     ]
   },
   {
-    "outputFileName": "./dist/meadco-scriptxservicesUI.min.js",
+    "outputFileName": "../dist/meadco-scriptxservicesUI.min.js",
     "inputFiles": [
       "./src/meadco-core.js",
       "./src/meadco-scriptxprint.js",
@@ -66,7 +66,7 @@
     ]
   },
   {
-    "outputFileName": "./dist/meadco-scriptxservicesUI-2.min.js",
+    "outputFileName": "../dist/meadco-scriptxservicesUI-2.min.js",
     "inputFiles": [
       "./src/meadco-core.js",
       "./src/meadco-scriptxprint.js",
