@@ -3,52 +3,42 @@ const packageDescription = require("../package.json");
 const versions = require("../configs/versions");
 
 const serverUrl = `http://127.0.0.1:${server.port}`;
+const badServerUrl = "http://127.0.0.0:12";
 const licenseGuid = "{5091E665-8916-4D21-996E-00A2DE5DE416}";
 
 const util = require('util');
 
-//function pageStartup() {
-//    return new Promise((resolve, reject) => {
-//        server.start().then(() => {
-//            // Redirect console.log from the browser to the Jest console
-//            page.on('console', async (msg) => {
-//                if (msg.type() === 'log') {
-//                    for (let i = 0; i < msg.args().length; ++i) {
-//                        try {
-//                            // Get the raw value from the JSHandle
-//                            const argValue = await msg.args()[i].jsonValue();
+const { Console } = require('console');
+// Create a custom console for logging with minimal formatting
+const customConsole = new Console({ stdout: process.stdout, stderr: process.stderr });;
 
-//                            // Print only the value without any additional formatting
-//                            // console.log(argValue);
-//                            //
-//                            process.stdout.write(util.format('%s\n', argValue));
-//                        } catch (error) {
-//                            console.log(`[Could not serialize console argument: ${error}]`);
-//                        }
-//                    }
-//                }
-//                else {
-//                    console.log(`[Console.${msg.type()}]: ${msg.text()}`);
-//                }
-//            });
+// revert to the standard console (which will create verbose formatting in jest)
+// const customConsole = console;
 
-//            page.goto("http://localhost:" + server.port + "/test-page-src.html").then(() => {
-//                resolve();
-//            }).catch((err) => {
-//                    reject(err);
-//            });
-//        }).catch((err) => {
-//            reject(err);
-//        });
-//    });
-//}
-
+const capturePageLogs = false;
 async function pageStartup() {
     await server.start();
 
     // Redirect console.log from the browser to the Jest console
     page.on('console', async (msg) => {
         if (msg.type() === 'log') {
+            if (capturePageLogs) {
+                for (let i = 0; i < msg.args().length; ++i) {
+                    try {
+                        // Get the raw value from the JSHandle
+                        const argValue = await msg.args()[i].jsonValue();
+
+                        // Print only the value without any additional formatting
+                        // console.log(argValue);
+                        //
+                        process.stdout.write(util.format('%s\n', argValue));
+                    } catch (error) {
+                        console.log(`[Could not serialize console argument: ${error}]`);
+                    }
+                }
+            }
+        }
+        else {
             for (let i = 0; i < msg.args().length; ++i) {
                 try {
                     // Get the raw value from the JSHandle
@@ -63,10 +53,8 @@ async function pageStartup() {
                 }
             }
         }
-        else {
-            console.log(`[Console.${msg.type()}]: ${msg.text()}`);
-        }
     });
+
 
     await page.goto("http://localhost:" + server.port + "/test-page-src.html");
 }
@@ -84,8 +72,8 @@ describe("Namespaces core", () => {
     test("Library implements expected versions", async () => {
         let v = await page.evaluate(() => {
 
-            console.log("MeadCo: " + window.MeadCo.version);
-            console.log("MeadCoScriptXPrint: " + window.MeadCo.ScriptX.Print.version);
+            console.debug("MeadCo: " + window.MeadCo.version);
+            console.debug("MeadCoScriptXPrint: " + window.MeadCo.ScriptX.Print.version);
 
             return {
                 "MeadCo": window.MeadCo.version,
@@ -185,8 +173,17 @@ describe("Service description", () => {
 
     test("Connection", async () => {
         const result = await page.evaluate(async (serverUrl) => {
+            let v = {};
             window.MeadCo.ScriptX.Print.connectLite(serverUrl, " ");
-            return await window.MeadCo.ScriptX.Print.waitableServiceDescription();
+            try {
+                // v = await window.MeadCo.ScriptX.Print.waitableServiceDescription();
+                v = await new Promise((resolve, reject) => {
+                    window.MeadCo.ScriptX.Print.serviceDescriptionAsync(resolve, reject);
+                });
+            } 
+            catch (e) {
+            }
+            return v;
         }, serverUrl);
 
         expect(result).toBeDefined();
@@ -206,7 +203,7 @@ describe("Printing", () => {
     });
 
     test("Namespace basics", async () => {
-        let v = await page.evaluate(() => {
+        const v = await page.evaluate(async () => {
             let result = {};
             const api = window.MeadCo.ScriptX.Print;
 
@@ -215,28 +212,182 @@ describe("Printing", () => {
             result.ContentTypeUrl = api.ContentType.URL;
             result.xxEnum = api.ContentType.XX;
             result.ContentTypeHtml = window.MeadCo.ScriptX.Print.ContentType.INNERHTML;
+            result.PrintStatusDownloading = api.PrintStatus.DOWNLOADING;
+            result.xxPrintStatus = api.PrintStatus.XX;
 
             if (typeof api !== "undefined") {
+                api.connectLite("http://clearServer", " ");
 
+                result.printerName = api.printerName;
+                result.deviceSettings = api.deviceSettings;
+            }
+
+            result.deviceError = "It shouldnt be this";
+
+            if (MeadCo.fetchEnabled) {
+                console.debug("Note fetch is enabled");
+                try {
+                    result.deviceSettings2 = await new Promise((resolve, reject) => {
+                        api.deviceSettingsForAsync("My printer", resolve, reject);
+                    });
+                    console.debug("deviceSettingsForAsync succeeded");
+                }
+                catch (e) {
+                    console.debug("deviceSettingsForAsync failed", e);
+                    result.deviceSettings2 = undefined;
+                    result.deviceError = e;
+                }
+            }
+            else {
+                result.deviceSettings2 = api.deviceSettingsFor("My printer");
+                result.deviceError = document.getElementById("qunit-fixture").textContent;
             }
 
             return result;
         });
 
+        customConsole.debug(v);
+
         expect(v.namespace).toBeTruthy();
         expect(v.version).toBe(versions.LibVersions.MeadCoScriptXPrint);
-        expect(v.cloudEnum).toBe(1);
+        expect(v.ContentTypeUrl).toBe(1);
         expect(v.xxEnum).toBe(undefined);
+        expect(v.ContentTypeHtml).toBe(4);
+        expect(v.PrintStatusDownloading).toBe(3);
+        expect(v.xxPrintStatus).toBe(undefined);
+        expect(v.printerName).toBe("");
+        expect(v.deviceSettings).not.toBe(null);
+        expect(v.deviceSettings).toEqual({});
+
+        expect(v.devicesSettings2).toBe(undefined);
+        expect(v.deviceError).toBe("ScriptX.Services could not be found at \"http://clearServer\". Is it installed and running?");
     });
 
+    test("Device settings basics", async () => {
+        let result = await page.evaluate(async () => {
+            const api = window.MeadCo.ScriptX.Print;
 
-    test("PrintHtml", async () => {
-        const result = await page.evaluate(async (serverUrl, licenseGuid) => {
-            window.MeadCo.ScriptX.Print.connectLite(serverUrl, licenseGuid);
-            return await window.MeadCo.ScriptX.Print.printHtml("<html><head></head><body><p>Test</p></body></html>");
-        }, serverUrl, licenseGuid);
-        expect(result).toBeDefined();
-        expect(result.success).toBeTruthy();
+            api.deviceSettings = {
+                printerName: "My printer",
+                isDefault: true,
+                paperSize: "A4"
+            };
+
+            return api.deviceSettings;
+        });
+
+        expect(result).not.toEqual({});
+        expect(result.printerName).toBe("My printer");
+        expect(result.isDefault).toBeTruthy();
+        expect(result.paperSize).toBe("A4");
+
+        result = await page.evaluate(async () => {
+            let results = {};
+            const api = window.MeadCo.ScriptX.Print;
+
+            // add a printer
+            api.deviceSettings = {
+                printerName: "A3 printer",
+                paperSize: "A3"
+            };
+
+            results.deviceSettings = api.deviceSettings;
+            results.paperSize = api.deviceSettingsFor("A3 printer").paperSize;
+            results.defaultPapersSize = api.deviceSettings.paperSize
+
+            return results;
+        });
+
+        expect(result.paperSize).toBe("A3");
+        expect(result.defaultPapersSize).toBe("A4");
+
+        result = await page.evaluate(async () => {
+            let results = {};
+            const api = window.MeadCo.ScriptX.Print;
+
+            // changing the printer should change the paper size
+            api.printerName = "A3 printer";
+
+            results.paperSize = api.deviceSettings.paperSize;
+            results.printerName = api.printerName;
+
+            api.printerName = "Garbage printer";
+            results.printerName2 = api.printerName;
+            return results;
+        });
+
+        expect(result.printerName).toBe("A3 printer");
+        expect(result.paperSize).toBe("A3");
+        expect(result.printerName2).toBe("A3 printer"); // changing to a non-existent printer should leave unchanged
+
+        result = await page.evaluate(async () => {
+            let results = {};
+            if (MeadCo.fetchEnabled) {
+                console.debug("Note fetch is enabled - 2");
+                try {
+                    results.deviceSettings = await new Promise((resolve, reject) => {
+                        api.deviceSettingsForAsync("Garbage", resolve, reject);
+                    });
+                    console.debug("deviceSettingsForAsync - 2 - succeeded");
+                }
+                catch (e) {
+                    console.debug("deviceSettingsForAsync - 2 - failed " + document.getElementById("qunit-fixture").textContent);
+                    results.deviceSettings = undefined;
+                    results.deviceError = document.getElementById("qunit-fixture").textContent;
+                }
+            }
+            else {
+                console.debug("Note fetch is NOT enabled - 2");
+                results.deviceSettings = api.deviceSettingsFor("Garbage");
+                results.deviceError = document.getElementById("qunit-fixture").textContent;
+            }
+            return results;
+        });
+
+        expect(result.deviceSettings).toBe(undefined);
+        expect(result.deviceError).toBe("MeadCo.ScriptX.Print : server connection is not defined.");
+    });
+
+    test("Test a connection", async () => {
+        let result = await page.evaluate(async (serverUrl) => {
+            const api = window.MeadCo.ScriptX.Print;
+            let results = {};
+
+            try {
+                results.result = await new Promise((resolve, reject) => {
+                    api.connectTestAsync(serverUrl, resolve, reject);
+                });
+                results.error = "Should not get here";
+            } catch (e) {
+                console.debug("connectTestAsync failed", e, document.getElementById("qunit-fixture").textContent);
+                results.error = e;
+            }
+
+            return results;
+        }, badServerUrl);
+
+        expect(result.error).toBe("ScriptX.Services could not be found at \"" + badServerUrl + "\". Is it installed and running?");
+
+        result = await page.evaluate(async (serverUrl) => {
+            const api = window.MeadCo.ScriptX.Print;
+            let results = {};
+
+            try {
+                results.result = await new Promise((resolve, reject) => {
+                    api.connectTestAsync(serverUrl, resolve, reject);
+                });
+                results.error = "No Error";
+            } catch (e) {
+                console.debug("connectTestAsync failed", e, document.getElementById("qunit-fixture").textContent);
+                results.error = e;
+            }
+
+            return results;
+        }, serverUrl);
+
+        expect(result.error).toBe("No Error");
+        expect(result.result.AdvancedPrinting).toBeFalsy();
+
     });
 
 

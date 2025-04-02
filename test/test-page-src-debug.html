@@ -26,6 +26,33 @@
         MeadCo.ScriptX.Print.reportFeatureNotImplemented = function (featureDescription) {
             document.getElementById("qunit-fixture").textContent = txt;
         };
+
+
+    </script>
+
+    <script type="text/javascript">
+        // Define the runTest function if it's not already defined elsewhere
+        async function runTest() {
+            results = {};
+            console.log("Running test on document load");
+            // Add your test logic here
+            const api = window.MeadCo.ScriptX.Print;
+
+            try {
+                results.result = await new Promise((resolve, reject) => {
+                    api.connectTestAsync("http://127.0.0.0:12", resolve, reject);
+                });
+                console.log("connectTestAsync succeeded with: " + results.result);
+            } catch (e) {
+                console.log("connectTestAsync failed", e, document.getElementById("qunit-fixture").textContent);
+                results.error = e;
+            }
+        }
+
+        // Execute runTest when the document is fully loaded
+        document.addEventListener("DOMContentLoaded", async function () {
+            runTest();
+        });
     </script>
 </head>
 <body>

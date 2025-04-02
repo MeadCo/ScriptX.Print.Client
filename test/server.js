@@ -5,15 +5,19 @@ const fs = require("fs");
 const path = require("path");
 const url = require("url");
 const { Console } = require('console');
-const customConsole = new Console({
-    stdout: process.stdout,
-    stderr: process.stderr,
-    inspectOptions: {
-        depth: null,
-        colors: true
-    }
-});
 
+// Create a custom console for logging with minimal formatting
+// const customConsole = new Console({ stdout: process.stdout, stderr: process.stderr });;
+
+// revert to the standard console (which will create verbose formatting in jest)
+// const customConsole = console;
+
+// a console eater
+const customConsole = {
+    log: () => { },
+    warn: () => { },
+    error: () => { }
+}
 
 const PORT = 41191; // standard ScriptX.Services 4WPC port
 
@@ -162,7 +166,7 @@ const routes = {
                 const params = url.parse(req.url, true).query;
                 const units = params.units;
 
-                console.log("GET htmlPrintDefaults: ", params);
+                customConsole.log("GET htmlPrintDefaults: ", params);
                 sendJsonResponse(res, 200, {
                     "settings": {
                         "header": "page header",
@@ -231,7 +235,7 @@ const routes = {
             const license = serviceState.licenses.find(l => l.guid == guid)
 
             if (!license) {
-                console.warn("License not found: ", guid);
+                customConsole.warn("License not found: ", guid);
                 sendJsonResponse(res, 401, "Unauthorized - unknown license");
                 return;
             }
@@ -410,8 +414,8 @@ const serviceServer = http.createServer(async (req, res) => {
             await routes[apiPath][method](req, res);
         }
         else {
-            console.warn("API endpoint not found: ", apiPath);
-            console.log(routes);
+            customConsole.warn("API endpoint not found: ", apiPath);
+            customConsole.log(routes);
             sendJsonResponse(res, 404, "API endpoint not found");
         }
     }
@@ -451,7 +455,7 @@ const serviceServer = http.createServer(async (req, res) => {
             setCorsHeaders(res);
             if (err) {
                 if (pathname != "/favicon.ico") // its ok to not find the favicon
-                    console.error(err);
+                    customConsole.error(err);
                 res.writeHead(500, { "Content-Type": "text/plain" });
                 res.end("Error loading page");
             } else {
@@ -477,7 +481,7 @@ module.exports = {
         });
     }),
     debug: () => new Promise((resolve) => {
-        console.log(routes);
+        customConsole.log(routes);
         resolve();
     }),
     port: PORT,
