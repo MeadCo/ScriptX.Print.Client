@@ -13,12 +13,7 @@ module.exports = bundleConfig.map(bundle => {
         entry: bundle.inputFiles,
         output: {
             path: path.resolve(__dirname, outputPath),
-            filename: outputFilename,
-            library: {
-                name: 'MeadCo',
-                type: 'window',
-                export: 'default'
-            }
+            filename: outputFilename
         },
         devtool: 'source-map',
         optimization: {

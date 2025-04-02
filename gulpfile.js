@@ -7,57 +7,28 @@ const path = require("path");
 const fs = require("fs");
 
 
-//    concat = require("gulp-concat"),
-//    cssmin = require("gulp-cssmin"),
-//    htmlmin = require("gulp-htmlmin"),
-//    terser = require('gulp-terser'),
-//    merge = require("merge-stream"),
-//    sourcemaps = require("gulp-sourcemaps"),
-//    pipeline = require('readable-stream').pipeline,
-//    del = require("del"),
-//    bundleconfig = require("./tooling/distbundlesconfig.json"),
-//    replace = require('gulp-replace'),
-//    rename = require('gulp-rename'),
-//    jsdoc = require('gulp-jsdoc3');
-
-////////////////////////////////
-//// build minimised distribution packages
-
-//// get the package bundle definitions 
-//function getBundles(regexPattern) {
-//    return bundleconfig.filter(function (bundle) {
-//        return regexPattern.test(bundle.outputFileName);
-//    });
-//}
-
-//// minimse and bundle
-//function BundleMinToDist() {
-//    var tasks = getBundles(/\.js$/).map(function (bundle) {
-//        return gulp.src(bundle.inputFiles, { base: "." })
-//            .pipe(sourcemaps.init())
-//            .pipe(concat(bundle.outputFileName))
-//            .pipe(terser())
-//            .pipe(sourcemaps.write('.'))
-//            .pipe(gulp.dest("."));
-//    });
-//    return merge(tasks);
-//}
-
-//// mimise and map individual files
-//function MinifyAndMapToDist() {
-//    var tasks = gulp.src('src/**/*.js')
-//    .pipe(sourcemaps.init())
-//        .pipe(terser())
-//        .pipe(rename({ suffix: '.min' }))
-//        .pipe(sourcemaps.write('.'))
-//        .pipe(gulp.dest('dist'));
-//    return merge(tasks);
-//}
 
 async function CleanDistFolder() {
     console.log("Cleaning dist folder...");
     const del = await import('del');
     return del.deleteAsync(['./dist/*']);
+}
+
+/**
+ * Build distribution files using webpack config
+ */
+function BuildWithWebpack(done) {
+    const { exec } = require('child_process');
+
+    console.log("Building distribution files with webpack...");
+    exec('npx webpack --config ./configs/webpack.config.js', (err, stdout, stderr) => {
+        if (err) {
+            console.error(stderr);
+            return done(err);
+        }
+        console.log(stdout);
+        done();
+    });
 }
 
 //////////////////////////////////////
@@ -151,38 +122,8 @@ function ProcessNamespacesAndVersion(cb) {
     }
 }
 
-
-//gulp.task('Bundle1', function () {
-//    return BundleMinToDist();
-//});
-
-//gulp.task('Minify1', function () {
-//    return MinifyAndMapToDist();
-//});
-
-//gulp.task("CleanDist", function () {
-//    return CleanDistFolder();
-//});
-
-//gulp.task("CleanDocs", function () {
-//    return CleanDocsFolder();
-//});
-
-/////////////////////////////////////////////
-//// callable processes to build outputs.
-////
-//gulp.task('Minify', gulp.series('CleanDist', gulp.series(BundleMinToDist, MinifyAndMapToDist)));
-
-//gulp.task('Clean', gulp.parallel('CleanDist', 'CleanDocs'));
-
-//gulp.task('MakeDocs', gulp.series('CompileDocs', 'ProcessDocs1', 'ProcessDocs2', 'ProcessDocs3', 'ProcessDocs4','DocStatics'));
-
-//gulp.task('BuildDocs', gulp.series('CleanDocs','MakeDocs'));
-
-//gulp.task('BuildDist', gulp.series('Clean', gulp.parallel(gulp.series(BundleMinToDist, MinifyAndMapToDist), 'MakeDocs')));
-
-
-
 exports.Clean = gulp.parallel(CleanDistFolder, CleanDocsFolder);
-exports.BuildDocs = gulp.series(CleanDocsFolder, gulp.series(CompileDocs, ProcessNamespacesAndVersion,CopyDocStatics));
+exports.BuildDocs = gulp.series(CleanDocsFolder, gulp.series(CompileDocs, ProcessNamespacesAndVersion, CopyDocStatics));
+exports.BuildDist = gulp.series(CleanDistFolder, BuildWithWebpack);
+exports.Dist = gulp.series(exports.clean, gulp.parallel(gulp.series(CompileDocs, ProcessNamespacesAndVersion, CopyDocStatics), BuildWithWebpack));
 
