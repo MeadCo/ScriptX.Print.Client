@@ -37,16 +37,39 @@
             console.log("Running test on document load");
             // Add your test logic here
             const api = window.MeadCo.ScriptX.Print;
+            const serverUrl = "http://127.0.0.1:41191";
+            const guid = "{5091E665-8916-4D21-996E-00A2DE5DE416}"
+
+            api.connectLite(serverUrl, "{218A8DB0-5A54-41A3-B349-1144546A3A8E}");
+            try {
+                results.result2 = "ok";
+                results.result2 = await new Promise((resolve, reject) => {
+                    api.getFromServer("twaddle/?units=0", true, resolve, reject);
+                });
+            } catch (e) {
+                results.error2 = e;
+            }
 
             try {
-                results.result = await new Promise((resolve, reject) => {
-                    api.connectTestAsync("http://127.0.0.0:12", resolve, reject);
+                results.result3 = "ok";
+                results.result3 = await new Promise((resolve, reject) => {
+                    api.getFromServer("/htmlPrintDefaults/?units=0", true, resolve, reject);
                 });
-                console.log("connectTestAsync succeeded with: " + results.result);
             } catch (e) {
-                console.log("connectTestAsync failed", e, document.getElementById("qunit-fixture").textContent);
-                results.error = e;
+                results.error3 = e;
             }
+
+            api.connectLite(serverUrl, guid);
+            try {
+                results.result4 = "ok";
+                results.result4 = (await new Promise((resolve, reject) => {
+                    api.getFromServer("/htmlPrintDefaults/?units=0", true, resolve, reject);
+                })).settings.header;
+            } catch (e) {
+                results.error4 = e;
+            }
+
+            console.log(results);
         }
 
         // Execute runTest when the document is fully loaded

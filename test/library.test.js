@@ -593,4 +593,80 @@ describe("Printing", () => {
         expect(result.error8).not.toBeDefined();
 
     });
+
+    test("queue management", async () => {
+        let result = await page.evaluate(async (serverUrl, guid) => {
+            const api = window.MeadCo.ScriptX.Print;
+            let results = {};
+
+            results.result1 = api.queue != null;
+            results.result2 = api.queue.length;
+            results.result3 = api.activeJobs;
+            results.result4 = api.isSpooling;
+
+            const lock = api.ensureSpoolingStatus();
+
+            results.result5 = api.clientSideJobs > 0;
+            results.result6 = api.isSpooling;
+
+            api.freeSpoolStatus(lock);
+            results.result7 = api.clientSideJobs;
+            results.result8 = api.isSpooling;
+
+            const w = await new Promise((resolve, reject) => {
+                api.waitForSpoolingComplete(-1,resolve);
+            }); 
+            results.result9 = w;
+
+            return results;
+        }, serverUrl, licenseGuid);
+
+        expect(result.result1).toBeTruthy();
+        expect(result.result2).toBe(0);
+        expect(result.result3).toBe(0);
+        expect(result.result4).toBeFalsy();
+        expect(result.result5).toBeTruthy();
+        expect(result.result6).toBeTruthy();
+        expect(result.result7).toBe(0);
+        expect(result.result8).toBeFalsy();
+        expect(result.result9).toBeTruthy();
+    });
+
+    test("WaitForSpoolingComplete time out", async () => {
+
+        let result = await page.evaluate(async (serverUrl, guid) => {
+            const api = window.MeadCo.ScriptX.Print;
+            let results = {};
+
+            const lock = api.ensureSpoolingStatus();
+            const w = await new Promise((resolve, reject) => {
+                api.waitForSpoolingComplete(2000, resolve);
+            });
+
+            // it should timeout so w will be false.
+            if (!w) {
+                api.freeSpoolStatus(lock);
+            }
+
+            results.result1 = w;
+            return results;
+        }, serverUrl, licenseGuid);
+
+        expect(result.result1).toBeFalsy();
+
+    });
+
+    test("printing with no arguments", async () => {
+        let result = await page.evaluate(async (serverUrl, guid) => {
+            const api = window.MeadCo.ScriptX.Print;
+            let results = {};
+
+            api.connectLite(serverUrl, guid);
+
+            return results;
+        }, serverUrl, licenseGuid);
+
+        customConsole.debug(result);
+        expect(result.error1).toBe("Unauthorized");
+    });
 });
