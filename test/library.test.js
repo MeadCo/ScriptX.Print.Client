@@ -15,7 +15,7 @@ const customConsole = new Console({ stdout: process.stdout, stderr: process.stde
 // revert to the standard console (which will create verbose formatting in jest)
 // const customConsole = console;
 
-const capturePageLogs = false;
+const capturePageLogs = true;
 async function pageStartup() {
     await server.start();
 
@@ -348,7 +348,7 @@ describe("Printing", () => {
         expect(result.deviceError).toBe("MeadCo.ScriptX.Print : server connection is not defined.");
     });
 
-    test("Test a connection", async () => {
+    test("Test a connection (no license)", async () => {
         let result = await page.evaluate(async (serverUrl) => {
             const api = window.MeadCo.ScriptX.Print;
             let results = {};
@@ -359,7 +359,6 @@ describe("Printing", () => {
                 });
                 results.error = "Should not get here";
             } catch (e) {
-                console.debug("connectTestAsync failed", e, document.getElementById("qunit-fixture").textContent);
                 results.error = e;
             }
 
@@ -378,7 +377,6 @@ describe("Printing", () => {
                 });
                 results.error = "No Error";
             } catch (e) {
-                console.debug("connectTestAsync failed", e, document.getElementById("qunit-fixture").textContent);
                 results.error = e;
             }
 
@@ -390,5 +388,209 @@ describe("Printing", () => {
 
     });
 
+    test("Connecting", async () => {
+        let result = await page.evaluate(async (serverUrl, guid) => {
+            const api = window.MeadCo.ScriptX.Print;
+            let results = {};
 
+            // ensure doesnt connect with no license
+            try {
+                results.result1 = await new Promise((resolve, reject) => {
+                    api.connectAsync(serverUrl, {}, resolve, reject);
+                });
+            } catch (e) {
+                results.result1 = e; //  document.getElementById("qunit-fixture").textContent;
+            }
+
+            try {
+                results.result2 = await new Promise((resolve, reject) => {
+                    api.connectAsync(serverUrl, null, resolve, reject);
+                });
+            } catch (e) {
+                results.result2 = e;
+            }
+
+            try {
+                results.result3 = await new Promise((resolve, reject) => {
+                    api.connectAsync(serverUrl, "", resolve, reject);
+                });
+            } catch (e) {
+                results.result3 = e;
+            }
+
+            // ensure connects with (already/previously 'applied' or services) license
+            try {
+                results.result4 = await new Promise((resolve, reject) => {
+                    api.connectAsync(serverUrl, guid, resolve, reject);
+                });
+                results.result5 = api.isConnected;
+            } catch (e) {
+                results.result3 = e;
+            }
+
+            return results;
+        }, serverUrl, licenseGuid);
+
+        expect(result.result1).toBe("Unauthorized");
+        expect(result.result2).toBe("Unauthorized");
+        expect(result.result3).toBe("Unauthorized");
+
+        expect(result.result4.printerName).toBe("Microsoft Print to PDF");
+        expect(result.result5).toBeTruthy();
+    });
+
+    test("Device values and available printers", async () => {
+        let result = await page.evaluate(async (serverUrl, guid) => {
+            const api = window.MeadCo.ScriptX.Print;
+            let results = {};
+
+            api.connectLite("http://clearServer", "{218A8DB0-5A54-41A3-B349-1144546A3A8E}");
+
+            results.badConnectionPrinterCount = api.availablePrinterNames.length;
+
+            api.connectDeviceAndPrinters(
+                {
+                    printerName: "A3 printer",
+                    paperSize: "A3",
+                    isDefault: true
+                },
+                ["A3 printer", "A4 printer"]);
+
+            results.printerName = api.printerName;
+            results.manuallyConnectedPrinters = api.deviceSettings;
+            results.goodConnectionPrinterCount = api.availablePrinterNames.length;
+
+            return results;
+
+        }, serverUrl, licenseGuid);
+
+        expect(result.badConnectionPrinterCount).toBe(0);
+        expect(result.manuallyConnectedPrinters).not.toBe(null);
+        expect(result.printerName).toBe("A3 printer");
+        expect(result.manuallyConnectedPrinters.paperSize).toBe("A3");
+        expect(result.goodConnectionPrinterCount).toBe(2);
+    });
+
+    test("Call server api with GET", async () => {
+        let result = await page.evaluate(async (serverUrl, guid) => {
+            const api = window.MeadCo.ScriptX.Print;
+            let results = {};
+            api.connectLite("http://clearServer", "{218A8DB0-5A54-41A3-B349-1144546A3A8E}");
+
+            try {
+                results.result1 = "ok";
+                results.result1 = await new Promise((resolve, reject) => {
+                    api.getFromServer("twaddle/?units=0",true, resolve, reject);
+                });
+            } catch (e) {
+                results.error1 = e;
+            }
+
+            api.connectLite(serverUrl, "{218A8DB0-5A54-41A3-B349-1144546A3A8E}");
+            try {
+                results.result2 = "ok";
+                results.result2 = await new Promise((resolve, reject) => {
+                    api.getFromServer("twaddle/?units=0", true, resolve, reject);
+                });
+            } catch (e) {
+                results.error2 = e;
+            }
+
+            try {
+                results.result3 = "ok";
+                results.result3 = await new Promise((resolve, reject) => {
+                    api.getFromServer("/htmlPrintDefaults/?units=0", true, resolve, reject);
+                });
+            } catch (e) {
+                results.error3 = e;
+            }
+
+            api.connectLite(serverUrl, guid);
+            try {
+                results.result4 = "ok";
+                results.result4 = (await new Promise((resolve, reject) => {
+                    api.getFromServer("/htmlPrintDefaults/?units=0", true, resolve, reject);
+                })).settings.header;
+            } catch (e) {
+                results.error4 = e;
+            }
+
+            // connected, ignore null license
+            api.connectLite(serverUrl, null);
+            try {
+                results.result5 = "ok";
+                results.result5 = (await new Promise((resolve, reject) => {
+                    api.getFromServer("/htmlPrintDefaults/?units=0", true, resolve, reject);
+                })).settings.header;
+            } catch (e) {
+                results.error5 = e;
+            }
+
+            // connected ignore empty license
+            api.connectLite(serverUrl, "");
+            try {
+                results.result6 = "ok";
+                results.result6 = (await new Promise((resolve, reject) => {
+                    api.getFromServer("/htmlPrintDefaults/?units=0", true, resolve, reject);
+                })).settings.header;
+            } catch (e) {
+                results.error6 = e;
+            }
+
+            // ingore null server
+            api.connectLite(null, guid);
+            try {
+                results.result7 = "ok";
+                results.result7 = (await new Promise((resolve, reject) => {
+                    api.getFromServer("/htmlPrintDefaults/?units=0", true, resolve, reject);
+                })).settings.header;
+            } catch (e) {
+                results.error7 = e;
+            }
+
+            // ingore empty server
+            api.connectLite(null, guid);
+            try {
+                results.result8 = "ok";
+                results.result8 = (await new Promise((resolve, reject) => {
+                    api.getFromServer("/htmlPrintDefaults/?units=0", true, resolve, reject);
+                })).settings.header;
+            } catch (e) {
+                results.error8 = e;
+            }
+
+            return results;
+
+        }, serverUrl, licenseGuid);
+
+        customConsole.debug(result);
+
+        expect(result.result1).toBe("ok");
+        expect(result.error1).toBe("ScriptX.Services could not be found at \"http://clearServer\". Is it installed and running?");
+
+        expect(result.result2).toBe("ok");
+        expect(result.error2).toBe("\"API endpoint not found\"");
+
+        expect(result.result3).toBe("ok");
+        expect(result.error3).toBe("Unauthorized");
+
+        expect(result.result4).toBe("page header");
+        expect(result.error4).not.toBeDefined();
+
+        expect(result.result5).toBe("page header");
+        expect(result.error5).not.toBeDefined();
+
+        expect(result.result6).toBe("page header");
+        expect(result.error6).not.toBeDefined();
+
+        expect(result.result7).toBe("page header");
+        expect(result.error7).not.toBeDefined();
+
+        expect(result.result7).toBe("page header");
+        expect(result.error7).not.toBeDefined();
+
+        expect(result.result8).toBe("page header");
+        expect(result.error8).not.toBeDefined();
+
+    });
 });

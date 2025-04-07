@@ -6,13 +6,17 @@ const path = require("path");
 const url = require("url");
 const { Console } = require('console');
 
-// Create a custom console for logging with minimal formatting
+const preInstalledLicenseGuid = "{5091E665-8916-4D21-996E-00A2DE5DE416}"; // GUID for 'pre-installed' license
+
+// Consoles .. 1,2,3
+
+// 1. Create a custom console for logging with minimal formatting
 // const customConsole = new Console({ stdout: process.stdout, stderr: process.stderr });;
 
-// revert to the standard console (which will create verbose formatting in jest)
+// 2. revert to the standard console (which will create verbose formatting in jest)
 // const customConsole = console;
 
-// a console eater
+// 3. a console eater
 const customConsole = {
     log: () => { },
     warn: () => { },
@@ -91,6 +95,26 @@ function sendJsonResponse(res, statusCode, data) {
     res.end(JSON.stringify(data));
 }
 
+// Helper to check a valid license was used
+function isAuthorised(req, res) {
+    const guid = decodeBasicAuthHeader(req);
+    if (!guid) {
+        sendJsonResponse(res, 401, "Unauthorized");
+        return false;
+    }
+    customConsole.log("Authorization GUID: ", guid);
+    const license = serviceState.licenses.find(l => l.guid == guid)
+    if (license) {
+        customConsole.log("License found: ", license);
+        return true;
+    }
+    else {
+        customConsole.warn("License not found: ", guid);
+        sendJsonResponse(res, 401, "Unauthorized - unknown license");
+        return false;
+    }
+}
+
 // Helper to create a device info object from a printer object
 function createDeviceInfo(printer) {
     return {
@@ -139,74 +163,113 @@ function createDeviceInfo(printer) {
 // Create routes based on ScriptX Services API
 const routes = {
     // Printer API
-    "/api/v1/printHtml/deviceinfo/systemdefault/": {
+    "/api/v1/printHtml/deviceinfo/systemdefault/":
+    {
         GET: (req, res) => {
-            const defaultPrinter = serviceState.printers.find(p => p.isDefault);
-            if (defaultPrinter) {
-                sendJsonResponse(res, 200, createDeviceInfo(defaultPrinter));
-            } else {
-                sendJsonResponse(res, 404, "Default printer not found");
+            if (isAuthorised(req, res)) {
+                const defaultPrinter = serviceState.printers.find(p => p.isDefault);
+                if (defaultPrinter) {
+                    sendJsonResponse(res, 200, createDeviceInfo(defaultPrinter));
+                } else {
+                    sendJsonResponse(res, 404, "Default printer not found");
+                }
+            }
+        }
+    },
+    "/api/v1/printHtml/deviceinfo/systemdefault/0":
+    {
+        GET: (req, res) => {
+            customConsole.log("Processing GET /api/v1/printHtml/deviceinfo/systemdefault/0");
+            if (isAuthorised(req, res)) {
+                const defaultPrinter = serviceState.printers.find(p => p.isDefault);
+                if (defaultPrinter) {
+                    const deviceInfo = createDeviceInfo(defaultPrinter);
+                    customConsole.log(`GET /api/v1/printHtml/deviceinfo/systemdefault/0 returns: ${deviceInfo}`);
+                    sendJsonResponse(res, 200, deviceInfo);
+                } else {
+                    customConsole.warn("GET /api/v1/printHtml/deviceinfo/systemdefault/0: Default printer not found");
+                    sendJsonResponse(res, 404, "Default printer not found");
+                }
+            }
+            else {
+                customConsole.warn("GET /api/v1/printHtml/deviceinfo/systemdefault/0: Unauthorized");
             }
         }
     },
     "/api/v1/printHtml/deviceinfo/default/": {
         GET: (req, res) => {
-            const defaultPrinter = serviceState.printers.find(p => p.isDefault);
-            if (defaultPrinter) {
-                sendJsonResponse(res, 200, createDeviceInfo(defaultPrinter));
-            } else {
-                sendJsonResponse(res, 404, "Default printer not found");
+            if (isAuthorised(req, res)) {
+                const defaultPrinter = serviceState.printers.find(p => p.isDefault);
+                if (defaultPrinter) {
+                    sendJsonResponse(res, 200, createDeviceInfo(defaultPrinter));
+                } else {
+                    sendJsonResponse(res, 404, "Default printer not found");
+                }
+            }
+        }
+    },
+    "/api/v1/printHtml/deviceinfo/default/0": {
+        GET: (req, res) => {
+            if (isAuthorised(req, res)) {
+                const defaultPrinter = serviceState.printers.find(p => p.isDefault);
+                if (defaultPrinter) {
+                    sendJsonResponse(res, 200, createDeviceInfo(defaultPrinter));
+                } else {
+                    sendJsonResponse(res, 404, "Default printer not found");
+                }
             }
         }
     },
     "/api/v1/printHtml/htmlPrintDefaults/": {
         GET: (req, res) => {
-            const defaultPrinter = serviceState.printers.find(p => p.isDefault);
-            if (defaultPrinter) {
-                const params = url.parse(req.url, true).query;
-                const units = params.units;
+            if (isAuthorised(req, res)) {
+                const defaultPrinter = serviceState.printers.find(p => p.isDefault);
+                if (defaultPrinter) {
+                    const params = url.parse(req.url, true).query;
+                    const units = params.units;
 
-                customConsole.log("GET htmlPrintDefaults: ", params);
-                sendJsonResponse(res, 200, {
-                    "settings": {
-                        "header": "page header",
-                        "footer": "page footer",
-                        "headerFooterFont": "Arial",
-                        "page": {
-                            "orientation": 0,
-                            "units": units,
-                            "margins": {
-                                "left": "5",
-                                "top": "5",
-                                "bottom": "5",
-                                "right": "5"
+                    customConsole.log("GET htmlPrintDefaults: ", params);
+                    sendJsonResponse(res, 200, {
+                        "settings": {
+                            "header": "page header",
+                            "footer": "page footer",
+                            "headerFooterFont": "Arial",
+                            "page": {
+                                "orientation": 0,
+                                "units": units,
+                                "margins": {
+                                    "left": "5",
+                                    "top": "5",
+                                    "bottom": "5",
+                                    "right": "5"
+                                }
+                            },
+                            "viewScale": 0,
+                            "printBackgroundColorsAndImages": 0,
+                            "pageRange": "",
+                            "printingPass": 0,
+                            "extraHeadersAndFooters": {
+                                "allPagesHeader": "",
+                                "allPagesFooter": "",
+                                "firstPageHeader": "",
+                                "firstPageFooter": "",
+                                "extraFirstPageFooter": "",
+                                "allHeaderHeight": 0,
+                                "allFooterHeight": 0,
+                                "firstHeaderHeight": 0,
+                                "firstFooterHeight": 0,
+                                "extraFirstFooterHeight": 0
                             }
                         },
-                        "viewScale": 0,
-                        "printBackgroundColorsAndImages": 0,
-                        "pageRange": "",
-                        "printingPass": 0,
-                        "extraHeadersAndFooters": {
-                            "allPagesHeader": "",
-                            "allPagesFooter": "",
-                            "firstPageHeader": "",
-                            "firstPageFooter": "",
-                            "extraFirstPageFooter": "",
-                            "allHeaderHeight": 0,
-                            "allFooterHeight": 0,
-                            "firstHeaderHeight": 0,
-                            "firstFooterHeight": 0,
-                            "extraFirstFooterHeight": 0
-                        }
-                    },
-                    "device": createDeviceInfo(defaultPrinter),
-                    "availablePrinters": [
-                        "Microsoft Print to PDF",
-                        "Microsoft XPS Document Writer"
-                    ]
-                });
-            } else {
-                sendJsonResponse(res, 404, "Default printer not found");
+                        "device": createDeviceInfo(defaultPrinter),
+                        "availablePrinters": [
+                            "Microsoft Print to PDF",
+                            "Microsoft XPS Document Writer"
+                        ]
+                    });
+                } else {
+                    sendJsonResponse(res, 404, "Default printer not found");
+                }
             }
         }
     },
@@ -283,71 +346,75 @@ const routes = {
     // Print HTML API
     "/api/v1/printHtml/print": {
         POST: async (req, res) => {
-            try {
-                const printData = await parseRequestBody(req);
+            if (isAuthorised(req, res)) {
+                try {
+                    const printData = await parseRequestBody(req);
 
-                customConsole.log("POST Print data: ", printData);
+                    customConsole.log("POST Print data: ", printData);
 
-                // Create a new print job
-                const jobId = serviceState.nextJobId++;
-                const printJob = {
-                    id: jobId,
-                    status: 1,
-                    contentType: printData.ContentType,
-                    content: printData.Content || "Empty document",
-                    printer: printData.Device.printerName || "Default Printer",
-                    createdAt: new Date().toISOString(),
-                    completedAt: null,
-                    timerId: null
-                };
+                    // Create a new print job
+                    const jobId = serviceState.nextJobId++;
+                    const printJob = {
+                        id: jobId,
+                        status: 1,
+                        contentType: printData.ContentType,
+                        content: printData.Content || "Empty document",
+                        printer: printData.Device.printerName || "Default Printer",
+                        createdAt: new Date().toISOString(),
+                        completedAt: null,
+                        timerId: null
+                    };
 
-                serviceState.printJobs.push(printJob);
+                    serviceState.printJobs.push(printJob);
 
-                // Simulate job processing
-                printJob.timerId = setInterval(() => {
-                    customConsole.log("Simulate print job processing: ", jobId);
-                    const job = serviceState.printJobs.find(j => j.id === jobId);
+                    // Simulate job processing
+                    printJob.timerId = setInterval(() => {
+                        customConsole.log("Simulate print job processing: ", jobId);
+                        const job = serviceState.printJobs.find(j => j.id === jobId);
 
-                    if (job) {
-                        customConsole.log(`Job found at state: ${job.status}`);
-                        job.status = job.status == 1 ? 3 : job.status == 3 ? 5 : 6;
-                        if (job.status == 6) {
-                            clearInterval(job.timerId);
-                            job.completedAt = new Date().toISOString();
+                        if (job) {
+                            customConsole.log(`Job found at state: ${job.status}`);
+                            job.status = job.status == 1 ? 3 : job.status == 3 ? 5 : 6;
+                            if (job.status == 6) {
+                                clearInterval(job.timerId);
+                                job.completedAt = new Date().toISOString();
+                            }
                         }
-                    }
-                }, 2000);
+                    }, 2000);
 
-                sendJsonResponse(res, 202, { jobIdentifier: jobId.toString(), status: 1, message: "" });
-            } catch (error) {
-                sendJsonResponse(res, 400, `print failed: ${error}`);
+                    sendJsonResponse(res, 202, { jobIdentifier: jobId.toString(), status: 1, message: "" });
+                } catch (error) {
+                    sendJsonResponse(res, 400, `print failed: ${error}`);
+                }
             }
         }
     },
     // Print job status API
     "/api/v1/printHtml/status/": {
         GET: (req, res) => {
-            const parsedUrl = url.parse(req.url, true);
-            const pathname = parsedUrl.pathname;
-            const jobId = parseInt(pathname.substring(pathname.lastIndexOf("/") + 1));
-            const job = serviceState.printJobs.find(j => j.id === jobId);
+            if (isAuthorised(req, res)) {
+                const parsedUrl = url.parse(req.url, true);
+                const pathname = parsedUrl.pathname;
+                const jobId = parseInt(pathname.substring(pathname.lastIndexOf("/") + 1));
+                const job = serviceState.printJobs.find(j => j.id === jobId);
 
-            if (job) {
-                if (job.status == 6) {
-                    customConsole.log("Job completed: ", jobId);
-                    const jobIndex = serviceState.printJobs.findIndex(j => j.id === jobId);
-                    if (jobIndex !== -1) {
-                        serviceState.printJobs.splice(jobIndex, 1);
-                    };
+                if (job) {
+                    if (job.status == 6) {
+                        customConsole.log("Job completed: ", jobId);
+                        const jobIndex = serviceState.printJobs.findIndex(j => j.id === jobId);
+                        if (jobIndex !== -1) {
+                            serviceState.printJobs.splice(jobIndex, 1);
+                        };
+                    }
+                    sendJsonResponse(res, 200, {
+                        "message": job.status == 6 ? "completed" : `printing: ${job.status}`,
+                        "status": job.status,
+                        "jobIdentifier": jobId.toString()
+                    });
                 }
-                sendJsonResponse(res, 200, {
-                    "message": job.status == 6 ? "completed" : `printing: ${job.status}`, 
-                    "status": job.status,
-                    "jobIdentifier": jobId.toString()
-                });
-            }
-            else {
-                sendJsonResponse(res, 404, "Job not found");
+                else {
+                    sendJsonResponse(res, 404, "Job not found");
+                }
             }
         }
     },
@@ -469,6 +536,26 @@ const serviceServer = http.createServer(async (req, res) => {
 // Modify the exported module to include the service server
 module.exports = {
     start: () => new Promise((resolve) => {
+        serviceState.licenses.push({
+            guid: preInstalledLicenseGuid,
+            company: "Mead & Co Ltd.",
+            companyHomePage: "https://www.meadroid.com",
+            from: new Date().toISOString(),
+            to: new Date().toISOString(),
+            options: {
+                basicHtmlPrinting: true,
+                advancedPrinting: true,
+                enhancedFormatting: true,
+                printPdf: true,
+                printRaw: true
+            },
+            domains: [
+                "meadroid.com",
+                "support.meadroid.com"
+            ],
+            revision: 1
+        });
+
         serviceServer.listen(PORT, () => {
             customConsole.log(`ScriptX Service API running at http://localhost:${PORT}`);
             resolve();
