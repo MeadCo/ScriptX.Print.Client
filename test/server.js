@@ -8,20 +8,52 @@ const { Console } = require('console');
 
 const preInstalledLicenseGuid = "{5091E665-8916-4D21-996E-00A2DE5DE416}"; // GUID for 'pre-installed' license
 
+const enumContentType = {
+    URL: 1, // the url will be downloaded and printed (for html and direct printing)
+    HTML: 2, // the passed string is assumed to be a complete html document .. <html>..</html>
+    INNERHTML: 4, // the passed string is a complete html document but missing the html tags
+    STRING: 8 // the passed string is assumed to contain no html but may contain other language such as ZPL (for direct printing)
+};
+
+const enumResponseStatus = {
+    UNKNOWN: 0,
+    QUEUEDTODEVICE: 1,
+    QUEUEDTOFILE: 2,
+    SOFTERROR: 3,
+    OK: 4
+};
+
+var enumPrintStatus = {
+    NOTSTARTED: 0,
+
+    // queue call back opcodes ...
+    QUEUED: 1,
+    STARTING: 2,
+    DOWNLOADING: 3,
+    DOWNLOADED: 4,
+    PRINTING: 5,
+    COMPLETED: 6,
+    PAUSED: 7,
+    PRINTPDF: 8,
+
+    ERROR: -1,
+    ABANDONED: -2
+};
+
 // Consoles .. 1,2,3
 
 // 1. Create a custom console for logging with minimal formatting
-// const customConsole = new Console({ stdout: process.stdout, stderr: process.stderr });;
+const customConsole = new Console({ stdout: process.stdout, stderr: process.stderr });;
 
 // 2. revert to the standard console (which will create verbose formatting in jest)
 // const customConsole = console;
 
 // 3. a console eater
-const customConsole = {
-    log: () => { },
-    warn: () => { },
-    error: () => { }
-}
+//const customConsole = {
+//    log: () => { },
+//    warn: () => { },
+//    error: () => { }
+//}
 
 const PORT = 41191; // standard ScriptX.Services 4WPC port
 
@@ -48,6 +80,8 @@ const serviceState = {
     nextJobId: 1,
     licenses: []
 };
+
+let pdfCounter = 0;
 
 // Function to parse JSON request body
 const parseRequestBody = (req) => {
@@ -92,6 +126,7 @@ function setCorsHeaders(res) {
 function sendJsonResponse(res, statusCode, data) {
     setCorsHeaders(res);
     res.writeHead(statusCode, { "Content-Type": "application/json" });
+    customConsole.log("JsonResponse: ", statusCode, data);
     res.end(JSON.stringify(data));
 }
 
@@ -99,13 +134,14 @@ function sendJsonResponse(res, statusCode, data) {
 function isAuthorised(req, res) {
     const guid = decodeBasicAuthHeader(req);
     if (!guid) {
+        customConsole.warn("Authorization header not found or invalid");
         sendJsonResponse(res, 401, "Unauthorized");
         return false;
     }
-    customConsole.log("Authorization GUID: ", guid);
+    //customConsole.log("Authorization GUID: ", guid);
     const license = serviceState.licenses.find(l => l.guid == guid)
     if (license) {
-        customConsole.log("License found: ", license);
+        //customConsole.log("License found: ", license);
         return true;
     }
     else {
@@ -351,19 +387,40 @@ const routes = {
                     const printData = await parseRequestBody(req);
 
                     customConsole.log("POST Print data: ", printData);
+                    if (!printData) {
+                        throw new Error("No print data provided");
+                    }
+
+                    if (!printData.Device.printerName) {
+                        throw new Error("Printer name is required");
+                    }
 
                     // Create a new print job
                     const jobId = serviceState.nextJobId++;
                     const printJob = {
                         id: jobId,
-                        status: 1,
+                        status: enumPrintStatus.QUEUED,
                         contentType: printData.ContentType,
                         content: printData.Content || "Empty document",
                         printer: printData.Device.printerName || "Default Printer",
                         createdAt: new Date().toISOString(),
                         completedAt: null,
-                        timerId: null
+                        timerId: null,
+                        message: "No message"
                     };
+
+                    if (printData.ContentType == enumContentType.STRING || printData.Device.PrintToFileName) {
+                        printJob.status = enumResponseStatus.SOFTERROR;
+                        printJob.message = "PrintToFileName: " + printData.Device.PrintToFileName;
+                        printJob.id = ""
+                    }
+                    else
+                        if (printData.ContentType != enumContentType.HTML && printData.ContentType != enumContentType.INNERHTML && printData.ContentType != enumContentType.URL) {
+                            printJob.status = enumResponseStatus.SOFTERROR;
+                            printJob.message = "Unsupported print content type: " + printData.ContentType;
+                            printJob.id = ""
+                        }
+
 
                     serviceState.printJobs.push(printJob);
 
@@ -374,16 +431,44 @@ const routes = {
 
                         if (job) {
                             customConsole.log(`Job found at state: ${job.status}`);
-                            job.status = job.status == 1 ? 3 : job.status == 3 ? 5 : 6;
-                            if (job.status == 6) {
+
+                            // job.status = job.status == enumPrintStatus.QUEUED ? enumPrintStatus.DOWNLOADING : job.status == enumPrintStatus.DOWNLOADING ? enumPrintStatus.PRINTING : enumPrintStatus.COMPLETED;
+
+                            switch (job.contentType) {
+                                case enumContentType.INNERHTML:
+                                    job.status = enumPrintStatus.COMPLETED;
+                                    break;
+
+                                case enumContentType.URL:
+                                    job.status = enumPrintStatus.ABANDONED;
+                                    job.message = "Mocked abandon";
+                                    break;
+
+                                case enumContentType.HTML:
+                                    //job.status = ++counter < 3 ? PrintHtmlStatus.Printing : PrintHtmlStatus.Completed;
+                                    job.status = job.status == enumPrintStatus.QUEUED ? enumPrintStatus.DOWNLOADING : job.status == enumPrintStatus.DOWNLOADING ? enumPrintStatus.PRINTING : enumPrintStatus.COMPLETED;
+                                    break;
+
+                                case enumContentType.STRING:
+                                    break;
+
+                                default:
+                                    job.status = enumPrintStatus.ERROR;
+                                    job.message = "Bad type from jobToken: " + jobId;
+                                    break;
+                            }
+
+                            if (job.status == enumPrintStatus.COMPLETED || job.status == enumPrintStatus.ABANDONED || job.status == enumPrintStatus.ERROR ) {
                                 clearInterval(job.timerId);
                                 job.completedAt = new Date().toISOString();
                             }
                         }
                     }, 2000);
 
-                    sendJsonResponse(res, 202, { jobIdentifier: jobId.toString(), status: 1, message: "" });
+                    sendJsonResponse(res, 202, { jobIdentifier: printJob.id.toString(), status: printJob.status, message: printJob.message });
+
                 } catch (error) {
+                    customConsole.error("Print job error: ", error);
                     sendJsonResponse(res, 400, `print failed: ${error}`);
                 }
             }
@@ -399,15 +484,15 @@ const routes = {
                 const job = serviceState.printJobs.find(j => j.id === jobId);
 
                 if (job) {
-                    if (job.status == 6) {
-                        customConsole.log("Job completed: ", jobId);
+                    if ( job.status == enumPrintStatus.COMPLETED || job.status == enumPrintStatus.ABANDONED || job.status == enumPrintStatus.ERROR ) {
+                        customConsole.log("Job completed: " + jobId + " @" + job.status + " => " + job.message);
                         const jobIndex = serviceState.printJobs.findIndex(j => j.id === jobId);
                         if (jobIndex !== -1) {
                             serviceState.printJobs.splice(jobIndex, 1);
                         };
                     }
                     sendJsonResponse(res, 200, {
-                        "message": job.status == 6 ? "completed" : `printing: ${job.status}`,
+                        "message": (job.status == enumPrintStatus.COMPLETED || job.status == enumPrintStatus.ABANDONED || job.status == enumPrintStatus.ERROR) ? job.message : `printing: ${job.status}`,
                         "status": job.status,
                         "jobIdentifier": jobId.toString()
                     });
@@ -415,6 +500,85 @@ const routes = {
                 else {
                     sendJsonResponse(res, 404, "Job not found");
                 }
+            }
+        }
+    },
+
+    // Print PDF API
+    "/api/v1/printPdf/print": {
+        POST: async (req, res) => {
+            if (isAuthorised(req, res)) {
+                try {
+                    const printData = await parseRequestBody(req);
+                    customConsole.log("POST Print PDF data: ", printData);
+                    if (!printData) {
+                        throw new Error("No print data provided");
+                    }
+                    if (!printData.Device.printerName) {
+                        throw new Error("Printer name is required");
+                    }
+
+                    let docUri = url.parse(printData.Document, true);
+                    const q = docUri.query;
+                    customConsole.log("PDF Print query: ", q);
+
+                    const jobId = q.f ? q.f : "pdf";
+                    customConsole.log("jobId: ", jobId);
+
+                    pdfCounter = 0;
+                    sendJsonResponse(res, 202, { jobIdentifier: `${jobId}:job`, status: enumResponseStatus.QUEUEDTODEVICE, message: "No message" });
+                } catch (error) {
+                    customConsole.error("PDF Print job error: ", error);
+                    sendJsonResponse(res, 400, `PDF print failed: ${error}`);
+                }
+            }
+        }
+    }, 
+
+    // Print job status API
+    "/api/v1/printPdf/status/": {
+        GET: (req, res) => {
+            if (isAuthorised(req, res)) {
+                customConsole.log("Processing GET /api/v1/printPdf/status/");
+
+                const parsedUrl = url.parse(req.url, true);
+                const pathname = parsedUrl.pathname;
+                const jobId = pathname.substring(pathname.lastIndexOf("/") + 1);
+
+                const parts = jobId.split(":");
+                const js = {};
+
+                js.jobIdentifier = jobId;
+                js.message = "";
+
+                customConsole.log("PDF jobId parts: ", parts);
+
+                if (parts.length > 0) {
+                    switch (parts[0]) {
+                        case "pdf0":
+                            js.status = enumPrintStatus.COMPLETED;
+                            break;
+
+                        case "pdf1":
+                            js.status = enumPrintStatus.ABANDONED;
+                            js.message = "Mocked abandon";
+                            break;
+
+                        case "pdf2":
+                            js.status = ++pdfCounter < 3 ? enumPrintStatus.PRINTING : enumPrintStatus.COMPLETED;
+                            break;
+
+                        default:
+                            js.status = enumPrintStatus.ERROR;
+                            js.message = "Bad type from jobToken: " + jobToken;
+                            break;
+                    }
+                }
+                else {
+                    js.status = enumPrintStatus.ERROR;
+                    js.message = "Bad PDF print jobToken";
+                }
+                sendJsonResponse(res, 202, js);
             }
         }
     },
@@ -477,7 +641,9 @@ const serviceServer = http.createServer(async (req, res) => {
 
         const apiPath = removeAfterLastSlash(pathname);
 
+        customConsole.log("removed last part, searching API path: ", apiPath);
         if (routes[apiPath] && routes[apiPath][method]) {
+            customConsole.log("found ...");
             await routes[apiPath][method](req, res);
         }
         else {
