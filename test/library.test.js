@@ -662,11 +662,19 @@ describe("Printing", () => {
             let results = {};
 
             api.connectLite(serverUrl, guid);
+            results.error1 = api.printHtml();
 
+            api.printHtml(0, null, null, (txt) => {
+                results.error2 = document.getElementById("qunit-fixture").textContent;
+                results.error3 = txt;
+            });
             return results;
         }, serverUrl, licenseGuid);
 
         customConsole.debug(result);
-        expect(result.error1).toBe("Unauthorized");
+        expect(result.error1).toBeFalsy();
+        expect(result.error2).toBe("Request to print no content - access denied?");
+        expect(result.error3).toBe("Request to print no content");
+
     });
 });
