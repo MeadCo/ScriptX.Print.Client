@@ -17,7 +17,7 @@ const customConsole = new Console({ stdout: process.stdout, stderr: process.stde
 // const customConsole = console;
 
 const capturePageLogs = true;
-async function pageStartup() {
+async function pageStartup(pageName) {
     await server.start();
 
     // Redirect console.log from the browser to the Jest console
@@ -56,8 +56,11 @@ async function pageStartup() {
         }
     });
 
+    if (!pageName) {
+        pageName = "test-page-src.html";
+    }
 
-    await page.goto("http://localhost:" + server.port + "/test-page-src.html");
+    await page.goto("http://localhost:" + server.port + "/" + pageName);
 }
 
 
@@ -181,7 +184,7 @@ async function pageStartup() {
 //                v = await new Promise((resolve, reject) => {
 //                    window.MeadCo.ScriptX.Print.serviceDescriptionAsync(resolve, reject);
 //                });
-//            } 
+//            }
 //            catch (e) {
 //            }
 //            return v;
@@ -1081,3 +1084,248 @@ async function pageStartup() {
 //    //    expect(result.wait1).toBeTruthy();
 //    //});
 //});
+
+describe("MeadCo.ScriptX.Print.HTML", () => {
+    beforeAll(async () => {
+        await pageStartup();
+    });
+
+    afterAll(async () => {
+        await server.stop();
+    });
+
+    test("Namespace basics", async () => {
+        const results = await page.evaluate(() => {
+            const api = window.MeadCo.ScriptX.Print.HTML;
+            let results = {};
+
+            results.vMeadCoScriptXPrintHTML = api.version;
+            results.vMM = MeadCo.ScriptX.Print.MeasurementUnits.MM;
+            results.xx = MeadCo.ScriptX.Print.MeasurementUnits.XX;
+            results.viewScale = api.settings.viewScale;
+
+            api.settings.viewScale = 100;
+            results.viewScale100 = api.settings.viewScale;
+
+            results.locale = (navigator.languages && navigator.languages.length)
+                ? navigator.languages[0]
+                : navigator.language;
+
+            results.apiLocale = api.settings.locale;
+
+            results.enum = MeadCo.ScriptX.Print.ContentType.INNERHTML;
+
+            console.log(results);
+            return results;
+
+        });
+
+        expect(results.vMeadCoScriptXPrintHTML).toBe(versions.LibVersions.MeadCoScriptXPrintHTML);
+        expect(results.vMM).toBe(2);
+        expect(results.xx).not.toBeDefined();
+        expect(results.viewScale).toBe(0);
+        expect(results.viewScale100).toBe(100);
+        expect(results.locale).toBeDefined();
+        expect(results.apiLocale).toBeDefined();
+        expect(results.apiLocale).toBe(results.locale);
+        expect(results.enum).toBe(4);
+    });
+
+    test("Connecting to service", async () => {
+        const results = await page.evaluate(async (serverUrl, guid) => {
+            const api = window.MeadCo.ScriptX.Print.HTML;
+            let results = {};
+            const url = serverUrl;
+
+            // do not connect with no license.
+            try {
+                results.result1 = await new Promise((resolve, reject) => {
+                    api.connectAsync(url, {}, resolve, reject);
+                });
+            }
+            catch (e) {
+                results.result1 = e;
+            }
+
+            try {
+                results.result2 = await new Promise((resolve, reject) => {
+                    api.connectAsync(url, null, resolve, reject);
+                });
+            }
+            catch (e) {
+                results.result2 = e;
+            }
+
+            try {
+                results.result3 = await new Promise((resolve, reject) => {
+                    api.connectAsync(url, "", resolve, reject);
+                });
+            }
+            catch (e) {
+                results.result3 = e;
+            }
+
+            // sucessful connect, note that this should also get print defaults
+            try {
+                // there should be no printer.
+                results.check1 = MeadCo.ScriptX.Print.printerName;
+                results.result4 = await new Promise((resolve, reject) => {
+                    api.connectAsync(url, guid, resolve, reject);
+                });
+ 
+                results.result5 = window.MeadCo.ScriptX.Print.isConnected;
+
+                results.check2 = MeadCo.ScriptX.Print.printerName;
+                results.check3 = api.settings.header;
+                results.check4 = api.settings.locale;
+            }
+            catch (e) {
+                console.error(e);
+                results.result4 = e;
+            }
+
+            console.log(results);
+            return results;
+        }, serverUrl, licenseGuid);
+
+        expect(results.result1).toBe("Unauthorized");
+        expect(results.result2).toBe("Unauthorized");
+        expect(results.result3).toBe("Unauthorized");
+        expect(results.check1).toBe("");
+        expect(results.result4).toBeTruthy();
+        expect(results.result5).toBeTruthy();
+        expect(results.check2).toBe("Microsoft Print to PDF");
+        expect(results.check3).toBe("page header");
+        expect(results.check4).toBe(Intl.DateTimeFormat().resolvedOptions().locale);
+    });
+
+    test("grabbing content", async () => {
+        const results = await page.evaluate(() => {
+            const api = window.MeadCo.ScriptX.Print.HTML;
+            let results = {};
+
+            results.t1 = api.documentContentToPrint;
+            results.t2 = api.frameContentToPrint("testFrame");
+
+            results.doc = api.documentContentToPrint.indexOf("<h1>Test page</h1>");
+            results.f = api.frameContentToPrint("testFrame").indexOf("A massively simple frame");
+            results.f2 = api.frameContentToPrint("testFrame-2").indexOf("A massively simple frame");
+
+            console.log(results);
+            return results;
+        });
+
+        expect(results.doc).not.toBe(-1);
+        expect(results.f).not.toBe(-1);
+        expect(results.f2).not.toBe(-1);
+    });
+
+    test("Printing content", async () => {
+        const results = await page.evaluate(async (serverUrl, guid) => {
+            const api = window.MeadCo.ScriptX.Print.HTML;
+            let results = {};
+
+            try {
+                results.connected = await new Promise((resolve, reject) => {
+                    api.connectAsync(serverUrl, guid, resolve, reject);
+                });
+            }
+            catch (e) {
+                results.error1 = e;
+            }
+
+            if (results.connected) {
+
+                try {
+                    results.data2 = [];
+                    results.result2 =  await new Promise((resolve, reject) => {
+                        api.printDocument((errorText) => {
+                            if (errorText) {
+                                reject(errorText);
+                            }
+                            else {
+                                resolve("ok");
+                            }
+                        }, (status, sInformation, data) => {
+                            results.data2.push(`${status}:${sInformation}:${data}`);
+                        }, "ProgressData2");
+                    });
+                }
+                catch (e) {
+                    results.error2 = e;
+                }
+
+                try {
+                    results.data3 = [];
+                    results.result3 = await new Promise((resolve, reject) => {
+                        api.printFromUrl("https://www.meadroid.com",(errorText) => {
+                            if (errorText) {
+                                reject(errorText);
+                            }
+                            else {
+                                resolve("ok");
+                            }
+                        }, (status, sInformation, data) => {
+                            results.data3.push(`${status}:${sInformation}:${data}`);
+                        }, "ProgressData3");
+                    });
+                }
+                catch (e) {
+                    results.error3 = e;
+                    results.error31 = document.getElementById("qunit-fixture").textContent;
+                }
+
+                try {
+                    results.data4 = [];
+                    results.result4 = await new Promise((resolve, reject) => {
+                        api.printHtml("<!Doctype html><html><body>Hello world</body></html>", (errorText) => {
+                            if (errorText) {
+                                reject(errorText);
+                            }
+                            else {
+                                resolve("ok");
+                            }
+                        }, (status, sInformation, data) => {
+                            results.data4.push(`${status}:${sInformation}:${data}`);
+                        }, "ProgressData4");
+                    });
+                }
+                catch (e) {
+                    results.error4 = e;
+                    results.error41 = document.getElementById("qunit-fixture").textContent;
+                }
+
+                results.wait1 = await new Promise((resolve, reject) => {
+                    MeadCo.ScriptX.Print.waitForSpoolingComplete(10000, resolve);
+                });
+            }
+
+            console.log(results);
+            console.log(results.data2);
+            console.log(results.data3);
+            console.log(results.data4);
+
+            return results;
+        }, serverUrl, licenseGuid);
+
+        expect(results.connected).toBeTruthy();
+        expect(results.error1).not.toBeDefined();
+        expect(results.result2).toBe("ok");
+        expect(results.error2).not.toBeDefined();
+        expect(results.data2.length).toBeGreaterThan(0);
+
+        expect(results.result3).not.toBeDefined(); 
+        expect(results.error3).toBe("Server error");
+        expect(results.error31).toBe("The print failed with the error: Mocked abandon");
+        expect(results.data3.length).toBeGreaterThan(0);
+
+        expect(results.result4).toBe("ok");
+        expect(results.error4).not.toBeDefined();
+        expect(results.data4.length).toBeGreaterThan(0);
+
+        expect(results.wait1).toBeTruthy();
+
+
+    });
+
+});
