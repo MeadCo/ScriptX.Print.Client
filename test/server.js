@@ -583,6 +583,39 @@ const routes = {
         }
     },
 
+
+    // Direct Print API
+    "/api/v1/printDirect/print": {
+        POST: async (req, res) => {
+            if (isAuthorised(req, res)) {
+                try {
+                    const printData = await parseRequestBody(req);
+                    let statusResult = enumResponseStatus.OK;
+                    let statusMessage = "No message";
+
+                    customConsole.log("POST Print Direct data: ", printData);
+                    if (!printData) {
+                        throw new Error("No print data provided");
+                    }
+                    if (!printData.Device.printerName) {
+                        throw new Error("Printer name is required");
+                    }
+
+                    if (printData.Device.printerName != "My printer" && printData.Device.printerName != "Test printer") {
+                        statusResult = enumResponseStatus.SOFTERROR;
+                        statusMessage = `Printer not available: ${printData.Device.printerName}`;
+                    }
+
+                    sendJsonResponse(res, 202, { jobIdentifier: printData.ContentType.toString(), status: statusResult, message: statusMessage });
+
+                } catch (error) {
+                    customConsole.error("Print Direct job error: ", error);
+                    sendJsonResponse(res, 400, `Direct print failed: ${error}`);
+                }
+            }
+        }
+    }, 
+
     // Service description
     "/api/": {
         GET: (req, res) => {
