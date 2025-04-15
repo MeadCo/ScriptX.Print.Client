@@ -256,6 +256,57 @@ const routes = {
             }
         }
     },
+    "/api/v1/printHtml/htmlPrintDefaults": {
+        GET: (req, res) => {
+            if (isAuthorised(req, res)) {
+                const defaultPrinter = serviceState.printers.find(p => p.isDefault);
+                if (defaultPrinter) {
+                    const params = url.parse(req.url, true).query;
+                    sendJsonResponse(res, 200, {
+                        "settings": {
+                            "header": "page header",
+                            "footer": "page footer",
+                            "headerFooterFont": "Arial",
+                            "page": {
+                                "orientation": 0,
+                                "units": 0,
+                                "margins": {
+                                    "left": "5",
+                                    "top": "5",
+                                    "bottom": "5",
+                                    "right": "5"
+                                }
+                            },
+                            "viewScale": 0,
+                            "printBackgroundColorsAndImages": 0,
+                            "pageRange": "",
+                            "printingPass": 0,
+                            "extraHeadersAndFooters": {
+                                "allPagesHeader": "",
+                                "allPagesFooter": "",
+                                "firstPageHeader": "",
+                                "firstPageFooter": "",
+                                "extraFirstPageFooter": "",
+                                "allHeaderHeight": 0,
+                                "allFooterHeight": 0,
+                                "firstHeaderHeight": 0,
+                                "firstFooterHeight": 0,
+                                "extraFirstFooterHeight": 0
+                            }
+                        },
+                        device: createDeviceInfo(defaultPrinter),
+                        availablePrinters: [
+                            'Microsoft Print to PDF',
+                            'Microsoft XPS Document Writer'
+                        ]
+                    });
+                } else {
+                    sendJsonResponse(res, 404, 'Default printer not found');
+                }
+            }
+        }
+    },
+
     "/api/v1/printHtml/htmlPrintDefaults/": {
         GET: (req, res) => {
             if (isAuthorised(req, res)) {
@@ -351,26 +402,37 @@ const routes = {
                     sendJsonResponse(res, 400, "GUID is required");
                     return;
                 }
-                customConsole.log("guid: ", guid, typeof(guid));
-                serviceState.licenses.push({
-                    guid: guid,
-                    company: "Test Company",
-                    companyHomePage: "https://www.example.com",
-                    from: new Date().toISOString(),
-                    to: new Date().toISOString(),
-                    options: {
-                        basicHtmlPrinting: true,
-                        advancedPrinting: true,
-                        enhancedFormatting: true,
-                        printPdf: true,
-                        printRaw: true
-                    },
-                    domains: [
-                        "example.com",
-                        "meadroid.com"
-                    ],
-                    revision: licenseData.Revision || 0
-                });
+                if (guid != preInstalledLicenseGuid) {
+                    sendJsonResponse(res, 400, "Invalid guid");
+                    return;
+                }
+                if (licenseData.Url == "http://localhost:41191/Bad-Warehouse") {
+                    sendJsonResponse(res, 400, "Unknown warehouse");
+                    return;
+                }
+
+                customConsole.log("guid: ", guid, typeof (guid));
+
+                // License is "pre-installed" at startup
+                //serviceState.licenses.push({
+                //    guid: guid,
+                //    company: "Test Company",
+                //    companyHomePage: "https://www.example.com",
+                //    from: new Date().toISOString(),
+                //    to: new Date().toISOString(),
+                //    options: {
+                //        basicHtmlPrinting: true,
+                //        advancedPrinting: true,
+                //        enhancedFormatting: true,
+                //        printPdf: true,
+                //        printRaw: true
+                //    },
+                //    domains: [
+                //        "example.com",
+                //        "meadroid.com"
+                //    ],
+                //    revision: licenseData.Revision || 0
+                //});
 
                 sendJsonResponse(res, 201, serviceState.licenses.find(l => l.guid === guid));
             } catch (error) {
@@ -411,60 +473,66 @@ const routes = {
 
                     if (printData.ContentType == enumContentType.STRING || printData.Device.PrintToFileName) {
                         printJob.status = enumResponseStatus.SOFTERROR;
-                        printJob.message = "PrintToFileName: " + printData.Device.PrintToFileName;
-                        printJob.id = ""
+                        printJob.message = "PrintToFileName: " + printData.Device.printToFileName;
+                        printJob.id = 0
                     }
                     else
                         if (printData.ContentType != enumContentType.HTML && printData.ContentType != enumContentType.INNERHTML && printData.ContentType != enumContentType.URL) {
                             printJob.status = enumResponseStatus.SOFTERROR;
                             printJob.message = "Unsupported print content type: " + printData.ContentType;
-                            printJob.id = ""
+                            printJob.id = 0
                         }
 
 
-                    serviceState.printJobs.push(printJob);
+                    if (printJob.id != 0) {
 
-                    // Simulate job processing
-                    printJob.timerId = setInterval(() => {
-                        customConsole.log("Simulate print job processing: ", jobId);
-                        const job = serviceState.printJobs.find(j => j.id === jobId);
+                        serviceState.printJobs.push(printJob);
 
-                        if (job) {
-                            customConsole.log(`Job found at state: ${job.status}`);
+                        // Simulate job processing
+                        printJob.timerId = setInterval(() => {
+                            customConsole.log("Simulate print job processing: ", jobId);
+                            const job = serviceState.printJobs.find(j => j.id === jobId);
 
-                            // job.status = job.status == enumPrintStatus.QUEUED ? enumPrintStatus.DOWNLOADING : job.status == enumPrintStatus.DOWNLOADING ? enumPrintStatus.PRINTING : enumPrintStatus.COMPLETED;
+                            if (job) {
+                                customConsole.log(`Job found at state: ${job.status}`);
 
-                            switch (job.contentType) {
-                                case enumContentType.INNERHTML:
-                                    job.status = enumPrintStatus.COMPLETED;
-                                    break;
+                                // job.status = job.status == enumPrintStatus.QUEUED ? enumPrintStatus.DOWNLOADING : job.status == enumPrintStatus.DOWNLOADING ? enumPrintStatus.PRINTING : enumPrintStatus.COMPLETED;
 
-                                case enumContentType.URL:
-                                    job.status = enumPrintStatus.ABANDONED;
-                                    job.message = "Mocked abandon";
-                                    break;
+                                switch (job.contentType) {
+                                    case enumContentType.INNERHTML:
+                                        job.status = enumPrintStatus.COMPLETED;
+                                        break;
 
-                                case enumContentType.HTML:
-                                    //job.status = ++counter < 3 ? PrintHtmlStatus.Printing : PrintHtmlStatus.Completed;
-                                    job.status = job.status == enumPrintStatus.QUEUED ? enumPrintStatus.DOWNLOADING : job.status == enumPrintStatus.DOWNLOADING ? enumPrintStatus.PRINTING : enumPrintStatus.COMPLETED;
-                                    break;
+                                    case enumContentType.URL:
+                                        job.status = enumPrintStatus.ABANDONED;
+                                        job.message = "Mocked abandon";
+                                        break;
 
-                                case enumContentType.STRING:
-                                    break;
+                                    case enumContentType.HTML:
+                                        //job.status = ++counter < 3 ? PrintHtmlStatus.Printing : PrintHtmlStatus.Completed;
+                                        job.status = job.status == enumPrintStatus.QUEUED ? enumPrintStatus.DOWNLOADING : job.status == enumPrintStatus.DOWNLOADING ? enumPrintStatus.PRINTING : enumPrintStatus.COMPLETED;
+                                        break;
 
-                                default:
-                                    job.status = enumPrintStatus.ERROR;
-                                    job.message = "Bad type from jobToken: " + jobId;
-                                    break;
+                                    case enumContentType.STRING:
+                                        break;
+
+                                    default:
+                                        job.status = enumPrintStatus.ERROR;
+                                        job.message = "Bad type from jobToken: " + jobId;
+                                        break;
+                                }
+
+                                if (job.status == enumPrintStatus.COMPLETED || job.status == enumPrintStatus.ABANDONED || job.status == enumPrintStatus.ERROR || job.status == enumPrintStatus.SOFTERROR) {
+                                    clearInterval(job.timerId);
+                                    job.completedAt = new Date().toISOString();
+                                }
                             }
-
-                            if (job.status == enumPrintStatus.COMPLETED || job.status == enumPrintStatus.ABANDONED || job.status == enumPrintStatus.ERROR ) {
-                                clearInterval(job.timerId);
-                                job.completedAt = new Date().toISOString();
+                            else {
+                                customConsole.log(`Job could not be found`);
                             }
-                        }
-                    }, 2000);
-
+                        }, 2000);
+                    }
+                    
                     sendJsonResponse(res, 202, { jobIdentifier: printJob.id.toString(), status: printJob.status, message: printJob.message });
 
                 } catch (error) {
