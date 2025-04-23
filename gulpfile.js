@@ -1,140 +1,127 @@
 ﻿"use strict";
 
-const gulp = require("gulp"),
-    concat = require("gulp-concat"),
-    cssmin = require("gulp-cssmin"),
-    htmlmin = require("gulp-htmlmin"),
-    terser = require('gulp-terser'),
-    merge = require("merge-stream"),
-    sourcemaps = require("gulp-sourcemaps"),
-    pipeline = require('readable-stream').pipeline,
-    del = require("del"),
-    bundleconfig = require("./tooling/distbundlesconfig.json"),
-    replace = require('gulp-replace'),
-    rename = require('gulp-rename'),
-    jsdoc = require('gulp-jsdoc3');
-
-//////////////////////////////
-// build minimised distribution packages
-
-// get the package bundle definitions 
-function getBundles(regexPattern) {
-    return bundleconfig.filter(function (bundle) {
-        return regexPattern.test(bundle.outputFileName);
-    });
-}
-
-// minimse and bundle
-function BundleMinToDist() {
-    var tasks = getBundles(/\.js$/).map(function (bundle) {
-        return gulp.src(bundle.inputFiles, { base: "." })
-            .pipe(sourcemaps.init())
-            .pipe(concat(bundle.outputFileName))
-            .pipe(terser())
-            .pipe(sourcemaps.write('.'))
-            .pipe(gulp.dest("."));
-    });
-    return merge(tasks);
-}
-
-// mimise and map individual files
-function MinifyAndMapToDist() {
-    var tasks = gulp.src('src/**/*.js')
-    .pipe(sourcemaps.init())
-        .pipe(terser())
-        .pipe(rename({ suffix: '.min' }))
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest('dist'));
-    return merge(tasks);
-}
+const gulp = require("gulp");
+const packagedef = require("./package.json");
+const replace = require('gulp-replace');
+const path = require("path");
+const fs = require("fs");
 
 async function CleanDistFolder() {
     console.log("Cleaning dist folder...");
-    return del(['./dist']);
+    const del = await import('del');
+    return del.deleteAsync(['./dist/*']);
 }
 
-////////////////////////////////////
-// Build documentation site from js content using jsdoc
+/**
+ * Build distribution files using webpack config
+ */
+function BuildWithWebpack(done) {
+    const { exec } = require('child_process');
 
-// remove previous output
+    console.log("Building distribution files with webpack...");
+    exec('npx webpack --config ./configs/webpack.config.js', (err, stdout, stderr) => {
+        if (err) {
+            console.error(stderr);
+            return done(err);
+        }
+        console.log(stdout);
+        done();
+    });
+}
+
+//////////////////////////////////////
+//// Build documentation site from js content using jsdoc
+
+//// remove previous output
 async function CleanDocsFolder() {
     console.log("Cleaning docs folder...");
-    return del(['./docs']);
-    // console.log("Completed clean docs folder...");
-    // await Promise.resolve('some result');
+    const del = await import('del');
+    return del.deleteAsync(['./docs/*']);
 }
 
 // extract docs and compile to html, adds in readme.md from docs-src
-gulp.task('CompileDocs', function (done) {
-    const config = require('./tooling/docs/jsdoc.json');
-    gulp.src(['readme.md', '.src/**/*.js'], { read: false }).pipe(jsdoc(config,done));
-});
+function CompileDocs(done) {
+    const { exec } = require('child_process');
 
-// post processing to put dot delimeters back into names
-//
-function ProcessName(nsname) {
-
-    var badName = nsname.replace(/\./g, "");
-
-    console.log("Replace: " + badName + " with: " + nsname);
-
-//    var regx = new RegExp(badName + "(?![a-zA-Z]*\.html)", "gi")
-//    return gulp.src("./docs/*.html").pipe(replace(regx, nsname)).pipe(gulp.dest("./docs"));
-
-    var regx = new RegExp(badName + "(?![a-zA-Z]*\.html)", "gi")
-    return gulp.src("./docs/**/*.html").pipe(replace(regx, nsname)).pipe(gulp.dest("./docs"));
+    console.log("Building documentation.");
+    exec('npx jsdoc -c ./configs/jsdoc.json', (err, stdout, stderr) => {
+        if (err) {
+            console.error(stderr);
+            return done(err);
+        }
+        console.log(stdout);
+        done();
+    });
 }
 
-// call dot processing for each update required so can chain one after the other .. crude but works
-gulp.task('ProcessDocs1', function () {
-    return ProcessName("MeadCo.ScriptX.Print.Licensing");
-});
-
-gulp.task('ProcessDocs2', function () {
-    return ProcessName("MeadCo.ScriptX.Print.HTML");
-});
-
-gulp.task('ProcessDocs3', function () {
-    return ProcessName("MeadCo.ScriptX.Print.PDF");
-});
-
-gulp.task('ProcessDocs4', function () {
-    return ProcessName("MeadCo.ScriptX.Print");
-});
-
 // static docs files that jsdocs won't put where we want
-gulp.task('DocStatics', function () {
-    return gulp.src('./docs-src/build/**').pipe(gulp.dest('./docs/build/'));
-});
+function CopyDocStatics() {
+    return gulp.src('./docs-src/configs/**').pipe(gulp.dest('./docs/configs/'));
+}
 
-gulp.task('Bundle1', function () {
-    return BundleMinToDist();
-});
+/**
+ * Helper function to get all files with a specific extension from a directory
+ */
+function getAllFiles(dir, ext) {
+    let files = [];
+    const items = fs.readdirSync(dir, { withFileTypes: true });
 
-gulp.task('Minify1', function () {
-    return MinifyAndMapToDist();
-});
+    for (const item of items) {
+        const fullPath = path.join(dir, item.name);
+        if (item.isDirectory()) {
+            files = files.concat(getAllFiles(fullPath, ext));
+        } else if (item.isFile() && path.extname(item.name) === ext) {
+            files.push(fullPath);
+        }
+    }
 
-gulp.task("CleanDist", function () {
-    return CleanDistFolder();
-});
+    return files;
+}
 
-gulp.task("CleanDocs", function () {
-    return CleanDocsFolder();
-});
+/**
+ * Process namespace strings in documentation files (to put dot delimeters back into names)
+ */
+function ProcessNamespacesAndVersion(cb) {
+    const namespaces = [
+        "MeadCo.ScriptX.Print.Licensing",
+        "MeadCo.ScriptX.Print.HTML",
+        "MeadCo.ScriptX.Print.PDF",
+        "MeadCo.ScriptX.Print"
+    ];
 
-///////////////////////////////////////////
-// callable processes to build outputs.
-//
-gulp.task('Minify', gulp.series('CleanDist', gulp.series(BundleMinToDist, MinifyAndMapToDist)));
+    console.log("Processing namespace strings in documentation files...");
 
-gulp.task('Clean', gulp.parallel('CleanDist', 'CleanDocs'));
+    try {
+        // Get all HTML files in docs directory
+        const docFiles = getAllFiles('./docs', '.html');
 
-gulp.task('MakeDocs', gulp.series('CompileDocs', 'ProcessDocs1', 'ProcessDocs2', 'ProcessDocs3', 'ProcessDocs4','DocStatics'));
+        // Process each namespace in each file
+        for (const file of docFiles) {
+            let content = fs.readFileSync(file, 'utf8');
 
-gulp.task('BuildDocs', gulp.series('CleanDocs','MakeDocs'));
+            for (const namespace of namespaces) {
+                const badName = namespace.replace(/\./g, "");
+                const regex = new RegExp(badName + "(?![a-zA-Z]*\.html|[a-zA-Z]*\")", "gi");
+                content = content.replace(regex, namespace);
+            }
 
-gulp.task('BuildDist', gulp.series('Clean', gulp.parallel(gulp.series(BundleMinToDist, MinifyAndMapToDist), 'MakeDocs')));
+            content = content.replace(/{@packageversion}/g, packagedef.version);
 
+            // Remove the footer element and its content (the generated date etc.)
+            content = content.replace(/<footer[\s\S]*?<\/footer>/gi, '');
 
+            fs.writeFileSync(file, content, 'utf8');
+        }
+
+        console.log('Namespace processing completed');
+        cb();
+    } catch (err) {
+        cb(err);
+    }
+}
+
+exports.Clean = gulp.parallel(CleanDistFolder, CleanDocsFolder);
+exports.BuildDocs = gulp.series(CleanDocsFolder, gulp.series(CompileDocs, ProcessNamespacesAndVersion, CopyDocStatics));
+exports.BuildDist = gulp.series(CleanDistFolder, BuildWithWebpack);
+exports.Dist = gulp.series(exports.Clean, gulp.parallel(gulp.series(CompileDocs, ProcessNamespacesAndVersion, CopyDocStatics), BuildWithWebpack));
 

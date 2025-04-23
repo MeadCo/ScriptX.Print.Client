@@ -54,9 +54,9 @@
 
     // protected API
     var outerScope = this;
-    var version = "1.16.1.0"; // matches the highest version number of sub-classes.
+    var version = "1.16.2.2"; // matches the highest version number of sub-classes.
     var bLog = ((typeof (MeadCo) !== "undefined" && typeof (MeadCo.logEnable) !== "undefined")) ? MeadCo.logEnable : false;
-    var bUseFetch = ((typeof (MeadCo) !== "undefined" && typeof (MeadCo.useFetch) !== "undefined")) ? MeadCo.useFetch : false;
+    var bUseFetch = ((typeof (MeadCo) !== "undefined" && typeof (MeadCo.useFetch) !== "undefined")) ? MeadCo.useFetch : typeof outerScope.jQuery == "undefined";
 
     var log = function (str) {
         if (bLog) {

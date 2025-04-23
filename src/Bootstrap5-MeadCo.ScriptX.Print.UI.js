@@ -17,7 +17,7 @@
     }
 
     let ui = topLevelNs.createNS("MeadCo.ScriptX.Print.UI");
-    ui.version = "1.16.1.0";
+    ui.version = "1.16.2.0";
 
     topLevelNs.log("MeadCo.ScriptX.Print.UI version is: " + ui.version);
 

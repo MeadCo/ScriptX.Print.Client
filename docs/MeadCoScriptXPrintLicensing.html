@@ -1,137 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ScriptX.Services Client Library MeadCo.ScriptX.Print.Licensing</title>
-
-  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script src="./build/entry.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
-  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
-  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
-  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
-  <link type="text/css" rel="stylesheet" href="style.css">
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-
-  
+    
+    <meta charset="utf-8">
+    <title>MeadCo.ScriptX.Print.Licensing - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+<body>
 
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
 
+<label for="nav-trigger" class="overlay"></label>
 
-<body class="layout">
-    <div id="stickyNavbarOverlay"></div>
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/MeadCo/ScriptX.Print.Client" target="_blank" class="menu-item" id="website_link" >GitHub</a></h2><h2><a href="https://scriptxprintsamples.meadroid.com" target="_blank" class="menu-item" id="forum_link" >Samples</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-a-start.html">Getting started</a></li><li><a href="tutorial-b-minifies.html">Minified collections</a></li><li><a href="tutorial-c-repositories.html">Package repositories</a></li></ul><h3>Namespaces</h3><ul><li><a href="MeadCo.html">MeadCo</a><ul class='members'><li data-type='member'><a href="MeadCo.html#.logEnabled">logEnabled</a></li><li data-type='member'><a href="MeadCo.html#.version">version</a></li></ul><ul class='methods'><li data-type='method'><a href="MeadCo.html#.createNS">createNS</a></li><li data-type='method'><a href="MeadCo.html#.error">error</a></li><li data-type='method'><a href="MeadCo.html#.log">log</a></li><li data-type='method'><a href="MeadCo.html#.makeApiEndPoint">makeApiEndPoint</a></li><li data-type='method'><a href="MeadCo.html#.makeServiceEndPoint">makeServiceEndPoint</a></li><li data-type='method'><a href="MeadCo.html#.parseAjaxError">parseAjaxError</a></li><li data-type='method'><a href="MeadCo.html#.parseFetchError">parseFetchError</a></li><li data-type='method'><a href="MeadCo.html#.warn">warn</a></li></ul></li><li><a href="MeadCoScriptXPrint.html">MeadCo.ScriptX.Print</a><ul class='members'><li data-type='member'><a href="MeadCoScriptXPrint.html#.activeJobs">activeJobs</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.authorisationCookie">authorisationCookie</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.availablePrinterNames">availablePrinterNames</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.clientSideJobs">clientSideJobs</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.deviceSettings">deviceSettings</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.isConnected">isConnected</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.isSpooling">isSpooling</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.jobFileName">jobFileName</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.noJobsWaitingDelivery">noJobsWaitingDelivery</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.onErrorAction">onErrorAction</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.printerName">printerName</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.queue">queue</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.queueGapResetTime">queueGapResetTime</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.queueTimeoutSpacing">queueTimeoutSpacing</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.serviceUrl">serviceUrl</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.version">version</a></li></ul><ul class='methods'><li data-type='method'><a href="MeadCoScriptXPrint.html#.addPrinterConnection">addPrinterConnection</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.addPrinterConnectionAsync">addPrinterConnectionAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.connect">connect</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.connectAsync">connectAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.connectDeviceAndPrinters">connectDeviceAndPrinters</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.connectLite">connectLite</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.connectTestAsync">connectTestAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.deviceSettingsFor">deviceSettingsFor</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.deviceSettingsForAsync">deviceSettingsForAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.ensureSpoolingStatus">ensureSpoolingStatus</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.freeSpoolStatus">freeSpoolStatus</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.getFromServer">getFromServer</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.parseAjaxError">parseAjaxError</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.parseFetchError">parseFetchError</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.printDirect">printDirect</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.printHtml">printHtml</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.printPdf">printPdf</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.removePrinterConnection">removePrinterConnection</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.removePrinterConnectionAsync">removePrinterConnectionAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.reportError">reportError</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.reportFeatureNotImplemented">reportFeatureNotImplemented</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.reportServerError">reportServerError</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.requestHtmlPreview">requestHtmlPreview</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.serviceDescription">serviceDescription</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.serviceDescriptionAsync">serviceDescriptionAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.serviceVersion">serviceVersion</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.serviceVersionAsync">serviceVersionAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.useAttributes">useAttributes</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.waitForDeliveryComplete">waitForDeliveryComplete</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.waitForDeliveryCompleteAsync">waitForDeliveryCompleteAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.waitForSpoolingComplete">waitForSpoolingComplete</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.waitableServiceDescription">waitableServiceDescription</a></li></ul></li><li><a href="MeadCoScriptXPrintHTML.html">MeadCo.ScriptX.Print.HTML</a><ul class='members'><li data-type='member'><a href="MeadCoScriptXPrintHTML.html#.documentContentToPrint">documentContentToPrint</a></li><li data-type='member'><a href="MeadCoScriptXPrintHTML.html#.version">version</a></li><li data-type='member'><a href="MeadCoScriptXPrintHTML.html#.version">version</a></li></ul><ul class='methods'><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.connect">connect</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.connectAsync">connectAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.connectLite">connectLite</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.frameContentToPrint">frameContentToPrint</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.previewDocument">previewDocument</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.previewFrame">previewFrame</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.printDocument">printDocument</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.printFrame">printFrame</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.printFromUrl">printFromUrl</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.printHtml">printHtml</a></li></ul></li><li><a href="MeadCoScriptXPrintLicensing.html">MeadCo.ScriptX.Print.Licensing</a><ul class='members'><li data-type='member'><a href="MeadCoScriptXPrintLicensing.html#.License">License</a></li><li data-type='member'><a href="MeadCoScriptXPrintLicensing.html#.errorMessage">errorMessage</a></li><li data-type='member'><a href="MeadCoScriptXPrintLicensing.html#.errorMessage">errorMessage</a></li><li data-type='member'><a href="MeadCoScriptXPrintLicensing.html#.result">result</a></li><li data-type='member'><a href="MeadCoScriptXPrintLicensing.html#.validLicense">validLicense</a></li><li data-type='member'><a href="MeadCoScriptXPrintLicensing.html#.version">version</a></li></ul><ul class='methods'><li data-type='method'><a href="MeadCoScriptXPrintLicensing.html#.GetLicenseAsync">GetLicenseAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrintLicensing.html#.apply">apply</a></li><li data-type='method'><a href="MeadCoScriptXPrintLicensing.html#.applyAsync">applyAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrintLicensing.html#.connect">connect</a></li><li data-type='method'><a href="MeadCoScriptXPrintLicensing.html#.connectLite">connectLite</a></li></ul></li><li><a href="MeadCoScriptXPrintPDF.html">MeadCo.ScriptX.Print.PDF</a><ul class='methods'><li data-type='method'><a href="MeadCoScriptXPrintPDF.html#.connect">connect</a></li><li data-type='method'><a href="MeadCoScriptXPrintPDF.html#.connectAsync">connectAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrintPDF.html#.connectLite">connectLite</a></li><li data-type='method'><a href="MeadCoScriptXPrintPDF.html#.print">print</a></li><li data-type='method'><a href="MeadCoScriptXPrintPDF.html#.resetSettings">resetSettings</a></li></ul></li><li><a href="factory.html">factory</a></li><li><a href="secmgr.html">secmgr</a><ul class='members'><li data-type='member'><a href="secmgr.html#.version">version</a></li></ul><ul class='methods'><li data-type='method'><a href="secmgr.html#.GetLicenseAsync">GetLicenseAsync</a></li></ul></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">MeadCo.ScriptX.Print.Licensing</h1>
     
 
-<div class="top-nav">
-    <div class="inner">
-        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-        </a>
-        <div class="logo">
-            
-             
-                <a href="index.html">
-                    <h1 class="navbar-item">ScriptX.Services Client Library</h1>
-                </a>
-            
-        </div>
-        <div class="menu">
-            
-            <div class="navigation">
-                <a
-                    href="index.html"
-                    class="link"
-                >
-                    Documentation
-                </a>
-                
-                <div class="dropdown is-hoverable is-right">
-                    <a class="dropdown-trigger link">
-                        Tutorials
-                        <i class="fas fa-chevron-down fa-xs"></i>
-                    </a>
-                    <div class="dropdown-menu">
-                        <div class="dropdown-content">
-                        
-                            <a class="dropdown-item" href="tutorial-start.html">
-                                Getting started
-                            </a>
-                        
-                            <a class="dropdown-item" href="tutorial-repositories.html">
-                                Package repositories
-                            </a>
-                        
-                            <a class="dropdown-item" href="tutorial-minifies.html">
-                                Minified collections
-                            </a>
-                        
-                        </div>
-                    </div>
-                </div>
-                
-                 
-                    
-                        <a
-                            class="link user-link "
-                            href="https://github.com/MeadCo/ScriptX.Print.Client"
-                        >
-                            Github
-                        </a>
-                    
-                        <a
-                            class="link user-link "
-                            href="https://www.meadroid.com/Developers/KnowledgeBank/HowToGuides/ScriptXServices/ThenToNow"
-                        >
-                            Then to now walk through
-                        </a>
-                    
-                        <a
-                            class="link user-link "
-                            href="https://scriptxprintsamples.meadroid.com"
-                        >
-                            Samples
-                        </a>
-                    
-                
-                
-            </div>
-        </div>
-    </div>
-</div>
-    <div id="main">
-        <div
-            class="sidebar "
-            id="sidebarNav"
-        >
-            
-                <div class="search-wrapper">
-                    <input id="search" type="text" placeholder="Search docs..." class="input">
-                </div>
-            
-            <nav>
-                
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Namespaces</h3><ul><li><a href="factory.html">factory</a></li><li><a href="MeadCo.html">MeadCo</a></li><li><a href="MeadCoScriptXPrint.html">MeadCo.ScriptX.Print</a></li><li><a href="MeadCoScriptXPrintHTML.html">MeadCo.ScriptX.Print.HTML</a></li><li><a href="MeadCoScriptXPrintLicensing.html">MeadCo.ScriptX.Print.Licensing</a></li><li><a href="MeadCoScriptXPrintPDF.html">MeadCo.ScriptX.Print.PDF</a></li><li><a href="secmgr.html">secmgr</a></li></ul><h3>Global</h3><ul><li><a href="global.html#orchestrator">orchestrator</a></li><li><a href="global.html#orchestratorKey">orchestratorKey</a></li></ul></div>
-                
-            </nav>
-        </div>
-        <div class="core" id="main-content-wrapper">
-            <div class="content">
-                <header class="page-title">
-                    <p>Namespace</p>
-                    <h1>MeadCo.ScriptX.Print.Licensing</h1>
-                </header>
-                
+    
 
 
 
@@ -140,16 +47,39 @@
 
 <header>
     
-        <h2>MeadCo.ScriptX.Print.Licensing</h2>
+        <h2>
+        
+            Namespace
+        
+        </h2>
         
     
 </header>
 
 <article>
-    <div class="container-overview">
     
+        <div class="container-overview">
         
-            <div class="description"><p>MeadCo.ScriptX.Print.Licensing</p>
+            
+
+
+    
+
+    <h4 class="name" id="MeadCoScriptXPrintLicensing">MeadCo.ScriptX.Print.Licensing</h4>
+
+    
+    <p class="summary usertext"><p>MeadCo.ScriptX.Print.Licensing</p>
+<p>A static class wrapping calls to the server API to install / manage a client
+license for ScriptX.Services for Windows PC.</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>MeadCo.ScriptX.Print.Licensing</p>
 <p>A static class wrapping calls to the server API to install / manage a client
 license for ScriptX.Services for Windows PC.</p>
 <p>The purpose of these libraries is to assist those with a body of client javascript code targetting use of the ScriptX Add-On for Internet Explorer. These libraries assist with continuing with a large part of the code
@@ -159,14 +89,14 @@ intact when transitioning to using ScriptX.Services instead/as well.</p>
 use the license can be made.</p>
 <p>This module is NOT required when working with Cloud or On Premise services as the license
 installation and management occurs at the server.</p>
-<p>Requires: meadco-core.js</p></div>
-        
+<p>Requires: meadco-core.js</p></li></ul></dd>
+    
 
-        
-
-
-<dl class="details">
-
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line1">line 1</a>
+    </li></ul></dd>
     
 
     
@@ -190,27 +120,47 @@ installation and management occurs at the server.</p>
     
 
     
-    
 
     
 
     
 
     
-        <p class="tag-source">
-            <a href="meadco-scriptxprintlicensing.js.html" class="button">View Source</a>
-            <span>
-                <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line1">line 1</a>
-            </span>
-        </p>
+
     
 </dl>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
-    
-    </div>
-    
+        </div>
     
 
     
@@ -218,285 +168,130 @@ installation and management occurs at the server.</p>
     
 
     
+    
+    
+
+     
 
     
 
     
+        <h3 class="subsection-title">Members</h3>
 
-    
-        <div class='vertical-section'>
-            <h1>Members</h1>
-            <div class="members">
+        
             
-                <div class="member">
+<h4 class="name" id=".License"><span class="type-signature type-signature-static">(static) </span>License<span class="type-signature"></span></h4>
 
-<h4 class="name" id=".errorMessage">
-    <a class="href-link" href="#.errorMessage">#</a>
+
+<p class="summary">Get the details on the connected license.</p>
+
+
+
+
+<dl class="details">
     
-        
-            <span class='tag'>static</span>
-        
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>Get the details on the connected license. If it hasnt been applied yet, then query
+for the details (but dont apply it and connectLite() MUST have been called).</p>
+<p>Warning this function is synchronous, GetLicenseAsync() should be used.</p></li></ul></dd>
     
-    <span class="code-name">
-        errorMessage
-    </span>
+
     
-</h4>
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line309">line 309</a>
+    </li></ul></dd>
+    
 
+    
 
+    
 
+    
 
-<div class="description">
-    <p>Get the text of the last error.</p>
-</div>
+    
 
+    
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
 
 
 
     <h5 class="subsection-title">Properties:</h5>
 
     
-<div class="table-container">
-    <table class="props table">
-        <thead>
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
         <tr>
             
-            <th>Name</th>
+                <td class="name"><code>License</code></td>
             
 
-            <th>Type</th>
+            <td class="type">
+            
+                
+<span class="param-type">license</span>
+
+
+
+            
+            </td>
 
             
 
             
 
-            <th class="last">Description</th>
+            <td class="description last"></td>
         </tr>
-        </thead>
-
-        <tbody>
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>errorMessage</code></td>
-    
-
-    <td class="type">
-    
-        
-<code class="param-type">string</code>
-
 
     
-    </td>
+    </tbody>
+</table>
 
-    
 
-    
 
-    <td class="description last"></td>
-</tr>
 
-        
-        </tbody>
-    </table>
-</div>
 
 
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="meadco-scriptxprintlicensing.js.html" class="button">View Source</a>
-            <span>
-                <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line291">line 291</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-</div>
-            
-                <div class="member">
-
-<h4 class="name" id=".errorMessage">
-    <a class="href-link" href="#.errorMessage">#</a>
-    
-        
-            <span class='tag'>static</span>
-        
-    
-    <span class="code-name">
-        errorMessage
-    </span>
-    
-</h4>
-
-
-
-
-<div class="description">
-    <p>Get the text of the last error.</p>
-</div>
-
-
-
-
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    
-<div class="table-container">
-    <table class="props table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>errorMessage</code></td>
-    
-
-    <td class="type">
-    
-        
-<code class="param-type">string</code>
-
-
-    
-    </td>
-
-    
-
-    
-
-    <td class="description last"></td>
-</tr>
-
-        
-        </tbody>
-    </table>
-</div>
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="meadco-secmgr.js.html" class="button">View Source</a>
-            <span>
-                <a href="meadco-secmgr.js.html">meadco-secmgr.js</a>, <a href="meadco-secmgr.js.html#line149">line 149</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-</div>
-            
-                <div class="member">
-
-<h4 class="name" id=".License">
-    <a class="href-link" href="#.License">#</a>
-    
-        
-            <span class='tag'>static</span>
-        
-    
-    <span class="code-name">
-        License
-    </span>
-    
-</h4>
-
-
-
-
-<div class="description">
+<div class="description usertext">
     <p>Get the details on the connected license. If it hasnt been applied yet, then query
 for the details (but dont apply it and connectLite() MUST have been called).</p>
 <p>Warning this function is synchronous, GetLicenseAsync() should be used.</p>
@@ -506,59 +301,31 @@ for the details (but dont apply it and connectLite() MUST have been called).</p>
 
 
 
-    <h5 class="subsection-title">Properties:</h5>
-
-    
-<div class="table-container">
-    <table class="props table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>License</code></td>
-    
-
-    <td class="type">
-    
-        
-<code class="param-type">license</code>
 
 
-    
-    </td>
-
-    
-
-    
-
-    <td class="description last"></td>
-</tr>
 
         
-        </tbody>
-    </table>
-</div>
+            
+<h4 class="name" id=".errorMessage"><span class="type-signature type-signature-static">(static) </span>errorMessage<span class="type-signature"></span></h4>
+
+
+<p class="summary">Get the text of the last error.</p>
+
 
 
 
 <dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>Get the text of the last error.</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line291">line 291</a>
+    </li></ul></dd>
+    
 
     
 
@@ -583,47 +350,317 @@ for the details (but dont apply it and connectLite() MUST have been called).</p>
     
 
     
-    
 
     
 
     
 
-    
-        <p class="tag-source">
-            <a href="meadco-scriptxprintlicensing.js.html" class="button">View Source</a>
-            <span>
-                <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line309">line 309</a>
-            </span>
-        </p>
     
 </dl>
 
 
 
+    <h5 class="subsection-title">Properties:</h5>
 
+    
 
-</div>
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
             
-                <div class="member">
+                <td class="name"><code>errorMessage</code></td>
+            
 
-<h4 class="name" id=".result">
-    <a class="href-link" href="#.result">#</a>
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
     
+    </tbody>
+</table>
+
+
+
+
+
+
+<div class="description usertext">
+    <p>Get the text of the last error.</p>
+</div>
+
+
+
+
+
+
+
+
         
-            <span class='tag'>static</span>
+            
+<h4 class="name" id=".errorMessage"><span class="type-signature type-signature-static">(static) </span>errorMessage<span class="type-signature"></span></h4>
+
+
+<p class="summary">Get the text of the last error.</p>
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>Get the text of the last error.</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="meadco-secmgr.js.html">meadco-secmgr.js</a>, <a href="meadco-secmgr.js.html#line149">line 149</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
         
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
     
-    <span class="code-name">
-        result
-    </span>
+
+        <tr>
+            
+                <td class="name"><code>errorMessage</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
     
-</h4>
+    </tbody>
+</table>
 
 
 
 
-<div class="description">
+
+
+<div class="description usertext">
+    <p>Get the text of the last error.</p>
+</div>
+
+
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".result"><span class="type-signature type-signature-static">(static) </span>result<span class="type-signature"></span></h4>
+
+
+<p class="summary">Get the result code for the last attempt to apply a license.</p>
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>Get the result code for the last attempt to apply a license.</p>
+<p>Basically faked for the benefit of code compatibility with the add-on</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line269">line 269</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>result</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<div class="description usertext">
     <p>Get the result code for the last attempt to apply a license.</p>
 <p>Basically faked for the benefit of code compatibility with the add-on</p>
 </div>
@@ -632,59 +669,31 @@ for the details (but dont apply it and connectLite() MUST have been called).</p>
 
 
 
-    <h5 class="subsection-title">Properties:</h5>
-
-    
-<div class="table-container">
-    <table class="props table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>result</code></td>
-    
-
-    <td class="type">
-    
-        
-<code class="param-type">number</code>
 
 
-    
-    </td>
-
-    
-
-    
-
-    <td class="description last"></td>
-</tr>
 
         
-        </tbody>
-    </table>
-</div>
+            
+<h4 class="name" id=".validLicense"><span class="type-signature type-signature-static">(static) </span>validLicense<span class="type-signature"></span></h4>
+
+
+<p class="summary"><p>Get whether a license has been applied successfully</p>.</p>
+
 
 
 
 <dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>Get whether a license has been applied successfully</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line280">line 280</a>
+    </li></ul></dd>
+    
 
     
 
@@ -709,47 +718,72 @@ for the details (but dont apply it and connectLite() MUST have been called).</p>
     
 
     
-    
 
     
 
     
 
-    
-        <p class="tag-source">
-            <a href="meadco-scriptxprintlicensing.js.html" class="button">View Source</a>
-            <span>
-                <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line269">line 269</a>
-            </span>
-        </p>
     
 </dl>
 
 
 
+    <h5 class="subsection-title">Properties:</h5>
 
+    
 
-</div>
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
             
-                <div class="member">
+                <td class="name"><code>validLicense</code></td>
+            
 
-<h4 class="name" id=".validLicense">
-    <a class="href-link" href="#.validLicense">#</a>
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
     
-        
-            <span class='tag'>static</span>
-        
-    
-    <span class="code-name">
-        validLicense
-    </span>
-    
-</h4>
+    </tbody>
+</table>
 
 
 
 
-<div class="description">
+
+
+<div class="description usertext">
     <p>Get whether a license has been applied successfully</p>
 </div>
 
@@ -757,59 +791,31 @@ for the details (but dont apply it and connectLite() MUST have been called).</p>
 
 
 
-    <h5 class="subsection-title">Properties:</h5>
-
-    
-<div class="table-container">
-    <table class="props table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>validLicense</code></td>
-    
-
-    <td class="type">
-    
-        
-<code class="param-type">boolean</code>
 
 
-    
-    </td>
-
-    
-
-    
-
-    <td class="description last"></td>
-</tr>
 
         
-        </tbody>
-    </table>
-</div>
+            
+<h4 class="name" id=".version"><span class="type-signature type-signature-static">(static) </span>version<span class="type-signature"></span></h4>
+
+
+<p class="summary"><p>Get the version of this module as a string major.minor.hotfix.build</p>.</p>
+
 
 
 
 <dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>Get the version of this module as a string major.minor.hotfix.build</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line187">line 187</a>
+    </li></ul></dd>
+    
 
     
 
@@ -834,47 +840,72 @@ for the details (but dont apply it and connectLite() MUST have been called).</p>
     
 
     
-    
 
     
 
     
 
-    
-        <p class="tag-source">
-            <a href="meadco-scriptxprintlicensing.js.html" class="button">View Source</a>
-            <span>
-                <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line280">line 280</a>
-            </span>
-        </p>
     
 </dl>
 
 
 
+    <h5 class="subsection-title">Properties:</h5>
 
+    
 
-</div>
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
             
-                <div class="member">
+                <td class="name"><code>version</code></td>
+            
 
-<h4 class="name" id=".version">
-    <a class="href-link" href="#.version">#</a>
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
     
-        
-            <span class='tag'>static</span>
-        
-    
-    <span class="code-name">
-        version
-    </span>
-    
-</h4>
+    </tbody>
+</table>
 
 
 
 
-<div class="description">
+
+
+<div class="description usertext">
     <p>Get the version of this module as a string major.minor.hotfix.build</p>
 </div>
 
@@ -882,257 +913,42 @@ for the details (but dont apply it and connectLite() MUST have been called).</p>
 
 
 
-    <h5 class="subsection-title">Properties:</h5>
 
-    
-<div class="table-container">
-    <table class="props table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>version</code></td>
-    
-
-    <td class="type">
-    
-        
-<code class="param-type">string</code>
-
-
-    
-    </td>
-
-    
-
-    
-
-    <td class="description last"></td>
-</tr>
-
-        
-        </tbody>
-    </table>
-</div>
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="meadco-scriptxprintlicensing.js.html" class="button">View Source</a>
-            <span>
-                <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line187">line 187</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-</div>
-            
-            </div>
-        </div>
-    
-
-    
-        <div class='vertical-section'>
-            <h1>Methods</h1>
-            <div class="members">
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id=".apply">
-        <a class="href-link" href="#.apply">#</a>
-        
-            
-                <span class='tag'>static</span>
-            
-        
-        <span class="code-name">
-            
-                apply<span class="signature">(licenseGuid, revision, path)</span><span class="type-signature"> &rarr; {license}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Apply (make usable) the MeadCo ScriptX Client license for use with this content. If the license is not already cached it will be downloaded and cached.
-It is strongly suggested you request that the silent option is enabled in the license (it is by default for ScriptX.Services for Windows PC licenses)</p>
-<p>The license must list the url of the content to which it is being applied.</p>
-<p>This call is synchronous and therefore not recommended. Use applyAsync()</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-<div class="table-container">
-    <table class="params table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>licenseGuid</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">string</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>the license GUID as provided by MeadCo.</p></td>
-</tr>
 
 
         
+    
 
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>revision</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">number</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>the revision number of the licsnse as provided by MeadCo.</p></td>
-</tr>
-
+    
+        <h3 class="subsection-title">Methods</h3>
 
         
-
             
-<tr class="deep-level-0">
-  
-      <td class="name"><code>path</code></td>
-  
 
-  <td class="type">
-  
-      
-<code class="param-type">string</code>
+    
 
+    <h4 class="name" id=".GetLicenseAsync"><span class="type-signature type-signature-static">(static) </span>GetLicenseAsync<span class="signature">(resolve, reject)</span><span class="type-signature"></span></h4>
 
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>fully qualified path to the license file (.mlf file). Use the value 'warehouse' to download from the public MeadCo License warehouse</p></td>
-</tr>
-
-
-        
-        </tbody>
-    </table>
-</div>
-
+    
+    <p class="summary usertext">Get the details on the connected license.</p>
+    
 
 
 
 
 <dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>Get the details on the connected license. If it hasnt been applied yet, then query
+for the details (but dont apply it and connectLite() MUST have been called).</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line316">line 316</a>
+    </li></ul></dd>
+    
 
     
 
@@ -1157,19 +973,11 @@ It is strongly suggested you request that the silent option is enabled in the li
     
 
     
-    
 
     
 
     
 
-    
-        <p class="tag-source">
-            <a href="meadco-scriptxprintlicensing.js.html" class="button">View Source</a>
-            <span>
-                <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line222">line 222</a>
-            </span>
-        </p>
     
 </dl>
 
@@ -1185,233 +993,130 @@ It is strongly suggested you request that the silent option is enabled in the li
 
 
 
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
+    <h5 class="h5-parameters">Parameters:</h5>
     
-    <div class='param-desc column is-7'><p>details the license that was sucessfully applied, null if none available</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
+
+<table class="params">
+    <thead>
+    <tr>
         
-<code class="param-type">license</code>
+        <th>Name</th>
+        
 
+        <th>Type</th>
 
-    </div>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
     
-</div>
 
+        <tr>
+            
+                <td class="name"><code>resolve</code></td>
+            
+
+            <td class="type">
+            
                 
-        </div>
-    </div>
+<span class="param-type">function</span>
 
 
 
-
-</div>
             
-                <div class="member">
+            </td>
 
+            
+
+            
+
+            <td class="description last"><p>function to call on success</p></td>
+        </tr>
 
     
-    <h4 class="name" id=".applyAsync">
-        <a class="href-link" href="#.applyAsync">#</a>
+
+        <tr>
+            
+                <td class="name"><code>reject</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>function to call on failure with reason for failure</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
             
-                <span class='tag'>static</span>
-            
-        
-        <span class="code-name">
-            
-                applyAsync<span class="signature">(licenseGuid, revision, path, resolve, reject)</span><span class="type-signature"></span>
-            
-        </span>
-    </h4>
-    
 
     
+
+    <h4 class="name" id=".apply"><span class="type-signature type-signature-static">(static) </span>apply<span class="signature">(licenseGuid, revision, path)</span><span class="type-signature"> &rarr; {license}</span></h4>
+
     
-    <div class="description">
-        <p>Apply (make usable) the MeadCo ScriptX Client license for use with this content. If the license is not already cached it will be downloaded and cached.
+    <p class="summary usertext">Apply (make usable) the MeadCo ScriptX Client license for use with this content.</p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>Apply (make usable) the MeadCo ScriptX Client license for use with this content. If the license is not already cached it will be downloaded and cached.
 It is strongly suggested you request that the silent option is enabled in the license (it is by default for ScriptX.Services for Windows PC licenses)</p>
 <p>The license must list the url of the content to which it is being applied.</p>
-    </div>
+<p>This call is synchronous and therefore not recommended. Use applyAsync()</p></li></ul></dd>
     
 
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
     
-<div class="table-container">
-    <table class="params table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line222">line 222</a>
+    </li></ul></dd>
+    
 
-            <th>Type</th>
+    
 
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>licenseGuid</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">string</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>the license GUID as provided by MeadCo.</p></td>
-</tr>
-
-
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>revision</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">number</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>the revision number of the licsnse as provided by MeadCo.</p></td>
-</tr>
-
-
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>path</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">string</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>fully qualified path to the license file (.mlf file). Use the value 'warehouse' to download from the public MeadCo License warehouse</p></td>
-</tr>
-
-
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>resolve</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">function</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>function to call on success</p></td>
-</tr>
-
-
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>reject</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">function</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>function to call on failure with reason for failure</p></td>
-</tr>
-
-
-        
-        </tbody>
-    </table>
-</div>
-
-
-
-
-
-<dl class="details">
+    
 
     
 
@@ -1436,19 +1141,7 @@ It is strongly suggested you request that the silent option is enabled in the li
     
 
     
-    
 
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="meadco-scriptxprintlicensing.js.html" class="button">View Source</a>
-            <span>
-                <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line241">line 241</a>
-            </span>
-        </p>
     
 </dl>
 
@@ -1464,131 +1157,172 @@ It is strongly suggested you request that the silent option is enabled in the li
 
 
 
-
-
-
-
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
+    <h5 class="h5-parameters">Parameters:</h5>
     
-    <h4 class="name" id=".connect">
-        <a class="href-link" href="#.connect">#</a>
+
+<table class="params">
+    <thead>
+    <tr>
         
-            
-                <span class='tag'>static</span>
-            
+        <th>Name</th>
         
-        <span class="code-name">
-            
-                connect<span class="signature">(serverUrl, slicenseGuid)</span><span class="type-signature"></span>
-            
-        </span>
-    </h4>
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
     
 
-    
-    
-    <div class="description">
-        <p>Specify the server to use and the license Guid.</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-<div class="table-container">
-    <table class="params table">
-        <thead>
         <tr>
             
-            <th>Name</th>
+                <td class="name"><code>licenseGuid</code></td>
             
 
-            <th>Type</th>
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
 
             
 
             
 
-            <th class="last">Description</th>
+            <td class="description last"><p>the license GUID as provided by MeadCo.</p></td>
         </tr>
-        </thead>
 
-        <tbody>
-        
+    
+
+        <tr>
+            
+                <td class="name"><code>revision</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
 
             
-<tr class="deep-level-0">
-  
-      <td class="name"><code>serverUrl</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">string</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>the 'root' url to the server (the api path will be added by the library)</p></td>
-</tr>
-
-
-        
+            </td>
 
             
-<tr class="deep-level-0">
-  
-      <td class="name"><code>slicenseGuid</code></td>
-  
 
-  <td class="type">
-  
-      
-<code class="param-type">string</code>
+            
+
+            <td class="description last"><p>the revision number of the licsnse as provided by MeadCo.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>path</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
 
 
-  
-  </td>
 
-  
+            
+            </td>
 
-  
+            
 
-  <td class="description last"><p>the license GUID as provided by MeadCo. Optional unless will call GetLicenseAsync() without calling apply</p></td>
-</tr>
+            
 
+            <td class="description last"><p>fully qualified path to the license file (.mlf file). Use the value 'warehouse' to download from the public MeadCo License warehouse</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
 
         
-        </tbody>
-    </table>
+<div class="param-desc">
+    <p>details the license that was sucessfully applied, null if none available</p>
 </div>
 
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">license</span>
+
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".applyAsync"><span class="type-signature type-signature-static">(static) </span>applyAsync<span class="signature">(licenseGuid, revision, path, resolve, reject)</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext">Apply (make usable) the MeadCo ScriptX Client license for use with this content.</p>
+    
 
 
 
 
 <dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>Apply (make usable) the MeadCo ScriptX Client license for use with this content. If the license is not already cached it will be downloaded and cached.
+It is strongly suggested you request that the silent option is enabled in the license (it is by default for ScriptX.Services for Windows PC licenses)</p>
+<p>The license must list the url of the content to which it is being applied.</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line241">line 241</a>
+    </li></ul></dd>
+    
 
     
 
@@ -1613,19 +1347,11 @@ It is strongly suggested you request that the silent option is enabled in the li
     
 
     
-    
 
     
 
     
 
-    
-        <p class="tag-source">
-            <a href="meadco-scriptxprintlicensing.js.html" class="button">View Source</a>
-            <span>
-                <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line191">line 191</a>
-            </span>
-        </p>
     
 </dl>
 
@@ -1641,182 +1367,195 @@ It is strongly suggested you request that the silent option is enabled in the li
 
 
 
-
-
-
-
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
+    <h5 class="h5-parameters">Parameters:</h5>
     
-    <h4 class="name" id=".connectLite">
-        <a class="href-link" href="#.connectLite">#</a>
+
+<table class="params">
+    <thead>
+    <tr>
         
-            
-                <span class='tag'>static</span>
-            
+        <th>Name</th>
         
-        <span class="code-name">
-            
-                connectLite<span class="signature">(serverUrl, slicenseGuid, revision, path)</span><span class="type-signature"></span>
-            
-        </span>
-    </h4>
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
     
 
-    
-    
-    <div class="description">
-        <p>Specify the server to use and the license Guid in order to get details on the license via the License property
-or function GetLicenseAsync()</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-<div class="table-container">
-    <table class="params table">
-        <thead>
         <tr>
             
-            <th>Name</th>
+                <td class="name"><code>licenseGuid</code></td>
             
 
-            <th>Type</th>
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
 
             
 
             
 
-            <th class="last">Description</th>
+            <td class="description last"><p>the license GUID as provided by MeadCo.</p></td>
         </tr>
-        </thead>
 
-        <tbody>
-        
+    
+
+        <tr>
+            
+                <td class="name"><code>revision</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
 
             
-<tr class="deep-level-0">
-  
-      <td class="name"><code>serverUrl</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">string</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>the 'root' url to the server (the api path will be added by the library)</p></td>
-</tr>
-
-
-        
+            </td>
 
             
-<tr class="deep-level-0">
-  
-      <td class="name"><code>slicenseGuid</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">string</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>the license GUID as provided by MeadCo. Optional unless will call GetLicenseAsync() without calling apply</p></td>
-</tr>
-
-
-        
 
             
-<tr class="deep-level-0">
-  
-      <td class="name"><code>revision</code></td>
-  
 
-  <td class="type">
-  
-      
-<code class="param-type">number</code>
+            <td class="description last"><p>the revision number of the licsnse as provided by MeadCo.</p></td>
+        </tr>
 
+    
 
-  
-  </td>
+        <tr>
+            
+                <td class="name"><code>path</code></td>
+            
 
-  
-
-  
-
-  <td class="description last"><p>the revision number of the licsnse as provided by MeadCo.</p></td>
-</tr>
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
 
 
-        
 
             
-<tr class="deep-level-0">
-  
-      <td class="name"><code>path</code></td>
-  
+            </td>
 
-  <td class="type">
-  
-      
-<code class="param-type">string</code>
+            
+
+            
+
+            <td class="description last"><p>fully qualified path to the license file (.mlf file). Use the value 'warehouse' to download from the public MeadCo License warehouse</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>resolve</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
 
 
-  
-  </td>
 
-  
+            
+            </td>
 
-  
+            
 
-  <td class="description last"><p>fully qualified path to the license file (.mlf file). Use the value 'warehouse' to download from the public MeadCo License warehouse</p></td>
-</tr>
+            
+
+            <td class="description last"><p>function to call on success</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>reject</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>function to call on failure with reason for failure</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         
-        </tbody>
-    </table>
-</div>
+            
 
+    
+
+    <h4 class="name" id=".connect"><span class="type-signature type-signature-static">(static) </span>connect<span class="signature">(serverUrl, slicenseGuid)</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext">Specify the server to use and the license Guid.</p>
+    
 
 
 
 
 <dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>Specify the server to use and the license Guid.</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line191">line 191</a>
+    </li></ul></dd>
+    
 
     
 
@@ -1841,19 +1580,11 @@ or function GetLicenseAsync()</p>
     
 
     
-    
 
     
 
     
 
-    
-        <p class="tag-source">
-            <a href="meadco-scriptxprintlicensing.js.html" class="button">View Source</a>
-            <span>
-                <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line203">line 203</a>
-            </span>
-        </p>
     
 </dl>
 
@@ -1869,132 +1600,125 @@ or function GetLicenseAsync()</p>
 
 
 
-
-
-
-
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
+    <h5 class="h5-parameters">Parameters:</h5>
     
-    <h4 class="name" id=".GetLicenseAsync">
-        <a class="href-link" href="#.GetLicenseAsync">#</a>
+
+<table class="params">
+    <thead>
+    <tr>
         
-            
-                <span class='tag'>static</span>
-            
+        <th>Name</th>
         
-        <span class="code-name">
-            
-                GetLicenseAsync<span class="signature">(resolve, reject)</span><span class="type-signature"></span>
-            
-        </span>
-    </h4>
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
     
 
-    
-    
-    <div class="description">
-        <p>Get the details on the connected license. If it hasnt been applied yet, then query
-for the details (but dont apply it and connectLite() MUST have been called).</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-<div class="table-container">
-    <table class="params table">
-        <thead>
         <tr>
             
-            <th>Name</th>
+                <td class="name"><code>serverUrl</code></td>
             
 
-            <th>Type</th>
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
 
             
 
             
 
-            <th class="last">Description</th>
+            <td class="description last"><p>the 'root' url to the server (the api path will be added by the library)</p></td>
         </tr>
-        </thead>
 
-        <tbody>
-        
+    
+
+        <tr>
+            
+                <td class="name"><code>slicenseGuid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
 
             
-<tr class="deep-level-0">
-  
-      <td class="name"><code>resolve</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">function</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>function to call on success</p></td>
-</tr>
-
-
-        
+            </td>
 
             
-<tr class="deep-level-0">
-  
-      <td class="name"><code>reject</code></td>
-  
 
-  <td class="type">
-  
-      
-<code class="param-type">function</code>
+            
+
+            <td class="description last"><p>the license GUID as provided by MeadCo. Optional unless will call GetLicenseAsync() without calling apply</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
-  
-  </td>
 
-  
 
-  
 
-  <td class="description last"><p>function to call on failure with reason for failure</p></td>
-</tr>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         
-        </tbody>
-    </table>
-</div>
+            
 
+    
+
+    <h4 class="name" id=".connectLite"><span class="type-signature type-signature-static">(static) </span>connectLite<span class="signature">(serverUrl, slicenseGuid, revision, path)</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Specify the server to use and the license Guid in order to get details on the license via the License property
+or function GetLicenseAsync()</p>.</p>
+    
 
 
 
 
 <dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>Specify the server to use and the license Guid in order to get details on the license via the License property
+or function GetLicenseAsync()</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line203">line 203</a>
+    </li></ul></dd>
+    
 
     
 
@@ -2019,19 +1743,11 @@ for the details (but dont apply it and connectLite() MUST have been called).</p>
     
 
     
-    
 
     
 
     
 
-    
-        <p class="tag-source">
-            <a href="meadco-scriptxprintlicensing.js.html" class="button">View Source</a>
-            <span>
-                <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line316">line 316</a>
-            </span>
-        </p>
     
 </dl>
 
@@ -2047,299 +1763,359 @@ for the details (but dont apply it and connectLite() MUST have been called).</p>
 
 
 
+    <h5 class="h5-parameters">Parameters:</h5>
+    
 
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
 
+        <th>Type</th>
 
+        
 
+        
 
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
+    <tbody>
+    
 
-
-</div>
+        <tr>
             
-            </div>
-        </div>
-    
-
-    
-        <div class='vertical-section'>
-            <h1>Type Definitions</h1>
-            <div class="members">
+                <td class="name"><code>serverUrl</code></td>
             
-                <div class="member">
 
-<h4 class="name" id=".license">
-    <a class="href-link" href="#.license">#</a>
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the 'root' url to the server (the api path will be added by the library)</p></td>
+        </tr>
+
     
-    <span class="code-name">
-        license
-    </span>
+
+        <tr>
+            
+                <td class="name"><code>slicenseGuid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the license GUID as provided by MeadCo. Optional unless will call GetLicenseAsync() without calling apply</p></td>
+        </tr>
+
     
-</h4>
+
+        <tr>
+            
+                <td class="name"><code>revision</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the revision number of the licsnse as provided by MeadCo.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>path</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>fully qualified path to the license file (.mlf file). Use the value 'warehouse' to download from the public MeadCo License warehouse</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
 
-<div class="description">
-    <p>License details</p>
-</div>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        
+                
+<h4 class="name" id=".LicenseOptions">LicenseOptions</h4>
+
+
+<p class="summary">The capabilities that can be licensed.</p>
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>The capabilities that can be licensed.</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line38">line 38</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
 
 
 
     <h5 class="subsection-title">Properties:</h5>
 
     
-<div class="table-container">
-    <table class="props table">
-        <thead>
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
         <tr>
             
-            <th>Name</th>
+                <td class="name"><code>basicHtmlPrinting</code></td>
             
 
-            <th>Type</th>
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
 
             
 
             
 
-            <th class="last">Description</th>
+            <td class="description last"><p>True if Add-on compatible basic html printing is available (always true)</p></td>
         </tr>
-        </thead>
 
-        <tbody>
-        
+    
+
+        <tr>
             
-<tr class="deep-level-0">
-    
-        <td class="name"><code>guid</code></td>
-    
-
-    <td class="type">
-    
-        
-<code class="param-type">string</code>
-
-
-    
-    </td>
-
-    
-
-    
-
-    <td class="description last"><p>The unique id of the license</p></td>
-</tr>
-
-        
+                <td class="name"><code>advancedPrinting</code></td>
             
-<tr class="deep-level-0">
-    
-        <td class="name"><code>company</code></td>
-    
 
-    <td class="type">
-    
-        
-<code class="param-type">string</code>
-
-
-    
-    </td>
-
-    
-
-    
-
-    <td class="description last"><p>The name of the license owner</p></td>
-</tr>
-
-        
+            <td class="type">
             
-<tr class="deep-level-0">
-    
-        <td class="name"><code>companyHomePage</code></td>
-    
-
-    <td class="type">
-    
-        
-<code class="param-type">string</code>
+                
+<span class="param-type">boolean</span>
 
 
-    
-    </td>
 
-    
-
-    
-
-    <td class="description last"><p>Url of company home page</p></td>
-</tr>
-
-        
             
-<tr class="deep-level-0">
-    
-        <td class="name"><code>from</code></td>
-    
+            </td>
 
-    <td class="type">
-    
-        
-<code class="param-type">Date</code>
-
-
-    
-    </td>
-
-    
-
-    
-
-    <td class="description last"><p>Date license is valid from</p></td>
-</tr>
-
-        
             
-<tr class="deep-level-0">
-    
-        <td class="name"><code>to</code></td>
-    
 
-    <td class="type">
-    
-        
-<code class="param-type">Date</code>
-
-
-    
-    </td>
-
-    
-
-    
-
-    <td class="description last"><p>Date license is vaid till</p></td>
-</tr>
-
-        
             
-<tr class="deep-level-0">
-    
-        <td class="name"><code>options</code></td>
-    
 
-    <td class="type">
-    
-        
-<code class="param-type">LicenseOptions</code>
-
-
-    
-    </td>
+            <td class="description last"><p>True if Add-on compatible advanced html printing features are available</p></td>
+        </tr>
 
     
 
-    
-
-    <td class="description last"><p>The options enabled by the license</p></td>
-</tr>
-
-        
+        <tr>
             
-<tr class="deep-level-0">
-    
-        <td class="name"><code>domains</code></td>
-    
-
-    <td class="type">
-    
-        
-<code class="param-type">Array.string</code>
-
-
-    
-    </td>
-
-    
-
-    
-
-    <td class="description last"><p>the domains the license can be used from</p></td>
-</tr>
-
-        
-        </tbody>
-    </table>
-</div>
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="meadco-scriptxprintlicensing.js.html" class="button">View Source</a>
-            <span>
-                <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line52">line 52</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-</div>
+                <td class="name"><code>enhancedFormatting</code></td>
             
-                <div class="member">
 
-<h4 class="name" id=".LicenseOptions">
-    <a class="href-link" href="#.LicenseOptions">#</a>
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>True if Add-on compatible enhanced formatting is available</p></td>
+        </tr>
+
     
-    <span class="code-name">
-        LicenseOptions
-    </span>
+
+        <tr>
+            
+                <td class="name"><code>printPdf</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>True if printing PDF files is available</p></td>
+        </tr>
+
     
-</h4>
+
+        <tr>
+            
+                <td class="name"><code>printRaw</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>True if Raw printing is available</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
 
-<div class="description">
+
+
+<div class="description usertext">
     <p>The capabilities that can be licensed.</p>
 </div>
 
@@ -2347,151 +2123,31 @@ for the details (but dont apply it and connectLite() MUST have been called).</p>
 
 
 
-    <h5 class="subsection-title">Properties:</h5>
 
-    
-<div class="table-container">
-    <table class="props table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
 
-            <th>Type</th>
 
             
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>basicHtmlPrinting</code></td>
-    
-
-    <td class="type">
-    
-        
-<code class="param-type">boolean</code>
+                
+<h4 class="name" id=".license">license</h4>
 
 
-    
-    </td>
+<p class="summary"><p>License details</p>.</p>
 
-    
-
-    
-
-    <td class="description last"><p>True if Add-on compatible basic html printing is available (always true)</p></td>
-</tr>
-
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>advancedPrinting</code></td>
-    
-
-    <td class="type">
-    
-        
-<code class="param-type">boolean</code>
-
-
-    
-    </td>
-
-    
-
-    
-
-    <td class="description last"><p>True if Add-on compatible advanced html printing features are available</p></td>
-</tr>
-
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>enhancedFormatting</code></td>
-    
-
-    <td class="type">
-    
-        
-<code class="param-type">boolean</code>
-
-
-    
-    </td>
-
-    
-
-    
-
-    <td class="description last"><p>True if Add-on compatible enhanced formatting is available</p></td>
-</tr>
-
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>printPdf</code></td>
-    
-
-    <td class="type">
-    
-        
-<code class="param-type">boolean</code>
-
-
-    
-    </td>
-
-    
-
-    
-
-    <td class="description last"><p>True if printing PDF files is available</p></td>
-</tr>
-
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>printRaw</code></td>
-    
-
-    <td class="type">
-    
-        
-<code class="param-type">boolean</code>
-
-
-    
-    </td>
-
-    
-
-    
-
-    <td class="description last"><p>True if Raw printing is available</p></td>
-</tr>
-
-        
-        </tbody>
-    </table>
-</div>
 
 
 
 <dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><p>License details</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line52">line 52</a>
+    </li></ul></dd>
+    
 
     
 
@@ -2516,30 +2172,227 @@ for the details (but dont apply it and connectLite() MUST have been called).</p>
     
 
     
-    
 
     
 
     
 
-    
-        <p class="tag-source">
-            <a href="meadco-scriptxprintlicensing.js.html" class="button">View Source</a>
-            <span>
-                <a href="meadco-scriptxprintlicensing.js.html">meadco-scriptxprintlicensing.js</a>, <a href="meadco-scriptxprintlicensing.js.html#line38">line 38</a>
-            </span>
-        </p>
     
 </dl>
 
 
 
+    <h5 class="subsection-title">Properties:</h5>
 
+    
 
-</div>
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
             
-            </div>
-        </div>
+                <td class="name"><code>guid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The unique id of the license</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>company</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The name of the license owner</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>companyHomePage</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Url of company home page</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>from</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Date license is valid from</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>to</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Date license is vaid till</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">LicenseOptions</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The options enabled by the license</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>domains</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the domains the license can be used from</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<div class="description usertext">
+    <p>License details</p>
+</div>
+
+
+
+
+
+
+
+
+            
     
 
     
@@ -2550,17 +2403,18 @@ for the details (but dont apply it and connectLite() MUST have been called).</p>
 
 
 
-            </div>
-            
-        </div>
-        <div id="side-nav" class="side-nav">
-        </div>
-    </div>
-<script src="scripts/app.min.js"></script>
-<script>PR.prettyPrint();</script>
-<script src="scripts/linenumber.js"> </script>
+    
+    
+</div>
 
-<script src="scripts/search.js"> </script>
+<br class="clear">
+
+
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
 
 
 </body>

@@ -1,12 +1,11 @@
 {
-  "start": {
+  "a-start": {
     "title": "Getting started"
   },
-  "repositories": {
-    "title": "Package repositories"
+  "b-minifies": {
+    "title": "Minified collections"
   },
-  "minifies": {
-    "title":  "Minified collections"
+  "c-repositories": {
+    "title": "Package repositories"
   }
-
 }

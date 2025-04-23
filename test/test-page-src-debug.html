@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Page</title>
+    <script type="text/javascript">
+        var MeadCo = {
+            logEnable: true,
+            useFetch: true
+        }
+    </script>
+    <script src="src/meadco-core.js"></script>
+    <script src="src/meadco-scriptxprint.js"></script>
+    <script src="src/meadco-scriptxprinthtml.js"></script>
+    <script src="src/meadco-scriptxprintpdf.js"></script>
+    <script src="src/meadco-scriptxprintlicensing.js"></script>
+    <script src="src/meadco-scriptxfactory.js"></script>
+    <script src="src/meadco-secmgr.js"></script>
+
+    <script type="text/javascript">
+        MeadCo.ScriptX.Print.reportServerError = function (txt) {
+            document.getElementById("qunit-fixture").textContent = txt;
+        };
+
+        MeadCo.ScriptX.Print.reportFeatureNotImplemented = function (featureDescription) {
+            document.getElementById("qunit-fixture").textContent = txt;
+        };
+
+
+    </script>
+
+    <script type="text/javascript">
+        const serverUrl = `http://localhost:41191`;
+        const badServerUrl = "http://127.0.0.0:12";
+        const guid = "{5091E665-8916-4D21-996E-00A2DE5DE416}";
+        const badLicenseGuid = "{218A8DB0-5A54-41A3-B349-1144546A3A8E}";
+
+        // Define the runTest function if it's not already defined elsewhere
+        async function runTest() {
+            results = {};
+            console.log("Running test on document load");
+
+            // Add your test logic here
+
+            console.log(results);
+        }
+
+        // Execute runTest when the document is fully loaded
+        document.addEventListener("DOMContentLoaded", async function () {
+            runTest();
+        });
+    </script>
+</head>
+<body>
+    <div id="test-element">Initial Content</div>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+</body>
+</html>

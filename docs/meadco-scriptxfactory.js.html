@@ -1,139 +1,44 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ScriptX.Services Client Library meadco-scriptxfactory.js</title>
-
-  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script src="./build/entry.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
-  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
-  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
-  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
-  <link type="text/css" rel="stylesheet" href="style.css">
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-
-  
+    
+    <meta charset="utf-8">
+    <title>meadco-scriptxfactory.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+<body>
 
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
 
+<label for="nav-trigger" class="overlay"></label>
 
-<body class="layout">
-    <div id="stickyNavbarOverlay"></div>
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/MeadCo/ScriptX.Print.Client" target="_blank" class="menu-item" id="website_link" >GitHub</a></h2><h2><a href="https://scriptxprintsamples.meadroid.com" target="_blank" class="menu-item" id="forum_link" >Samples</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-a-start.html">Getting started</a></li><li><a href="tutorial-b-minifies.html">Minified collections</a></li><li><a href="tutorial-c-repositories.html">Package repositories</a></li></ul><h3>Namespaces</h3><ul><li><a href="MeadCo.html">MeadCo</a><ul class='members'><li data-type='member'><a href="MeadCo.html#.logEnabled">logEnabled</a></li><li data-type='member'><a href="MeadCo.html#.version">version</a></li></ul><ul class='methods'><li data-type='method'><a href="MeadCo.html#.createNS">createNS</a></li><li data-type='method'><a href="MeadCo.html#.error">error</a></li><li data-type='method'><a href="MeadCo.html#.log">log</a></li><li data-type='method'><a href="MeadCo.html#.makeApiEndPoint">makeApiEndPoint</a></li><li data-type='method'><a href="MeadCo.html#.makeServiceEndPoint">makeServiceEndPoint</a></li><li data-type='method'><a href="MeadCo.html#.parseAjaxError">parseAjaxError</a></li><li data-type='method'><a href="MeadCo.html#.parseFetchError">parseFetchError</a></li><li data-type='method'><a href="MeadCo.html#.warn">warn</a></li></ul></li><li><a href="MeadCoScriptXPrint.html">MeadCo.ScriptX.Print</a><ul class='members'><li data-type='member'><a href="MeadCoScriptXPrint.html#.activeJobs">activeJobs</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.authorisationCookie">authorisationCookie</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.availablePrinterNames">availablePrinterNames</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.clientSideJobs">clientSideJobs</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.deviceSettings">deviceSettings</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.isConnected">isConnected</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.isSpooling">isSpooling</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.jobFileName">jobFileName</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.noJobsWaitingDelivery">noJobsWaitingDelivery</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.onErrorAction">onErrorAction</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.printerName">printerName</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.queue">queue</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.queueGapResetTime">queueGapResetTime</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.queueTimeoutSpacing">queueTimeoutSpacing</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.serviceUrl">serviceUrl</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.version">version</a></li></ul><ul class='methods'><li data-type='method'><a href="MeadCoScriptXPrint.html#.addPrinterConnection">addPrinterConnection</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.addPrinterConnectionAsync">addPrinterConnectionAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.connect">connect</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.connectAsync">connectAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.connectDeviceAndPrinters">connectDeviceAndPrinters</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.connectLite">connectLite</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.connectTestAsync">connectTestAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.deviceSettingsFor">deviceSettingsFor</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.deviceSettingsForAsync">deviceSettingsForAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.ensureSpoolingStatus">ensureSpoolingStatus</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.freeSpoolStatus">freeSpoolStatus</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.getFromServer">getFromServer</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.parseAjaxError">parseAjaxError</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.parseFetchError">parseFetchError</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.printDirect">printDirect</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.printHtml">printHtml</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.printPdf">printPdf</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.removePrinterConnection">removePrinterConnection</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.removePrinterConnectionAsync">removePrinterConnectionAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.reportError">reportError</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.reportFeatureNotImplemented">reportFeatureNotImplemented</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.reportServerError">reportServerError</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.requestHtmlPreview">requestHtmlPreview</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.serviceDescription">serviceDescription</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.serviceDescriptionAsync">serviceDescriptionAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.serviceVersion">serviceVersion</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.serviceVersionAsync">serviceVersionAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.useAttributes">useAttributes</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.waitForDeliveryComplete">waitForDeliveryComplete</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.waitForDeliveryCompleteAsync">waitForDeliveryCompleteAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.waitForSpoolingComplete">waitForSpoolingComplete</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.waitableServiceDescription">waitableServiceDescription</a></li></ul></li><li><a href="MeadCoScriptXPrintHTML.html">MeadCo.ScriptX.Print.HTML</a><ul class='members'><li data-type='member'><a href="MeadCoScriptXPrintHTML.html#.documentContentToPrint">documentContentToPrint</a></li><li data-type='member'><a href="MeadCoScriptXPrintHTML.html#.version">version</a></li><li data-type='member'><a href="MeadCoScriptXPrintHTML.html#.version">version</a></li></ul><ul class='methods'><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.connect">connect</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.connectAsync">connectAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.connectLite">connectLite</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.frameContentToPrint">frameContentToPrint</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.previewDocument">previewDocument</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.previewFrame">previewFrame</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.printDocument">printDocument</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.printFrame">printFrame</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.printFromUrl">printFromUrl</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.printHtml">printHtml</a></li></ul></li><li><a href="MeadCoScriptXPrintLicensing.html">MeadCo.ScriptX.Print.Licensing</a><ul class='members'><li data-type='member'><a href="MeadCoScriptXPrintLicensing.html#.License">License</a></li><li data-type='member'><a href="MeadCoScriptXPrintLicensing.html#.errorMessage">errorMessage</a></li><li data-type='member'><a href="MeadCoScriptXPrintLicensing.html#.errorMessage">errorMessage</a></li><li data-type='member'><a href="MeadCoScriptXPrintLicensing.html#.result">result</a></li><li data-type='member'><a href="MeadCoScriptXPrintLicensing.html#.validLicense">validLicense</a></li><li data-type='member'><a href="MeadCoScriptXPrintLicensing.html#.version">version</a></li></ul><ul class='methods'><li data-type='method'><a href="MeadCoScriptXPrintLicensing.html#.GetLicenseAsync">GetLicenseAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrintLicensing.html#.apply">apply</a></li><li data-type='method'><a href="MeadCoScriptXPrintLicensing.html#.applyAsync">applyAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrintLicensing.html#.connect">connect</a></li><li data-type='method'><a href="MeadCoScriptXPrintLicensing.html#.connectLite">connectLite</a></li></ul></li><li><a href="MeadCoScriptXPrintPDF.html">MeadCo.ScriptX.Print.PDF</a><ul class='methods'><li data-type='method'><a href="MeadCoScriptXPrintPDF.html#.connect">connect</a></li><li data-type='method'><a href="MeadCoScriptXPrintPDF.html#.connectAsync">connectAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrintPDF.html#.connectLite">connectLite</a></li><li data-type='method'><a href="MeadCoScriptXPrintPDF.html#.print">print</a></li><li data-type='method'><a href="MeadCoScriptXPrintPDF.html#.resetSettings">resetSettings</a></li></ul></li><li><a href="factory.html">factory</a></li><li><a href="secmgr.html">secmgr</a><ul class='members'><li data-type='member'><a href="secmgr.html#.version">version</a></li></ul><ul class='methods'><li data-type='method'><a href="secmgr.html#.GetLicenseAsync">GetLicenseAsync</a></li></ul></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">meadco-scriptxfactory.js</h1>
     
 
-<div class="top-nav">
-    <div class="inner">
-        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-        </a>
-        <div class="logo">
-            
-             
-                <a href="index.html">
-                    <h1 class="navbar-item">ScriptX.Services Client Library</h1>
-                </a>
-            
-        </div>
-        <div class="menu">
-            
-            <div class="navigation">
-                <a
-                    href="index.html"
-                    class="link"
-                >
-                    Documentation
-                </a>
-                
-                <div class="dropdown is-hoverable is-right">
-                    <a class="dropdown-trigger link">
-                        Tutorials
-                        <i class="fas fa-chevron-down fa-xs"></i>
-                    </a>
-                    <div class="dropdown-menu">
-                        <div class="dropdown-content">
-                        
-                            <a class="dropdown-item" href="tutorial-start.html">
-                                Getting started
-                            </a>
-                        
-                            <a class="dropdown-item" href="tutorial-repositories.html">
-                                Package repositories
-                            </a>
-                        
-                            <a class="dropdown-item" href="tutorial-minifies.html">
-                                Minified collections
-                            </a>
-                        
-                        </div>
-                    </div>
-                </div>
-                
-                 
-                    
-                        <a
-                            class="link user-link "
-                            href="https://github.com/MeadCo/ScriptX.Print.Client"
-                        >
-                            Github
-                        </a>
-                    
-                        <a
-                            class="link user-link "
-                            href="https://www.meadroid.com/Developers/KnowledgeBank/HowToGuides/ScriptXServices/ThenToNow"
-                        >
-                            Then to now walk through
-                        </a>
-                    
-                        <a
-                            class="link user-link "
-                            href="https://scriptxprintsamples.meadroid.com"
-                        >
-                            Samples
-                        </a>
-                    
-                
-                
-            </div>
-        </div>
-    </div>
-</div>
-    <div id="main">
-        <div
-            class="sidebar "
-            id="sidebarNav"
-        >
-            
-                <div class="search-wrapper">
-                    <input id="search" type="text" placeholder="Search docs..." class="input">
-                </div>
-            
-            <nav>
-                
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Namespaces</h3><ul><li><a href="factory.html">factory</a></li><li><a href="MeadCo.html">MeadCo</a></li><li><a href="MeadCoScriptXPrint.html">MeadCo.ScriptX.Print</a></li><li><a href="MeadCoScriptXPrintHTML.html">MeadCo.ScriptX.Print.HTML</a></li><li><a href="MeadCoScriptXPrintLicensing.html">MeadCo.ScriptX.Print.Licensing</a></li><li><a href="MeadCoScriptXPrintPDF.html">MeadCo.ScriptX.Print.PDF</a></li><li><a href="secmgr.html">secmgr</a></li></ul><h3>Global</h3><ul><li><a href="global.html#orchestrator">orchestrator</a></li><li><a href="global.html#orchestratorKey">orchestratorKey</a></li></ul></div>
-                
-            </nav>
-        </div>
-        <div class="core" id="main-content-wrapper">
-            <div class="content">
-                <header class="page-title">
-                    <p>Source</p>
-                    <h1>meadco-scriptxfactory.js</h1>
-                </header>
-                
+    
 
 
 
@@ -228,7 +133,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    const moduleversion = "1.16.1.0";
+    const moduleversion = "1.16.2.2";
     const emulatedVersion = "8.3.0.0";
     let servicesVersion = "";
     const printApi = MeadCo.ScriptX.Print;
@@ -504,7 +409,7 @@
                 MeadCo.log("promptAndPrint exits ...");
 
                 if (err != null) { // not great but a breaking change to remove this behaviour
-                    throw err;
+                    throw err.message;
                 }
 
                 return bStarted;
@@ -1572,17 +1477,18 @@
 
 
 
-            </div>
-            
-        </div>
-        <div id="side-nav" class="side-nav">
-        </div>
-    </div>
-<script src="scripts/app.min.js"></script>
-<script>PR.prettyPrint();</script>
-<script src="scripts/linenumber.js"> </script>
+    
+    
+</div>
 
-<script src="scripts/search.js"> </script>
+<br class="clear">
+
+
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
 
 
 </body>
