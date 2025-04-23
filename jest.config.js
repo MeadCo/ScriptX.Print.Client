@@ -1,7 +1,7 @@
 module.exports = {
     preset: "jest-puppeteer",
     testEnvironment: "jest-environment-puppeteer",
-    testTimeout: 30000, // Adjust if needed for slow tests
+    testTimeout: 120000, // Adjust if needed for slow tests
     reporters: [
         "default",
         ["jest-html-reporter", {

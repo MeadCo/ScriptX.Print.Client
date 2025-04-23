@@ -12,8 +12,8 @@
     <iconUrl>http://scriptx.meadroid.com/favicon.ico</iconUrl>
     <description>This library implements an emulation in javascript of the MeadCo ScriptX Add-on for Internet Explorer to bring print services to all browsers. To write javascript code that will work with both the Add-on and ScriptX.Print Services we recommend installing the MeadScriptXJS package, that package has this as a dependency.</description>
     <summary>Javascript emulation of the MeadCo ScriptX Add-on for Internet Explorer to bring print services to all browsers.</summary>
-    <releaseNotes>No depenendency on jQuery. Uses fetch API for AJAX calls. Support for Bootstrap 5.</releaseNotes>
-    <copyright>Copyright (c) 2017-2024, Mead &amp; Co Ltd</copyright>
+    <releaseNotes>Bug fixes.</releaseNotes>
+    <copyright>Copyright (c) 2017-2025, Mead &amp; Co Ltd</copyright>
     <language>en-GB</language>
     <tags>MeadCo, ScriptX, Print, HTML, PDF</tags>
   </metadata>

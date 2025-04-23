@@ -40,27 +40,8 @@
         async function runTest() {
             results = {};
             console.log("Running test on document load");
+
             // Add your test logic here
-            const api2 = MeadCo.ScriptX.Print.HTML;
-            const url = serverUrl;
-
-            try {
-                await new Promise((resolve, reject) => {
-                    api2.connectAsync(serverUrl, guid, resolve, reject);
-                });
-
-                console.log("Connected to: " + url);
-
-                const api = window.factory.rawPrinting;
-
-                api.printer = factory.printing.printer;
-
-                results.print1 = api.printString("hello");
-                results.print2 = api.printDocument("label.txt");
-
-            } catch (e) {
-                results.errorAll = e;
-            }
 
             console.log(results);
         }

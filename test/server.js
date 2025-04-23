@@ -43,17 +43,17 @@ var enumPrintStatus = {
 // Consoles .. 1,2,3
 
 // 1. Create a custom console for logging with minimal formatting
-const customConsole = new Console({ stdout: process.stdout, stderr: process.stderr });;
+// const customConsole = new Console({ stdout: process.stdout, stderr: process.stderr });;
 
 // 2. revert to the standard console (which will create verbose formatting in jest)
 // const customConsole = console;
 
 // 3. a console eater
-//const customConsole = {
-//    log: () => { },
-//    warn: () => { },
-//    error: () => { }
-//}
+const customConsole = {
+    log: () => { },
+    warn: () => { },
+    error: () => { }
+}
 
 const PORT = 41191; // standard ScriptX.Services 4WPC port
 

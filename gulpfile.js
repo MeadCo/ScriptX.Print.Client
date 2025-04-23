@@ -6,8 +6,6 @@ const replace = require('gulp-replace');
 const path = require("path");
 const fs = require("fs");
 
-
-
 async function CleanDistFolder() {
     console.log("Cleaning dist folder...");
     const del = await import('del');
@@ -125,5 +123,5 @@ function ProcessNamespacesAndVersion(cb) {
 exports.Clean = gulp.parallel(CleanDistFolder, CleanDocsFolder);
 exports.BuildDocs = gulp.series(CleanDocsFolder, gulp.series(CompileDocs, ProcessNamespacesAndVersion, CopyDocStatics));
 exports.BuildDist = gulp.series(CleanDistFolder, BuildWithWebpack);
-exports.Dist = gulp.series(exports.clean, gulp.parallel(gulp.series(CompileDocs, ProcessNamespacesAndVersion, CopyDocStatics), BuildWithWebpack));
+exports.Dist = gulp.series(exports.Clean, gulp.parallel(gulp.series(CompileDocs, ProcessNamespacesAndVersion, CopyDocStatics), BuildWithWebpack));
 

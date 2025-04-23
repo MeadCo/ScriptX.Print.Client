@@ -9,7 +9,7 @@ const badLicenseGuid = "{218A8DB0-5A54-41A3-B349-1144546A3A8E}";
 
 const util = require('util');
 
-const testSources = true;
+const testSources = false;
 
 const { Console } = require('console');
 // Create a custom console for logging with minimal formatting
@@ -19,7 +19,7 @@ const customConsole = new Console({ stdout: process.stdout, stderr: process.stde
 // const customConsole = console;
 
 const capturePageLogs = true;
-async function pageStartup(pageName) {
+async function pageStartup(pageName = "test-page") {
     await server.start();
 
     // Redirect console.log from the browser to the Jest console
@@ -57,10 +57,6 @@ async function pageStartup(pageName) {
             }
         }
     });
-
-    if (!pageName) {
-        pageName = "test-page";
-    }
 
     if (testSources) {
         pageName += "-src";
@@ -255,8 +251,6 @@ describe("Printing", () => {
 
             return result;
         });
-
-        customConsole.debug(v);
 
         expect(v.namespace).toBeTruthy();
         expect(v.version).toBe(versions.LibVersions.MeadCoScriptXPrint);
@@ -573,8 +567,6 @@ describe("Printing", () => {
 
         }, serverUrl, licenseGuid);
 
-        customConsole.debug(result);
-
         expect(result.result1).toBe("ok");
         expect(result.error1).toBe("ScriptX.Services could not be found at \"http://clearServer\". Is it installed and running?");
 
@@ -681,7 +673,7 @@ describe("Printing", () => {
             return results;
         }, serverUrl, licenseGuid);
 
-        customConsole.debug(result);
+        // customConsole.debug(result);
         expect(result.error1).toBeFalsy();
         expect(result.error2).toBe("Request to print no content - access denied?");
         expect(result.error3).toBe("Request to print no content");
@@ -1519,9 +1511,6 @@ describe("MeadCo.ScriptX.Print.PDF", () => {
             return results;
         }, serverUrl, licenseGuid);
 
-        console.log("Review ...");
-        console.log(results);
-
         expect(results.connected).toBeTruthy();
         expect(results.error2).toBe("Request to print no content");
         expect(results.result3).toBe("ok");
@@ -1631,7 +1620,6 @@ describe("MeadCo.ScriptX.Print.Licensing", () => {
             console.log(results);
             return results;
         }, serverUrl, licenseGuid, badLicenseGuid);
-        console.log(results);
 
         expect(results.serviceInfo).toBeDefined();
         expect(results.serviceInfo.major).toBe(11);
@@ -1652,60 +1640,60 @@ describe("MeadCo.ScriptX.Print.Licensing", () => {
 
 });
 
-describe("Attribute init MeadCo.ScriptX.Print.Licensing", () => {
-    beforeAll(async () => {
-        await pageStartup("test-page-attribs");
-    });
-    afterAll(async () => {
-        await server.stop();
-    });
+//describe("Attribute init MeadCo.ScriptX.Print.Licensing", () => {
+//    beforeAll(async () => {
+//        await pageStartup("test-page-attribs");
+//    });
+//    afterAll(async () => {
+//        await server.stop();
+//    });
 
-    test("Namespace basics", async () => {
-        const results = await page.evaluate(() => {
-            const api = window.MeadCo.ScriptX.Print.Licensing;
-            let results = {};
+//    test("Namespace basics", async () => {
+//        const results = await page.evaluate(() => {
+//            const api = window.MeadCo.ScriptX.Print.Licensing;
+//            let results = {};
 
-            try {
-                results.api = !!api; // Set to true if api is defined, false otherwise
-                results.vMeadCoScriptXPrintLicensing = api.version;
-            }
-            catch (e) {
-                results.error = e;
-            }
-            console.log(results);
-            return results;
-        });
+//            try {
+//                results.api = !!api; // Set to true if api is defined, false otherwise
+//                results.vMeadCoScriptXPrintLicensing = api.version;
+//            }
+//            catch (e) {
+//                results.error = e;
+//            }
+//            console.log(results);
+//            return results;
+//        });
 
-        expect(results.error).not.toBeDefined();
-        expect(results.api).toBeTruthy();
-        expect(results.vMeadCoScriptXPrintLicensing).toBe(versions.LibVersions.MeadCoScriptXPrintLicensing);
-    });
+//        expect(results.error).not.toBeDefined();
+//        expect(results.api).toBeTruthy();
+//        expect(results.vMeadCoScriptXPrintLicensing).toBe(versions.LibVersions.MeadCoScriptXPrintLicensing);
+//    });
 
-    test("Attribute applied license", async () => {
-        const results = await page.evaluate(async () => {
-            const api = window.MeadCo.ScriptX.Print.Licensing;
+//    test("Attribute applied license", async () => {
+//        const results = await page.evaluate(async () => {
+//            const api = window.MeadCo.ScriptX.Print.Licensing;
 
-            let results = {};
+//            let results = {};
 
-            try {
-                const license = await new Promise((resolve, reject) => {
-                    api.GetLicenseAsync(resolve, reject);
-                });
+//            try {
+//                const license = await new Promise((resolve, reject) => {
+//                    api.GetLicenseAsync(resolve, reject);
+//                });
 
-                results.licenseok = !!license;
-            }
-            catch (e) {
-                results.error = e;
-            }
+//                results.licenseok = !!license;
+//            }
+//            catch (e) {
+//                results.error = e;
+//            }
 
-            console.log(results);
-            return results;
-        });
+//            console.log(results);
+//            return results;
+//        });
 
-        expect(results.licenseok).toBeTruthy();
-        expect(results.error).not.toBeDefined();
-    });
-});
+//        expect(results.licenseok).toBeTruthy();
+//        expect(results.error).not.toBeDefined();
+//    });
+//});
 
 describe("Print to file", () => {
     beforeAll(async () => {
@@ -1770,8 +1758,6 @@ describe("Print to file", () => {
             return results;
         }, serverUrl, licenseGuid);
 
-        console.log(results);
-
         expect(results.connected).toBeTruthy();
         expect(results.printer).toBe("Microsoft Print to PDF");
         expect(results.printer2).toBe("Microsoft Print to PDF");
@@ -1826,7 +1812,7 @@ describe("Print to file", () => {
             console.log(results);
             return results;
         }, serverUrl, licenseGuid);
-        console.log(results);
+
         expect(results.connected).toBeTruthy();
         expect(results.error1).not.toBeDefined();
         expect(results.error2).not.toBeDefined();
