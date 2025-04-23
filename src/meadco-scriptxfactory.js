@@ -86,7 +86,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    const moduleversion = "1.16.2.0";
+    const moduleversion = "1.16.2.1";
     const emulatedVersion = "8.3.0.0";
     let servicesVersion = "";
     const printApi = MeadCo.ScriptX.Print;
@@ -362,7 +362,7 @@
                 MeadCo.log("promptAndPrint exits ...");
 
                 if (err != null) { // not great but a breaking change to remove this behaviour
-                    throw err;
+                    throw err.message;
                 }
 
                 return bStarted;

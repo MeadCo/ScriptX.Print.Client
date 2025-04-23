@@ -31,42 +31,35 @@
     </script>
 
     <script type="text/javascript">
+        const serverUrl = `http://localhost:41191`;
+        const badServerUrl = "http://127.0.0.0:12";
+        const guid = "{5091E665-8916-4D21-996E-00A2DE5DE416}";
+        const badLicenseGuid = "{218A8DB0-5A54-41A3-B349-1144546A3A8E}";
+
         // Define the runTest function if it's not already defined elsewhere
         async function runTest() {
             results = {};
             console.log("Running test on document load");
             // Add your test logic here
-            const api = window.MeadCo.ScriptX.Print;
-            const serverUrl = "http://127.0.0.1:41191";
-            const guid = "{5091E665-8916-4D21-996E-00A2DE5DE416}"
+            const api2 = MeadCo.ScriptX.Print.HTML;
+            const url = serverUrl;
 
-            api.connectLite(serverUrl, "{218A8DB0-5A54-41A3-B349-1144546A3A8E}");
             try {
-                results.result2 = "ok";
-                results.result2 = await new Promise((resolve, reject) => {
-                    api.getFromServer("twaddle/?units=0", true, resolve, reject);
+                await new Promise((resolve, reject) => {
+                    api2.connectAsync(serverUrl, guid, resolve, reject);
                 });
-            } catch (e) {
-                results.error2 = e;
-            }
 
-            try {
-                results.result3 = "ok";
-                results.result3 = await new Promise((resolve, reject) => {
-                    api.getFromServer("/htmlPrintDefaults/?units=0", true, resolve, reject);
-                });
-            } catch (e) {
-                results.error3 = e;
-            }
+                console.log("Connected to: " + url);
 
-            api.connectLite(serverUrl, guid);
-            try {
-                results.result4 = "ok";
-                results.result4 = (await new Promise((resolve, reject) => {
-                    api.getFromServer("/htmlPrintDefaults/?units=0", true, resolve, reject);
-                })).settings.header;
+                const api = window.factory.rawPrinting;
+
+                api.printer = factory.printing.printer;
+
+                results.print1 = api.printString("hello");
+                results.print2 = api.printDocument("label.txt");
+
             } catch (e) {
-                results.error4 = e;
+                results.errorAll = e;
             }
 
             console.log(results);

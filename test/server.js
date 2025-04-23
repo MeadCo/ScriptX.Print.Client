@@ -151,6 +151,25 @@ function isAuthorised(req, res) {
     }
 }
 
+/**
+ * Extracts the printer name from a pathname in the format 'url/printerName/units'
+ * @param {string} pathname - The pathname string in the format 'url/printerName/units'
+ * @returns {string} The extracted printer name or empty string if not found
+ */
+function extractPrinterName(pathname) {
+    // Split the pathname by '/'
+    const parts = pathname.split('/').filter(part => part.length > 0);
+
+    // If we have at least 2 parts (url and printerName)
+    if (parts.length >= 2) {
+        // Return the second-to-last part (printerName), and URL decode it
+        return decodeURIComponent(parts[parts.length - 2]);
+    }
+
+    // Return empty string if the format doesn't match
+    return "";
+}
+
 // Helper to create a device info object from a printer object
 function createDeviceInfo(printer) {
     return {
@@ -186,7 +205,7 @@ function createDeviceInfo(printer) {
         ],
         "forms": [
             "A4",
-            "Letter", ,
+            "Letter",
             "Legal",
             "Executive",
             "A3",
@@ -199,7 +218,7 @@ function createDeviceInfo(printer) {
 // Create routes based on ScriptX Services API
 const routes = {
     // Printer API
-    "/api/v1/printHtml/deviceinfo/systemdefault/":
+    "/api/v1/printHtml/deviceinfo/systemdefault":
     {
         GET: (req, res) => {
             if (isAuthorised(req, res)) {
@@ -232,7 +251,7 @@ const routes = {
             }
         }
     },
-    "/api/v1/printHtml/deviceinfo/default/": {
+    "/api/v1/printHtml/deviceinfo/default": {
         GET: (req, res) => {
             if (isAuthorised(req, res)) {
                 const defaultPrinter = serviceState.printers.find(p => p.isDefault);
@@ -256,6 +275,24 @@ const routes = {
             }
         }
     },
+    "/api/v1/printHtml/deviceinfo": {
+        GET: (req, res) => {
+            if (isAuthorised(req, res)) {
+                const parsedUrl = url.parse(req.url, true);
+                const pathname = parsedUrl.pathname;
+                const printerName = extractPrinterName(pathname);
+
+                customConsole.log("Printer name: ", printerName);
+                const printer = serviceState.printers.find(p => p.name == printerName);
+                if (printer) {
+                    sendJsonResponse(res, 200, createDeviceInfo(printer));
+                } else {
+                    sendJsonResponse(res, 404, "Printer not found");
+                }
+            }
+        }
+    },
+
     "/api/v1/printHtml/htmlPrintDefaults": {
         GET: (req, res) => {
             if (isAuthorised(req, res)) {
@@ -543,7 +580,7 @@ const routes = {
         }
     },
     // Print job status API
-    "/api/v1/printHtml/status/": {
+    "/api/v1/printHtml/status": {
         GET: (req, res) => {
             if (isAuthorised(req, res)) {
                 const parsedUrl = url.parse(req.url, true);
@@ -604,7 +641,7 @@ const routes = {
     }, 
 
     // Print job status API
-    "/api/v1/printPdf/status/": {
+    "/api/v1/printPdf/status": {
         GET: (req, res) => {
             if (isAuthorised(req, res)) {
                 customConsole.log("Processing GET /api/v1/printPdf/status/");
@@ -669,7 +706,12 @@ const routes = {
                         throw new Error("Printer name is required");
                     }
 
-                    if (printData.Device.printerName != "My printer" && printData.Device.printerName != "Test printer") {
+                    if (printData.ContentType != enumContentType.STRING && printData.ContentType != enumContentType.URL ) {
+                        statusResult = enumResponseStatus.SOFTERROR;
+                        statusMessage = `Unsupported print content type: ${printData.ContentType}`;
+                    }
+
+                    if (printData.Device.printerName != "Microsoft Print to PDF" && printData.Device.printerName != "Microsoft XPS Document Writer") {
                         statusResult = enumResponseStatus.SOFTERROR;
                         statusMessage = `Printer not available: ${printData.Device.printerName}`;
                     }
@@ -690,10 +732,12 @@ const routes = {
             sendJsonResponse(res, 200, {
                 serviceClass: 3,
                 currentAPIVersion: "v1",
-                serviceVersion: { major: 3, minor: 2, build: 1, revision: 0, majorRevision: 3, minorRevision: 2 },
+                serverVersion: { major: 10, minor: 1, build: 2, revision: 3, majorRevision: 0, minorRevision: 0 },
+                serviceVersion: { major: 11, minor: 12, build: 13, revision: 14, majorRevision: 0, minorRevision: 0 },
+                serviceUpgrade: {},
                 printHTML: true,
                 printPDF: true,
-                printDIRECT: true,
+                printDIRECT: false,
                 availablePrinters: serviceState.printers
             });
         }
@@ -711,7 +755,7 @@ function generateGuid() {
 // Function to remove characters after the last '/' character in a string
 function removeAfterLastSlash(str) {
     const lastSlashIndex = str.lastIndexOf('/');
-    return lastSlashIndex !== -1 ? str.substring(0, lastSlashIndex + 1) : str;
+    return lastSlashIndex !== -1 ? str.substring(0, lastSlashIndex ) : str;
 }
 
 // Create the service server
@@ -740,7 +784,7 @@ const serviceServer = http.createServer(async (req, res) => {
     // Handle 404 for API routes
     else if (pathname.startsWith('/api/')) {
 
-        const apiPath = removeAfterLastSlash(pathname);
+        let apiPath = removeAfterLastSlash(pathname);
 
         customConsole.log("removed last part, searching API path: ", apiPath);
         if (routes[apiPath] && routes[apiPath][method]) {
@@ -748,9 +792,17 @@ const serviceServer = http.createServer(async (req, res) => {
             await routes[apiPath][method](req, res);
         }
         else {
-            customConsole.warn("API endpoint not found: ", apiPath);
-            customConsole.log(routes);
-            sendJsonResponse(res, 404, "API endpoint not found");
+            apiPath = removeAfterLastSlash(apiPath);
+            customConsole.log("removed last part, searching API path: ", apiPath);
+            if (routes[apiPath] && routes[apiPath][method]) {
+                customConsole.log("found ...");
+                await routes[apiPath][method](req, res);
+            }
+            else {
+                customConsole.warn("API endpoint not found: ", apiPath);
+                customConsole.log(routes);
+                sendJsonResponse(res, 404, "API endpoint not found");
+            }
         }
     }
     // Serve static files for non-API routes 
