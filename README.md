@@ -16,7 +16,7 @@
 	</a>
 </p>
 
-The MeadCo ScriptX.Services Client Library offers an emulation of the MeadCo’s ScriptX Add-on 
+The MeadCo ScriptX.Services Client Library offers an emulation of the MeadCoï¿½s ScriptX Add-on 
 for Internet Explorer on Windows, extending its functionality to any browser on any device. 
 This is achieved by integrating with [MeadCo ScriptX.Services](https://www.meadroid.com/scriptx-services/), which can be located:
 
@@ -32,7 +32,7 @@ This library enables applications that previously relied on the ScriptX.Addon fo
 
 Our extensive set of [samples](https://scriptxprintsamples.meadroid.com) demonstrates the use of the library.
 
-The primary motivation for developing this library was to facilitate a seamless transition for ‘old but valuable code’ to function in evergreen browsers. When used in combination with the MeadCoScriptXJS library, it also provides a quick start to modern coding practices with client-side queue management.
+The primary motivation for developing this library was to facilitate a seamless transition for ï¿½old but valuable codeï¿½ to function in evergreen browsers. When used in combination with the MeadCoScriptXJS library, it also provides a quick start to modern coding practices with client-side queue management.
 
 #### From version 1.15 onwards, there is no dependency on jQuery.
 
@@ -82,7 +82,7 @@ Or, for print only to cloud/on premise services,
 <!-- Use an evaluation license id for the value of data-meadco-license
      the current id can be found here https://support.meadroid.com/deploy/services/ -->
 <script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1/dist/meadco-scriptxservices.min.js" 
-        data-meadco-server="http://127.0.0.1:41991" 
+        data-meadco-server="http://127.0.0.1:41191" 
         data-meadco-license="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
         data-meadco-license-path="warehouse"
         data-meadco-license-revision="0"
@@ -127,7 +127,7 @@ Or, if using jQuery :
 <!-- Use an evaluation license id for the value of data-meadco-license:
      the current id can be found here https://support.meadroid.com/deploy/services/ -->
 <script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1/dist/meadco-scriptxservices.min.js" 
-        data-meadco-server="http://127.0.0.1:41991" 
+        data-meadco-server="http://127.0.0.1:41191" 
         data-meadco-license="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
         data-meadco-license-path="warehouse"
         data-meadco-license-revision="0"
