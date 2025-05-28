@@ -17,7 +17,7 @@
     }
 
     var ui = topLevelNs.createNS("MeadCo.ScriptX.Print.UI");
-    ui.version = "1.16.2.0";
+    ui.version = "1.16.3.2"; // version of this file
 
     topLevelNs.log("MeadCo.ScriptX.Print.UI version is: " + ui.version);
 
@@ -463,11 +463,11 @@
         var printApi = MeadCo.ScriptX.Print;
         var settings = printApi.deviceSettings;
 
-        fillAndSetBinsList();
-
-        var $dlg = $('#dlg-printersettings');
-        $dlg.find('#fld-collate').prop('checked', settings.collate === printApi.CollateOptions.TRUE);
-        $dlg.find('#fld-copies').val(settings.copies);
+        fillAndSetBinsList(printApi.printerName, () => {
+            var $dlg = $('#dlg-printersettings');
+            $dlg.find('#fld-collate').prop('checked', settings.collate === printApi.CollateOptions.TRUE);
+            $dlg.find('#fld-copies').val(settings.copies);
+        });
 
     }
 
@@ -546,32 +546,34 @@
 
         var a = printApi.onErrorAction;
 
-        printApi.onErrorAction = printApi.ErrorAction.THROW;
-
         try {
             // select the printer to get its default source and size.
-            printApi.printerName = printerName;
-            fillAndSetBinsList();
-        } catch (e) {
+            fillAndSetBinsList(printerName, () => {
+                // revert the current printer in ScriptX
+                printApi.onErrorAction = printApi.ErrorAction.THROW;
+                try {
+                    printApi.printerName = currentPrinterName;
+                    printApi.deviceSettings.paperSourceName = currentSource;
+                } catch (e) {
+                    alert("Sorry, an error has occurred restoring current printer settings:\n\n" + e.message);
+                }
+                finally {
+                    printApi.onErrorAction = a;
+                }
+            });
+       } catch (e) {
             alert("Sorry, an error has occurred:\n\n" + e.message);
-        }
+       }
 
-        // revert the current printer in ScriptX
-        try {
-            printApi.printerName = currentPrinterName;
-            printApi.deviceSettings.paperSourceName = currentSource;
-        } catch (e) {
-            alert("Sorry, an error has occurred restoring current printer settings:\n\n" + e.message);
-        }
-
-        printApi.onErrorAction = a;
 
     }
+    function fillAndSetBinsList(printerName, fnDone) {
+        const printApi = MeadCo.ScriptX.Print;
+        const a = printApi.onErrorAction;
 
-    function fillAndSetBinsList() {
-        var printApi = MeadCo.ScriptX.Print;
+        printApi.onErrorAction = printApi.ErrorAction.THROW;
 
-        printApi.deviceSettingsForAsync(printApi.printerName, (settings) => {
+        printApi.deviceSettingsForAsync(printerName, (settings) => {
             var binsArray = settings.bins;
             var $bins = $('#fld-papersource');
 
@@ -585,8 +587,16 @@
             if ($bins.hasClass("selectpicker")) {
                 $bins.selectpicker('refresh');
             }
+
+            printApi.printerName = printerName;
+            printApi.onErrorAction = a;
+            if (fnDone) fnDone();
         },
-            (eTxt) => { MeadCo.ScriptX.Print.reportError(eTxt); });
+            (eTxt) => {
+                printApi.onErrorAction = a;
+                MeadCo.ScriptX.Print.reportError(eTxt);
+                if (fnDone) fnDone();
+            });
 
     }
 

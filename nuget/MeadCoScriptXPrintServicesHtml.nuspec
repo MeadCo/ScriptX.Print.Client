@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>MeadScriptXPrintHtml</id>
-    <version>1.16.2</version>
+    <version>1.16.3</version>
     <title>MeadCo ScriptX.Print Services Library</title>
     <authors>Pete Cole, MeadCo</authors>
     <owners>MeadCo</owners>
@@ -18,16 +18,16 @@
     <tags>MeadCo, ScriptX, Print, HTML, PDF</tags>
   </metadata>
   <files>
-    <file src="..\src\meadco-core.js" target="content\scripts\MeadCo.ScriptX\meadco-core-1.16.2.js" />
-    <file src="..\src\meadco-scriptxprint.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxprint-1.16.2.js" />
-    <file src="..\src\meadco-scriptxprinthtml.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxprinthtml-1.16.2.js" />
-    <file src="..\src\meadco-scriptxprintpdf.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxprintpdf-1.16.2.js" />
-    <file src="..\src\meadco-scriptxprintlicensing.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxprintlicensing-1.16.2.js" />
-    <file src="..\src\meadco-scriptxfactory.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxfactory-1.16.2.js" />
-    <file src="..\src\meadco-secmgr.js" target="content\scripts\MeadCo.ScriptX\meadco-secmgr-1.16.2.js" />
+    <file src="..\src\meadco-core.js" target="content\scripts\MeadCo.ScriptX\meadco-core-1.16.3.js" />
+    <file src="..\src\meadco-scriptxprint.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxprint-1.16.3.js" />
+    <file src="..\src\meadco-scriptxprinthtml.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxprinthtml-1.16.3.js" />
+    <file src="..\src\meadco-scriptxprintpdf.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxprintpdf-1.16.3.js" />
+    <file src="..\src\meadco-scriptxprintlicensing.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxprintlicensing-1.16.3.js" />
+    <file src="..\src\meadco-scriptxfactory.js" target="content\scripts\MeadCo.ScriptX\meadco-scriptxfactory-1.16.3.js" />
+    <file src="..\src\meadco-secmgr.js" target="content\scripts\MeadCo.ScriptX\meadco-secmgr-1.16.3.js" />
 
     <!-- this will shift out to its own package -->
-    <file src="..\src\jQuery-MeadCo.ScriptX.Print.UI.js" target="content\scripts\MeadCo.ScriptX\jQuery-MeadCo.ScriptX.Print.UI-1.16.2.js" />
-	<file src="..\src\Bootstrap5-MeadCo.ScriptX.Print.UI.js" target="content\scripts\MeadCo.ScriptX\Bootstrap5-MeadCo.ScriptX.Print.UI-1.16.2.js" />	  
+    <file src="..\src\jQuery-MeadCo.ScriptX.Print.UI.js" target="content\scripts\MeadCo.ScriptX\jQuery-MeadCo.ScriptX.Print.UI-1.16.3.js" />
+	<file src="..\src\Bootstrap5-MeadCo.ScriptX.Print.UI.js" target="content\scripts\MeadCo.ScriptX\Bootstrap5-MeadCo.ScriptX.Print.UI-1.16.3.js" />	  
   </files>
 </package>

@@ -15,7 +15,10 @@ test-page-src.html, test-page-attribs-src.html
 
 To run the test with minified or source libraries, edit library.test.js:
 
-`javascript` const testSources = true;
+`javascript` const testSources = true; // use source files
+
+npm test -- test/library.test.js
+npm test -- test/attributes.test.js
 
 ## Test pages
 

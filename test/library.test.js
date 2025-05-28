@@ -9,7 +9,7 @@ const badLicenseGuid = "{218A8DB0-5A54-41A3-B349-1144546A3A8E}";
 
 const util = require('util');
 
-const testSources = false;
+const testSources = true;
 
 const { Console } = require('console');
 // Create a custom console for logging with minimal formatting
@@ -18,7 +18,7 @@ const customConsole = new Console({ stdout: process.stdout, stderr: process.stde
 // revert to the standard console (which will create verbose formatting in jest)
 // const customConsole = console;
 
-const capturePageLogs = true;
+const capturePageLogs = false;
 async function pageStartup(pageName = "test-page") {
     await server.start();
 
