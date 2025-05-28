@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>Tutorial: Minified collections - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/MeadCo/ScriptX.Print.Client" target="_blank" class="menu-item" id="website_link" >GitHub</a></h2><h2><a href="https://scriptxprintsamples.meadroid.com" target="_blank" class="menu-item" id="forum_link" >Samples</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-a-start.html">Getting started</a></li><li><a href="tutorial-b-minifies.html">Minified collections</a></li><li><a href="tutorial-c-repositories.html">Package repositories</a></li></ul><h3>Namespaces</h3><ul><li><a href="MeadCo.html">MeadCo</a><ul class='members'><li data-type='member'><a href="MeadCo.html#.logEnabled">logEnabled</a></li><li data-type='member'><a href="MeadCo.html#.version">version</a></li></ul><ul class='methods'><li data-type='method'><a href="MeadCo.html#.createNS">createNS</a></li><li data-type='method'><a href="MeadCo.html#.error">error</a></li><li data-type='method'><a href="MeadCo.html#.log">log</a></li><li data-type='method'><a href="MeadCo.html#.makeApiEndPoint">makeApiEndPoint</a></li><li data-type='method'><a href="MeadCo.html#.makeServiceEndPoint">makeServiceEndPoint</a></li><li data-type='method'><a href="MeadCo.html#.parseAjaxError">parseAjaxError</a></li><li data-type='method'><a href="MeadCo.html#.parseFetchError">parseFetchError</a></li><li data-type='method'><a href="MeadCo.html#.warn">warn</a></li></ul></li><li><a href="MeadCoScriptXPrint.html">MeadCoScriptXPrint</a><ul class='members'><li data-type='member'><a href="MeadCoScriptXPrint.html#.activeJobs">activeJobs</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.authorisationCookie">authorisationCookie</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.availablePrinterNames">availablePrinterNames</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.clientSideJobs">clientSideJobs</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.deviceSettings">deviceSettings</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.isConnected">isConnected</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.isSpooling">isSpooling</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.jobFileName">jobFileName</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.noJobsWaitingDelivery">noJobsWaitingDelivery</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.onErrorAction">onErrorAction</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.printerName">printerName</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.queue">queue</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.queueGapResetTime">queueGapResetTime</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.queueTimeoutSpacing">queueTimeoutSpacing</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.serviceUrl">serviceUrl</a></li><li data-type='member'><a href="MeadCoScriptXPrint.html#.version">version</a></li></ul><ul class='methods'><li data-type='method'><a href="MeadCoScriptXPrint.html#.addPrinterConnection">addPrinterConnection</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.addPrinterConnectionAsync">addPrinterConnectionAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.connect">connect</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.connectAsync">connectAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.connectDeviceAndPrinters">connectDeviceAndPrinters</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.connectLite">connectLite</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.connectTestAsync">connectTestAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.deviceSettingsFor">deviceSettingsFor</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.deviceSettingsForAsync">deviceSettingsForAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.ensureSpoolingStatus">ensureSpoolingStatus</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.freeSpoolStatus">freeSpoolStatus</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.getFromServer">getFromServer</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.parseAjaxError">parseAjaxError</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.parseFetchError">parseFetchError</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.printDirect">printDirect</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.printHtml">printHtml</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.printPdf">printPdf</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.removePrinterConnection">removePrinterConnection</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.removePrinterConnectionAsync">removePrinterConnectionAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.reportError">reportError</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.reportFeatureNotImplemented">reportFeatureNotImplemented</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.reportServerError">reportServerError</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.requestHtmlPreview">requestHtmlPreview</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.serviceDescription">serviceDescription</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.serviceDescriptionAsync">serviceDescriptionAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.serviceVersion">serviceVersion</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.serviceVersionAsync">serviceVersionAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.useAttributes">useAttributes</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.waitForDeliveryComplete">waitForDeliveryComplete</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.waitForDeliveryCompleteAsync">waitForDeliveryCompleteAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.waitForSpoolingComplete">waitForSpoolingComplete</a></li><li data-type='method'><a href="MeadCoScriptXPrint.html#.waitableServiceDescription">waitableServiceDescription</a></li></ul></li><li><a href="MeadCoScriptXPrintHTML.html">MeadCoScriptXPrintHTML</a><ul class='members'><li data-type='member'><a href="MeadCoScriptXPrintHTML.html#.documentContentToPrint">documentContentToPrint</a></li><li data-type='member'><a href="MeadCoScriptXPrintHTML.html#.version">version</a></li><li data-type='member'><a href="MeadCoScriptXPrintHTML.html#.version">version</a></li></ul><ul class='methods'><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.connect">connect</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.connectAsync">connectAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.connectLite">connectLite</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.frameContentToPrint">frameContentToPrint</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.previewDocument">previewDocument</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.previewFrame">previewFrame</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.printDocument">printDocument</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.printFrame">printFrame</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.printFromUrl">printFromUrl</a></li><li data-type='method'><a href="MeadCoScriptXPrintHTML.html#.printHtml">printHtml</a></li></ul></li><li><a href="MeadCoScriptXPrintLicensing.html">MeadCoScriptXPrintLicensing</a><ul class='members'><li data-type='member'><a href="MeadCoScriptXPrintLicensing.html#.License">License</a></li><li data-type='member'><a href="MeadCoScriptXPrintLicensing.html#.errorMessage">errorMessage</a></li><li data-type='member'><a href="MeadCoScriptXPrintLicensing.html#.errorMessage">errorMessage</a></li><li data-type='member'><a href="MeadCoScriptXPrintLicensing.html#.result">result</a></li><li data-type='member'><a href="MeadCoScriptXPrintLicensing.html#.validLicense">validLicense</a></li><li data-type='member'><a href="MeadCoScriptXPrintLicensing.html#.version">version</a></li></ul><ul class='methods'><li data-type='method'><a href="MeadCoScriptXPrintLicensing.html#.GetLicenseAsync">GetLicenseAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrintLicensing.html#.apply">apply</a></li><li data-type='method'><a href="MeadCoScriptXPrintLicensing.html#.applyAsync">applyAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrintLicensing.html#.connect">connect</a></li><li data-type='method'><a href="MeadCoScriptXPrintLicensing.html#.connectLite">connectLite</a></li></ul></li><li><a href="MeadCoScriptXPrintPDF.html">MeadCoScriptXPrintPDF</a><ul class='methods'><li data-type='method'><a href="MeadCoScriptXPrintPDF.html#.connect">connect</a></li><li data-type='method'><a href="MeadCoScriptXPrintPDF.html#.connectAsync">connectAsync</a></li><li data-type='method'><a href="MeadCoScriptXPrintPDF.html#.connectLite">connectLite</a></li><li data-type='method'><a href="MeadCoScriptXPrintPDF.html#.print">print</a></li><li data-type='method'><a href="MeadCoScriptXPrintPDF.html#.resetSettings">resetSettings</a></li></ul></li><li><a href="factory.html">factory</a></li><li><a href="secmgr.html">secmgr</a><ul class='members'><li data-type='member'><a href="secmgr.html#.version">version</a></li></ul><ul class='methods'><li data-type='method'><a href="secmgr.html#.GetLicenseAsync">GetLicenseAsync</a></li></ul></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">Tutorial: Minified collections</h1>
+    
+
+    <section>
+
+<header>
+    
+
+    <h2>Minified collections</h2>
+</header>
+
+<article>
+    <p>The library contains the following source files :</p>
+<h3>Core</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Namespace</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>meadco-core.js</td>
+<td>MeadCo</td>
+<td>Core functionality required for creating objects in the namespace and other general utilities</td>
+</tr>
+<tr>
+<td>meadco-scriptxprint.js</td>
+<td>MeadCo.ScriptX.Print</td>
+<td>Implements calls to the ScriptX.Services Web print APIs including processing of responses with tracking of jobs at the server</td>
+</tr>
+<tr>
+<td>meadco-scriptxprinthtml.js</td>
+<td>MeadCo.ScriptX.Print.HTML</td>
+<td>Implements support for the structures required by the Web API for html printing and functions to gather the HTML to be printed from the current document</td>
+</tr>
+<tr>
+<td>meadco-scriptxprintpdf.js</td>
+<td>MeadCo.ScriptX.Print.PDF</td>
+<td>Implements support for the structures required by the Web API for printing PDF documents</td>
+</tr>
+<tr>
+<td>meadco-scriptxfactory.js</td>
+<td>&quot;factory&quot;</td>
+<td>Implements emulations of factory, factory.printing..., factory.rawPrinting, factory.js</td>
+</tr>
+</tbody>
+</table>
+<h3>Licensing</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Namespace</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>meadco-scriptxprintlicensing.js</td>
+<td>MeadCo.ScriptX.Print.Licensing</td>
+<td>Implements calls to the ScriptX.Services Web licensing API</td>
+</tr>
+<tr>
+<td>meadco-secmgr.js</td>
+<td>&quot;secmgr&quot;</td>
+<td>Implements emulation of secmgr</td>
+</tr>
+</tbody>
+</table>
+<h3>UI</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Namespace</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>jQuery-MeadCo.ScriptX.Print.UI.js</td>
+<td>MeadCo.ScriptX.Print.UI</td>
+<td>Implements the dialogs PageSetup and PrinterSettings with Bootstrap 3/4 and jQuery</td>
+</tr>
+<tr>
+<td>Bootstrap5-MeadCo.ScriptX.Print.UI.js</td>
+<td>MeadCo.ScriptX.Print.UI</td>
+<td>Implements the dialogs PageSetup and PrinterSettings with Bootstrap 5 without jQuery</td>
+</tr>
+</tbody>
+</table>
+<h2>Collections</h2>
+<p>The following minimised collections are provided/available from each repository:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Includes</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>meadco-scriptxservices.min.js</td>
+<td>All core modules for printing including window.factory and window.secmgr emulation but no support for UI prompts.</td>
+<td>Full support for ScriptX Services on Windows PC. But, <strong>no</strong> UI dialog modules are included.</td>
+</tr>
+<tr>
+<td>meadco-scriptxservicesUI.min.js</td>
+<td>As above but includes UI prompt Page and Print setup UI dialogs (require Bootstrap 3/4 and jQuery).</td>
+<td>Full support for ScriptX Services on Windows PC where print promopt dialogs are required.</td>
+</tr>
+<tr>
+<td>meadco-scriptxservicesUI-2.min.js</td>
+<td>As above but includes UI prompt Page and Print setup UI dialogs (require Bootstrap 5 no jQuery).</td>
+<td>Full support for ScriptX Services on Windows PC where print promopt dialogs are required.</td>
+</tr>
+<tr>
+<td>meadco-scriptxservicesprint.min.js</td>
+<td>All core modules for printing print including window.factory emulation. No UI modules or support licensing for ScriptX Services on Windows PC.</td>
+<td>Intended for working with ScriptX.Services on Cloud or On Premise.</td>
+</tr>
+<tr>
+<td>meadco-scriptxservicesprintUI.min.js</td>
+<td>As above but includes Page and Print setup UI dialogs (require Bootstrap 3/4 and jQuery).</td>
+<td>For working with ScriptX.Services on Cloud or On Premise where print prompt dialogs are required.</td>
+</tr>
+<tr>
+<td>meadco-scriptxservicesprintUI-2.min.js</td>
+<td>As above but includes Page and Print setup UI dialogs (require Bootstrap5 no jQuery).</td>
+<td>For working with ScriptX.Services on Cloud or On Premise where print prompt dialogs are required.</td>
+</tr>
+<tr>
+<td>meadco-scriptxserviceslicensing.min.js</td>
+<td>window.secmgr emulation for ScriptX Services on Windows PC.</td>
+<td>Super low download cost for a 'license install' page.</td>
+</tr>
+</tbody>
+</table>
+</article>
+
+</section>
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Wed May 28 2025 10:56:12 GMT+0100 (British Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

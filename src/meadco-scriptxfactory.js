@@ -15,7 +15,7 @@
  *
  * This javascript 'module' provides partial emulation of window.factory, window.factory.object and window.factory.object.js
  * 
- * Full emulation (and almost complete implementation) is provided for window.factory.printing, window.factory.printing.printerControl, window.factory.printing.enhancedFormatting. The most notable absent implementation is an implementation of print preview.
+ * Full emulation (and almost complete implementation) is provided for window.factory.printing, window.factory.printing.printerControl, window.factory.printing.enhancedFormatting.
  * 
  * Full emulation is provided for window.factory.rawPrinting. Please note that the implementation is synchronous and browsers will issue a warning to the console.
  * 
@@ -86,7 +86,7 @@
 })('factory', function () {
     // If this is executing, we believe we are needed.
     // protected API
-    const moduleversion = "1.16.0.0";
+    const moduleversion = "1.16.2.2";
     const emulatedVersion = "8.3.0.0";
     let servicesVersion = "";
     const printApi = MeadCo.ScriptX.Print;
@@ -362,7 +362,7 @@
                 MeadCo.log("promptAndPrint exits ...");
 
                 if (err != null) { // not great but a breaking change to remove this behaviour
-                    throw err;
+                    throw err.message;
                 }
 
                 return bStarted;

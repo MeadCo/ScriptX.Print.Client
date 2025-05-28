@@ -28,7 +28,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print', function () {
     // module version and the api we are coded for
-    const version = "1.16.0.4";
+    const version = "1.16.2.2";
     const htmlApiLocation = "v1/printHtml";
     const pdfApiLocation = "v1/printPdf";
     const directApiLocation = "v1/printDirect";
@@ -2173,6 +2173,19 @@
             else {
                 resolve(cachedServiceDescription);
             }
+        },
+
+        /**
+         * Obtain the description of the service provided by the server
+         * 
+         * @function waitableServiceDescription
+         * @memberof MeadCoScriptXPrint
+         * @returns a Promise that resolves to the service description object
+         */
+        waitableServiceDescription: function () {
+            return new Promise((resolve, reject) => {
+                this.serviceDescriptionAsync(resolve, reject);
+            });
         },
 
         /**

@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Page</title>
+    <script type="text/javascript">
+        var MeadCo = {
+            logEnable: true,
+            useFetch: true
+        }
+    </script>
+
+    <script src="dist/meadco-scriptxservices.min.js"
+            data-meadco-server="http://localhost:41191"
+            data-meadco-syncinit="false"
+            data-meadco-license="{5091E665-8916-4D21-996E-00A2DE5DE416}"
+            data-meadco-license-path="warehouse"
+            data-meadco-license-revision="0"></script>
+
+    <script type="text/javascript">
+        MeadCo.ScriptX.Print.reportServerError = function (txt) {
+            document.getElementById("qunit-fixture").textContent = txt;
+        };
+
+        MeadCo.ScriptX.Print.reportFeatureNotImplemented = function (featureDescription) {
+            document.getElementById("qunit-fixture").textContent = txt;
+        };
+    </script>
+    <script type="text/javascript">
+        console.log("Try to useAttributes()...");
+        MeadCo.ScriptX.Print.useAttributes();
+    </script>
+</head>
+<body>
+    <h1>Test page</h1>
+    <div id="test-element">Initial Content</div>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+
+    <iframe style="visibility: hidden; display: none" id="testFrame" src="frame.html"></iframe>
+    <iframe style="visibility: hidden; display: none" name="testFrame-2" src="frame2.html"></iframe>
+</body>
+</html>

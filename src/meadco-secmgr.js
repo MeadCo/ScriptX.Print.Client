@@ -62,7 +62,7 @@
 })('secmgr', function () {
 
     // protected API
-    const moduleversion = "1.16.0.0";
+    const moduleversion = "1.16.2.0";
     const emulatedVersion = "8.2.0.0";
     const thisSpace = this;
     const logApi = MeadCo;

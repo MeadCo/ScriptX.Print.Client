@@ -1,0 +1,81 @@
+﻿[
+  {
+    "outputFileName": "../dist/meadco-scriptxservicesprint.min.js",
+    "inputFiles": [
+      "./src/meadco-core.js",
+      "./src/meadco-scriptxprint.js",
+      "./src/meadco-scriptxprinthtml.js",
+      "./src/meadco-scriptxprintpdf.js",
+      "./src/meadco-scriptxfactory.js"
+    ]
+  },
+  {
+    "outputFileName": "../dist/meadco-scriptxservicesprintUI.min.js",
+    "inputFiles": [
+      "./src/meadco-core.js",
+      "./src/meadco-scriptxprint.js",
+      "./src/meadco-scriptxprinthtml.js",
+      "./src/meadco-scriptxprintpdf.js",
+      "./src/meadco-scriptxfactory.js",
+      "./src/jQuery-MeadCo.ScriptX.Print.UI.js"
+    ]
+  },
+  {
+    "outputFileName": "../dist/meadco-scriptxservicesprintUI-2.min.js",
+    "inputFiles": [
+      "./src/meadco-core.js",
+      "./src/meadco-scriptxprint.js",
+      "./src/meadco-scriptxprinthtml.js",
+      "./src/meadco-scriptxprintpdf.js",
+      "./src/meadco-scriptxfactory.js",
+      "./src/Bootstrap5-MeadCo.ScriptX.Print.UI.js"
+    ]
+  },
+  {
+    "outputFileName": "../dist/meadco-scriptxserviceslicensing.min.js",
+    "inputFiles": [
+      "./src/meadco-core.js",
+      "./src/meadco-scriptxprint.js",
+      "./src/meadco-scriptxprintlicensing.js",
+      "./src/meadco-secmgr.js"
+    ]
+  },
+  {
+    "outputFileName": "../dist/meadco-scriptxservices.min.js",
+    "inputFiles": [
+      "./src/meadco-core.js",
+      "./src/meadco-scriptxprint.js",
+      "./src/meadco-scriptxprinthtml.js",
+      "./src/meadco-scriptxprintpdf.js",
+      "./src/meadco-scriptxfactory.js",
+      "./src/meadco-scriptxprintlicensing.js",
+      "./src/meadco-secmgr.js"
+    ]
+  },
+  {
+    "outputFileName": "../dist/meadco-scriptxservicesUI.min.js",
+    "inputFiles": [
+      "./src/meadco-core.js",
+      "./src/meadco-scriptxprint.js",
+      "./src/meadco-scriptxprinthtml.js",
+      "./src/meadco-scriptxprintpdf.js",
+      "./src/meadco-scriptxfactory.js",
+      "./src/meadco-scriptxprintlicensing.js",
+      "./src/meadco-secmgr.js",
+      "./src/jQuery-MeadCo.ScriptX.Print.UI.js"
+    ]
+  },
+  {
+    "outputFileName": "../dist/meadco-scriptxservicesUI-2.min.js",
+    "inputFiles": [
+      "./src/meadco-core.js",
+      "./src/meadco-scriptxprint.js",
+      "./src/meadco-scriptxprinthtml.js",
+      "./src/meadco-scriptxprintpdf.js",
+      "./src/meadco-scriptxfactory.js",
+      "./src/meadco-scriptxprintlicensing.js",
+      "./src/meadco-secmgr.js",
+      "./src/Bootstrap5-MeadCo.ScriptX.Print.UI.js"
+    ]
+  }
+]
