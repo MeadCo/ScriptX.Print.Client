@@ -125,7 +125,7 @@ Or, if using jQuery :
 
 <!-- .Addon emulation, connect to server with publishing license id. -->
 <!-- Use an evaluation license id for the value of data-meadco-license:
-     the current id can be found here https://support.meadroid.com/deploy/services/ -->
+     the current id and revision can be found here https://support.meadroid.com/deploy/services/ -->
 <script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1/dist/meadco-scriptxservices.min.js" 
         data-meadco-server="http://127.0.0.1:41191" 
         data-meadco-license="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
@@ -146,6 +146,63 @@ Or, if using jQuery :
             MeadCo.ScriptX.PrintPage(false);
        });
      })      
+   });
+</script>
+```
+Note that when using data-meadco-syncinit="false" (to ensure asynchronous initialisation) you must ensure that the MeadCo.ScriptX.InitAsync() method is called before any other ScriptX methods are used. 
+
+If the MeadCoScriptXJS Library is **not** being used (which provides MeadCo.ScriptX.InitAsync() and other methods), then the ScriptX.Services client library **must** be initialiased as follows (jQuery is not used here, but can be):
+
+1. Addition of attribute data-meadco-apply-license="true"
+1. Use of short sleep timeout to allow asynchronous function calls within the library to proceed
+1. Use of MeadCo.ScriptX.Print.Licensing.GetLicenseAsync() to ensure the license is applied before any other ScriptX methods are used.
+
+```javascript
+<!-- Use an evaluation license id for the value of data-meadco-license
+     the current id and revision can be found here https://support.meadroid.com/deploy/services/ -->
+<script src="https://cdn.jsdelivr.net/npm/scriptxprint-html@1/dist/meadco-scriptxservices.min.js" 
+        data-meadco-server="http://127.0.0.1:41191" 
+        data-meadco-license="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+        data-meadco-license-path="warehouse"
+        data-meadco-license-revision="0"
+        data-meadco-syncinit="false"
+        data-meadco-apply-license="true"
+        ></script>
+
+<script type="text/javascript">
+   async InitializeScriptX() {
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            return new Promise((resolve, reject) => {
+                MeadCo.ScriptX.Print.Licensing.GetLicenseAsync((license) => {
+                    resolve(true);
+                }, (error) => {
+                    reject(error);
+                });
+            });
+        } catch (error) {
+            throw error;
+        }
+   }
+
+   window.addEventListener("load",async () => {
+      try {
+       await InitializeScriptX();
+       MeadCo.ScriptX.Printing.header = 
+          "MeadCo's ScriptX&b:&p of &P:&bBasic Printing Sample";
+       MeadCo.ScriptX.Printing.footer = 
+          "The de facto standard for advanced web-based printing";
+       MeadCo.ScriptX.Printing.orientation = "landscape";
+
+       document.getElementById("btnprint").addEventListener("click",async () => {
+            MeadCo.ScriptX.Print.HTML.printDocument();
+            await new Promise(resolve => MeadCo.ScriptX.Print.waitForSpoolingComplete(-1, resolve));
+            window.location.href = "MenuStart.html";
+       });
+      }
+      catch (e) {
+        console.error("Error on load",e);
+      }
    });
 </script>
 ```
