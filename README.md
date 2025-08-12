@@ -151,7 +151,7 @@ Or, if using jQuery :
 ```
 Note that when using data-meadco-syncinit="false" (to ensure asynchronous initialisation) you must ensure that the MeadCo.ScriptX.InitAsync() method is called before any other ScriptX methods are used. 
 
-If the MeadCoScriptXJS Library is **not** being used (which provides MeadCo.ScriptX.InitAsync() and other methods), then the ScriptX.Services client library **must** be initialiased as follows (jQuery is not used here, but can be):
+If the MeadCoScriptXJS Library is **not** being used (which provides MeadCo.ScriptX.InitAsync() and other methods), then the ScriptX.Services client library **must** be initialised as follows (jQuery is not used here, but can be):
 
 1. Addition of attribute data-meadco-apply-license="true"
 1. Use of short sleep timeout to allow asynchronous function calls within the library to proceed
