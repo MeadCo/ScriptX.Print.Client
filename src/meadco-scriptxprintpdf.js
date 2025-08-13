@@ -20,7 +20,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.PDF', function () {
 
-    var moduleversion = "1.16.3.0";
+    var moduleversion = "1.16.4.1";
 
     /**
      * Enum to describe the orientation of the paper
@@ -234,7 +234,7 @@
                     MeadCo.log("got default html settings");
                     if (data.device !== null) {
                         MeadCo.ScriptX.Print.connectDeviceAndPrinters(data.device, data.availablePrinters);
-                        resolve(2);
+                        resolve(data.device);
                     }
                     else {
                         reject("Server did not respond with valid settings");

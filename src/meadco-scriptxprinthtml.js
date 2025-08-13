@@ -19,7 +19,7 @@
     extendMeadCoNamespace(name, definition);
 })('MeadCo.ScriptX.Print.HTML', function () {
 
-    var moduleversion = "1.16.3.0";
+    var moduleversion = "1.16.4.1";
 
     /**
      * Enum to describe the units used on measurements - **NOTE** please use MeadCo.ScriptX.Print.MeasurementUnits instead
@@ -855,8 +855,11 @@
                     if (updateSettingsWithServerDefaults(data.settings)) {
                         if (data.device !== null) {
                             MeadCo.ScriptX.Print.connectDeviceAndPrinters(data.device, data.availablePrinters);
+                            resolve(data.device);
                         }
-                        resolve(2);
+                        else {
+                            reject("Server did not respond with valid settings");
+                        }
                     }
                     else {
                         reject("Server did not respond with valid settings");
