@@ -1640,61 +1640,6 @@ describe("MeadCo.ScriptX.Print.Licensing", () => {
 
 });
 
-//describe("Attribute init MeadCo.ScriptX.Print.Licensing", () => {
-//    beforeAll(async () => {
-//        await pageStartup("test-page-attribs");
-//    });
-//    afterAll(async () => {
-//        await server.stop();
-//    });
-
-//    test("Namespace basics", async () => {
-//        const results = await page.evaluate(() => {
-//            const api = window.MeadCo.ScriptX.Print.Licensing;
-//            let results = {};
-
-//            try {
-//                results.api = !!api; // Set to true if api is defined, false otherwise
-//                results.vMeadCoScriptXPrintLicensing = api.version;
-//            }
-//            catch (e) {
-//                results.error = e;
-//            }
-//            console.log(results);
-//            return results;
-//        });
-
-//        expect(results.error).not.toBeDefined();
-//        expect(results.api).toBeTruthy();
-//        expect(results.vMeadCoScriptXPrintLicensing).toBe(versions.LibVersions.MeadCoScriptXPrintLicensing);
-//    });
-
-//    test("Attribute applied license", async () => {
-//        const results = await page.evaluate(async () => {
-//            const api = window.MeadCo.ScriptX.Print.Licensing;
-
-//            let results = {};
-
-//            try {
-//                const license = await new Promise((resolve, reject) => {
-//                    api.GetLicenseAsync(resolve, reject);
-//                });
-
-//                results.licenseok = !!license;
-//            }
-//            catch (e) {
-//                results.error = e;
-//            }
-
-//            console.log(results);
-//            return results;
-//        });
-
-//        expect(results.licenseok).toBeTruthy();
-//        expect(results.error).not.toBeDefined();
-//    });
-//});
-
 describe("Print to file", () => {
     beforeAll(async () => {
         await pageStartup();
