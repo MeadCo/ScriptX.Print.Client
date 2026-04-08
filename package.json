@@ -37,7 +37,8 @@
     "watch:docs": "onchange \"docs-src/**/*.*\" \"src/**/*.js\" -- npm run docs:build",
     "view:docs": "http-server docs -o index.html",
     "build": "webpack --config ./configs/webpack.config.js",
-    "test": "jest --maxWorkers=1"
+    "test": "jest --maxWorkers=1",
+    "merge:dependabot": "powershell -ExecutionPolicy Bypass -File ./scripts/merge-dependabot.ps1"
   },
   "devDependencies": {
       "babel-loader": "^10.0.0",
