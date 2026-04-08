@@ -8,26 +8,35 @@
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "Refreshing main..."
-git checkout main
-git pull origin main
+Write-Host "Refreshing master..."
+git checkout master
+git pull origin master
 
 Write-Host "Recreating TestPRs..."
 git checkout -B TestPRs
 
-Write-Host "Fetching Dependabot PRs..."
-$prs = gh pr list --author dependabot --state open --json number | ConvertFrom-Json
+Write-Host "Fetching open PRs..."
+$prs = gh pr list --state open --json number,author,headRefName | ConvertFrom-Json
 
-if ($prs.Count -eq 0) {
+if (-not $prs) {
     Write-Host "No Dependabot PRs found."
     exit 0
 }
 
-foreach ($pr in $prs) {
-    $prNumber = $pr.number
-    Write-Host "Processing PR #$prNumber"
+# Filter to Dependabot PRs (e.g. author.login = 'app/dependabot', 'dependabot[bot]', etc.)
+$dependabotPrs = $prs | Where-Object { $_.author.login -like "*dependabot*" }
 
-    $branch = gh pr view $prNumber --json headRefName | ConvertFrom-Json | Select-Object -ExpandProperty headRefName
+if (-not $dependabotPrs -or $dependabotPrs.Count -eq 0) {
+    Write-Host "No Dependabot PRs found."
+    exit 0
+}
+
+foreach ($pr in $dependabotPrs) {
+    $prNumber = $pr.number
+    $author   = $pr.author.login
+    $branch   = $pr.headRefName
+
+    Write-Host "Processing PR #$prNumber by $author on branch $branch"
 
     Write-Host "Fetching branch $branch"
     git fetch origin $branch
@@ -39,4 +48,4 @@ foreach ($pr in $prs) {
 Write-Host "Pushing TestPRs..."
 git push -u origin TestPRs --force
 
-Write-Host "Done. CI will now run on TestPRs."
+Write-Host "Done."
